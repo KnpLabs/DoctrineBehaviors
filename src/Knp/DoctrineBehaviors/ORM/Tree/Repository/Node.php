@@ -8,7 +8,7 @@ trait Node
     {
         $qb = $this->createQueryBuilder($rootAlias)
             ->andWhere($rootAlias.'.path NOT LIKE :path')
-            ->setParameter('path', sprintf('%s%%s%', $pathSeparator, $pathSeparator)
+            ->setParameter('path', sprintf('%s%%s%', $pathSeparator, $pathSeparator))
         ;
 
         return $qb->getQuery()->execute();
@@ -18,6 +18,7 @@ trait Node
     {
         $results = $this->getFlatTree($path, $rootAlias);
 
+        //die(var_dump(count($results)));
         $root = $results->next();
         $root->buildTree($results);
 

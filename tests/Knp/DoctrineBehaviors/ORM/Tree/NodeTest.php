@@ -3,8 +3,10 @@
 namespace Tests\Knp\DoctrineBehaviors\ORM\Tree;
 
 use Knp\DoctrineBehaviors\ORM\Tree\NodeInterface;
+use Tests\Knp\DoctrineBehaviors\ORM\EntityManagerProvider;
+use BehaviorFixtures\ORM\TreeNodeEntity;
 
-require_once 'EntityManagerProvider.php';
+require_once __DIR__.'/../EntityManagerProvider.php';
 
 class NodeTest extends \PHPUnit_Framework_TestCase
 {
@@ -17,10 +19,9 @@ class NodeTest extends \PHPUnit_Framework_TestCase
         );
     }
 
-
     protected function buildNode(array $values = array())
     {
-        $node = new ;
+        $node = new TreeNodeEntity;
         foreach($values as $method => $value) {
             $node->$method($value);
         }
@@ -266,6 +267,25 @@ class NodeTest extends \PHPUnit_Framework_TestCase
         $this->assertTrue($tree->getNodeChildren()->contains($childChildItem), 'The children collection has been updated to reference the moved node');
 
         $this->assertEquals(3, $childChildChildItem->getLevel(), 'The level has been updated');
+    }
+
+    public function testGetTree()
+    {
+        $em = $this->getEntityManager();
+        $repo = $em->getRepository('BehaviorFixtures\ORM\TreeNodeEntity');
+
+        $entity = new TreeNodeEntity(1);
+        $entity[0] = new TreeNodeEntity(2);
+        $entity[0][0] = new TreeNodeEntity(3);
+
+        $em->persist($entity);
+        $em->persist($entity[0]);
+        $em->persist($entity[0][0]);
+        $em->flush();
+
+        $root = $repo->getTree('/');
+
+        $this->assertEquals($root[0][0], $entity[0][0]);
     }
 }
 

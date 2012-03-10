@@ -92,19 +92,6 @@ interface NodeInterface
     function isChildOf(NodeInterface $node);
 
     /**
-     * @param integer|mixed the value used to sort nodes in current level
-     *
-     * @return NodeInterface $this Fluent interface
-     **/
-    function setSort($sort);
-
-    /**
-     *
-     * @return integer|mixed the value used to sort nodes in current level
-     **/
-    function getSort();
-
-    /**
      *
      * @return integer the level of this node, eg: the depth compared to root node
      **/

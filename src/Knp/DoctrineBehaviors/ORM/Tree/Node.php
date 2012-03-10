@@ -11,8 +11,6 @@ use Doctrine\Common\Collections\Collection;
  */
 trait Node
 {
-    const PATH_SEPARATOR = '/';
-
     /**
      * @param Collection the children in the tree
      */
@@ -42,8 +40,9 @@ trait Node
     public function setPath($path)
     {
         $this->path = $path;
-
         $this->setParentPath($this->getParentPath());
+
+        return $this;
     }
 
     /**
@@ -140,6 +139,8 @@ trait Node
     public function setParent(NodeInterface $node)
     {
         $this->parent = $node;
+
+        return $this;
     }
 
     /**
@@ -156,24 +157,6 @@ trait Node
     public function getLevel()
     {
         return \count($this->getExplodedPath()) - 1;
-    }
-
-    /**
-     * Set sort.
-     *
-     * @param sort the value to set.
-     */
-    public function getSort()
-    {
-        return $this->sort;
-    }
-
-    /**
-     * {@inheritdoc}
-     **/
-    public function setSort($sort)
-    {
-        $this->sort = $sort;
     }
 
     /**
@@ -282,6 +265,8 @@ trait Node
     public function offsetSet($offset, $node)
     {
         $node->setChildOf($this);
+
+        return $this;
     }
 
     public function offsetExists($offset)

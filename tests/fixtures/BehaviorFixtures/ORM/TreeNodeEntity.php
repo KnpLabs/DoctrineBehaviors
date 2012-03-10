@@ -1,57 +1,38 @@
 <?php
 
-namespace Knp\Component\Test\MaterializedPath\Fixture;
+namespace BehaviorFixtures\ORM;
 
-
-use Knp\Component\Tree\MaterializedPath\Node;
-use Knp\Component\Tree\MaterializedPath\NodeInterface;
-
+use Doctrine\ORM\Mapping as ORM;
 use Doctrine\Common\Collections\ArrayCollection;
 
+use Knp\DoctrineBehaviors\ORM\Tree;
 
-class MenuItem implements NodeInterface, \ArrayAccess
+
+/**
+ * @ORM\Entity(repositoryClass="BehaviorFixtures\ORM\TreeNodeEntityRepository")
+ */
+class TreeNodeEntity implements Tree\NodeInterface, \ArrayAccess
 {
     const PATH_SEPARATOR = '/';
 
-    use Node {
-
-    }
+    use Tree\Node;
 
     /**
      * @ORM\Id
      * @ORM\Column(type="integer")
-     * @ORM\GeneratedValue(strategy="AUTO")
+     * @ORM\GeneratedValue(strategy="NONE")
      */
     protected $id;
 
     /**
-     * @ORM\Column(type="string", length=255)
+     * @ORM\Column(type="string", length=255, nullable=true)
      */
     protected $name;
 
-    /**
-     * @param Collection the children in the tree
-     */
-    private $children;
-
-    /**
-     * @param NodeInterface the parent in the tree
-     */
-    private $parent;
-
-    /**
-     * @ORM\Column(type="string", length=255, nullable=true)
-     */
-    private $path;
-
-    /**
-     * @ORM\Column(type="integer", nullable=true)
-     */
-    private $sort;
-
-    public function __construct()
+    public function __construct($id = null)
     {
         $this->children = new ArrayCollection;
+        $this->id = $id;
     }
 
     public function __toString()
@@ -93,6 +74,5 @@ class MenuItem implements NodeInterface, \ArrayAccess
     {
         $this->name = $name;
     }
-
 }
 
