@@ -2,8 +2,6 @@
 
 namespace Knp\DoctrineBehaviors\ORM;
 
-use Doctrine\ORM\Mapping as ORM;
-
 trait Timestampable
 {
     /**
