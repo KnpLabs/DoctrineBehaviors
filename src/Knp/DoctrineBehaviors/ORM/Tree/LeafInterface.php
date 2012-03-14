@@ -11,9 +11,8 @@ use Doctrine\Common\Collections\Collection;
  *
  * @author     Florian Klein <florian.klein@free.fr>
  */
-interface NodeInterface
+interface LeafInterface
 {
-
     /**
      * @return string the id that will represent the node in the path
      **/
@@ -39,14 +38,14 @@ interface NodeInterface
 
 
     /**
-     * @return NodeInterface the parent node
+     * @return LeafInterface the parent node
      **/
     function getParent();
 
     /**
      * @param string $path the materialized path, eg: the the materialized path to its parent
      *
-     * @return NodeInterface $this Fluent interface
+     * @return LeafInterface $this Fluent interface
      **/
     function setPath($path);
 
@@ -58,18 +57,18 @@ interface NodeInterface
      *    - Remove the this node from the children of the old parent
      *    - Modify the materialized path of this node and all its children, recursively
      *
-     * @param NodeInterface $node The node to use as a parent
+     * @param LeafInterface $node The node to use as a parent
      *
-     * @return NodeInterface $this Fluent interface
+     * @return LeafInterface $this Fluent interface
      **/
-    function setChildOf(NodeInterface $node);
+    function setChildOf(LeafInterface $node);
 
     /**
-     * @param NodeInterface the node to append to the children collection
+     * @param LeafInterface the node to append to the children collection
      *
-     * @return NodeInterface $this Fluent interface
+     * @return LeafInterface $this Fluent interface
      **/
-    function addChild(NodeInterface $node);
+    function addChild(LeafInterface $node);
 
     /**
      * @return Collection the children collection
@@ -78,11 +77,11 @@ interface NodeInterface
 
     /**
      * Tells if this node is a child of another node
-     * @param NodeInterface $node the node to compare with
+     * @param LeafInterface $node the node to compare with
      *
      * @return boolean true if this node is a direct child of $node
      **/
-    function isChildOf(NodeInterface $node);
+    function isChildOf(LeafInterface $node);
 
     /**
      *
@@ -91,7 +90,7 @@ interface NodeInterface
     function getLevel();
 
     /**
-     * Builds a hierarchical tree from a flat collection of NodeInterface elements
+     * Builds a hierarchical tree from a flat collection of LeafInterface elements
      *
      * @return void
      **/

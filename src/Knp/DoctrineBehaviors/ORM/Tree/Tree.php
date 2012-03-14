@@ -1,6 +1,6 @@
 <?php
 
-namespace Knp\DoctrineBehaviors\ORM\Tree\Repository;
+namespace Knp\DoctrineBehaviors\ORM\Tree;
 
 trait Tree
 {
