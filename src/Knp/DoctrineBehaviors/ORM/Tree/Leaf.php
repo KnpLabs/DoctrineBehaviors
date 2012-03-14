@@ -104,11 +104,11 @@ trait Leaf
     public function getParentPath()
     {
         $path = $this->getExplodedPath();
-        \array_pop($path);
+        array_pop($path);
 
-        $parent_path = \implode(static::getPathSeparator(), $path);
+        $parent_path = static::getPathSeparator().implode(static::getPathSeparator(), $path);
 
-        return $parent_path ?: static::getPathSeparator();
+        return $parent_path;
     }
 
     /**
