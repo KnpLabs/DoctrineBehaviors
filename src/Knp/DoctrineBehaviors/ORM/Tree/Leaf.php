@@ -192,8 +192,10 @@ trait Leaf
             $tree[$node->getPath()] = $node;
 
             $parent = isset($tree[$node->getParentPath()]) ? $tree[$node->getParentPath()] : $this; // root is the fallback parent
-            $parent->addChild($node);
-            $node->setParent($parent);
+            if ($parent !== $node) {
+                $parent->addChild($node);
+                $node->setParent($parent);
+            }
         }
     }
 
