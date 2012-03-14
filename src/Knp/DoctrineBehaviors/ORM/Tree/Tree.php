@@ -4,11 +4,14 @@ namespace Knp\DoctrineBehaviors\ORM\Tree;
 
 trait Tree
 {
-    public function getRootNodes($rootAlias = 't', $pathSeparator = '/')
+    public function getRootNodes($rootAlias = 't')
     {
+        $class         = $this->getClassName();
+        $pathSeparator = $class::getPathSeparator();
+
         $qb = $this->createQueryBuilder($rootAlias)
-            ->andWhere($rootAlias.'.path NOT LIKE :path')
-            ->setParameter('path', sprintf('%s%%s%', $pathSeparator, $pathSeparator))
+            ->andWhere($rootAlias.'.path NOT LIKE :separator')
+            ->setParameter('separator', $pathSeparator.'%')
         ;
 
         return $qb->getQuery()->execute();

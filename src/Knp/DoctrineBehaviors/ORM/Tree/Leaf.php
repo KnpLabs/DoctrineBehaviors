@@ -80,8 +80,8 @@ trait Leaf
             throw new \LogicException('You must provide an id for this node if you want it to be part of a tree.');
         }
 
-        $path = rtrim($node->getPath(), $this->getPathSeparator());
-        $this->setPath($path . $this->getPathSeparator() . $this->getId());
+        $path = rtrim($node->getPath(), static::getPathSeparator());
+        $this->setPath($path . static::getPathSeparator() . $this->getId());
 
         if (null !== $this->parent) {
             $this->parent->getNodeChildren()->removeElement($this);
@@ -106,9 +106,9 @@ trait Leaf
         $path = $this->getExplodedPath();
         \array_pop($path);
 
-        $parent_path = \implode($this->getPathSeparator(), $path);
+        $parent_path = \implode(static::getPathSeparator(), $path);
 
-        return $parent_path ?: $this->getPathSeparator();
+        return $parent_path ?: static::getPathSeparator();
     }
 
     /**
@@ -142,7 +142,7 @@ trait Leaf
      **/
     public function getExplodedPath()
     {
-        $path = explode($this->getPathSeparator(), $this->getPath());
+        $path = explode(static::getPathSeparator(), $this->getPath());
 
         return array_filter($path, function($item) {
             return !empty($item);
@@ -165,7 +165,7 @@ trait Leaf
         $explodedPath = $this->getExplodedPath();
         array_shift($explodedPath); // first is empty
 
-        return $this->getPathSeparator() . array_shift($explodedPath);
+        return static::getPathSeparator() . array_shift($explodedPath);
     }
 
     /**
@@ -197,10 +197,16 @@ trait Leaf
         }
     }
 
-    public function getPathSeparator()
+    /**
+     * Returns path separator for entity's materialized path.
+     *
+     * @return string "/" by default
+     */
+    static public function getPathSeparator()
     {
         return '/';
     }
+
     /**
      * @param \Closure $prepare a function to prepare the node before putting into the result
      *
