@@ -14,6 +14,8 @@ trait SortableEntity
      */
     private $sort = 1;
 
+    private $reordered = false;
+
     /**
      * Get sort.
      *
@@ -31,7 +33,17 @@ trait SortableEntity
      */
     public function setSort($sort)
     {
-        $this->sort = $sort;
+        $this->reordered = $this->sort !== $sort;
+        $this->sort      = $sort;
+    }
+
+    public function isReordered()
+    {
+        return $this->reordered;
+    }
+
+    public function setReordered()
+    {
+        $this->reordered = true;
     }
 }
-

@@ -6,9 +6,9 @@ use Doctrine\ORM\QueryBuilder;
 
 trait SortableRepository
 {
-    public function setSortPosition($entity, $position)
+    public function reorderEntity($entity)
     {
-        if ($entity->getSort() === $position) {
+        if (!$entity->isReordered()) {
             return;
         }
 
@@ -16,9 +16,9 @@ trait SortableRepository
             ->update($this->getEntityName(), 'e')
             ->set('e.sort', 'e.sort + 1')
             ->andWhere('e.sort >= :sort')
-            ->setParameter('sort', $position)
+            ->setParameter('sort', $entity->getSort())
         ;
-        $entity->setSort($position);
+        $entity->setReordered();
 
         $this->addSortingScope($qb, $entity);
 
