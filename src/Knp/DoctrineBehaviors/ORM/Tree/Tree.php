@@ -31,6 +31,14 @@ trait Tree
         return $root;
     }
 
+    public function getTreeExceptNodeAndItsChildrenQB($entity, $rootAlias = 't')
+    {
+        return $this->getFlatTreeQB('', $rootAlias)
+            ->andWhere($rootAlias.'.path NOT LIKE :except_path')
+            ->setParameter('except_path', $entity->getPath().'%')
+        ;
+    }
+
     public function getFlatTreeQB($path, $rootAlias = 't')
     {
         return $this->createQueryBuilder($rootAlias)

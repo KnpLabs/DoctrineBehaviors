@@ -133,6 +133,7 @@ trait Leaf
     public function setParent(LeafInterface $node)
     {
         $this->parent = $node;
+        $this->setChildOf($this->parent);
 
         return $this;
     }
