@@ -5,6 +5,7 @@ namespace Knp\DoctrineBehaviors\ORM\Tree;
 use Knp\DoctrineBehaviors\ORM\Tree\NodeInterface;
 
 use Doctrine\Common\Collections\Collection;
+use Doctrine\Common\Collections\ArrayCollection;
 
 /*
  * @author     Florian Klein <florian.klein@free.fr>
@@ -50,15 +51,7 @@ trait Node
      **/
     public function getNodeChildren()
     {
-        return $this->children;
-    }
-
-    /**
-     * {@inheritdoc}
-     **/
-    public function setNodeChildren(Collection $children)
-    {
-        $this->children = $children;
+        return $this->children = $this->children ?: new ArrayCollection;
     }
 
     /**
@@ -66,7 +59,7 @@ trait Node
      **/
     public function addChild(NodeInterface $node)
     {
-        $this->children->add($node);
+        $this->getNodeChildren()->add($node);
     }
 
     /**
@@ -87,7 +80,8 @@ trait Node
             throw new \LogicException('You must provide an id for this node if you want it to be part of a tree.');
         }
 
-        $this->setPath($node->getPath() . static::PATH_SEPARATOR . $this->getId());
+        $path = rtrim($node->getPath(), $this->getPathSeparator());
+        $this->setPath($path . $this->getPathSeparator() . $this->getId());
 
         if (null !== $this->parent) {
             $this->parent->getNodeChildren()->removeElement($this);
@@ -112,9 +106,9 @@ trait Node
         $path = $this->getExplodedPath();
         \array_pop($path);
 
-        $parent_path = \implode(static::PATH_SEPARATOR, $path);
+        $parent_path = \implode($this->getPathSeparator(), $path);
 
-        return $parent_path ?: static::PATH_SEPARATOR;
+        return $parent_path ?: $this->getPathSeparator();
     }
 
     /**
@@ -148,7 +142,7 @@ trait Node
      **/
     public function getExplodedPath()
     {
-        return \explode(static::PATH_SEPARATOR, $this->getPath());
+        return \explode($this->getPathSeparator(), $this->getPath());
     }
 
     /**
@@ -167,7 +161,7 @@ trait Node
         $explodedPath = $this->getExplodedPath();
         array_shift($explodedPath); // first is empty
 
-        return static::PATH_SEPARATOR . array_shift($explodedPath);
+        return $this->getPathSeparator() . array_shift($explodedPath);
     }
 
     /**
@@ -199,6 +193,10 @@ trait Node
         }
     }
 
+    public function getPathSeparator()
+    {
+        return '/';
+    }
     /**
      * @param \Closure $prepare a function to prepare the node before putting into the result
      *
@@ -271,16 +269,26 @@ trait Node
 
     public function offsetExists($offset)
     {
-        return isset($this->children[$offset]);
+        return isset($this->getNodeChildren()[$offset]);
     }
 
     public function offsetUnset($offset)
     {
-        unset($this->children[$offset]);
+        unset($this->getNodeChildren()[$offset]);
     }
 
     public function offsetGet($offset)
     {
-        return $this->children[$offset];
+        return $this->getNodeChildren()[$offset];
+    }
+
+
+    /**
+     * @ORM\PrePersist
+     * @ORM\PreUpdate
+     */
+    public function updateDefaultTreePath()
+    {
+        $this->path = $this->path ?: $this->getPathSeparator();
     }
 }

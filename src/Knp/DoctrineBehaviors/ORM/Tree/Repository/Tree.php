@@ -2,7 +2,7 @@
 
 namespace Knp\DoctrineBehaviors\ORM\Tree\Repository;
 
-trait Node
+trait Tree
 {
     public function getRootNodes($rootAlias = 't', $pathSeparator = '/')
     {
