@@ -23,9 +23,9 @@ trait Leaf
     private $parent;
 
     /**
-     * @ORM\Column(type="string", length=255, nullable=true)
+     * @ORM\Column(type="string", length=255)
      */
-    private $path;
+    private $path = '';
 
     /**
      * {@inheritdoc}
@@ -142,7 +142,11 @@ trait Leaf
      **/
     public function getExplodedPath()
     {
-        return \explode($this->getPathSeparator(), $this->getPath());
+        $path = explode($this->getPathSeparator(), $this->getPath());
+
+        return array_filter($path, function($item) {
+            return !empty($item);
+        });
     }
 
     /**
@@ -150,7 +154,7 @@ trait Leaf
      **/
     public function getLevel()
     {
-        return \count($this->getExplodedPath()) - 1;
+        return count($this->getExplodedPath());
     }
 
     /**
@@ -180,7 +184,7 @@ trait Leaf
     /**
      * {@inheritdoc}
      **/
-    public function buildTree(\Traversable $results)
+    public function buildTree(array $results)
     {
         $tree = array($this->getPath() => $this);
         foreach($results as $node) {
@@ -280,15 +284,5 @@ trait Leaf
     public function offsetGet($offset)
     {
         return $this->getNodeChildren()[$offset];
-    }
-
-
-    /**
-     * @ORM\PrePersist
-     * @ORM\PreUpdate
-     */
-    public function updateDefaultTreePath()
-    {
-        $this->path = $this->path ?: $this->getPathSeparator();
     }
 }

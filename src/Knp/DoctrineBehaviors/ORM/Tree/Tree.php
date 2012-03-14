@@ -14,12 +14,15 @@ trait Tree
         return $qb->getQuery()->execute();
     }
 
-    public function getTree($path, $rootAlias = 't')
+    public function getTree($path = '', $rootAlias = 't')
     {
         $results = $this->getFlatTree($path, $rootAlias);
 
-        //die(var_dump(count($results)));
-        $root = $results->next();
+        if (!count($results)) {
+            return;
+        }
+
+        $root = $results[0];
         $root->buildTree($results);
 
         return $root;
@@ -39,7 +42,7 @@ trait Tree
         return $this
             ->getFlatTreeQB($path, $rootAlias)
             ->getQuery()
-            ->iterate()
+            ->execute()
         ;
     }
 }

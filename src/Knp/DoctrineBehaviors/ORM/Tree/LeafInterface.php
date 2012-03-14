@@ -94,6 +94,6 @@ interface LeafInterface
      *
      * @return void
      **/
-    function buildTree(\Traversable $nodes);
+    function buildTree(array $nodes);
 }
 
