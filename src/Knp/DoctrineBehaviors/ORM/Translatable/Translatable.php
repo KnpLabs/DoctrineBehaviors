@@ -28,7 +28,7 @@ trait Translatable
         }
 
         $class       = get_class($this).'Translation';
-        $translation = new $class($locale);
+        $translation = new $class($this, $locale);
 
         $this->getTranslations()->add($translation);
 
