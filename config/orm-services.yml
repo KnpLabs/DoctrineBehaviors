@@ -1,0 +1,16 @@
+parameters:
+    knp.doctrine_behaviors.translatable_listener.class: Knp\DoctrineBehaviors\ORM\Translatable\TranslatableListener
+    knp.doctrine_behaviors.softdeletable_listener.class: Knp\DoctrineBehaviors\ORM\SoftDeletable\SoftDeletableListener
+
+services:
+    knp.doctrine_behaviors.translatable_listener:
+        class:   %knp.doctrine_behaviors.translatable_listener.class%
+        public:  false
+        tags:
+            - { name: doctrine.event_subscriber }
+
+    knp.doctrine_behaviors.softdeletable_listener:
+        class:   %knp.doctrine_behaviors.softdeletable_listener.class%
+        public:  false
+        tags:
+            - { name: doctrine.event_subscriber }
