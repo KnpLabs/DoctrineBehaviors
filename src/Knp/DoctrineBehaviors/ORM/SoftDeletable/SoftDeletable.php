@@ -1,8 +1,6 @@
 <?php
 
-namespace Knp\DoctrineBehaviors\ORM;
-
-use Doctrine\ORM\Mapping as ORM;
+namespace Knp\DoctrineBehaviors\ORM\SoftDeletable;
 
 trait SoftDeletable
 {

@@ -1,6 +1,6 @@
 <?php
 
-namespace Knp\DoctrineBehaviors\ORM\Listener;
+namespace Knp\DoctrineBehaviors\ORM\SoftDeletable;
 
 use Doctrine\Common\EventSubscriber,
     Doctrine\ORM\Event\LifecycleEventArgs,
