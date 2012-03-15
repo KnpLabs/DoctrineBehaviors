@@ -11,14 +11,15 @@ class TranslatableListener implements EventSubscriber
     public function loadClassMetadata(LoadClassMetadataEventArgs $eventArgs)
     {
         $classMetadata = $eventArgs->getClassMetadata();
-        if (in_array('Knp\DoctrineBehaviors\ORM\Translation\Translatable', $classMetadata->reflClass->getTraitNames())) {
+        if (in_array('Knp\DoctrineBehaviors\ORM\Translatable\Translatable', $classMetadata->reflClass->getTraitNames())) {
             $classMetadata->mapOneToMany([
                 'fieldName'    => 'translations',
                 'mappedBy'     => 'translatable',
+                'cascade'      => ['persist', 'merge', 'remove'],
                 'targetEntity' => $classMetadata->name.'Translation'
             ]);
         }
-        if (in_array('Knp\DoctrineBehaviors\ORM\Translation\Translation', $classMetadata->reflClass->getTraitNames())) {
+        if (in_array('Knp\DoctrineBehaviors\ORM\Translatable\Translation', $classMetadata->reflClass->getTraitNames())) {
             $classMetadata->mapManyToOne([
                 'fieldName'    => 'translatable',
                 'inversedBy'   => 'translations',
