@@ -19,6 +19,21 @@ trait Translatable
 
     public function translate($locale)
     {
+        if ($translation = $this->findTranslationByLocale($locale)) {
+            return $translation;
+        }
+
+        $class       = get_class($this).'Translation';
+        $translation = new $class();
+        $translation->setLocale($locale);
+
+        $this->addTranslation($translation);
+
+        return $translation;
+    }
+
+    public function findTranslationByLocale($locale)
+    {
         $translations = $this->getTranslations()->filter(function($translation) use ($locale) {
             return $locale === $translation->getLocale();
         });
@@ -26,12 +41,16 @@ trait Translatable
         if (count($translations)) {
             return $translations[0];
         }
+    }
 
-        $class       = get_class($this).'Translation';
-        $translation = new $class($this, $locale);
-
+    public function addTranslation($translation)
+    {
+        $translation->setTranslatable($this);
         $this->getTranslations()->add($translation);
+    }
 
-        return $translation;
+    public function removeTranslation($translation)
+    {
+        $this->getTranslations()->removeElement($translation);
     }
 }

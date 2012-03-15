@@ -26,6 +26,10 @@ class TranslatableListener implements EventSubscriber
                 // remove "Translation" suffix:
                 'targetEntity' => substr($classMetadata->name, 0, -11)
             ]);
+
+            $classMetadata->setPrimaryTable([
+                'uniqueConstraints' => [[ 'name' => $classMetadata->getTableName().'_unique_translation', 'columns' => ['translatable_id', 'locale' ] ]],
+            ]);
         }
     }
 

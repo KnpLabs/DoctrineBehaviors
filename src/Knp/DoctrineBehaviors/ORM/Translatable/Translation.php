@@ -24,12 +24,6 @@ trait Translation
      */
     protected $translatable;
 
-    public function __construct($translatable, $locale)
-    {
-        $this->translatable = $translatable;
-        $this->locale       = $locale;
-    }
-
     /**
      * Get id.
      *
@@ -48,5 +42,15 @@ trait Translation
     public function getLocale()
     {
         return $this->locale;
+    }
+
+    public function setLocale($locale)
+    {
+        $this->locale = $locale;
+    }
+
+    public function setTranslatable($translatable)
+    {
+        $this->translatable = $translatable;
     }
 }
