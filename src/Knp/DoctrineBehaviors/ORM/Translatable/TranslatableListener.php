@@ -1,10 +1,9 @@
 <?php
 
-namespace Knp\DoctrineBehaviors\ORM\Translation;
+namespace Knp\DoctrineBehaviors\ORM\Translatable;
 
-use Doctrine\ORM\Event\LoadClassMetadataEventArgs;
-
-use Doctrine\Common\EventSubscriber,
+use Doctrine\ORM\Event\LoadClassMetadataEventArgs,
+    Doctrine\Common\EventSubscriber,
     Doctrine\ORM\Events;
 
 class TranslatableListener implements EventSubscriber
@@ -14,17 +13,17 @@ class TranslatableListener implements EventSubscriber
         $classMetadata = $eventArgs->getClassMetadata();
         if (in_array('Knp\DoctrineBehaviors\ORM\Translation\Translatable', $classMetadata->reflClass->getTraitNames())) {
             $classMetadata->mapOneToMany([
-                'targetEntity' => $classMetadata->name.'Translation',
-                'fieldName' => 'translations',
-                'mappedBy' => 'translatable'
+                'fieldName'    => 'translations',
+                'mappedBy'     => 'translatable',
+                'targetEntity' => $classMetadata->name.'Translation'
             ]);
         }
         if (in_array('Knp\DoctrineBehaviors\ORM\Translation\Translation', $classMetadata->reflClass->getTraitNames())) {
             $classMetadata->mapManyToOne([
+                'fieldName'    => 'translatable',
+                'inversedBy'   => 'translations',
                 // remove "Translation" suffix:
-                'targetEntity' => substr($classMetadata->name, 0, -11),
-                'fieldName' => 'translatable',
-                'inversedBy' => 'translations'
+                'targetEntity' => substr($classMetadata->name, 0, -11)
             ]);
         }
     }
