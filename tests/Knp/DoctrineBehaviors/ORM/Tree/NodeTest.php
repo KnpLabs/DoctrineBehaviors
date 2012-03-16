@@ -61,22 +61,38 @@ class NodeTest extends \PHPUnit_Framework_TestCase
     public function testBuildTree()
     {
         $root = $this->buildNode(array('setPath' => '/0'     , 'setName' => 'root'        , 'setId' => 0));
-        $flatTree = new \ArrayObject(array(
-            $this->buildNode(array('setPath' => '/0/1'       , 'setName' => 'Villes'      , 'setId' => 1)) ,
-            $this->buildNode(array('setPath' => '/0/1/2'     , 'setName' => 'Nantes'      , 'setId' => 2)) ,
-            $this->buildNode(array('setPath' => '/0/1/2/3'   , 'setName' => 'Nantes Est'  , 'setId' => 3)) ,
-            $this->buildNode(array('setPath' => '/0/1/2/4'   , 'setName' => 'Nantes Nord' , 'setId' => 4)) ,
-            $this->buildNode(array('setPath' => '/0/1/2/4/5' , 'setName' => 'St-Mihiel'   , 'setId' => 5)) ,
-        ));
+        $flatTree = array(
+            $this->buildNode(array('setPath' => '/0/1'       , 'setName' => 'Villes'      , 'setId' => 1)),
+            $this->buildNode(array('setPath' => '/0/1/2'     , 'setName' => 'Nantes'      , 'setId' => 2)),
+            $this->buildNode(array('setPath' => '/0/1/2/3'   , 'setName' => 'Nantes Est'  , 'setId' => 3)),
+            $this->buildNode(array('setPath' => '/0/1/2/4'   , 'setName' => 'Nantes Nord' , 'setId' => 4)),
+            $this->buildNode(array('setPath' => '/0/1/2/4/5' , 'setName' => 'St-Mihiel'   , 'setId' => 5)),
+        );
 
         $root->buildTree($flatTree);
+        $this->assertCount(1, $root->getNodeChildren());
 
-        $this->assertEquals(1, $root->getNodeChildren()->count());
-        $this->assertEquals(1, $root->getNodeChildren()->get(0)->getNodeChildren()->count());
-        $this->assertEquals(2, $root->getNodeChildren()->get(0)->getNodeChildren()->get(0)->getNodeChildren()->count());
+        $this->assertCount(1, $root->getNodeChildren()->first()->getNodeChildren());
+        $this->assertCount(2, $root->getNodeChildren()->first()->getNodeChildren()->first()->getNodeChildren());
 
         $this->assertEquals(1, $root->getLevel());
-        $this->assertEquals(4, $root->getNodeChildren()->get(0)->getNodeChildren()->get(0)->getNodeChildren()->get(0)->getLevel());
+        $this->assertEquals(4, $root->getNodeChildren()->first()->getNodeChildren()->first()->getNodeChildren()->first()->getLevel());
+    }
+
+    public function testIsRoot()
+    {
+        $tree = $this->buildTree();
+
+        $this->assertTrue($tree->getRoot()->isRoot());
+        $this->assertTrue($tree->isRoot());
+    }
+
+    public function testIsLeaf()
+    {
+        $tree = $this->buildTree();
+
+        $this->assertTrue($tree[0][0][0]->isLeaf());
+        $this->assertTrue($tree[1]->isLeaf());
     }
 
     public function testGetRoot()
@@ -189,7 +205,7 @@ class NodeTest extends \PHPUnit_Framework_TestCase
     {
         $tree = $this->buildTree();
 
-        $expected = array (
+        $expected = array(
           1 => '',
           2 => '----',
           4 => '------',

@@ -76,6 +76,16 @@ interface NodeInterface
     function getNodeChildren();
 
     /**
+     * @return bool if the node is a leaf (i.e has no children)
+     **/
+    function isLeaf();
+
+    /**
+     * @return bool if the node is a root (i.e has no parent)
+     **/
+    function isRoot();
+
+    /**
      * Tells if this node is a child of another node
      * @param NodeInterface $node the node to compare with
      *

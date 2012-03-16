@@ -10,6 +10,6 @@ use Doctrine\ORM\EntityRepository;
  */
 class TreeNodeEntityRepository extends EntityRepository
 {
-    use Tree\Repository\Node;
+    use Tree\Tree;
 }
 

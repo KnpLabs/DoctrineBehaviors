@@ -54,6 +54,16 @@ trait Node
         return $this->children = $this->children ?: new ArrayCollection;
     }
 
+    public function isLeaf()
+    {
+        return 0 === $this->getNodeChildren()->count();
+    }
+
+    public function isRoot()
+    {
+        return self::getPathSeparator() === $this->getParentPath();
+    }
+
     /**
      * {@inheritdoc}
      **/
@@ -146,7 +156,7 @@ trait Node
         $path = explode(static::getPathSeparator(), $this->getPath());
 
         return array_filter($path, function($item) {
-            return !empty($item);
+            return '' !== $item;
         });
     }
 
@@ -164,7 +174,6 @@ trait Node
     public function getRootPath()
     {
         $explodedPath = $this->getExplodedPath();
-        array_shift($explodedPath); // first is empty
 
         return static::getPathSeparator() . array_shift($explodedPath);
     }
