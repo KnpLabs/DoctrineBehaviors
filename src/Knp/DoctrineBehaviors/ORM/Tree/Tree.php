@@ -2,6 +2,8 @@
 
 namespace Knp\DoctrineBehaviors\ORM\Tree;
 
+use Doctrine\ORM\QueryBuilder;
+
 trait Tree
 {
     public function getRootNodes($rootAlias = 't')
@@ -41,11 +43,19 @@ trait Tree
 
     public function getFlatTreeQB($path, $rootAlias = 't')
     {
-        return $this->createQueryBuilder($rootAlias)
+        $qb = $this->createQueryBuilder($rootAlias)
             ->andWhere($rootAlias.'.path LIKE :path')
             ->addOrderBy($rootAlias.'.path', 'ASC')
             ->setParameter('path', $path.'%')
         ;
+
+        $this->addFlatTreeConditions($qb);
+
+        return $qb;
+    }
+
+    protected function addFlatTreeConditions(QueryBuilder $qb)
+    {
     }
 
     public function getFlatTree($path, $rootAlias = 't')
