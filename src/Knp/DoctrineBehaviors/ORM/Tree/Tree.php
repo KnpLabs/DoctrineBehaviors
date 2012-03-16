@@ -80,7 +80,7 @@ trait Tree
      *
      * @return QueryBuilder
      */
-    protected function getFlatTreeQB($path, $rootAlias = 't')
+    protected function getFlatTreeQB($path = '', $rootAlias = 't')
     {
         $qb = $this->createQueryBuilder($rootAlias)
             ->andWhere($rootAlias.'.path LIKE :path')
