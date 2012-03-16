@@ -2,7 +2,7 @@
 
 namespace Knp\DoctrineBehaviors\ORM\Tree;
 
-use Knp\DoctrineBehaviors\ORM\Tree\LeafInterface;
+use Knp\DoctrineBehaviors\ORM\Tree\NodeInterface;
 
 use Doctrine\Common\Collections\Collection;
 use Doctrine\Common\Collections\ArrayCollection;
@@ -10,7 +10,7 @@ use Doctrine\Common\Collections\ArrayCollection;
 /*
  * @author     Florian Klein <florian.klein@free.fr>
  */
-trait Leaf
+trait Node
 {
     /**
      * @param Collection the children in the tree
@@ -18,7 +18,7 @@ trait Leaf
     private $children;
 
     /**
-     * @param LeafInterface the parent in the tree
+     * @param NodeInterface the parent in the tree
      */
     private $parent;
 
@@ -57,7 +57,7 @@ trait Leaf
     /**
      * {@inheritdoc}
      **/
-    public function addChild(LeafInterface $node)
+    public function addChild(NodeInterface $node)
     {
         $this->getNodeChildren()->add($node);
     }
@@ -65,7 +65,7 @@ trait Leaf
     /**
      * {@inheritdoc}
      **/
-    public function isChildOf(LeafInterface $node)
+    public function isChildOf(NodeInterface $node)
     {
         return $this->getParentPath() === $node->getPath();
     }
@@ -73,7 +73,7 @@ trait Leaf
     /**
      * {@inheritdoc}
      **/
-    public function setChildOf(LeafInterface $node)
+    public function setChildOf(NodeInterface $node)
     {
         $id = $this->getId();
         if (empty($id)) {
@@ -130,7 +130,7 @@ trait Leaf
     /**
      * {@inheritdoc}
      **/
-    public function setParent(LeafInterface $node)
+    public function setParent(NodeInterface $node)
     {
         $this->parent = $node;
         $this->setChildOf($this->parent);
@@ -231,7 +231,7 @@ trait Leaf
     public function toArray(\Closure $prepare = null, array &$tree = null)
     {
         if(null === $prepare) {
-            $prepare = function(LeafInterface $node) {
+            $prepare = function(NodeInterface $node) {
                 return (string)$node;
             };
         }
@@ -256,7 +256,7 @@ trait Leaf
     public function toFlatArray(\Closure $prepare = null, array &$tree = null)
     {
         if(null === $prepare) {
-            $prepare = function(LeafInterface $node) {
+            $prepare = function(NodeInterface $node) {
                 $pre = $node->getLevel() > 1 ? implode('', array_fill(0, $node->getLevel(), '--')) : '';
                 return $pre.(string)$node;
             };
