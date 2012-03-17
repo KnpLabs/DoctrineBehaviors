@@ -38,9 +38,7 @@ trait Translatable
             return $locale === $translation->getLocale();
         });
 
-        if (count($translations)) {
-            return $translations[0];
-        }
+        return $translations->first();
     }
 
     public function addTranslation($translation)
