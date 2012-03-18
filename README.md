@@ -32,7 +32,7 @@ use Doctrine\ORM\Mapping as ORM;
 use Knp\DoctrineBehaviors as DoctrineBehaviors;
 
 /**
- * @ORM\Entity(repositoryClass="CategoryEntityRepository")
+ * @ORM\Entity(repositoryClass="CategoryRepository")
  */
 class Category implements DoctrineBehaviors\Tree\NodeInterface, \ArrayAccess
 {
@@ -60,7 +60,7 @@ For some behaviors like sortable and tree, you can use repository traits:
 use Doctrine\ORM\EntityRepository;
 use Knp\DoctrineBehaviors\ORM as DoctrineBehaviors;
 
-class CategroyRepository extends EntityRepository
+class CategoryRepository extends EntityRepository
 {
     use DoctrineBehaviors\Tree\Tree,
         DoctrineBehaviors\Sortable\SortableRepository;
@@ -99,7 +99,7 @@ You now have a working `Category` that behaves like:
 
  * translatable:
 
-Translatable behavior waits for a Categroy**Translation** entity.  
+Translatable behavior waits for a Category**Translation** entity.  
 This naming convention avoids you to handle manually entity associations. It is handled automatically by the TranslationListener.
 
 In order to use Translatable trait, you will have to create this entity.
