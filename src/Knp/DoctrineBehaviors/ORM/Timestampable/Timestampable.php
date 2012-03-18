@@ -1,6 +1,6 @@
 <?php
 
-namespace Knp\DoctrineBehaviors\ORM;
+namespace Knp\DoctrineBehaviors\ORM\Timestampable;
 
 trait Timestampable
 {
@@ -27,6 +27,7 @@ trait Timestampable
     }
 
     /**
+     * @ORM\PrePersist
      * @ORM\PreUpdate
      */
     public function updateUpdatedAt()
