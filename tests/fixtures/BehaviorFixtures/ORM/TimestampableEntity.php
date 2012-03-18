@@ -7,11 +7,10 @@ use Knp\DoctrineBehaviors\ORM as OrmBehaviors;
 
 /**
  * @ORM\Entity
- * @ORM\HasLifecycleCallbacks
  */
-class DeletableEntity
+class TimestampableEntity
 {
-    use OrmBehaviors\Timestampable;
+    use OrmBehaviors\Timestampable\Timestampable;
 
     /**
      * @ORM\Id
