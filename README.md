@@ -76,7 +76,7 @@ Voila!
 
 You now have a working `Category` that behaves like:
 
- * tree node:
+### tree node:
 
 ``` php
 
@@ -103,7 +103,7 @@ You now have a working `Category` that behaves like:
 
 ```
 
- * translatable:
+### translatable:
 
 Translatable behavior waits for a Category**Translation** entity.  
 This naming convention avoids you to handle manually entity associations. It is handled automatically by the TranslationListener.
@@ -166,7 +166,7 @@ Now you can work on translations using `translate` or `getTranslations` methods.
 
 ```
 
- * sortable:
+### sortable:
 
 ``` php
 
