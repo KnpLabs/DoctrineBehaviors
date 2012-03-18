@@ -21,7 +21,7 @@ class SoftDeletableTest extends \PHPUnit_Framework_TestCase
     {
         $em = new EventManager;
 
-        $em->addEventSubscriber(new \Knp\DoctrineBehaviors\ORM\Listener\SoftDeletableListener);
+        $em->addEventSubscriber(new \Knp\DoctrineBehaviors\ORM\SoftDeletable\SoftDeletableListener);
 
         return $em;
     }
@@ -43,6 +43,7 @@ class SoftDeletableTest extends \PHPUnit_Framework_TestCase
 
         $entity = $em->getRepository('BehaviorFixtures\ORM\DeletableEntity')->findOneById($id);
 
-        var_dump($entity);
+        $this->assertNotNull($entity);
+        $this->assertTrue($entity->isDeleted());
     }
 }
