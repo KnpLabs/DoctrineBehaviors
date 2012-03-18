@@ -41,7 +41,7 @@ class SoftDeletableTest extends \PHPUnit_Framework_TestCase
         $em->flush();
         $em->clear();
 
-        $entity = $em->getRepository('BehaviorFixtures\ORM\DeletableEntity')->findOneById($id);
+        $entity = $em->getRepository('BehaviorFixtures\ORM\DeletableEntity')->find($id);
 
         $this->assertNotNull($entity);
         $this->assertTrue($entity->isDeleted());
