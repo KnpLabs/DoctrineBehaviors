@@ -20,6 +20,11 @@ class TimestampableEntity
     private $id;
 
     /**
+     * @ORM\Column(type="string", nullable=true)
+     */
+    private $title;
+
+    /**
      * Returns object id.
      *
      * @return integer
@@ -27,5 +32,25 @@ class TimestampableEntity
     public function getId()
     {
         return $this->id;
+    }
+
+    /**
+     * Get title.
+     *
+     * @return title.
+     */
+    public function getTitle()
+    {
+        return $this->title;
+    }
+
+    /**
+     * Set title.
+     *
+     * @param title the value to set.
+     */
+    public function setTitle($title)
+    {
+        $this->title = $title;
     }
 }
