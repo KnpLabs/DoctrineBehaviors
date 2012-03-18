@@ -203,7 +203,7 @@ You can also register them using doctrine2 api:
 
 <?php
 
-$em->getEventManager()->addEventSubscriber(new \Knp\DoctrineBehaviors\ORM\Translatable\TranslationListener);
+$em->getEventManager()->addEventSubscriber(new \Knp\DoctrineBehaviors\ORM\Translatable\TranslatableListener);
 // register more if needed
 
 ```
