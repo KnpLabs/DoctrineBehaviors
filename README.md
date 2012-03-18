@@ -27,6 +27,8 @@ All you have to do is to define a Doctrine2 entity and use traits:
 
 ``` php
 
+<?php
+
 use Doctrine\ORM\Mapping as ORM;
 
 use Knp\DoctrineBehaviors as DoctrineBehaviors;
@@ -57,6 +59,8 @@ For some behaviors like sortable and tree, you can use repository traits:
 
 ``` php
 
+<?php
+
 use Doctrine\ORM\EntityRepository;
 use Knp\DoctrineBehaviors\ORM as DoctrineBehaviors;
 
@@ -75,6 +79,8 @@ You now have a working `Category` that behaves like:
  * tree node:
 
 ``` php
+
+<?php
 
     $category = new Category;
     $category->setId(1); // tree nodes need an id to construct path.
@@ -106,6 +112,8 @@ In order to use Translatable trait, you will have to create this entity.
 
 
 ``` php
+
+<?php
 
 use Doctrine\ORM\Mapping as ORM;
 
@@ -147,6 +155,8 @@ Now you can work on translations using `translate` or `getTranslations` methods.
 
 ``` php
 
+<?php
+
     $category = new Category;
     $category->translate('fr')->setName('Chaussures');
     $category->translate('en')->setName('Shoes');
@@ -159,6 +169,8 @@ Now you can work on translations using `translate` or `getTranslations` methods.
  * sortable:
 
 ``` php
+
+<?php
 
     $category = new Category;
     $em->persist($category);
@@ -173,3 +185,26 @@ Now you can work on translations using `translate` or `getTranslations` methods.
 
 
 ## Listeners
+
+If you use symfony2, you can easilly register them by importing a service definition file:
+
+``` yaml
+
+    # app/config/config.yml
+    imports:
+        - { resource: ../../vendor/knp-doctrine-behaviors/config/orm-services.yml }
+
+```
+
+You can also register them using doctrine2 api:
+
+
+``` php
+
+<?php
+
+$em->getEventManager()->addEventSubscriber(new \Knp\DoctrineBehaviors\ORM\Translatable\TranslationListener);
+// register more if needed
+
+```
+
