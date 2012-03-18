@@ -58,6 +58,8 @@ class TimestampableTest extends \PHPUnit_Framework_TestCase
         $em->clear();
 
         // TODO avoid this. maybe by storing microseconds ? :)
+        echo 'sleep(1)';
+        ob_flush();
         sleep(1); // needed to make diverge createdAt and updatedAt
 
         $entity = $em->getRepository('BehaviorFixtures\ORM\TimestampableEntity')->find($id);
