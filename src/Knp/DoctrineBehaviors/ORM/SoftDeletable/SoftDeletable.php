@@ -21,4 +21,9 @@ trait SoftDeletable
     {
         return null !== $this->deletedAt;
     }
+
+    public function getDeletedAt()
+    {
+        return $this->deletedAt;
+    }
 }
