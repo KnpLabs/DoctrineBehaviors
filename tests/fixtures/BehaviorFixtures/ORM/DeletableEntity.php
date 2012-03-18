@@ -7,11 +7,10 @@ use Knp\DoctrineBehaviors\ORM as OrmBehaviors;
 
 /**
  * @ORM\Entity
- * @ORM\HasLifecycleCallbacks
  */
 class DeletableEntity
 {
-    use OrmBehaviors\SoftDeletable;
+    use OrmBehaviors\SoftDeletable\SoftDeletable;
 
     /**
      * @ORM\Id
