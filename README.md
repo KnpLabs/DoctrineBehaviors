@@ -165,6 +165,29 @@ Now you can work on translations using `translate` or `getTranslations` methods.
 
 ```
 
+### soft-deletable
+
+``` php
+
+<?php
+
+    $category = new Category;
+    $em->persist($category);
+    $em->flush();
+
+    // get id
+    $id = $em->getId();
+
+    // now remove it
+    $em->remove($category);
+
+    // hey, i'm still here:
+    $category = $em->getRepository('Category')->findOneById($id);
+
+    // but i'm "deleted"
+    $category->isDeleted(); // === true
+```
+
 ### blameable
 
 ``` php
