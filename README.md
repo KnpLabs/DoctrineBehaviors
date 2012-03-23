@@ -6,7 +6,6 @@ that add behaviors to Doctrine2 entites and repositories.
 It currently handles:
 
  * tree
- * sortable
  * translatable
  * timestampable
  * softDeletable
@@ -44,7 +43,6 @@ class Category implements DoctrineBehaviors\Tree\NodeInterface, \ArrayAccess
         DoctrineBehaviors\Timestampable\Timestampable,
         DoctrineBehaviors\SoftDeletable\SoftDeletable,
         DoctrineBehaviors\Blameable\Blameable,
-        DoctrineBehaviors\Sortable\SortableEntity;
 
     /**
      * @ORM\Id
@@ -69,7 +67,6 @@ use Knp\DoctrineBehaviors\ORM as DoctrineBehaviors;
 class CategoryRepository extends EntityRepository
 {
     use DoctrineBehaviors\Tree\Tree,
-        DoctrineBehaviors\Sortable\SortableRepository;
 }
 
 ```
