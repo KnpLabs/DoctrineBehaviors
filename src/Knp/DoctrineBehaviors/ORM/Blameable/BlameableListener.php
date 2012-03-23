@@ -1,5 +1,14 @@
 <?php
 
+/**
+ * This file is part of the KnpDoctrineBehaviors package.
+ *
+ * (c) KnpLabs <http://knplabs.com/>
+ *
+ * For the full copyright and license information, please view the LICENSE
+ * file that was distributed with this source code.
+ */
+
 namespace Knp\DoctrineBehaviors\ORM\Blameable;
 
 use Doctrine\Common\Persistence\Mapping\ClassMetadata;
@@ -11,18 +20,45 @@ use Doctrine\Common\EventSubscriber,
     Doctrine\ORM\Event\OnFlushEventArgs,
     Doctrine\ORM\Events;
 
+/**
+ * BlameableListener handle Blameable entites
+ * Adds class metadata depending of user type (entity or string)
+ * Listens to prePersist and PreUpdate lifecycle events
+ */
 class BlameableListener implements EventSubscriber
 {
+    /**
+     * @var SecurityContextInterface|null
+     */
     private $securityContext;
+
+    /**
+     * @var UserInterface|string
+     */
     private $user;
+
+    /**
+     * userEntity name
+     */
     private $userEntity;
 
-    public function __construct(SecurityContext $securityContext = null, $userEntity = null)
+    /**
+     * @constructor
+     *
+     * @param SecurityContextInterface $securityContext
+     * @param string $userEntity
+     */
+    public function __construct(SecurityContextInterface $securityContext = null, $userEntity = null)
     {
         $this->securityContext = $securityContext;
         $this->userEntity = $userEntity;
     }
 
+    /**
+     * Adds metadata about how to store user, either a string or an ManyToOne association on UserInterface entity
+     *
+     * @param LoadClassMetadataEventArgs $eventArgs
+     */
     public function loadClassMetadata(LoadClassMetadataEventArgs $eventArgs)
     {
         $classMetadata = $eventArgs->getClassMetadata();
@@ -53,6 +89,11 @@ class BlameableListener implements EventSubscriber
         }
     }
 
+    /**
+     * Stores the current user into createdBy and updatedBy properties
+     *
+     * @param LifecycleEventArgs $eventArgs
+     */
     public function prePersist(LifecycleEventArgs $eventArgs)
     {
         $entity = $eventArgs->getEntity();
@@ -63,6 +104,11 @@ class BlameableListener implements EventSubscriber
         }
     }
 
+    /**
+     * Stores the current user into updatedBy property
+     *
+     * @param LifecycleEventArgs $eventArgs
+     */
     public function preUpdate(LifecycleEventArgs $eventArgs)
     {
         $entity = $eventArgs->getEntity();
@@ -72,11 +118,21 @@ class BlameableListener implements EventSubscriber
         }
     }
 
+    /**
+     * set a custome representation of current user
+     *
+     * @param mixed $user
+     */
     public function setUser($user)
     {
         $this->user = $user;
     }
 
+    /**
+     * get current user, either if $this->user is present or from SecurityContext
+     *
+     * @return mixed The user reprensentation
+     */
     public function getUser()
     {
         if (null !== $this->user) {
@@ -93,6 +149,12 @@ class BlameableListener implements EventSubscriber
         }
     }
 
+    /**
+     * Checks if entity supports Blameable
+     *
+     * @param ClassMetadata $classMetadata
+     * @return boolean
+     */
     private function isEntitySupported(ClassMetadata $classMetadata)
     {
         return in_array('Knp\DoctrineBehaviors\ORM\Blameable\Blameable', $classMetadata->reflClass->getTraitNames());
