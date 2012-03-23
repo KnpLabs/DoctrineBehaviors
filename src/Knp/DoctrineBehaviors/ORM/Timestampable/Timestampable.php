@@ -1,7 +1,21 @@
 <?php
 
+/*
+ * This file is part of the KnpDoctrineBehaviors package.
+ *
+ * (c) KnpLabs <http://knplabs.com/>
+ *
+ * For the full copyright and license information, please view the LICENSE
+ * file that was distributed with this source code.
+ */
+
 namespace Knp\DoctrineBehaviors\ORM\Timestampable;
 
+/**
+ * Timestampable trait.
+ *
+ * Should be used inside entity, that needs to be timestamped.
+ */
 trait Timestampable
 {
     /**
@@ -19,7 +33,7 @@ trait Timestampable
     private $updatedAt;
 
     /**
-     * @ORM\PrePersist
+     * Updates createdAt value.
      */
     public function updateCreatedAt()
     {
@@ -27,19 +41,28 @@ trait Timestampable
     }
 
     /**
-     * @ORM\PrePersist
-     * @ORM\PreUpdate
+     * Updates updatedAt value.
      */
     public function updateUpdatedAt()
     {
         $this->updatedAt = new \DateTime("now");
     }
 
+    /**
+     * Returns createdAt value.
+     *
+     * @return DateTime
+     */
     public function getCreatedAt()
     {
         return $this->createdAt;
     }
 
+    /**
+     * Returns updatedAt value.
+     *
+     * @return DateTime
+     */
     public function getUpdatedAt()
     {
         return $this->updatedAt;
