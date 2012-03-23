@@ -57,10 +57,8 @@ class TimestampableTest extends \PHPUnit_Framework_TestCase
         $createdAt = $entity->getCreatedAt();
         $em->clear();
 
-        // TODO avoid this. maybe by storing microseconds ? :)
-        echo 'sleep(1)';
-        ob_flush();
-        sleep(1); // needed to make diverge createdAt and updatedAt
+        // wait for a second:
+        sleep(1);
 
         $entity = $em->getRepository('BehaviorFixtures\ORM\TimestampableEntity')->find($id);
         $entity->setTitle('test'); // need to modify at least one column to trigger onUpdate
