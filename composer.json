@@ -23,7 +23,8 @@
     ],
     "require": {
         "php":              ">=5.3.2",
-        "doctrine/common":  ">=2.1"
+        "doctrine/common":  ">=2.1",
+        "symfony/security":  "2.0-dev"
     },
     "recommend": {
         "doctrine/orm":          ">=2.1",
