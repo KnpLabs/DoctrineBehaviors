@@ -8,6 +8,8 @@ require_once 'EntityManagerProvider.php';
 
 class BlameableTest extends \PHPUnit_Framework_TestCase
 {
+    private $listener;
+
     use EntityManagerProvider;
 
     protected function getUsedEntityFixtures()
@@ -18,24 +20,24 @@ class BlameableTest extends \PHPUnit_Framework_TestCase
         ];
     }
 
-    protected function getEventManager($userCallback = null, $userEntity = null)
+    protected function getEventManager($user = null, $userCallback = null, $userEntity = null)
     {
         $em = new EventManager;
 
-        $listener = new \Knp\DoctrineBehaviors\ORM\Blameable\BlameableListener(
+        $this->listener = new \Knp\DoctrineBehaviors\ORM\Blameable\BlameableListener(
             $userCallback,
             $userEntity
         );
-        $listener->setUser('user');
+        $this->listener->setUser($user);
 
-        $em->addEventSubscriber($listener);
+        $em->addEventSubscriber($this->listener);
 
         return $em;
     }
 
     public function testCreate()
     {
-        $em = $this->getEntityManager();
+        $em = $this->getEntityManager($this->getEventManager('user'));
 
         $entity = new \BehaviorFixtures\ORM\BlameableEntity();
 
@@ -48,7 +50,7 @@ class BlameableTest extends \PHPUnit_Framework_TestCase
 
     public function testUpdate()
     {
-        $em = $this->getEntityManager();
+        $em = $this->getEntityManager($this->getEventManager('user'));
 
         $entity = new \BehaviorFixtures\ORM\BlameableEntity();
 
@@ -83,34 +85,34 @@ class BlameableTest extends \PHPUnit_Framework_TestCase
         $user = new \BehaviorFixtures\ORM\UserEntity();
         $user->setUsername('user');
 
+        $user2 = new \BehaviorFixtures\ORM\UserEntity();
+        $user2->setUsername('user2');
+
         $userCallback = function() use($user) {
             return $user;
         };
 
-        $em = $this->getEntityManager($this->getEventManager($userCallback, get_class($user)));
+        $em = $this->getEntityManager($this->getEventManager(null, $userCallback, get_class($user)));
         $em->persist($user);
+        $em->persist($user2);
         $em->flush();
 
         $entity = new \BehaviorFixtures\ORM\BlameableEntity();
-
-        $listeners = $em->getEventManager()->getListeners()['preUpdate'];
-        $listener = array_pop($listeners);
-        $listener->setUser(null); // use securityContext
 
         $em->persist($entity);
         $em->flush();
         $id = $entity->getId();
         $createdBy = $entity->getCreatedBy();
-        $em->clear();
+        $this->listener->setUser($user2); // switch user for update
 
         $entity = $em->getRepository('BehaviorFixtures\ORM\BlameableEntity')->find($id);
         $entity->setTitle('test'); // need to modify at least one column to trigger onUpdate
         $em->flush();
         $em->clear();
 
-        $this->assertInstanceOf('BehaviorFixtures\\ORM\\UserEntity', $entity->getCreatedBy(), 'createdBy is constant');
+        $this->assertInstanceOf('BehaviorFixtures\\ORM\\UserEntity', $entity->getCreatedBy(), 'createdBy is a user object');
         $this->assertEquals($createdBy->getUsername(), $entity->getCreatedBy()->getUsername(), 'createdBy is constant');
-        $this->assertEquals($user->getUsername(), $entity->getUpdatedBy()->getUsername());
+        $this->assertEquals($user2->getUsername(), $entity->getUpdatedBy()->getUsername());
 
         $this->assertNotEquals(
             $entity->getCreatedBy(),
