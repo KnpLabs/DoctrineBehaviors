@@ -31,18 +31,18 @@ All you have to do is to define a Doctrine2 entity and use traits:
 
 use Doctrine\ORM\Mapping as ORM;
 
-use Knp\DoctrineBehaviors as DoctrineBehaviors;
+use Knp\DoctrineBehaviors\ORM as ORMBehaviors;
 
 /**
  * @ORM\Entity(repositoryClass="CategoryRepository")
  */
-class Category implements DoctrineBehaviors\Tree\NodeInterface, \ArrayAccess
+class Category implements ORMBehaviors\Tree\NodeInterface, \ArrayAccess
 {
-    use DoctrineBehaviors\Tree\Node,
-        DoctrineBehaviors\Translatable\Translatable,
-        DoctrineBehaviors\Timestampable\Timestampable,
-        DoctrineBehaviors\SoftDeletable\SoftDeletable,
-        DoctrineBehaviors\Blameable\Blameable,
+    use ORMBehaviors\Tree\Node,
+        ORMBehaviors\Translatable\Translatable,
+        ORMBehaviors\Timestampable\Timestampable,
+        ORMBehaviors\SoftDeletable\SoftDeletable,
+        ORMBehaviors\Blameable\Blameable,
 
     /**
      * @ORM\Id
@@ -62,11 +62,11 @@ For some behaviors like sortable and tree, you can use repository traits:
 <?php
 
 use Doctrine\ORM\EntityRepository;
-use Knp\DoctrineBehaviors\ORM as DoctrineBehaviors;
+use Knp\DoctrineBehaviors\ORM as ORMBehaviors;
 
 class CategoryRepository extends EntityRepository
 {
-    use DoctrineBehaviors\Tree\Tree,
+    use ORMBehaviors\Tree\Tree,
 }
 
 ```
