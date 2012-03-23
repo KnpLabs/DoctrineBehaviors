@@ -55,7 +55,7 @@ class Category implements ORMBehaviors\Tree\NodeInterface, \ArrayAccess
 ```
 
 
-For some behaviors like sortable and tree, you can use repository traits:
+For some behaviors like tree, you can use repository traits:
 
 ``` php
 
@@ -162,23 +162,6 @@ Now you can work on translations using `translate` or `getTranslations` methods.
     $em->persist($category);
 
     $category->translate('en')->getName();
-
-```
-
-### sortable:
-
-``` php
-
-<?php
-
-    $category = new Category;
-    $em->persist($category);
-
-    $category2 = new Category;
-    $em->persist($category2);
-    $category2->setSort(2);
-
-    $em->getRepository('Category')->reorderEntity($category2);
 
 ```
 
