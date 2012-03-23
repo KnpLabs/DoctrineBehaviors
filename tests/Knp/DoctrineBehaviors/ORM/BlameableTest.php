@@ -22,7 +22,7 @@ class BlameableTest extends \PHPUnit_Framework_TestCase
     private function getSecurityContext($user)
     {
         $mock = $this
-            ->getMockBuilder('Symfony\Component\Security\Core\SecurityContext')
+            ->getMockBuilder('Symfony\Component\Security\Core\SecurityContextInterface')
             ->disableOriginalConstructor()
             ->getMock()
         ;

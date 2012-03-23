@@ -14,7 +14,7 @@ namespace Knp\DoctrineBehaviors\ORM\Blameable;
 use Doctrine\Common\Persistence\Mapping\ClassMetadata;
 use Doctrine\ORM\Event\LoadClassMetadataEventArgs;
 use Doctrine\ORM\Event\LifecycleEventArgs;
-use Symfony\Component\Security\Core\SecurityContext;
+use Symfony\Component\Security\Core\SecurityContextInterface;
 
 use Doctrine\Common\EventSubscriber,
     Doctrine\ORM\Event\OnFlushEventArgs,
