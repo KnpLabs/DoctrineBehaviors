@@ -34,7 +34,7 @@ class BlameableListener implements EventSubscriber
     private $userCallable;
 
     /**
-     * @var UserInterface|string
+     * @var mixed
      */
     private $user;
 
@@ -63,7 +63,7 @@ class BlameableListener implements EventSubscriber
     }
 
     /**
-     * Adds metadata about how to store user, either a string or an ManyToOne association on UserInterface entity
+     * Adds metadata about how to store user, either a string or an ManyToOne association on user entity
      *
      * @param LoadClassMetadataEventArgs $eventArgs
      */

@@ -19,19 +19,19 @@ namespace Knp\DoctrineBehaviors\ORM\Blameable;
 trait Blameable
 {
     /**
-     * Will be mapped to either string or UserInterface entity
+     * Will be mapped to either string or user entity
      * by BlameableListener
      */
     private $createdBy;
 
     /**
-     * Will be mapped to either string or UserInterface entity
+     * Will be mapped to either string or user entity
      * by BlameableListener
      */
     private $updatedBy;
 
     /**
-     * @param string|UserInterface the user representation
+     * @param mixed the user representation
      */
     public function setCreatedBy($user)
     {
@@ -39,7 +39,7 @@ trait Blameable
     }
 
     /**
-     * @param string|UserInterface the user representation
+     * @param mixed the user representation
      */
     public function setUpdatedBy($user)
     {
@@ -47,7 +47,7 @@ trait Blameable
     }
 
     /**
-     * @return string|UserInterface the user who created entity
+     * @return mixed the user who created entity
      */
     public function getCreatedBy()
     {
@@ -55,7 +55,7 @@ trait Blameable
     }
 
     /**
-     * @return string|UserInterface the user who last updated entity
+     * @return mixed the user who last updated entity
      */
     public function getUpdatedBy()
     {
