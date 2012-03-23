@@ -10,10 +10,11 @@ It currently handles:
  * translatable
  * timestampable
  * softDeletable
+ * blameable
 
 ## Notice:
 
-Some behaviors (translatable, timestampable, softDeletable) need Doctrine listeners in order to work.
+Some behaviors (translatable, timestampable, softDeletable, blameable) need Doctrine listeners in order to work.
 Make sure to activate them by reading the **Listeners** section.  
 Timestampable is a bit special in the sense it's only used to avoid having you to declare `hasLifecycleCallbacks` metadata.
 
@@ -42,6 +43,7 @@ class Category implements DoctrineBehaviors\Tree\NodeInterface, \ArrayAccess
         DoctrineBehaviors\Translatable\Translatable,
         DoctrineBehaviors\Timestampable\Timestampable,
         DoctrineBehaviors\SoftDeletable\SoftDeletable,
+        DoctrineBehaviors\Blameable\Blameable,
         DoctrineBehaviors\Sortable\SortableEntity;
 
     /**
@@ -183,6 +185,20 @@ Now you can work on translations using `translate` or `getTranslations` methods.
 
 ```
 
+### blameable
+
+``` php
+
+<?php
+
+    $category = new Category;
+    $em->persist($category);
+
+    // instances of UserInterface if configured with symfony2
+    $creator = $em->getCreatedBy();
+    $updater = $em->getUpdatedBy();
+
+```
 
 ## Listeners
 
