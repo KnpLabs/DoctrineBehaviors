@@ -1,9 +1,23 @@
 <?php
 
+/*
+ * This file is part of the KnpDoctrineBehaviors package.
+ *
+ * (c) KnpLabs <http://knplabs.com/>
+ *
+ * For the full copyright and license information, please view the LICENSE
+ * file that was distributed with this source code.
+ */
+
 namespace Knp\DoctrineBehaviors\ORM\Translatable;
 
 use Doctrine\Common\Collections\ArrayCollection;
 
+/**
+ * Translation trait.
+ *
+ * Should be used inside translation entity.
+ */
 trait Translation
 {
     /**
@@ -25,32 +39,52 @@ trait Translation
     protected $translatable;
 
     /**
-     * Get id.
+     * Returns translation ID.
      *
-     * @return id.
+     * @return integer The ID.
      */
     public function getId()
     {
         return $this->id;
     }
 
+    /**
+     * Sets entity, that this translation should be mapped to.
+     *
+     * @param Translatable $translatable The translatable
+     */
+    public function setTranslatable($translatable)
+    {
+        $this->translatable = $translatable;
+    }
+
+    /**
+     * Returns entity, that this translation is mapped to.
+     *
+     * @return Translatable
+     */
     public function getTranslatable()
     {
         return $this->translatable;
     }
 
-    public function getLocale()
-    {
-        return $this->locale;
-    }
-
+    /**
+     * Sets locale name for this translation.
+     *
+     * @param string $locale The locale
+     */
     public function setLocale($locale)
     {
         $this->locale = $locale;
     }
 
-    public function setTranslatable($translatable)
+    /**
+     * Returns this translation locale.
+     *
+     * @return string
+     */
+    public function getLocale()
     {
-        $this->translatable = $translatable;
+        return $this->locale;
     }
 }
