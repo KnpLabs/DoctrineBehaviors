@@ -11,10 +11,11 @@
 
 namespace Knp\DoctrineBehaviors\ORM\Blameable;
 
+use Symfony\Component\Security\Core\SecurityContextInterface;
+
 use Doctrine\Common\Persistence\Mapping\ClassMetadata;
 use Doctrine\ORM\Event\LoadClassMetadataEventArgs;
 use Doctrine\ORM\Event\LifecycleEventArgs;
-use Symfony\Component\Security\Core\SecurityContextInterface;
 
 use Doctrine\Common\EventSubscriber,
     Doctrine\ORM\Event\OnFlushEventArgs,
@@ -28,9 +29,9 @@ use Doctrine\Common\EventSubscriber,
 class BlameableListener implements EventSubscriber
 {
     /**
-     * @var SecurityContextInterface|null
+     * @var callable
      */
-    private $securityContext;
+    private $userCallable;
 
     /**
      * @var UserInterface|string
@@ -43,14 +44,21 @@ class BlameableListener implements EventSubscriber
     private $userEntity;
 
     /**
+     * map of already mapped entites
+     *
+     * @var array
+     */
+    private $map;
+
+    /**
      * @constructor
      *
-     * @param SecurityContextInterface $securityContext
+     * @param callable
      * @param string $userEntity
      */
-    public function __construct(SecurityContextInterface $securityContext = null, $userEntity = null)
+    public function __construct(callable $userCallable = null, $userEntity = null)
     {
-        $this->securityContext = $securityContext;
+        $this->userCallable = $userCallable;
         $this->userEntity = $userEntity;
     }
 
@@ -62,31 +70,43 @@ class BlameableListener implements EventSubscriber
     public function loadClassMetadata(LoadClassMetadataEventArgs $eventArgs)
     {
         $classMetadata = $eventArgs->getClassMetadata();
-        if ($this->isEntitySupported($classMetadata)) {
-            if ($this->userEntity) {
-                $classMetadata->mapManyToOne([
-                    'fieldName'    => 'createdBy',
-                    'targetEntity' => $this->userEntity,
-                ]);
-                $classMetadata->mapManyToOne([
-                    'fieldName'    => 'updatedBy',
-                    'targetEntity' => $this->userEntity,
-                ]);
-            }
-            else {
-                $classMetadata->mapField([
-                    'fieldName'  => 'createdBy',
-                    'type'       => 'string',
-                    'nullable'   => true,
-                ]);
-
-                $classMetadata->mapField([
-                    'fieldName'  => 'updatedBy',
-                    'type'       => 'string',
-                    'nullable'   => true,
-                ]);
-            }
+        if ($this->isEntitySupported($classMetadata->reflClass) and !$this->isAlreadyMapped($classMetadata)) {
+            $this->mapEntity($classMetadata);
         }
+    }
+
+    private function isAlreadyMapped(ClassMetadata $classMetadata)
+    {
+        return isset($this->maps[$classMetadata->reflClass->getName()]);
+    }
+
+    private function mapEntity(ClassMetadata $classMetadata)
+    {
+        if ($this->userEntity) {
+            $classMetadata->mapManyToOne([
+                'fieldName'    => 'createdBy',
+                'targetEntity' => $this->userEntity,
+            ]);
+            $classMetadata->mapManyToOne([
+                'fieldName'    => 'updatedBy',
+                'targetEntity' => $this->userEntity,
+            ]);
+        }
+        else {
+            $classMetadata->mapField([
+                'fieldName'  => 'createdBy',
+                'type'       => 'string',
+                'nullable'   => true,
+            ]);
+
+            $classMetadata->mapField([
+                'fieldName'  => 'updatedBy',
+                'type'       => 'string',
+                'nullable'   => true,
+            ]);
+        }
+
+        $this->map[$classMetadata->reflClass->getName()] = true;
     }
 
     /**
@@ -96,11 +116,21 @@ class BlameableListener implements EventSubscriber
      */
     public function prePersist(LifecycleEventArgs $eventArgs)
     {
+        $em =$eventArgs->getEntityManager();
+        $uow = $em->getUnitOfWork();
         $entity = $eventArgs->getEntity();
-        $classMetadata = $eventArgs->getEntityManager()->getClassMetadata(get_class($entity));
-        if ($this->isEntitySupported($classMetadata)) {
+
+        $classMetadata = $em->getClassMetadata(get_class($entity));
+        if ($this->isEntitySupported($classMetadata->reflClass)) {
             $entity->setCreatedBy($this->getUser());
             $entity->setUpdatedBy($this->getUser());
+
+            $uow->propertyChanged($entity, 'createdBy', null, $entity->getCreatedBy());
+            $uow->propertyChanged($entity, 'updatedBy', null, $entity->getUpdatedBy());
+            $uow->scheduleExtraUpdate($entity, [
+                'createdBy' => [null, $entity->getCreatedBy()],
+                'updatedBy' => [null, $entity->getUpdatedBy()],
+            ]);
         }
     }
 
@@ -111,10 +141,20 @@ class BlameableListener implements EventSubscriber
      */
     public function preUpdate(LifecycleEventArgs $eventArgs)
     {
+
+        $em =$eventArgs->getEntityManager();
+        $uow = $em->getUnitOfWork();
         $entity = $eventArgs->getEntity();
-        $classMetadata = $eventArgs->getEntityManager()->getClassMetadata(get_class($entity));
-        if ($this->isEntitySupported($classMetadata)) {
+
+        $classMetadata = $em->getClassMetadata(get_class($entity));
+        if ($this->isEntitySupported($classMetadata->reflClass)) {
+            $oldValue = $entity->getUpdatedBy();
             $entity->setUpdatedBy($this->getUser());
+
+            $uow->propertyChanged($entity, 'updatedBy', null, $entity->getUpdatedBy());
+            $uow->scheduleExtraUpdate($entity, [
+                'updatedBy' => [$oldValue, $entity->getUpdatedBy()],
+            ]);
         }
     }
 
@@ -129,7 +169,7 @@ class BlameableListener implements EventSubscriber
     }
 
     /**
-     * get current user, either if $this->user is present or from SecurityContext
+     * get current user, either if $this->user is present or from userCallable
      *
      * @return mixed The user reprensentation
      */
@@ -138,15 +178,13 @@ class BlameableListener implements EventSubscriber
         if (null !== $this->user) {
             return $this->user;
         }
-        if (null === $this->securityContext) {
+        if (null === $this->userCallable) {
             return;
         }
 
-        $token = $this->securityContext->getToken();
+        $callable = $this->userCallable;
 
-        if (null !== $token) {
-            return $token->getUser();
-        }
+        return $callable();
     }
 
     /**
@@ -155,9 +193,16 @@ class BlameableListener implements EventSubscriber
      * @param ClassMetadata $classMetadata
      * @return boolean
      */
-    private function isEntitySupported(ClassMetadata $classMetadata)
+    private function isEntitySupported(\ReflectionClass $reflClass)
     {
-        return in_array('Knp\DoctrineBehaviors\ORM\Blameable\Blameable', $classMetadata->reflClass->getTraitNames());
+        $isSupported = in_array('Knp\DoctrineBehaviors\ORM\Blameable\Blameable', $reflClass->getTraitNames());
+
+        /*while(!$isSupported and $reflClass->getParentClass()) {
+            $reflClass = $reflClass->getParentClass();
+            $isSupported = $this->isEntitySupported($reflClass);
+        }*/
+
+        return $isSupported;
     }
 
     public function getSubscribedEvents()

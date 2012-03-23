@@ -3,7 +3,6 @@
 namespace Tests\Knp\DoctrineBehaviors\ORM;
 
 use Doctrine\Common\EventManager;
-use Symfony\Component\Security\Core\Authentication\Token\UsernamePasswordToken;
 
 require_once 'EntityManagerProvider.php';
 
@@ -19,29 +18,12 @@ class BlameableTest extends \PHPUnit_Framework_TestCase
         ];
     }
 
-    private function getSecurityContext($user)
-    {
-        $mock = $this
-            ->getMockBuilder('Symfony\Component\Security\Core\SecurityContextInterface')
-            ->disableOriginalConstructor()
-            ->getMock()
-        ;
-        $token = new UsernamePasswordToken($user, 'password', '_');
-        $mock
-            ->expects($this->any())
-            ->method('getToken')
-            ->will($this->returnValue($token))
-        ;
-
-        return $mock;
-    }
-
-    protected function getEventManager($securityContext = null, $userEntity = null)
+    protected function getEventManager($userCallback = null, $userEntity = null)
     {
         $em = new EventManager;
 
         $listener = new \Knp\DoctrineBehaviors\ORM\Blameable\BlameableListener(
-            $securityContext,
+            $userCallback,
             $userEntity
         );
         $listener->setUser('user');
@@ -96,13 +78,16 @@ class BlameableTest extends \PHPUnit_Framework_TestCase
         );
     }
 
-    public function testListenerWithSecurityContext()
+    public function testListenerWithUserCallback()
     {
         $user = new \BehaviorFixtures\ORM\UserEntity();
         $user->setUsername('user');
 
-        $securityContext = $this->getSecurityContext($user);
-        $em = $this->getEntityManager($this->getEventManager($securityContext, get_class($user)));
+        $userCallback = function() use($user) {
+            return $user;
+        };
+
+        $em = $this->getEntityManager($this->getEventManager($userCallback, get_class($user)));
         $em->persist($user);
         $em->flush();
 
