@@ -4,12 +4,11 @@ namespace BehaviorFixtures\ORM;
 
 use Doctrine\ORM\Mapping as ORM;
 use Knp\DoctrineBehaviors\ORM as OrmBehaviors;
-use Symfony\Component\Security\Core\User\UserInterface;
 
 /**
  * @ORM\Entity
  */
-class UserEntity implements UserInterface
+class UserEntity
 {
     /**
      * @ORM\Id
@@ -23,21 +22,6 @@ class UserEntity implements UserInterface
      */
     private $username;
 
-    public function getRoles()
-    {
-        return [];
-    }
-
-    public function getPassword()
-    {
-        return '';
-    }
-
-    public function getSalt()
-    {
-        return '';
-    }
-
     public function getUsername()
     {
         return $this->username;
@@ -46,14 +30,5 @@ class UserEntity implements UserInterface
     public function setUsername($username)
     {
         $this->username = $username;
-    }
-
-    public function eraseCredentials()
-    {
-    }
-
-    public function equals(UserInterface $user)
-    {
-        return $this === $user;
     }
 }
