@@ -1,0 +1,27 @@
+<?php
+
+namespace Knp\DoctrineBehaviors\ORM\Geocodable;
+
+use Knp\DoctrineBehaviors\ORM\Geocodable\Type\Point;
+use Doctrine\ORM\QueryBuilder;
+
+trait GeocodableRepository
+{
+    public function findByDistanceQB(Point $point, $distanceMax)
+    {
+        return $this->createQueryBuilder('e')
+            ->andWhere('DISTANCE(e.location, :location) <= :distanceMax')
+            ->setParameter('location', $point)
+            ->setParameter('distanceMax', $distanceMax)
+        ;
+    }
+
+    public function findByDistance(Point $point, $distanceMax)
+    {
+        return $this->findByDistanceQB($entity, $distanceMax)
+            ->getQuery()
+            ->execute()
+        ;
+    }
+}
+

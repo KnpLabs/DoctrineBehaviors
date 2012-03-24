@@ -21,16 +21,16 @@ trait EntityManagerProvider
      * @param EventManager $evm
      * @return EntityManager
      */
-    protected function getEntityManager(EventManager $evm = null, Configuration $config = null)
+    protected function getEntityManager(EventManager $evm = null, Configuration $config = null, array $conn = [])
     {
         if (null !== $this->em) {
             return $this->em;
         }
 
-        $conn = array(
+        $conn = array_merge(array(
             'driver' => 'pdo_sqlite',
             'memory' => true,
-        );
+        ), $conn);
 
         $config = is_null($config) ? $this->getAnnotatedConfig() : $config;
         $em = EntityManager::create($conn, $config, $evm ?: $this->getEventManager());
@@ -62,7 +62,7 @@ trait EntityManagerProvider
         $mockMethods = array();
 
         foreach ($methods as $method) {
-            if ($method->name !== 'addFilter' && $method->name !== 'getFilterClassName') {
+            if (!in_array($method->name, ['addFilter', 'getFilterClassName', 'addCustomNumericFunction', 'getCustomNumericFunction'])) {
                 $mockMethods[] = $method->name;
             }
         }
