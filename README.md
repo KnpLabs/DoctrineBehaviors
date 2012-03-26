@@ -10,10 +10,11 @@ It currently handles:
  * timestampable
  * softDeletable
  * blameable
+ * geocodable
 
 ## Notice:
 
-Some behaviors (translatable, timestampable, softDeletable, blameable) need Doctrine listeners in order to work.
+Some behaviors (translatable, timestampable, softDeletable, blameable, geocodable) need Doctrine listeners in order to work.
 Make sure to activate them by reading the **Listeners** section.  
 Timestampable is a bit special in the sense it's only used to avoid having you to declare `hasLifecycleCallbacks` metadata.
 
@@ -200,6 +201,40 @@ Now you can work on translations using `translate` or `getTranslations` methods.
     // instances of UserInterface if configured with symfony2
     $creator = $em->getCreatedBy();
     $updater = $em->getUpdatedBy();
+
+```
+
+### geocodable
+
+Geocodable Provides extensions to Postrges platform in order to work with cube and earthdistance extensions.
+
+It allows you to query entities based on geographical coordinates.  
+It also provides an easy entry point to use 3rd party libraries like the exellent [geocoder](https://github.com/willdurand/Geocoder) to transform addresses into latitude and longitude.
+
+
+``` php
+
+<?php
+
+    $geocoder = new \Geocoder\Geocoder;
+    // register geocoder providers
+
+    // $listener instanceof GeocodableListener
+    $listener->setGeolocationCallable(function($entity) use($gecoder) {
+        $location = $geocoder->geocode($entity->getAddress());
+        $geocoder->setLocation(new Point(
+            $location->getLatitude(),
+            $location->getLongitude()
+        ));
+    });
+
+    $category = new Category;
+    $em->persist($category);
+
+    $location = $em->getLocation(); // instanceof Point
+
+    // find cities in a cricle of 500 km around point 47 lon., 7 lat.
+    $nearCities = $repository->findByDistance(new Point(47, 7), 500);
 
 ```
 
