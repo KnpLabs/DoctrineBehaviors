@@ -215,4 +215,9 @@ class BlameableListener implements EventSubscriber
 
         return $events;
     }
+
+    public function setUserCallable(callable $callable)
+    {
+        $this->userCallable = $callable;
+    }
 }
