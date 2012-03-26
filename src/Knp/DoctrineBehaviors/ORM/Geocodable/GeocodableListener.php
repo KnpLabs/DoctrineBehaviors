@@ -91,11 +91,12 @@ class GeocodableListener implements EventSubscriber
         $classMetadata = $em->getClassMetadata(get_class($entity));
         if ($this->isEntitySupported($classMetadata->reflClass)) {
 
+            $oldValue = $entity->getLocation();
             $entity->setLocation($this->getLocation($entity));
 
-            $uow->propertyChanged($entity, 'location', null, $entity->getLocation());
+            $uow->propertyChanged($entity, 'location', $oldValue, $entity->getLocation());
             $uow->scheduleExtraUpdate($entity, [
-                'location' => [null, $entity->getLocation()],
+                'location' => [$oldValue, $entity->getLocation()],
             ]);
         }
     }
@@ -105,7 +106,7 @@ class GeocodableListener implements EventSubscriber
      */
     public function preUpdate(LifecycleEventArgs $eventArgs)
     {
-        $this->preUpdate($EventArgs);
+        $this->prePersist($EventArgs);
     }
 
     /**

@@ -40,7 +40,7 @@ trait EntityManagerProvider
         }, (array)$this->getUsedEntityFixtures());
 
         $schemaTool = new SchemaTool($em);
-        $schemaTool->dropSchema(array());
+        $schemaTool->dropSchema($schema);
         $schemaTool->createSchema($schema);
         return $this->em = $em;
     }

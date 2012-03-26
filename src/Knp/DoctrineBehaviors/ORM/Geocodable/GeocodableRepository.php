@@ -18,7 +18,7 @@ trait GeocodableRepository
 
     public function findByDistance(Point $point, $distanceMax)
     {
-        return $this->findByDistanceQB($entity, $distanceMax)
+        return $this->findByDistanceQB($point, $distanceMax)
             ->getQuery()
             ->execute()
         ;
