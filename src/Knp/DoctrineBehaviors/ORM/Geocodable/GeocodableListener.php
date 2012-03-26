@@ -142,4 +142,9 @@ class GeocodableListener implements EventSubscriber
             Events::loadClassMetadata,
         ];
     }
+
+    public function setGeolocationCallable(callable $callable)
+    {
+        $this->geolocationCallable = $callable;
+    }
 }
