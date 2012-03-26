@@ -262,3 +262,11 @@ $em->getEventManager()->addEventSubscriber(new \Knp\DoctrineBehaviors\ORM\Transl
 
 ```
 
+## callables
+
+Callables are used by some listeners like blameable and geocodable to fill information based on 3rd party system.
+
+For example, the bleamable callable can be any symfony2 service that implements  `__invoke` method or any anonymous function, as soon as they return currently logged in user representation (which means everything, a User entity, a string, a username, ...). For an example of DI service that is invoked, look at the `Knp\DoctrineBehaviors\ORM\Blameable\UserCallable` class.
+
+In the case of geocodable, you can set it as any service that implements `__invoke` or anonymous function that returns a `Knp\DoctrineBehaviors\ORM\Geocodable\Type\Point` object.
+
