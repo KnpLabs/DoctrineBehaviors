@@ -3,7 +3,7 @@ parameters:
     knp.doctrine_behaviors.softdeletable_listener.class: Knp\DoctrineBehaviors\ORM\SoftDeletable\SoftDeletableListener
     knp.doctrine_behaviors.timestampable_listener.class: Knp\DoctrineBehaviors\ORM\Timestampable\TimestampableListener
     knp.doctrine_behaviors.blameable_listener.class: Knp\DoctrineBehaviors\ORM\Blameable\BlameableListener
-    knp.doctrine_behaviors.blameable_listener.user_callable: Knp\DoctrineBehaviors\ORM\Blameable\UserCallable
+    knp.doctrine_behaviors.blameable_listener.user_callable.class: Knp\DoctrineBehaviors\ORM\Blameable\UserCallable
     knp.doctrine_behaviors.blameable_listener.user_entity: ~
 
 services:
@@ -35,7 +35,7 @@ services:
             - { name: doctrine.event_subscriber }
 
     knp.doctrine_behaviors.blameable_listener.user_callable:
-        class:           %knp.doctrine_behaviors.blameable_listener.user_callable%
+        class:           %knp.doctrine_behaviors.blameable_listener.user_callable.class%
         arguments:
             - @service_container # because of circular dep
         public:  false
