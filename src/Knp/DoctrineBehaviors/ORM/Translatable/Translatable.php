@@ -24,7 +24,7 @@ trait Translatable
      * Will be mapped to translatable entity
      * by TranslatableListener
      */
-    protected $translations;
+    private $translations;
 
     /**
      * Returns collection of translations.
@@ -43,8 +43,8 @@ trait Translatable
      */
     public function addTranslation($translation)
     {
-        $translation->setTranslatable($this);
         $this->getTranslations()->add($translation);
+        $translation->setTranslatable($this);
     }
 
     /**
@@ -70,13 +70,23 @@ trait Translatable
             return $translation;
         }
 
-        $class       = get_class($this).'Translation';
+        $class       = self::getTranslationEntityClass();
         $translation = new $class();
         $translation->setLocale($locale);
 
         $this->addTranslation($translation);
 
         return $translation;
+    }
+
+    /**
+     * Returns translation entity class name.
+     *
+     * @return string
+     */
+    static public function getTranslationEntityClass()
+    {
+        return __CLASS__.'Translation';
     }
 
     /**
