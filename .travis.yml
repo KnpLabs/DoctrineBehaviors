@@ -6,10 +6,10 @@ php:
 before_script:
   - wget -nc http://getcomposer.org/composer.phar
   - php composer.phar install
-  - apt-get install -y postgresql-contrib-8.4
-  - psql -c 'create database orm_behaviors_test;' -U postgres
-  - psql -c 'create extension cube;' -U postgres orm_behaviors_test
-  - psql -c 'create extension earthdistance;' -U postgres orm_behaviors_test
+  - sudo apt-get install -y postgresql-contrib-8.4
+  - psql -U postgres -d storage -f /usr/share/postgresql/8.4/contrib/cube.sql
+  - psql -U postgres -d storage -f /usr/share/postgresql/8.4/contrib/earthdistance.sql
+  - createdb orm_behaviors_test
 
 script: phpunit
 
