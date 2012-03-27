@@ -19,34 +19,18 @@ namespace Knp\DoctrineBehaviors\ORM\Timestampable;
 trait Timestampable
 {
     /**
-     * @var datetime $createdAt
+     * @var DateTime $createdAt
      *
      * @ORM\Column(type="datetime")
      */
     private $createdAt;
 
     /**
-     * @var datetime $updatedAt
+     * @var DateTime $updatedAt
      *
      * @ORM\Column(type="datetime")
      */
     private $updatedAt;
-
-    /**
-     * Updates createdAt value.
-     */
-    public function updateCreatedAt()
-    {
-        $this->createdAt = new \DateTime("now");
-    }
-
-    /**
-     * Updates updatedAt value.
-     */
-    public function updateUpdatedAt()
-    {
-        $this->updatedAt = new \DateTime("now");
-    }
 
     /**
      * Returns createdAt value.
@@ -66,5 +50,17 @@ trait Timestampable
     public function getUpdatedAt()
     {
         return $this->updatedAt;
+    }
+
+    /**
+     * Updates createdAt and updatedAt timestamps.
+     */
+    public function updateTimestamps()
+    {
+        if (null === $this->createdAt) {
+            $this->createdAt = new \DateTime('now');
+        }
+
+        $this->updatedAt = new \DateTime('now');
     }
 }
