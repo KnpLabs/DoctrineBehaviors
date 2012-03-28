@@ -106,7 +106,7 @@ class GeocodableListener implements EventSubscriber
      */
     public function preUpdate(LifecycleEventArgs $eventArgs)
     {
-        $this->prePersist($EventArgs);
+        $this->prePersist($eventArgs);
     }
 
     /**
