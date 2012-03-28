@@ -5,6 +5,7 @@ parameters:
     knp.doctrine_behaviors.blameable_listener.class: Knp\DoctrineBehaviors\ORM\Blameable\BlameableListener
     knp.doctrine_behaviors.blameable_listener.user_callable.class: Knp\DoctrineBehaviors\ORM\Blameable\UserCallable
     knp.doctrine_behaviors.blameable_listener.user_entity: ~
+    knp.doctrine_behaviors.geocodable_listener.class: Knp\DoctrineBehaviors\ORM\Geocodable\GeocodableListener
 
 services:
     knp.doctrine_behaviors.translatable_listener:
