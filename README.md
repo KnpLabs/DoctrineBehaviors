@@ -43,6 +43,8 @@ class Category implements ORMBehaviors\Tree\NodeInterface, \ArrayAccess
         ORMBehaviors\Timestampable\Timestampable,
         ORMBehaviors\SoftDeletable\SoftDeletable,
         ORMBehaviors\Blameable\Blameable,
+        ORMBehaviors\Geocodable\Geocodable
+    ;
 
     /**
      * @ORM\Id
