@@ -5,7 +5,7 @@ that add behaviors to Doctrine2 entites and repositories.
 
 It currently handles:
 
- * tree
+ * [tree](#tree)
  * translatable
  * timestampable
  * softDeletable
@@ -75,7 +75,7 @@ Voila!
 
 You now have a working `Category` that behaves like:
 
-### tree node:
+### tree:<a id="tree"></a>
 
 ``` php
 
