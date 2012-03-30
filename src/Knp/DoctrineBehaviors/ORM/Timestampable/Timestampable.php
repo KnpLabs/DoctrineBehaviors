@@ -21,14 +21,14 @@ trait Timestampable
     /**
      * @var DateTime $createdAt
      *
-     * @ORM\Column(type="datetime")
+     * @ORM\Column(type="datetime", nullable=true)
      */
     private $createdAt;
 
     /**
      * @var DateTime $updatedAt
      *
-     * @ORM\Column(type="datetime")
+     * @ORM\Column(type="datetime", nullable=true)
      */
     private $updatedAt;
 
@@ -61,9 +61,6 @@ trait Timestampable
             $this->createdAt = new \DateTime('now');
         }
 
-        // update updatedAt only if getUpdatedAt is callable (public)
-        if (is_callable($this, 'getUpdatedAt')) {
-            $this->updatedAt = new \DateTime('now');
-        }
+        $this->updatedAt = new \DateTime('now');
     }
 }
