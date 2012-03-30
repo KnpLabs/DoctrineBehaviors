@@ -25,10 +25,7 @@ trait FilterableRepository
      *
      * @return array
      */
-    public function getLikeFilterColumns()
-    {
-        return [];
-    }
+    abstract public function getLikeFilterColumns();
 
     /**
      * Retrieve field which will be sorted using EQUAL
@@ -37,13 +34,12 @@ trait FilterableRepository
      *
      * @return array
      */
-    public function getEqualFilterColumns()
-    {
-        return [];
-    }
+    abstract public function getEqualFilterColumns();
 
     /**
-     * @param array $filters - array like ['e.name' => 'nameValue']
+     * Filter values
+     *
+     * @param array $filters - array like ['e:name' => 'nameValue'] where "e" is entity alias query, so we can filter using joins.
      * @return Doctrine\DBAL\Query\QueryBuilder
      */
     public function filterBy(array $filters)
