@@ -261,7 +261,7 @@ It also provides an easy entry point to use 3rd party libraries like the exellen
 
 ```
 
-<a name="listeners" id="listeners"></a>
+<a name="filterable" id="filterable"></a>
 ### filterable:
 
 Filterable can be used at the Repository level
@@ -341,6 +341,7 @@ Now we can filtering using:
     $products = $em->getRepository('Product')->filterBy(['o.code' => '21']);
 ```
 
+<a name="listeners" id="listeners"></a>
 ## Listeners
 
 If you use symfony2, you can easilly register them by importing a service definition file:
