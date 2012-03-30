@@ -16,7 +16,6 @@ It currently handles:
 
 Some behaviors (translatable, timestampable, softDeletable, blameable, geocodable) need Doctrine listeners in order to work.
 Make sure to activate them by reading the **Listeners** section.  
-Timestampable is a bit special in the sense it's only used to avoid having you to declare `hasLifecycleCallbacks` metadata.
 
 Traits are based on annotation driver.  
 You need to declare `use Doctrine\ORM\Mapping as ORM;` on top of your entity.
@@ -191,6 +190,22 @@ Now you can work on translations using `translate` or `getTranslations` methods.
 
 ### blameable
 
+Blameable is able to track creators and updators of a given entity.
+A blameable callable is used to get the current user from your application.
+
+In the case you are using a Doctrine Entity to represent your users, you can configure the listener
+to manage automatically the association between this user entity and your entites.
+
+Using symfony2, all you have to do is to configure the DI parameter named `%knp.doctrine_behaviors.blameable_listener.user_entity%` with a fully qualified namespace,
+for example:
+
+    # app/config/config.yml
+
+    parameters:
+        knp.doctrine_behaviors.blameable_listener.user_entity: AppBundle\Entity\User
+
+Then, you can use it like that:
+
 ``` php
 
 <?php
@@ -198,7 +213,7 @@ Now you can work on translations using `translate` or `getTranslations` methods.
     $category = new Category;
     $em->persist($category);
 
-    // instances of UserInterface if configured with symfony2
+    // instances of %knp.doctrine_behaviors.blameable_listener.user_entity%
     $creator = $em->getCreatedBy();
     $updater = $em->getUpdatedBy();
 
@@ -206,7 +221,7 @@ Now you can work on translations using `translate` or `getTranslations` methods.
 
 ### geocodable
 
-Geocodable Provides extensions to Postrges platform in order to work with cube and earthdistance extensions.
+Geocodable Provides extensions to PostgreSQL platform in order to work with cube and earthdistance extensions.
 
 It allows you to query entities based on geographical coordinates.  
 It also provides an easy entry point to use 3rd party libraries like the exellent [geocoder](https://github.com/willdurand/Geocoder) to transform addresses into latitude and longitude.
@@ -266,7 +281,8 @@ $em->getEventManager()->addEventSubscriber(new \Knp\DoctrineBehaviors\ORM\Transl
 
 Callables are used by some listeners like blameable and geocodable to fill information based on 3rd party system.
 
-For example, the bleamable callable can be any symfony2 service that implements  `__invoke` method or any anonymous function, as soon as they return currently logged in user representation (which means everything, a User entity, a string, a username, ...). For an example of DI service that is invoked, look at the `Knp\DoctrineBehaviors\ORM\Blameable\UserCallable` class.
+For example, the blameable callable can be any symfony2 service that implements  `__invoke` method or any anonymous function, as soon as they return currently logged in user representation (which means everything, a User entity, a string, a username, ...).
+For an example of DI service that is invoked, look at the `Knp\DoctrineBehaviors\ORM\Blameable\UserCallable` class.
 
 In the case of geocodable, you can set it as any service that implements `__invoke` or anonymous function that returns a `Knp\DoctrineBehaviors\ORM\Geocodable\Type\Point` object.
 
