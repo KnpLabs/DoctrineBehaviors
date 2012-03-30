@@ -11,6 +11,7 @@ It currently handles:
  * [softDeletable](#softDeletable)
  * [blameable](#blameable)
  * [geocodable](#geocodable)
+ * [filterable](#filterable)
 
 ## Notice:
 
@@ -258,6 +259,86 @@ It also provides an easy entry point to use 3rd party libraries like the exellen
     // find cities in a cricle of 500 km around point 47 lon., 7 lat.
     $nearCities = $repository->findByDistance(new Point(47, 7), 500);
 
+```
+
+<a name="filterable" id="filterable"></a>
+### filterable:
+
+Filterable can be used at the Repository level
+
+It allows to simple filter our result
+
+Joined filters example:
+
+```php
+<?php
+use Doctrine\ORM\Mapping as ORM;
+
+/**
+ * @ORM\Entity(repositoryClass="ProductRepository")
+ */
+class ProductEntity
+{
+
+    /**
+     * @ORM\Id
+     * @ORM\Column(type="integer")
+     * @ORM\GeneratedValue(strategy="AUTO")
+     */
+    private $id;
+
+    /**
+     * @ORM\Column(type="string", nullable=true)
+     */
+    private $name;
+
+    /**
+     * @ORM\Column(type="integer")
+     */
+    private $code;
+
+    /**
+     * @ORM\OneToMany(targetEntity="Order", mappedBy="product")
+     */
+    protected $orders;
+}
+```
+
+and repository:
+
+```php
+<?php
+
+use Knp\DoctrineBehaviors\ORM\Filterable;
+use Doctrine\ORM\EntityRepository;
+
+class ProductRepository extends EntityRepository
+{
+    use Filterable\FilterableRepository;
+
+    public function getLikeFilterColumns()
+    {
+        return ['e:name', 'o:code'];
+    }
+
+    public function getEqualFilterColumns()
+    {
+        return [];
+    }
+
+    protected function createFilterQueryBuilder()
+    {
+        return $this
+            ->createQueryBuilder('e')
+            ->leftJoin('e.orders', 'o');
+    }
+}
+```
+
+Now we can filtering using:
+
+```php
+    $products = $em->getRepository('Product')->filterBy(['o:code' => '21']);
 ```
 
 <a name="listeners" id="listeners"></a>
