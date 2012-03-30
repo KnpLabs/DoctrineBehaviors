@@ -75,7 +75,8 @@ Voila!
 
 You now have a working `Category` that behaves like:
 
-### tree:<a id="tree"></a>
+<a name="tree" id="tree"></a>
+### tree:
 
 ``` php
 
