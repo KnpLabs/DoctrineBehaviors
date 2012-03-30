@@ -61,6 +61,9 @@ trait Timestampable
             $this->createdAt = new \DateTime('now');
         }
 
-        $this->updatedAt = new \DateTime('now');
+        // update updatedAt only if getUpdatedAt is callable (public)
+        if (is_callable($this, 'getUpdatedAt')) {
+            $this->updatedAt = new \DateTime('now');
+        }
     }
 }
