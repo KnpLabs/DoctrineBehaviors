@@ -22,32 +22,31 @@ interface NodeInterface
      * @return string the materialized path,
      * eg the representation of path from all ancestors
      **/
-    function getPath();
+    function getMaterializedPath();
 
     /**
      * @return string the materialized path from the parent, eg: the representation of path from all parent ancestors
      **/
-    function getParentPath();
+    function getParentMaterializedPath();
 
     /**
      * Set parent path.
      *
      * @param path the value to set.
      */
-    function setParentPath($path);
-
+    function setParentMaterializedPath($path);
 
     /**
      * @return NodeInterface the parent node
      **/
-    function getParent();
+    function getParentNode();
 
     /**
      * @param string $path the materialized path, eg: the the materialized path to its parent
      *
      * @return NodeInterface $this Fluent interface
      **/
-    function setPath($path);
+    function setMaterializedPath($path);
 
     /**
      * Used to build the hierarchical tree.
@@ -73,17 +72,17 @@ interface NodeInterface
     /**
      * @return Collection the children collection
      **/
-    function getNodeChildren();
+    function getChildren();
 
     /**
      * @return bool if the node is a leaf (i.e has no children)
      **/
-    function isLeaf();
+    function isLeafNode();
 
     /**
      * @return bool if the node is a root (i.e has no parent)
      **/
-    function isRoot();
+    function isRootNode();
 
     /**
      * Tells if this node is a child of another node
@@ -97,7 +96,7 @@ interface NodeInterface
      *
      * @return integer the level of this node, eg: the depth compared to root node
      **/
-    function getLevel();
+    function getNodeLevel();
 
     /**
      * Builds a hierarchical tree from a flat collection of NodeInterface elements

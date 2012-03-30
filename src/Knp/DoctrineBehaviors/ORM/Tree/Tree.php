@@ -18,7 +18,7 @@ trait Tree
     public function getRootNodes($rootAlias = 't')
     {
         $class         = $this->getClassName();
-        $pathSeparator = $class::getPathSeparator();
+        $pathSeparator = $class::getMaterializedPathSeparator();
 
         $qb = $this->createQueryBuilder($rootAlias)
             ->andWhere($rootAlias.'.path NOT LIKE :separator')
@@ -48,7 +48,7 @@ trait Tree
     public function getTreeExceptNodeAndItsChildrenQB($entity, $rootAlias = 't')
     {
         return $this->getFlatTreeQB('', $rootAlias)
-            ->andWhere($rootAlias.'.path NOT LIKE :except_path')
+            ->andWhere($rootAlias.'.materializedPath NOT LIKE :except_path')
             ->setParameter('except_path', $entity->getPath().'%')
         ;
     }
@@ -83,8 +83,8 @@ trait Tree
     protected function getFlatTreeQB($path = '', $rootAlias = 't')
     {
         $qb = $this->createQueryBuilder($rootAlias)
-            ->andWhere($rootAlias.'.path LIKE :path')
-            ->addOrderBy($rootAlias.'.path', 'ASC')
+            ->andWhere($rootAlias.'.materializedPath LIKE :path')
+            ->addOrderBy($rootAlias.'.materializedPath', 'ASC')
             ->setParameter('path', $path.'%')
         ;
 
