@@ -11,6 +11,7 @@ It currently handles:
  * [softDeletable](#softDeletable)
  * [blameable](#blameable)
  * [geocodable](#geocodable)
+ * [filterable](#filterable)
 
 ## Notice:
 
@@ -261,6 +262,115 @@ It also provides an easy entry point to use 3rd party libraries like the exellen
 ```
 
 <a name="listeners" id="listeners"></a>
+### filterable:
+
+Filterable can be used at the Repository level
+
+It allows to simple filter our result
+
+Joined filters example:
+
+```php
+<?php
+use Doctrine\ORM\Mapping as ORM;
+
+/**
+ * @ORM\Entity(repositoryClass="ProductRepository")
+ */
+class ProductEntity
+{
+
+    /**
+     * @ORM\Id
+     * @ORM\Column(type="integer")
+     * @ORM\GeneratedValue(strategy="AUTO")
+     */
+    private $id;
+
+    /**
+     * @ORM\Column(type="string", nullable=true)
+     */
+    private $name;
+
+    /**
+     * @ORM\Column(type="integer")
+     */
+    private $code;
+
+    /**
+     * @ORM\OneToMany(targetEntity="Order", mappedBy="product")
+     */
+    protected $orders;
+
+    /**
+     * Returns object id.
+     *
+     * @return integer
+     */
+    public function getId()
+    {
+        return $this->id;
+    }
+
+    /**
+     * Get name.
+     *
+     * @return name.
+     */
+    public function getName()
+    {
+        return $this->name;
+    }
+
+    /**
+     * Set name.
+     *
+     * @param name the value to set.
+     */
+    public function setName($name)
+    {
+        $this->name = $name;
+    }
+}
+```
+
+and repository:
+
+```php
+<?php
+
+use Knp\DoctrineBehaviors\ORM\Filterable;
+use Doctrine\ORM\EntityRepository;
+
+class ProductRepository extends EntityRepository
+{
+    use Filterable\FilterableRepository;
+
+    public function getLikeFilterColumns()
+    {
+        return ['e:name', 'o:code'];
+    }
+
+    public function getEqualFilterColumns()
+    {
+        return [];
+    }
+
+    protected function createFilterQueryBuilder()
+    {
+        return $this
+            ->createQueryBuilder('e')
+            ->leftJoin('e.orders', 'o');
+    }
+}
+```
+
+Now we can filtering using:
+
+```php
+    $products = $em->getRepository('Product')->filterBy(['o.code' => '21']);
+```
+
 ## Listeners
 
 If you use symfony2, you can easilly register them by importing a service definition file:
