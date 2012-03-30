@@ -6,16 +6,16 @@ that add behaviors to Doctrine2 entites and repositories.
 It currently handles:
 
  * [tree](#tree)
- * translatable
- * timestampable
- * softDeletable
- * blameable
- * geocodable
+ * [translatable](#translatable)
+ * [timestampable](#timestampable)
+ * [softDeletable](#softDeletable)
+ * [blameable](#blameable)
+ * [geocodable](#geocodable)
 
 ## Notice:
 
 Some behaviors (translatable, timestampable, softDeletable, blameable, geocodable) need Doctrine listeners in order to work.
-Make sure to activate them by reading the **Listeners** section.  
+Make sure to activate them by reading the [Listeners](#listeners) section.  
 
 Traits are based on annotation driver.  
 You need to declare `use Doctrine\ORM\Mapping as ORM;` on top of your entity.
@@ -103,6 +103,7 @@ You now have a working `Category` that behaves like:
 
 ```
 
+<a name="translatable" id="translatable"></a>
 ### translatable:
 
 Translatable behavior waits for a Category**Translation** entity.  
@@ -166,6 +167,7 @@ Now you can work on translations using `translate` or `getTranslations` methods.
 
 ```
 
+<a name="softDeletable" id="softDeletable"></a>
 ### soft-deletable
 
 ``` php
@@ -189,10 +191,11 @@ Now you can work on translations using `translate` or `getTranslations` methods.
     $category->isDeleted(); // === true
 ```
 
+<a name="blameable" id="blameable"></a>
 ### blameable
 
 Blameable is able to track creators and updators of a given entity.
-A blameable callable is used to get the current user from your application.
+A blameable [callable](#callables) is used to get the current user from your application.
 
 In the case you are using a Doctrine Entity to represent your users, you can configure the listener
 to manage automatically the association between this user entity and your entites.
@@ -220,6 +223,7 @@ Then, you can use it like that:
 
 ```
 
+<a name="geocodable" id="geocodable"></a>
 ### geocodable
 
 Geocodable Provides extensions to PostgreSQL platform in order to work with cube and earthdistance extensions.
@@ -254,6 +258,7 @@ It also provides an easy entry point to use 3rd party libraries like the exellen
 
 ```
 
+<a name="listeners" id="listeners"></a>
 ## Listeners
 
 If you use symfony2, you can easilly register them by importing a service definition file:
@@ -278,6 +283,7 @@ $em->getEventManager()->addEventSubscriber(new \Knp\DoctrineBehaviors\ORM\Transl
 
 ```
 
+<a name="callables" id="callables"></a>
 ## callables
 
 Callables are used by some listeners like blameable and geocodable to fill information based on 3rd party system.
