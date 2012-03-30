@@ -338,7 +338,7 @@ class ProductRepository extends EntityRepository
 Now we can filtering using:
 
 ```php
-    $products = $em->getRepository('Product')->filterBy(['o.code' => '21']);
+    $products = $em->getRepository('Product')->filterBy(['o:code' => '21']);
 ```
 
 <a name="listeners" id="listeners"></a>
