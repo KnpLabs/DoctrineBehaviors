@@ -45,6 +45,11 @@ class TranslatableListener implements EventSubscriber
             $classMetadata->mapManyToOne([
                 'fieldName'    => 'translatable',
                 'inversedBy'   => 'translations',
+                'joinColumns'  => [[
+                    'name'                 => 'translatable_id',
+                    'referencedColumnName' => 'id',
+                    'onDelete'             => 'CASCADE'
+                ]],
                 'targetEntity' => substr($classMetadata->name, 0, -11)
             ]);
 
