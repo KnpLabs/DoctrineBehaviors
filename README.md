@@ -326,7 +326,7 @@ class ProductRepository extends EntityRepository
 
     public function getLikeFilterColumns()
     {
-        return ['e:name', 'o.code'];
+        return ['e:name', 'o:code'];
     }
 
     public function getEqualFilterColumns()
