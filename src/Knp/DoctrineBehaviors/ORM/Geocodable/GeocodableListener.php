@@ -110,7 +110,7 @@ class GeocodableListener implements EventSubscriber
     }
 
     /**
-     * @return mixed The user reprensentation
+     * @return Point the location
      */
     public function getLocation($entity)
     {
