@@ -301,36 +301,6 @@ class ProductEntity
      * @ORM\OneToMany(targetEntity="Order", mappedBy="product")
      */
     protected $orders;
-
-    /**
-     * Returns object id.
-     *
-     * @return integer
-     */
-    public function getId()
-    {
-        return $this->id;
-    }
-
-    /**
-     * Get name.
-     *
-     * @return name.
-     */
-    public function getName()
-    {
-        return $this->name;
-    }
-
-    /**
-     * Set name.
-     *
-     * @param name the value to set.
-     */
-    public function setName($name)
-    {
-        $this->name = $name;
-    }
 }
 ```
 
