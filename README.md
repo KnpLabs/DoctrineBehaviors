@@ -1,5 +1,8 @@
 # Doctrine2 Behaviors
 
+[![Build Status](https://secure.travis-ci.org/KnpLabs/DoctrineBehaviors.png)](http://travis-ci.org/KnpLabs/DoctrineBehaviors)
+
+
 This php 5.4+ library is a collection of traits 
 that add behaviors to Doctrine2 entites and repositories.
 
