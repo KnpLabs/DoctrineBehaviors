@@ -5,12 +5,12 @@
     "keywords": [
         "behaviors",
         "doctrine2",
-        "timestampable"
+        "timestampable",
         "translatable",
         "filterable",
         "blameable",
         "softdeletable",
-        "tree",
+        "tree"
     ],
     "homepage": "http://knplabs.com",
     "license": "MIT",
