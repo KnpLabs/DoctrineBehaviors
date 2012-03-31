@@ -246,7 +246,7 @@ It also provides an easy entry point to use 3rd party libraries like the exellen
     // register geocoder providers
 
     // $listener instanceof GeocodableListener
-    $listener->setGeolocationCallable(function($entity) use($gecoder) {
+    $listener->setGeolocationCallable(function($entity) use($geocoder) {
         $location = $geocoder->geocode($entity->getAddress());
         $geocoder->setLocation(new Point(
             $location->getLatitude(),
@@ -257,7 +257,7 @@ It also provides an easy entry point to use 3rd party libraries like the exellen
     $category = new Category;
     $em->persist($category);
 
-    $location = $em->getLocation(); // instanceof Point
+    $location = $category->getLocation(); // instanceof Point
 
     // find cities in a cricle of 500 km around point 47 lon., 7 lat.
     $nearCities = $repository->findByDistance(new Point(47, 7), 500);
