@@ -63,6 +63,6 @@ class PointType extends Type
             return;
         }
 
-        return sprintf('(%f,%f)', $value->getLatitude(), $value->getLongitude());
+        return sprintf('(%F,%F)', $value->getLatitude(), $value->getLongitude());
     }
 }
