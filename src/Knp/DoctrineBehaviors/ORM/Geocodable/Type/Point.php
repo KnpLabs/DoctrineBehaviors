@@ -77,6 +77,6 @@ class Point
      */
     public function __toString()
     {
-        return sprintf('(%f,%f)', $this->latitude, $this->longitude);
+        return sprintf('(%F,%F)', $this->latitude, $this->longitude);
     }
 }
