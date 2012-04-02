@@ -27,6 +27,11 @@ trait Translatable
     private $translations;
 
     /**
+     * currentLocale is a non persisted field configured during postLoad event
+     */
+    private $currentLocale;
+
+    /**
      * Returns collection of translations.
      *
      * @return ArrayCollection
@@ -77,6 +82,33 @@ trait Translatable
         $this->addTranslation($translation);
 
         return $translation;
+    }
+
+
+    /**
+     * @param mixed $locale the current locale
+     */
+    public function setCurrentLocale($locale)
+    {
+        $this->currentLocale = $locale;
+    }
+
+    public function getCurrentLocale()
+    {
+        return $this->currentLocale ?: $this->getDefaultLocale();
+    }
+
+    public function getDefaultLocale()
+    {
+        return 'en';
+    }
+
+    protected function proxyCurrentLocaleTranslation($method, array $arguments = [])
+    {
+        return call_user_func_array(
+            [$this->translate($this->getCurrentLocale()), $method],
+            $arguments
+        );
     }
 
     /**

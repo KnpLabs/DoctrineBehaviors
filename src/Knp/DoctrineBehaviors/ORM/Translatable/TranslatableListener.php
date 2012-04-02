@@ -11,8 +11,11 @@
 
 namespace Knp\DoctrineBehaviors\ORM\Translatable;
 
-use Doctrine\ORM\Event\LoadClassMetadataEventArgs,
-    Doctrine\Common\EventSubscriber,
+
+use Doctrine\Common\EventSubscriber,
+    Doctrine\ORM\Mapping\ClassMetadata,
+    Doctrine\ORM\Event\LoadClassMetadataEventArgs,
+    Doctrine\ORM\Event\LifecycleEventArgs,
     Doctrine\ORM\Events;
 
 /**
@@ -22,6 +25,13 @@ use Doctrine\ORM\Event\LoadClassMetadataEventArgs,
  */
 class TranslatableListener implements EventSubscriber
 {
+    private $currentLocaleCallable;
+
+    public function __construct(callable $currentLocaleCallable = null)
+    {
+        $this->currentLocaleCallable = $currentLocaleCallable;
+    }
+
     /**
      * Adds mapping to the translatable and translations.
      *
@@ -32,7 +42,7 @@ class TranslatableListener implements EventSubscriber
         $classMetadata = $eventArgs->getClassMetadata();
         $traitNames    = $classMetadata->reflClass->getTraitNames();
 
-        if (in_array('Knp\DoctrineBehaviors\ORM\Translatable\Translatable', $traitNames)) {
+        if ($this->isTranslatable($classMetadata)) {
             $classMetadata->mapOneToMany([
                 'fieldName'    => 'translations',
                 'mappedBy'     => 'translatable',
@@ -41,7 +51,7 @@ class TranslatableListener implements EventSubscriber
             ]);
         }
 
-        if (in_array('Knp\DoctrineBehaviors\ORM\Translatable\Translation', $traitNames)) {
+        if ($this->isTranslation($classMetadata)) {
             $classMetadata->mapManyToOne([
                 'fieldName'    => 'translatable',
                 'inversedBy'   => 'translations',
@@ -62,6 +72,42 @@ class TranslatableListener implements EventSubscriber
         }
     }
 
+    private function isTranslatable(ClassMetadata $classMetadata)
+    {
+        $traitNames = $classMetadata->reflClass->getTraitNames();
+
+        return in_array('Knp\DoctrineBehaviors\ORM\Translatable\Translatable', $traitNames);
+    }
+
+    private function isTranslation(ClassMetadata $classMetadata)
+    {
+        $traitNames = $classMetadata->reflClass->getTraitNames();
+
+        return in_array('Knp\DoctrineBehaviors\ORM\Translatable\Translation', $traitNames);
+    }
+
+    public function postLoad(LifecycleEventArgs $eventArgs)
+    {
+        $em            = $eventArgs->getEntityManager();
+        $entity        = $eventArgs->getEntity();
+        $classMetadata = $em->getClassMetadata(get_class($entity));
+
+        if (!$this->isTranslatable($classMetadata)) {
+            return;
+        }
+
+        if ($locale = $this->getCurrentLocale()) {
+            $entity->setCurrentLocale($locale);
+        }
+    }
+
+    private function getCurrentLocale()
+    {
+        if ($currentLocaleCallable = $this->currentLocaleCallable) {
+            return $currentLocaleCallable();
+        }
+    }
+
     /**
      * Returns hash of events, that this listener is bound to.
      *
@@ -69,6 +115,9 @@ class TranslatableListener implements EventSubscriber
      */
     public function getSubscribedEvents()
     {
-        return [Events::loadClassMetadata];
+        return [
+            Events::loadClassMetadata,
+            Events::postLoad,
+        ];
     }
 }

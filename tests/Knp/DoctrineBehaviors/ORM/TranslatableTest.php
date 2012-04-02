@@ -23,7 +23,9 @@ class TranslatableTest extends \PHPUnit_Framework_TestCase
     {
         $em = new EventManager;
 
-        $em->addEventSubscriber(new \Knp\DoctrineBehaviors\ORM\Translatable\TranslatableListener);
+        $em->addEventSubscriber(new \Knp\DoctrineBehaviors\ORM\Translatable\TranslatableListener(function() {
+            return 'en';
+        }));
 
         return $em;
     }
@@ -83,6 +85,27 @@ class TranslatableTest extends \PHPUnit_Framework_TestCase
             'BehaviorFixtures\ORM\TranslatableEntityTranslation',
             $entity->translate('fr')
         );
+    }
+
+    /**
+     * @test
+     */
+    public function listener_should_configure_entity_with_current_locale()
+    {
+        $em = $this->getEntityManager();
+
+        $entity = new \BehaviorFixtures\ORM\TranslatableEntity();
+        $entity->setTitle('test'); // magic method
+        $em->persist($entity);
+        $em->flush();
+        $id = $entity->getId();
+        $em->clear();
+
+        $entity = $em->getRepository('BehaviorFixtures\ORM\TranslatableEntity')->find($id);
+
+        $this->assertEquals('en', $entity->getCurrentLocale());
+        $this->assertEquals('test', $entity->getTitle());
+        $this->assertEquals('test', $entity->translate($entity->getCurrentLocale())->getTitle());
     }
 
     /**
