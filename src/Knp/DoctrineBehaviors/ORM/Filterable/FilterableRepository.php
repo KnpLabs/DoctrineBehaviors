@@ -11,6 +11,8 @@
 
 namespace Knp\DoctrineBehaviors\ORM\Filterable;
 
+use Doctrine\ORM\QueryBuilder;
+
 /**
  * Filterable trait.
  *
@@ -42,13 +44,15 @@ trait FilterableRepository
      * @param array $filters - array like ['e:name' => 'nameValue'] where "e" is entity alias query, so we can filter using joins.
      * @return Doctrine\DBAL\Query\QueryBuilder
      */
-    public function filterBy(array $filters)
+    public function filterBy(array $filters, QueryBuilder $qb = null)
     {
         $filters = array_filter($filters, function($filter) {
             return !empty($filter);
         });
 
-        $qb = $this->createFilterQueryBuilder();
+        if (null === $qb) {
+            $qb = $this->createFilterQueryBuilder();
+        }
 
         foreach ($filters as $col => $value) {
             $colName  = str_replace(':', '.', $col);
