@@ -19,6 +19,11 @@ class TranslatableEntity
      */
     private $id;
 
+    public function __call($method, $arguments)
+    {
+        return $this->proxyCurrentLocaleTranslation($method, $arguments);
+    }
+
     /**
      * Returns object id.
      *

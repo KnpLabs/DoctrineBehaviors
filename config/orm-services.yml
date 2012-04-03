@@ -1,5 +1,6 @@
 parameters:
     knp.doctrine_behaviors.translatable_listener.class: Knp\DoctrineBehaviors\ORM\Translatable\TranslatableListener
+    knp.doctrine_behaviors.translatable_listener.current_locale_callable.class: Knp\DoctrineBehaviors\ORM\Translatable\CurrentLocaleCallable
     knp.doctrine_behaviors.softdeletable_listener.class: Knp\DoctrineBehaviors\ORM\SoftDeletable\SoftDeletableListener
     knp.doctrine_behaviors.timestampable_listener.class: Knp\DoctrineBehaviors\ORM\Timestampable\TimestampableListener
     knp.doctrine_behaviors.blameable_listener.class: Knp\DoctrineBehaviors\ORM\Blameable\BlameableListener
@@ -11,8 +12,16 @@ services:
     knp.doctrine_behaviors.translatable_listener:
         class:   %knp.doctrine_behaviors.translatable_listener.class%
         public:  false
+        arguments:
+            - @knp.doctrine_behaviors.translatable_listener.current_locale_callable
         tags:
             - { name: doctrine.event_subscriber }
+
+    knp.doctrine_behaviors.translatable_listener.current_locale_callable:
+        class:           %knp.doctrine_behaviors.translatable_listener.current_locale_callable.class%
+        arguments:
+            - @service_container # lazy request resolution
+        public:  false
 
     knp.doctrine_behaviors.softdeletable_listener:
         class:   %knp.doctrine_behaviors.softdeletable_listener.class%
