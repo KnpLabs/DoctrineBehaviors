@@ -248,16 +248,16 @@ class NodeTest extends \PHPUnit_Framework_TestCase
     {
         $tree = $this->buildTree();
 
-        $this->assertEquals('/1', $tree->getMaterializedPath());
-        $this->assertEquals('/1/2', $tree->getChildren()->get(0)->getMaterializedPath());
-        $this->assertEquals('/1/2/4', $tree->getChildren()->get(0)->getChildren()->get(0)->getMaterializedPath());
-        $this->assertEquals('/1/2/4/5', $tree->getChildren()->get(0)->getChildren()->get(0)->getChildren()->get(0)->getMaterializedPath());
+        $this->assertEquals('/1', $tree->getRealMaterializedPath());
+        $this->assertEquals('/1/2', $tree->getChildren()->get(0)->getRealMaterializedPath());
+        $this->assertEquals('/1/2/4', $tree->getChildren()->get(0)->getChildren()->get(0)->getRealMaterializedPath());
+        $this->assertEquals('/1/2/4/5', $tree->getChildren()->get(0)->getChildren()->get(0)->getChildren()->get(0)->getRealMaterializedPath());
 
         $childChildItem = $tree->getChildren()->get(0)->getChildren()->get(0);
         $childChildChildItem = $tree->getChildren()->get(0)->getChildren()->get(0)->getChildren()->get(0);
         $childChildItem->setChildOf($tree);
-        $this->assertEquals('/1/4', $childChildItem->getMaterializedPath(), 'The path has been updated fo the node');
-        $this->assertEquals('/1/4/5', $childChildChildItem->getMaterializedPath(), 'The path has been updated fo the node and all its descendants');
+        $this->assertEquals('/1/4', $childChildItem->getRealMaterializedPath(), 'The path has been updated fo the node');
+        $this->assertEquals('/1/4/5', $childChildChildItem->getRealMaterializedPath(), 'The path has been updated fo the node and all its descendants');
         $this->assertTrue($tree->getChildren()->contains($childChildItem), 'The children collection has been updated to reference the moved node');
     }
 
@@ -270,8 +270,8 @@ class NodeTest extends \PHPUnit_Framework_TestCase
         $this->assertEquals(4, $childChildChildItem->getNodeLevel(), 'The level is well calcuated');
 
         $childChildItem->setChildOf($tree);
-        $this->assertEquals('/1/4', $childChildItem->getMaterializedPath(), 'The path has been updated fo the node');
-        $this->assertEquals('/1/4/5', $childChildChildItem->getMaterializedPath(), 'The path has been updated fo the node and all its descendants');
+        $this->assertEquals('/1/4', $childChildItem->getRealMaterializedPath(), 'The path has been updated fo the node');
+        $this->assertEquals('/1/4/5', $childChildChildItem->getRealMaterializedPath(), 'The path has been updated fo the node and all its descendants');
         $this->assertTrue($tree->getChildren()->contains($childChildItem), 'The children collection has been updated to reference the moved node');
 
         $this->assertEquals(3, $childChildChildItem->getNodeLevel(), 'The level has been updated');

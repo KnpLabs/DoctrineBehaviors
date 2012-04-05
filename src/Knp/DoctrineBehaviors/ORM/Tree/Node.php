@@ -40,7 +40,7 @@ trait Node
     /**
      * {@inheritdoc}
      **/
-    public function getMaterializedPath()
+    public function getRealMaterializedPath()
     {
         return $this->materializedPath;
     }
@@ -126,7 +126,7 @@ trait Node
      **/
     public function isChildOf(NodeInterface $node)
     {
-        return $this->getParentMaterializedPath() === $node->getMaterializedPath();
+        return $this->getParentMaterializedPath() === $node->getRealMaterializedPath();
     }
 
     /**
@@ -139,7 +139,7 @@ trait Node
             throw new \LogicException('You must provide an id for this node if you want it to be part of a tree.');
         }
 
-        $path = rtrim($node->getMaterializedPath(), static::getMaterializedPathSeparator());
+        $path = rtrim($node->getRealMaterializedPath(), static::getMaterializedPathSeparator());
         $this->setMaterializedPath($path . static::getMaterializedPathSeparator() . $this->getId());
 
         if (null !== $this->parentNode) {
@@ -194,10 +194,10 @@ trait Node
      **/
     public function buildTree(array $results)
     {
-        $tree = array($this->getMaterializedPath() => $this);
+        $tree = array($this->getRealMaterializedPath() => $this);
         foreach($results as $node) {
 
-            $tree[$node->getMaterializedPath()] = $node;
+            $tree[$node->getRealMaterializedPath()] = $node;
 
             $parent = isset($tree[$node->getParentMaterializedPath()]) ? $tree[$node->getParentMaterializedPath()] : $this; // root is the fallback parent
             if ($parent !== $node) {
@@ -297,7 +297,7 @@ trait Node
      **/
     protected function getExplodedPath()
     {
-        $path = explode(static::getMaterializedPathSeparator(), $this->getMaterializedPath());
+        $path = explode(static::getMaterializedPathSeparator(), $this->getRealMaterializedPath());
 
         return array_filter($path, function($item) {
             return '' !== $item;
