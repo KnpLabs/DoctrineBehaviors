@@ -49,7 +49,7 @@ trait Tree
     {
         return $this->getFlatTreeQB('', $rootAlias)
             ->andWhere($rootAlias.'.materializedPath NOT LIKE :except_path')
-            ->setParameter('except_path', $entity->getPath().'%')
+            ->setParameter('except_path', $entity->getMaterializedPath().'%')
         ;
     }
 
