@@ -22,6 +22,12 @@ interface NodeInterface
      * @return string the materialized path,
      * eg the representation of path from all ancestors
      **/
+    function getMaterializedPath();
+
+    /**
+     * @return string the real materialized path,
+     * eg the representation of path from all ancestors + current node
+     **/
     function getRealMaterializedPath();
 
     /**

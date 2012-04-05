@@ -32,27 +32,27 @@ class NodeTest extends \PHPUnit_Framework_TestCase
     private function buildTree()
     {
         $item = $this->buildNode();
-        $item->setMaterializedPath('/1');
+        $item->setMaterializedPath('');
         $item->setId(1);
 
         $childItem = $this->buildNode();
-        $childItem->setMaterializedPath('/1/2');
+        $childItem->setMaterializedPath('/1');
         $childItem->setId(2);
         $childItem->setChildOf($item);
 
         $secondChildItem = $this->buildNode();
-        $secondChildItem->setMaterializedPath('/1/3');
+        $secondChildItem->setMaterializedPath('/1');
         $secondChildItem->setId(3);
         $secondChildItem->setChildOf($item);
 
         $childChildItem = $this->buildNode();
         $childChildItem->setId(4);
-        $childChildItem->setMaterializedPath('/1/2/4');
+        $childChildItem->setMaterializedPath('/1/2');
         $childChildItem->setChildOf($childItem);
 
         $childChildChildItem = $this->buildNode();
         $childChildChildItem->setId(5);
-        $childChildChildItem->setMaterializedPath('/1/2/4/5');
+        $childChildChildItem->setMaterializedPath('/1/2/4');
         $childChildChildItem->setChildOf($childChildItem);
 
         return $item;
@@ -60,13 +60,13 @@ class NodeTest extends \PHPUnit_Framework_TestCase
 
     public function testBuildTree()
     {
-        $root = $this->buildNode(array('setMaterializedPath' => '/0'     , 'setName' => 'root'        , 'setId' => 0));
+        $root = $this->buildNode(array('setMaterializedPath' => ''     , 'setName' => 'root'        , 'setId' => 1));
         $flatTree = array(
-            $this->buildNode(array('setMaterializedPath' => '/0/1'       , 'setName' => 'Villes'      , 'setId' => 1)),
-            $this->buildNode(array('setMaterializedPath' => '/0/1/2'     , 'setName' => 'Nantes'      , 'setId' => 2)),
-            $this->buildNode(array('setMaterializedPath' => '/0/1/2/3'   , 'setName' => 'Nantes Est'  , 'setId' => 3)),
-            $this->buildNode(array('setMaterializedPath' => '/0/1/2/4'   , 'setName' => 'Nantes Nord' , 'setId' => 4)),
-            $this->buildNode(array('setMaterializedPath' => '/0/1/2/4/5' , 'setName' => 'St-Mihiel'   , 'setId' => 5)),
+            $this->buildNode(array('setMaterializedPath' => '/1'       , 'setName' => 'Villes'      , 'setId' => 2)),
+            $this->buildNode(array('setMaterializedPath' => '/1/2'     , 'setName' => 'Nantes'      , 'setId' => 3)),
+            $this->buildNode(array('setMaterializedPath' => '/1/2/3'   , 'setName' => 'Nantes Est'  , 'setId' => 4)),
+            $this->buildNode(array('setMaterializedPath' => '/1/2/3'   , 'setName' => 'Nantes Nord' , 'setId' => 5)),
+            $this->buildNode(array('setMaterializedPath' => '/1/2/3/5' , 'setName' => 'St-Mihiel'   , 'setId' => 6)),
         );
 
         $root->buildTree($flatTree);

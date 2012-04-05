@@ -42,6 +42,11 @@ trait Node
      **/
     public function getRealMaterializedPath()
     {
+        return $this->getMaterializedPath() . self::getMaterializedPathSeparator() . $this->getId();
+    }
+
+    public function getMaterializedPath()
+    {
         return $this->materializedPath;
     }
 
@@ -140,7 +145,7 @@ trait Node
         }
 
         $path = rtrim($node->getRealMaterializedPath(), static::getMaterializedPathSeparator());
-        $this->setMaterializedPath($path . static::getMaterializedPathSeparator() . $this->getId());
+        $this->setMaterializedPath($path);
 
         if (null !== $this->parentNode) {
             $this->parentNode->getChildren()->removeElement($this);
