@@ -17,12 +17,9 @@ trait Tree
      */
     public function getRootNodes($rootAlias = 't')
     {
-        $class         = $this->getClassName();
-        $pathSeparator = $class::getMaterializedPathSeparator();
-
         $qb = $this->createQueryBuilder($rootAlias)
-            ->andWhere($rootAlias.'.path NOT LIKE :separator')
-            ->setParameter('separator', $pathSeparator.'%')
+            ->andWhere($rootAlias.'.materializedPath = :empty')
+            ->setParameter('empty', '')
         ;
 
         return $qb->getQuery()->execute();
@@ -49,7 +46,9 @@ trait Tree
     {
         return $this->getFlatTreeQB('', $rootAlias)
             ->andWhere($rootAlias.'.materializedPath NOT LIKE :except_path')
-            ->setParameter('except_path', $entity->getMaterializedPath().'%')
+            ->andWhere($rootAlias.'.id != :id')
+            ->setParameter('except_path', $entity->getRealMaterializedPath().'%')
+            ->setParameter('id', $entity->getId())
         ;
     }
 
