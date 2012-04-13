@@ -40,7 +40,10 @@ class TranslatableListener implements EventSubscriber
     public function loadClassMetadata(LoadClassMetadataEventArgs $eventArgs)
     {
         $classMetadata = $eventArgs->getClassMetadata();
-        $traitNames    = $classMetadata->reflClass->getTraitNames();
+
+        if (null === $classMetadata->reflClass) {
+            return;
+        }
 
         if ($this->isTranslatable($classMetadata)) {
             $classMetadata->mapOneToMany([

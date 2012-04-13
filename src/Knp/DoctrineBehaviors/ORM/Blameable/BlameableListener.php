@@ -70,6 +70,11 @@ class BlameableListener implements EventSubscriber
     public function loadClassMetadata(LoadClassMetadataEventArgs $eventArgs)
     {
         $classMetadata = $eventArgs->getClassMetadata();
+
+        if (null === $classMetadata->reflClass) {
+            return;
+        }
+
         if ($this->isEntitySupported($classMetadata->reflClass) and !$this->isAlreadyMapped($classMetadata)) {
             $this->mapEntity($classMetadata);
         }
