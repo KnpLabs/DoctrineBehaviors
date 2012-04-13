@@ -52,6 +52,11 @@ class GeocodableListener implements EventSubscriber
     public function loadClassMetadata(LoadClassMetadataEventArgs $eventArgs)
     {
         $classMetadata = $eventArgs->getClassMetadata();
+
+        if (null === $classMetadata->reflClass) {
+            return;
+        }
+
         if ($this->isEntitySupported($classMetadata->reflClass)) {
 
             if (!Type::hasType('point')) {
