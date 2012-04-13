@@ -27,6 +27,10 @@ class TimestampableListener implements EventSubscriber
     {
         $classMetadata = $eventArgs->getClassMetadata();
 
+        if (null === $classMetadata->reflClass) {
+            return;
+        }
+
         if ($this->isEntitySupported($classMetadata)) {
             if ($classMetadata->reflClass->hasMethod('updateTimestamps')) {
                 $classMetadata->addLifecycleCallback('updateTimestamps', Events::prePersist);
