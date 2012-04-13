@@ -13,6 +13,7 @@ It currently handles:
  * [timestampable](#timestampable)
  * [softDeletable](#softDeletable)
  * [blameable](#blameable)
+ * [loggable](#loggable)
  * [geocodable](#geocodable)
  * [filterable](#filterable)
 
@@ -186,10 +187,16 @@ An extra feature allows you to proxy translated fields of a translatable entity.
 You can use it in the magic `__call` method of you translatable entity
 so that when you try to call `getName` (for example) it will return you the translated value of the name for current locale:
 
+``` php
+
+<?php
+
     public function __call($method, $arguments)
     {
         return $this->proxyCurrentLocaleTranslation($method, $arguments);
     }
+
+```
 
 
 <a name="softDeletable" id="softDeletable"></a>
@@ -247,6 +254,13 @@ Then, you can use it like that:
     $updater = $em->getUpdatedBy();
 
 ```
+
+<a name="loggable" id="loggable"></a>
+### loggable
+
+Loggable is able to track lifecycle modifications and log them using any third party log system.
+A loggable [callable](#callables) is used to get the logger from anywhere you want.
+
 
 <a name="geocodable" id="geocodable"></a>
 ### geocodable
