@@ -173,6 +173,25 @@ Now you can work on translations using `translate` or `getTranslations` methods.
 
 ```
 
+#### guess the current locale
+
+You can configure the way the listener guesses the current locale, by giving a callable as its first argument.
+This library provides a callable object (`Knp\DoctrineBehaviors\ORM\Translatable\CurrentLocaleCallable`) that returns the current locale using Symfony2.
+
+
+#### proxy translations
+
+An extra feature allows you to proxy translated fields of a translatable entity.
+
+You can use it in the magic `__call` method of you translatable entity
+so that when you try to call `getName` (for example) it will return you the translated value of the name for current locale:
+
+    public function __call($method, $arguments)
+    {
+        return $this->proxyCurrentLocaleTranslation($method, $arguments);
+    }
+
+
 <a name="softDeletable" id="softDeletable"></a>
 ### soft-deletable
 
