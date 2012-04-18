@@ -44,13 +44,6 @@ class BlameableListener implements EventSubscriber
     private $userEntity;
 
     /**
-     * map of already mapped entites
-     *
-     * @var array
-     */
-    private $map;
-
-    /**
      * @constructor
      *
      * @param callable
@@ -75,14 +68,9 @@ class BlameableListener implements EventSubscriber
             return;
         }
 
-        if ($this->isEntitySupported($classMetadata->reflClass) and !$this->isAlreadyMapped($classMetadata)) {
+        if ($this->isEntitySupported($classMetadata->reflClass)) {
             $this->mapEntity($classMetadata);
         }
-    }
-
-    private function isAlreadyMapped(ClassMetadata $classMetadata)
-    {
-        return isset($this->maps[$classMetadata->reflClass->getName()]);
     }
 
     private function mapEntity(ClassMetadata $classMetadata)
@@ -110,8 +98,6 @@ class BlameableListener implements EventSubscriber
                 'nullable'   => true,
             ]);
         }
-
-        $this->map[$classMetadata->reflClass->getName()] = true;
     }
 
     /**
@@ -126,7 +112,7 @@ class BlameableListener implements EventSubscriber
         $entity = $eventArgs->getEntity();
 
         $classMetadata = $em->getClassMetadata(get_class($entity));
-        if ($this->isEntitySupported($classMetadata->reflClass)) {
+        if ($this->isEntitySupported($classMetadata->reflClass, true)) {
             $entity->setCreatedBy($this->getUser());
             $entity->setUpdatedBy($this->getUser());
 
@@ -152,7 +138,7 @@ class BlameableListener implements EventSubscriber
         $entity = $eventArgs->getEntity();
 
         $classMetadata = $em->getClassMetadata(get_class($entity));
-        if ($this->isEntitySupported($classMetadata->reflClass)) {
+        if ($this->isEntitySupported($classMetadata->reflClass, true)) {
             $oldValue = $entity->getUpdatedBy();
             $entity->setUpdatedBy($this->getUser());
 
@@ -196,16 +182,18 @@ class BlameableListener implements EventSubscriber
      * Checks if entity supports Blameable
      *
      * @param ClassMetadata $classMetadata
+     * @param bool          $isRecursive    true to check for parent classes until trait is found
+     *
      * @return boolean
      */
-    private function isEntitySupported(\ReflectionClass $reflClass)
+    private function isEntitySupported(\ReflectionClass $reflClass, $isRecursive = false)
     {
         $isSupported = in_array('Knp\DoctrineBehaviors\ORM\Blameable\Blameable', $reflClass->getTraitNames());
 
-        /*while(!$isSupported and $reflClass->getParentClass()) {
+        while($isRecursive and !$isSupported and $reflClass->getParentClass()) {
             $reflClass = $reflClass->getParentClass();
-            $isSupported = $this->isEntitySupported($reflClass);
-        }*/
+            $isSupported = $this->isEntitySupported($reflClass, true);
+        }
 
         return $isSupported;
     }
