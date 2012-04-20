@@ -39,6 +39,15 @@ trait FilterableRepository
     abstract public function getEqualFilterColumns();
 
     /**
+     * Retrieve field which will be sorted using IN()
+     *
+     * Example format: ['e:group_id']
+     *
+     * @return array
+     */
+    abstract public function getInFilterColumns();
+
+    /**
      * Filter values
      *
      * @param array $filters - array like ['e:name' => 'nameValue'] where "e" is entity alias query, so we can filter using joins.
@@ -69,6 +78,12 @@ trait FilterableRepository
                 $qb
                     ->andWhere(sprintf('%s = :%s', $colName, $colParam))
                     ->setParameter($colParam, $value)
+                ;
+            }
+
+            if (in_array($col, $this->getInFilterColumns())) {
+                $qb
+                    ->andWhere($qb->expr()->in(sprintf('%s', $colName), (array)$value))
                 ;
             }
         }
