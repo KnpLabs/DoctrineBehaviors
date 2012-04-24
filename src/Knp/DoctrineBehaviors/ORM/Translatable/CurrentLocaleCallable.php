@@ -19,6 +19,10 @@ class CurrentLocaleCallable
 
     public function __invoke()
     {
+        if (!$this->container->isScopeActive('request')) {
+            return;
+        }
+
         $request = $this->container->get('request');
 
         return $request->getLocale() ?: $request->getDefaultLocale();
