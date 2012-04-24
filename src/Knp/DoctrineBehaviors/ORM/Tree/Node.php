@@ -199,26 +199,12 @@ trait Node
      **/
     public function buildTree(array $results)
     {
-        $this->cleanTree();
-
-        $tree = array($this->getRealMaterializedPath() => $this);
-        foreach($results as $node) {
-
-            $tree[$node->getRealMaterializedPath()] = $node;
-
-            $parent = isset($tree[$node->getParentMaterializedPath()]) ? $tree[$node->getParentMaterializedPath()] : $this; // root is the fallback parent
-            if ($parent !== $node) {
-                $parent->addChild($node);
-                $node->setParentNode($parent);
-            }
-        }
-    }
-
-    public function cleanTree()
-    {
         $this->getChildren()->clear();
-        foreach ($this->getChildren() as $node) {
-            $node->cleanTree();
+        foreach ($results as $i => $node) {
+            if ($node->getMaterializedPath() === $this->getRealMaterializedPath()) {
+                $node->setParentNode($this);
+                $node->buildTree($results);
+            }
         }
     }
 
