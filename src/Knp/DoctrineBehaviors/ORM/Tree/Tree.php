@@ -83,11 +83,17 @@ trait Tree
     {
         $qb = $this->createQueryBuilder($rootAlias)
             ->andWhere($rootAlias.'.materializedPath LIKE :path')
-            ->orWhere($rootAlias.'.id = :parent')
             ->addOrderBy($rootAlias.'.materializedPath', 'ASC')
             ->setParameter('path', $path.'%')
-            ->setParameter('parent', basename($path))
         ;
+
+        $parentId = basename($path);
+        if ($parentId) {
+            $qb
+                ->orWhere($rootAlias.'.id = :parent')
+                ->setParameter('parent', $parentId)
+            ;
+        }
 
         $this->addFlatTreeConditions($qb);
 
