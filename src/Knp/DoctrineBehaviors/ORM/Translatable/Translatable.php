@@ -65,12 +65,16 @@ trait Translatable
     /**
      * Returns translation for specific locale (creates new one if doesn't exists).
      *
-     * @param string $locale The locale (en, ru, fr)
+     * @param string $locale The locale (en, ru, fr) | null If null, will try with current locale
      *
      * @return Translation
      */
-    public function translate($locale)
+    public function translate($locale = null)
     {
+        if (null === $locale) {
+            $locale = $this->getCurrentLocale();
+        }
+
         if ($translation = $this->findTranslationByLocale($locale)) {
             return $translation;
         }
