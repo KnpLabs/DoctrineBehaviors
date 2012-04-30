@@ -27,6 +27,13 @@ trait Translatable
     private $translations;
 
     /**
+     * Will be merged with persisted translations on mergeNewTranslations call
+     *
+     * @see mergeNewTranslations
+     */
+    private $newTranslations;
+
+    /**
      * currentLocale is a non persisted field configured during postLoad event
      */
     private $currentLocale;
@@ -39,6 +46,17 @@ trait Translatable
     public function getTranslations()
     {
         return $this->translations = $this->translations ?: new ArrayCollection();
+    }
+
+
+    /**
+     * Returns collection of new translations.
+     *
+     * @return ArrayCollection
+     */
+    public function getNewTranslations()
+    {
+        return $this->newTranslations = $this->newTranslations ?: new ArrayCollection();
     }
 
     /**
@@ -64,6 +82,8 @@ trait Translatable
 
     /**
      * Returns translation for specific locale (creates new one if doesn't exists).
+     * If requested translation doesn't exist, it will be added to newTranslations collection.
+     * In order to persist new translations, call mergeNewTranslations method, before flush
      *
      * @param string $locale The locale (en, ru, fr) | null If null, will try with current locale
      *
@@ -83,11 +103,23 @@ trait Translatable
         $translation = new $class();
         $translation->setLocale($locale);
 
-        $this->addTranslation($translation);
+        $this->getNewTranslations()->add($translation);
+        $translation->setTranslatable($this);
 
         return $translation;
     }
 
+    /**
+     * Merges newly created translations into persisted translations.
+     */
+    public function mergeNewTranslations()
+    {
+        foreach ($this->getNewTranslations() as $newTranslation) {
+            if (!$this->getTranslations()->containsElement($newTranslations)) {
+                $this->addTranslation($newTranslation);
+            }
+        }
+    }
 
     /**
      * @param mixed $locale the current locale
