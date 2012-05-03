@@ -2,6 +2,7 @@
 
 namespace Knp\DoctrineBehaviors\ORM\Tree;
 
+use Knp\DoctrineBehaviors\ORM\Tree\NodeInterface;
 use Doctrine\ORM\QueryBuilder;
 
 trait Tree
@@ -42,7 +43,7 @@ trait Tree
         return $this->buildTree($results);
     }
 
-    public function getTreeExceptNodeAndItsChildrenQB($entity, $rootAlias = 't')
+    public function getTreeExceptNodeAndItsChildrenQB(NodeInterface $entity, $rootAlias = 't')
     {
         return $this->getFlatTreeQB('', $rootAlias)
             ->andWhere($rootAlias.'.materializedPath NOT LIKE :except_path')
@@ -79,7 +80,7 @@ trait Tree
      *
      * @return QueryBuilder
      */
-    protected function getFlatTreeQB($path = '', $rootAlias = 't')
+    public function getFlatTreeQB($path = '', $rootAlias = 't')
     {
         $qb = $this->createQueryBuilder($rootAlias)
             ->andWhere($rootAlias.'.materializedPath LIKE :path')
