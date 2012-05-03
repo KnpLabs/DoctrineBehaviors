@@ -115,7 +115,7 @@ trait Translatable
     public function mergeNewTranslations()
     {
         foreach ($this->getNewTranslations() as $newTranslation) {
-            if (!$this->getTranslations()->containsElement($newTranslations)) {
+            if (!$this->getTranslations()->contains($newTranslation)) {
                 $this->addTranslation($newTranslation);
             }
         }
