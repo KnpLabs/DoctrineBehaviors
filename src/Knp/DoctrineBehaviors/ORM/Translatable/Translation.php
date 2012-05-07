@@ -87,4 +87,14 @@ trait Translation
     {
         return $this->locale;
     }
+
+    /**
+     * Tells if translation is empty
+     *
+     * @return bool true if translation is not filled
+     */
+    public function isEmpty()
+    {
+        return false;
+    }
 }

@@ -45,7 +45,7 @@ class TranslatableListener implements EventSubscriber
             return;
         }
 
-        if ($this->isTranslatable($classMetadata)) {
+        if ($this->isTranslatable($classMetadata->reflClass)) {
             $classMetadata->mapOneToMany([
                 'fieldName'    => 'translations',
                 'mappedBy'     => 'translatable',
@@ -75,11 +75,26 @@ class TranslatableListener implements EventSubscriber
         }
     }
 
-    private function isTranslatable(ClassMetadata $classMetadata)
+    /**
+     * Checks if entity is translatable
+     *
+     * @param ClassMetadata $classMetadata
+     * @param bool          $isRecursive    true to check for parent classes until trait is found
+     *
+     * @return boolean
+     */
+    private function isTranslatable(\ReflectionClass $reflClass, $isRecursive = false)
     {
-        $traitNames = $classMetadata->reflClass->getTraitNames();
+        $traitNames = $reflClass->getTraitNames();
 
-        return in_array('Knp\DoctrineBehaviors\ORM\Translatable\Translatable', $traitNames);
+        $isSupported = in_array('Knp\DoctrineBehaviors\ORM\Translatable\Translatable', $reflClass->getTraitNames());
+
+        while($isRecursive and !$isSupported and $reflClass->getParentClass()) {
+            $reflClass = $reflClass->getParentClass();
+            $isSupported = $this->isTranslatable($reflClass, true);
+        }
+
+        return $isSupported;
     }
 
     private function isTranslation(ClassMetadata $classMetadata)
@@ -95,7 +110,7 @@ class TranslatableListener implements EventSubscriber
         $entity        = $eventArgs->getEntity();
         $classMetadata = $em->getClassMetadata(get_class($entity));
 
-        if (!$this->isTranslatable($classMetadata)) {
+        if (!$this->isTranslatable($classMetadata->reflClass, true)) {
             return;
         }
 
