@@ -87,7 +87,7 @@ class TranslatableListener implements EventSubscriber
     {
         $traitNames = $reflClass->getTraitNames();
 
-        $isSupported = in_array('Knp\DoctrineBehaviors\ORM\Translatable\Translatable', $reflClass->getTraitNames());
+        $isSupported = in_array('Knp\DoctrineBehaviors\Model\Translatable\Translatable', $reflClass->getTraitNames());
 
         while($isRecursive and !$isSupported and $reflClass->getParentClass()) {
             $reflClass = $reflClass->getParentClass();
@@ -101,7 +101,7 @@ class TranslatableListener implements EventSubscriber
     {
         $traitNames = $classMetadata->reflClass->getTraitNames();
 
-        return in_array('Knp\DoctrineBehaviors\ORM\Translatable\Translation', $traitNames);
+        return in_array('Knp\DoctrineBehaviors\Model\Translatable\Translation', $traitNames);
     }
 
     public function postLoad(LifecycleEventArgs $eventArgs)

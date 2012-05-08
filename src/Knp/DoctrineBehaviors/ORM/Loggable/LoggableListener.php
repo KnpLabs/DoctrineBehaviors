@@ -97,7 +97,7 @@ class LoggableListener implements EventSubscriber
      */
     private function isEntitySupported(\ReflectionClass $reflClass)
     {
-        return in_array('Knp\DoctrineBehaviors\ORM\Loggable\Loggable', $reflClass->getTraitNames());
+        return in_array('Knp\DoctrineBehaviors\Model\Loggable\Loggable', $reflClass->getTraitNames());
     }
 
     public function getSubscribedEvents()

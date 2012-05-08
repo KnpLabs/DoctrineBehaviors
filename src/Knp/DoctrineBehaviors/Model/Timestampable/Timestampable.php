@@ -9,7 +9,7 @@
  * file that was distributed with this source code.
  */
 
-namespace Knp\DoctrineBehaviors\ORM\Timestampable;
+namespace Knp\DoctrineBehaviors\Model\Timestampable;
 
 /**
  * Timestampable trait.

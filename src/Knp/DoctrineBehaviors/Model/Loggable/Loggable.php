@@ -9,7 +9,7 @@
  * file that was distributed with this source code.
  */
 
-namespace Knp\DoctrineBehaviors\ORM\Loggable;
+namespace Knp\DoctrineBehaviors\Model\Loggable;
 
 /**
  * Loggable trait.

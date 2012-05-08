@@ -55,6 +55,6 @@ class TimestampableListener implements EventSubscriber
     {
         $traitNames = $classMetadata->reflClass->getTraitNames();
 
-        return in_array('Knp\DoctrineBehaviors\ORM\Timestampable\Timestampable', $traitNames);
+        return in_array('Knp\DoctrineBehaviors\Model\Timestampable\Timestampable', $traitNames);
     }
 }

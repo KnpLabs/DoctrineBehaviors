@@ -1,13 +1,8 @@
 <?php
 
-namespace Knp\DoctrineBehaviors\ORM\Sortable;
+namespace Knp\DoctrineBehaviors\Model\Sortable;
 
-/**
- * Class documentation
- *
- * @author     Florian Klein <florian.klein@free.fr>
- */
-trait SortableEntity
+trait Sortable
 {
     /**
      * @ORM\Column(type="integer")
