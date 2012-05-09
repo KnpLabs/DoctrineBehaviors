@@ -64,31 +64,45 @@ trait FilterableRepository
         }
 
         foreach ($filters as $col => $value) {
-            $colName  = str_replace(':', '.', $col);
-            $colParam = str_replace(':', '_', $col);
+            foreach ($this->getColumnParameters($col) as $colName => $colParam) {
+                $compare = $this->getWhereOperator($col).'Where';
 
-            if (in_array($col, $this->getLikeFilterColumns())) {
-                $qb
-                    ->andWhere(sprintf('%s LIKE :%s', $colName, $colParam))
-                    ->setParameter($colParam, '%'.$value.'%')
-                ;
-            }
+                if (in_array($col, $this->getLikeFilterColumns())) {
+                    $qb
+                        ->$compare(sprintf('%s LIKE :%s', $colName, $colParam))
+                        ->setParameter($colParam, '%'.$value.'%')
+                    ;
+                }
 
-            if (in_array($col, $this->getEqualFilterColumns())) {
-                $qb
-                    ->andWhere(sprintf('%s = :%s', $colName, $colParam))
-                    ->setParameter($colParam, $value)
-                ;
-            }
+                if (in_array($col, $this->getEqualFilterColumns())) {
+                    $qb
+                        ->$compare(sprintf('%s = :%s', $colName, $colParam))
+                        ->setParameter($colParam, $value)
+                    ;
+                }
 
-            if (in_array($col, $this->getInFilterColumns())) {
-                $qb
-                    ->andWhere($qb->expr()->in(sprintf('%s', $colName), (array)$value))
-                ;
+                if (in_array($col, $this->getInFilterColumns())) {
+                    $qb
+                        ->$compare($qb->expr()->in(sprintf('%s', $colName), (array)$value))
+                    ;
+                }
             }
         }
 
         return $qb;
+    }
+
+    protected function getColumnParameters($col)
+    {
+        $colName  = str_replace(':', '.', $col);
+        $colParam = str_replace(':', '_', $col);
+
+        return [$colName => $colParam];
+    }
+
+    protected function getWhereOperator($col)
+    {
+        return 'and';
     }
 
     protected function createFilterQueryBuilder()
