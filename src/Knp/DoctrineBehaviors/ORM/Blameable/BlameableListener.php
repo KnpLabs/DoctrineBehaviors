@@ -76,26 +76,44 @@ class BlameableListener implements EventSubscriber
     private function mapEntity(ClassMetadata $classMetadata)
     {
         if ($this->userEntity) {
-            $classMetadata->mapManyToOne([
-                'fieldName'    => 'createdBy',
-                'targetEntity' => $this->userEntity,
-            ]);
-            $classMetadata->mapManyToOne([
-                'fieldName'    => 'updatedBy',
-                'targetEntity' => $this->userEntity,
-            ]);
+            $this->mapManyToOneUser($classMetadata);
         }
         else {
+            $this->mapStringUser($classMetadata);
+        }
+    }
+
+    private function mapStringUser(ClassMetadata $classMetadata)
+    {
+        if (!$classMetadata->hasField('createdBy')) {
             $classMetadata->mapField([
                 'fieldName'  => 'createdBy',
                 'type'       => 'string',
                 'nullable'   => true,
             ]);
+        }
 
+        if (!$classMetadata->hasField('updatedBy')) {
             $classMetadata->mapField([
                 'fieldName'  => 'updatedBy',
                 'type'       => 'string',
                 'nullable'   => true,
+            ]);
+        }
+    }
+
+    private function mapManyToOneUser(classMetadata $classMetadata)
+    {
+        if (!$classMetadata->hasAssociation('createdBy')) {
+            $classMetadata->mapManyToOne([
+                'fieldName'    => 'createdBy',
+                'targetEntity' => $this->userEntity,
+            ]);
+        }
+        if (!$classMetadata->hasAssociation('updatedBy')) {
+            $classMetadata->mapManyToOne([
+                'fieldName'    => 'updatedBy',
+                'targetEntity' => $this->userEntity,
             ]);
         }
     }
@@ -132,7 +150,6 @@ class BlameableListener implements EventSubscriber
      */
     public function preUpdate(LifecycleEventArgs $eventArgs)
     {
-
         $em =$eventArgs->getEntityManager();
         $uow = $em->getUnitOfWork();
         $entity = $eventArgs->getEntity();
@@ -188,7 +205,7 @@ class BlameableListener implements EventSubscriber
      */
     private function isEntitySupported(\ReflectionClass $reflClass, $isRecursive = false)
     {
-        $isSupported = in_array('Knp\DoctrineBehaviors\ORM\Blameable\Blameable', $reflClass->getTraitNames());
+        $isSupported = in_array('Knp\DoctrineBehaviors\Model\Blameable\Blameable', $reflClass->getTraitNames());
 
         while($isRecursive and !$isSupported and $reflClass->getParentClass()) {
             $reflClass = $reflClass->getParentClass();

@@ -41,6 +41,7 @@ class TranslatableTest extends \PHPUnit_Framework_TestCase
         $entity->translate('fr')->setTitle('fabuleux');
         $entity->translate('en')->setTitle('awesome');
         $entity->translate('ru')->setTitle('удивительный');
+        $entity->mergeNewTranslations();
 
         $em->persist($entity);
         $em->flush();
@@ -65,10 +66,6 @@ class TranslatableTest extends \PHPUnit_Framework_TestCase
         $this->assertEquals(
             'удивительный',
             $entity->translate('ru')->getTitle()
-        );
-
-        $this->assertNull(
-            $entity->translate('de')->getTitle()
         );
     }
 
@@ -96,6 +93,7 @@ class TranslatableTest extends \PHPUnit_Framework_TestCase
 
         $entity = new \BehaviorFixtures\ORM\TranslatableEntity();
         $entity->setTitle('test'); // magic method
+        $entity->mergeNewTranslations();
         $em->persist($entity);
         $em->flush();
         $id = $entity->getId();

@@ -1,7 +1,7 @@
 <?php
 
 
-namespace Knp\DoctrineBehaviors\ORM\Tree;
+namespace Knp\DoctrineBehaviors\Model\Tree;
 
 use Doctrine\Common\Collections\Collection;
 

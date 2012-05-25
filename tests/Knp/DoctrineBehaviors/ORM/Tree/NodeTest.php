@@ -2,7 +2,7 @@
 
 namespace Tests\Knp\DoctrineBehaviors\ORM\Tree;
 
-use Knp\DoctrineBehaviors\ORM\Tree\NodeInterface;
+use Knp\DoctrineBehaviors\Model\Tree\NodeInterface;
 use Tests\Knp\DoctrineBehaviors\ORM\EntityManagerProvider;
 use BehaviorFixtures\ORM\TreeNodeEntity;
 
@@ -291,7 +291,7 @@ class NodeTest extends \PHPUnit_Framework_TestCase
         $em->persist($entity[0][0]);
         $em->flush();
 
-        $root = $repo->getTree('/');
+        $root = $repo->getTree();
 
         $this->assertEquals($root[0][0], $entity[0][0]);
     }

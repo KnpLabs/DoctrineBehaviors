@@ -9,7 +9,7 @@
  * file that was distributed with this source code.
  */
 
-namespace Knp\DoctrineBehaviors\ORM\Blameable;
+namespace Knp\DoctrineBehaviors\Model\Blameable;
 
 /**
  * Blameable trait.

@@ -21,5 +21,10 @@ class FilterableRepository extends EntityRepository
     {
         return ['e:code'];
     }
+
+    public function getInFilterColumns()
+    {
+        return [];
+    }
 }
 

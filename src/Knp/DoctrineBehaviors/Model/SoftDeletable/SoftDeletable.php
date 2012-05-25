@@ -9,7 +9,7 @@
  * file that was distributed with this source code.
  */
 
-namespace Knp\DoctrineBehaviors\ORM\SoftDeletable;
+namespace Knp\DoctrineBehaviors\Model\SoftDeletable;
 
 /**
  * SoftDeletable trait.

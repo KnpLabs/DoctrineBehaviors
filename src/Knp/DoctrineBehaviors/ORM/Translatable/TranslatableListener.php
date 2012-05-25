@@ -46,6 +46,17 @@ class TranslatableListener implements EventSubscriber
         }
 
         if ($this->isTranslatable($classMetadata->reflClass)) {
+            $this->mapTranslatable($classMetadata);
+        }
+
+        if ($this->isTranslation($classMetadata)) {
+            $this->mapTranslation($classMetadata);
+        }
+    }
+
+    private function mapTranslatable(ClassMetadata $classMetadata)
+    {
+        if (!$classMetadata->hasAssociation('translations')) {
             $classMetadata->mapOneToMany([
                 'fieldName'    => 'translations',
                 'mappedBy'     => 'translatable',
@@ -53,8 +64,11 @@ class TranslatableListener implements EventSubscriber
                 'targetEntity' => $classMetadata->name.'Translation'
             ]);
         }
+    }
 
-        if ($this->isTranslation($classMetadata)) {
+    private function mapTranslation(ClassMetadata $classMetadata)
+    {
+        if (!$classMetadata->hasAssociation('translatable')) {
             $classMetadata->mapManyToOne([
                 'fieldName'    => 'translatable',
                 'inversedBy'   => 'translations',
@@ -65,14 +79,30 @@ class TranslatableListener implements EventSubscriber
                 ]],
                 'targetEntity' => substr($classMetadata->name, 0, -11)
             ]);
+        }
 
+        $name = $classMetadata->getTableName().'_unique_translation';
+        if (!$this->hasUniqueTranslationConstraint($classMetadata, $name)) {
             $classMetadata->setPrimaryTable([
                 'uniqueConstraints' => [[
-                    'name'    => $classMetadata->getTableName().'_unique_translation',
+                    'name'    => $name,
                     'columns' => ['translatable_id', 'locale' ]
                 ]],
             ]);
         }
+    }
+
+    private function hasUniqueTranslationConstraint(ClassMetadata $classMetadata, $name)
+    {
+        if (!isset($classMetadata->table['uniqueConstraints'])) {
+            return;
+        }
+
+        $constraints = array_filter($classMetadata->table['uniqueConstraints'], function($constraint) use ($name) {
+            return $name === $constraint['name'];
+        });
+
+        return 0 === count($constraints);
     }
 
     /**
@@ -87,7 +117,7 @@ class TranslatableListener implements EventSubscriber
     {
         $traitNames = $reflClass->getTraitNames();
 
-        $isSupported = in_array('Knp\DoctrineBehaviors\ORM\Translatable\Translatable', $reflClass->getTraitNames());
+        $isSupported = in_array('Knp\DoctrineBehaviors\Model\Translatable\Translatable', $reflClass->getTraitNames());
 
         while($isRecursive and !$isSupported and $reflClass->getParentClass()) {
             $reflClass = $reflClass->getParentClass();
@@ -101,7 +131,7 @@ class TranslatableListener implements EventSubscriber
     {
         $traitNames = $classMetadata->reflClass->getTraitNames();
 
-        return in_array('Knp\DoctrineBehaviors\ORM\Translatable\Translation', $traitNames);
+        return in_array('Knp\DoctrineBehaviors\Model\Translatable\Translation', $traitNames);
     }
 
     public function postLoad(LifecycleEventArgs $eventArgs)

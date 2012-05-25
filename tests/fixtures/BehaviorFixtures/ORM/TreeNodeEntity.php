@@ -5,7 +5,7 @@ namespace BehaviorFixtures\ORM;
 use Doctrine\ORM\Mapping as ORM;
 use Doctrine\Common\Collections\ArrayCollection;
 
-use Knp\DoctrineBehaviors\ORM\Tree;
+use Knp\DoctrineBehaviors\Model\Tree;
 
 
 /**

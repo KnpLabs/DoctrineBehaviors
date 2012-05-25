@@ -61,7 +61,7 @@ class SoftDeletableListener implements EventSubscriber
     {
         $traitNames = $classMetadata->reflClass->getTraitNames();
 
-        return in_array('Knp\DoctrineBehaviors\ORM\SoftDeletable\SoftDeletable', $traitNames);
+        return in_array('Knp\DoctrineBehaviors\Model\SoftDeletable\SoftDeletable', $traitNames);
     }
 
     /**

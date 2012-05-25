@@ -3,14 +3,14 @@
 namespace BehaviorFixtures\ORM;
 
 use Doctrine\ORM\Mapping as ORM;
-use Knp\DoctrineBehaviors\ORM as OrmBehaviors;
+use Knp\DoctrineBehaviors\Model;
 
 /**
  * @ORM\Entity
  */
 class TranslatableEntity
 {
-    use OrmBehaviors\Translatable\Translatable;
+    use Model\Translatable\Translatable;
 
     /**
      * @ORM\Id
