@@ -9,7 +9,7 @@
  * file that was distributed with this source code.
  */
 
-namespace Knp\DoctrineBehaviors\ORM\Geocodable;
+namespace Knp\DoctrineBehaviors\Model\Geocodable;
 
 /**Geocodable
  *  trait.
