@@ -18,9 +18,23 @@ use Doctrine\Common\Collections\ArrayCollection;
  *
  * Should be used inside entity, that needs to be translated.
  */
-trait Translatable
+trait TranslatableProperties
 {
-    use TranslatableProperties,
-        TranslatableMethods
-    ;
+    /**
+     * Will be mapped to translatable entity
+     * by TranslatableListener
+     */
+    private $translations;
+
+    /**
+     * Will be merged with persisted translations on mergeNewTranslations call
+     *
+     * @see mergeNewTranslations
+     */
+    private $newTranslations;
+
+    /**
+     * currentLocale is a non persisted field configured during postLoad event
+     */
+    private $currentLocale;
 }

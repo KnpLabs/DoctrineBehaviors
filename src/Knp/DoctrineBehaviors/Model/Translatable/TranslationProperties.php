@@ -17,9 +17,23 @@ namespace Knp\DoctrineBehaviors\Model\Translatable;
  *
  * Should be used inside translation entity.
  */
-trait Translation
+trait TranslationProperties
 {
-    use TranslationProperties,
-        TranslationMethods
-    ;
+    /**
+     * @ORM\Id
+     * @ORM\Column(type="integer")
+     * @ORM\GeneratedValue(strategy="AUTO")
+     */
+    protected $id;
+
+    /**
+     * @ORM\Column(type="string")
+     */
+    protected $locale;
+
+    /**
+     * Will be mapped to translatable entity
+     * by TranslatableListener
+     */
+    protected $translatable;
 }
