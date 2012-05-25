@@ -13,7 +13,6 @@ namespace Knp\DoctrineBehaviors\ORM\Blameable;
 
 use Symfony\Component\DependencyInjection\Container;
 
-
 /**
  * UserCallable can be invoked to return a blameable user
  */

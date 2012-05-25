@@ -41,7 +41,7 @@ trait Node
      *
      * @return string "/" by default
      */
-    static public function getMaterializedPathSeparator()
+    public static function getMaterializedPathSeparator()
     {
         return '/';
     }
@@ -172,8 +172,7 @@ trait Node
         $this->parentNode = $node;
         $this->parentNode->addChild($this);
 
-        foreach($this->getChildren() as $child)
-        {
+        foreach ($this->getChildren() as $child) {
             $child->setChildOf($this);
         }
 
@@ -205,7 +204,7 @@ trait Node
     public function getRootNode()
     {
         $parent = $this;
-        while(null !== $parent->getParentNode()) {
+        while (null !== $parent->getParentNode()) {
             $parent = $parent->getParentNode();
         }
 
@@ -240,22 +239,22 @@ trait Node
 
     /**
      * @param \Closure $prepare a function to prepare the node before putting into the result
-     * @param array $tree a reference to an array, used internally for recursion
+     * @param array    $tree    a reference to an array, used internally for recursion
      *
      * @return array the hierarchical result
      **/
     public function toArray(\Closure $prepare = null, array &$tree = null)
     {
-        if(null === $prepare) {
+        if (null === $prepare) {
             $prepare = function(NodeInterface $node) {
-                return (string)$node;
+                return (string) $node;
             };
         }
         if (null === $tree) {
             $tree = array($this->getId() => array('node' => $prepare($this), 'children' => array()));
         }
 
-        foreach($this->getChildren() as $node) {
+        foreach ($this->getChildren() as $node) {
             $tree[$this->getId()]['children'][$node->getId()] = array('node' => $prepare($node), 'children' => array());
             $node->toArray($prepare, $tree[$this->getId()]['children']);
         }
@@ -265,23 +264,24 @@ trait Node
 
     /**
      * @param \Closure $prepare a function to prepare the node before putting into the result
-     * @param array $tree a reference to an array, used internally for recursion
+     * @param array    $tree    a reference to an array, used internally for recursion
      *
      * @return array the flatten result
      **/
     public function toFlatArray(\Closure $prepare = null, array &$tree = null)
     {
-        if(null === $prepare) {
+        if (null === $prepare) {
             $prepare = function(NodeInterface $node) {
                 $pre = $node->getNodeLevel() > 1 ? implode('', array_fill(0, $node->getNodeLevel(), '--')) : '';
-                return $pre.(string)$node;
+
+                return $pre.(string) $node;
             };
         }
         if (null === $tree) {
             $tree = array($this->getId() => $prepare($this));
         }
 
-        foreach($this->getChildren() as $node) {
+        foreach ($this->getChildren() as $node) {
             $tree[$node->getId()] = $prepare($node);
             $node->toFlatArray($prepare, $tree);
         }

@@ -3,7 +3,6 @@
 namespace Knp\DoctrineBehaviors\ORM\Geocodable;
 
 use Knp\DoctrineBehaviors\ORM\Geocodable\Type\Point;
-use Doctrine\ORM\QueryBuilder;
 
 trait GeocodableRepository
 {

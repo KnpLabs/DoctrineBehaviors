@@ -13,7 +13,6 @@ namespace Knp\DoctrineBehaviors\ORM\Loggable;
 
 use Symfony\Component\HttpKernel\Log\LoggerInterface;
 
-
 /**
  * LoggerCallable can be invoked to log messages using symfony2 logger
  */

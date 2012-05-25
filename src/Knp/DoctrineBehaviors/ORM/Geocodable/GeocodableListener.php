@@ -11,7 +11,6 @@
 
 namespace Knp\DoctrineBehaviors\ORM\Geocodable;
 
-use Symfony\Component\Security\Core\SecurityContextInterface;
 
 use Doctrine\Common\Persistence\Mapping\ClassMetadata;
 use Doctrine\ORM\Event\LoadClassMetadataEventArgs;
@@ -131,7 +130,7 @@ class GeocodableListener implements EventSubscriber
     /**
      * Checks if entity supports Geocodable
      *
-     * @param ClassMetadata $classMetadata
+     * @param  ClassMetadata $classMetadata
      * @return boolean
      */
     private function isEntitySupported(\ReflectionClass $reflClass)

@@ -11,7 +11,6 @@
 
 namespace Knp\DoctrineBehaviors\ORM\Translatable;
 
-
 use Doctrine\Common\EventSubscriber,
     Doctrine\ORM\Mapping\ClassMetadata,
     Doctrine\ORM\Event\LoadClassMetadataEventArgs,
@@ -109,7 +108,7 @@ class TranslatableListener implements EventSubscriber
      * Checks if entity is translatable
      *
      * @param ClassMetadata $classMetadata
-     * @param bool          $isRecursive    true to check for parent classes until trait is found
+     * @param bool          $isRecursive   true to check for parent classes until trait is found
      *
      * @return boolean
      */
@@ -119,7 +118,7 @@ class TranslatableListener implements EventSubscriber
 
         $isSupported = in_array('Knp\DoctrineBehaviors\Model\Translatable\Translatable', $reflClass->getTraitNames());
 
-        while($isRecursive and !$isSupported and $reflClass->getParentClass()) {
+        while ($isRecursive and !$isSupported and $reflClass->getParentClass()) {
             $reflClass = $reflClass->getParentClass();
             $isSupported = $this->isTranslatable($reflClass, true);
         }

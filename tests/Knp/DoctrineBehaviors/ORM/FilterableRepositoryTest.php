@@ -2,7 +2,6 @@
 
 namespace Tests\Knp\DoctrineBehaviors\ORM;
 
-use Doctrine\Common\EventManager;
 use BehaviorFixtures\ORM\FilterableEntity;
 
 require_once 'EntityManagerProvider.php';

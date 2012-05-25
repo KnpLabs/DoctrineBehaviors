@@ -22,7 +22,7 @@ class NodeTest extends \PHPUnit_Framework_TestCase
     protected function buildNode(array $values = array())
     {
         $node = new TreeNodeEntity;
-        foreach($values as $method => $value) {
+        foreach ($values as $method => $value) {
             $node->$method($value);
         }
 

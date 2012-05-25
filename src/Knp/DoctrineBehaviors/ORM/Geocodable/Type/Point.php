@@ -29,7 +29,7 @@ class Point
      *
      * @return Point
      */
-    static public function fromArray(array $array)
+    public static function fromArray(array $array)
     {
         if (isset($array['latitude'])) {
             return new self($array['latitude'], $array['longitude']);
@@ -45,7 +45,7 @@ class Point
      *
      * @return Point
      */
-    static public function fromString($string)
+    public static function fromString($string)
     {
         return self::fromArray(sscanf($string, '(%f,%f)'));
     }

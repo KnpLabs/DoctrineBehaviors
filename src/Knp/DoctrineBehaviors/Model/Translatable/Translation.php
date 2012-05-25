@@ -11,7 +11,6 @@
 
 namespace Knp\DoctrineBehaviors\Model\Translatable;
 
-use Doctrine\Common\Collections\ArrayCollection;
 
 /**
  * Translation trait.

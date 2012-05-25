@@ -48,7 +48,6 @@ trait Translatable
         return $this->translations = $this->translations ?: new ArrayCollection();
     }
 
-
     /**
      * Returns collection of new translations.
      *
@@ -158,7 +157,7 @@ trait Translatable
      *
      * @return string
      */
-    static public function getTranslationEntityClass()
+    public static function getTranslationEntityClass()
     {
         return __CLASS__.'Translation';
     }

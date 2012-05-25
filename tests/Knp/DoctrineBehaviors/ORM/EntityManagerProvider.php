@@ -18,7 +18,7 @@ trait EntityManagerProvider
      * annotation mapping driver and pdo_sqlite
      * database in memory
      *
-     * @param EventManager $evm
+     * @param  EventManager  $evm
      * @return EntityManager
      */
     protected function getEntityManager(EventManager $evm = null, Configuration $config = null, array $conn = [])
@@ -37,14 +37,14 @@ trait EntityManagerProvider
 
         $schema = array_map(function($class) use ($em) {
             return $em->getClassMetadata($class);
-        }, (array)$this->getUsedEntityFixtures());
+        }, (array) $this->getUsedEntityFixtures());
 
         $schemaTool = new SchemaTool($em);
         $schemaTool->dropSchema($schema);
         $schemaTool->createSchema($schema);
+
         return $this->em = $em;
     }
-
 
     /**
      * Get annotation mapping configuration

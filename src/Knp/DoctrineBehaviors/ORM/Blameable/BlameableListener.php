@@ -11,7 +11,6 @@
 
 namespace Knp\DoctrineBehaviors\ORM\Blameable;
 
-use Symfony\Component\Security\Core\SecurityContextInterface;
 
 use Doctrine\Common\Persistence\Mapping\ClassMetadata;
 use Doctrine\ORM\Event\LoadClassMetadataEventArgs;
@@ -77,8 +76,7 @@ class BlameableListener implements EventSubscriber
     {
         if ($this->userEntity) {
             $this->mapManyToOneUser($classMetadata);
-        }
-        else {
+        } else {
             $this->mapStringUser($classMetadata);
         }
     }
@@ -199,7 +197,7 @@ class BlameableListener implements EventSubscriber
      * Checks if entity supports Blameable
      *
      * @param ClassMetadata $classMetadata
-     * @param bool          $isRecursive    true to check for parent classes until trait is found
+     * @param bool          $isRecursive   true to check for parent classes until trait is found
      *
      * @return boolean
      */
@@ -207,7 +205,7 @@ class BlameableListener implements EventSubscriber
     {
         $isSupported = in_array('Knp\DoctrineBehaviors\Model\Blameable\Blameable', $reflClass->getTraitNames());
 
-        while($isRecursive and !$isSupported and $reflClass->getParentClass()) {
+        while ($isRecursive and !$isSupported and $reflClass->getParentClass()) {
             $reflClass = $reflClass->getParentClass();
             $isSupported = $this->isEntitySupported($reflClass, true);
         }

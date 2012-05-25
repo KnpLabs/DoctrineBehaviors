@@ -50,7 +50,7 @@ trait FilterableRepository
     /**
      * Filter values
      *
-     * @param array $filters - array like ['e:name' => 'nameValue'] where "e" is entity alias query, so we can filter using joins.
+     * @param  array                            $filters - array like ['e:name' => 'nameValue'] where "e" is entity alias query, so we can filter using joins.
      * @return Doctrine\DBAL\Query\QueryBuilder
      */
     public function filterBy(array $filters, QueryBuilder $qb = null)
@@ -83,7 +83,7 @@ trait FilterableRepository
 
                 if (in_array($col, $this->getInFilterColumns())) {
                     $qb
-                        ->$compare($qb->expr()->in(sprintf('%s', $colName), (array)$value))
+                        ->$compare($qb->expr()->in(sprintf('%s', $colName), (array) $value))
                     ;
                 }
             }

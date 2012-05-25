@@ -7,7 +7,6 @@ use Doctrine\Common\Collections\ArrayCollection;
 
 use Knp\DoctrineBehaviors\Model\Tree;
 
-
 /**
  * @ORM\Entity(repositoryClass="BehaviorFixtures\ORM\TreeNodeEntityRepository")
  */
@@ -39,7 +38,6 @@ class TreeNodeEntity implements Tree\NodeInterface, \ArrayAccess
     {
         return (string) $this->name;
     }
-
 
     /**
      * @return string

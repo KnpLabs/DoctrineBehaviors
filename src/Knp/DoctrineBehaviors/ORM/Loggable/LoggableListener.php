@@ -11,7 +11,6 @@
 
 namespace Knp\DoctrineBehaviors\ORM\Loggable;
 
-use Doctrine\ORM\Event\LoadClassMetadataEventArgs;
 use Doctrine\ORM\Event\LifecycleEventArgs;
 
 use Doctrine\Common\EventSubscriber,
@@ -92,7 +91,7 @@ class LoggableListener implements EventSubscriber
     /**
      * Checks if entity supports Loggable
      *
-     * @param ReflectionClass $reflClass
+     * @param  ReflectionClass $reflClass
      * @return boolean
      */
     private function isEntitySupported(\ReflectionClass $reflClass)

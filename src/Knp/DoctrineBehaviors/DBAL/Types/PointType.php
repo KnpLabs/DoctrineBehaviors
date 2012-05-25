@@ -24,8 +24,8 @@ class PointType extends Type
     /**
      * Returns the SQL declaration snippet for a field of this type.
      *
-     * @param array $fieldDeclaration The field declaration.
-     * @param AbstractPlatform $platform The currently used database platform.
+     * @param array            $fieldDeclaration The field declaration.
+     * @param AbstractPlatform $platform         The currently used database platform.
      */
     public function getSQLDeclaration(array $fieldDeclaration, AbstractPlatform $platform)
     {
