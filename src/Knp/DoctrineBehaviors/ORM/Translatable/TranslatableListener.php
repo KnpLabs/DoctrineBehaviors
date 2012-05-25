@@ -101,22 +101,20 @@ class TranslatableListener implements EventSubscriber
             return $name === $constraint['name'];
         });
 
-        return 0 === count($constraints);
+        return 0 !== count($constraints);
     }
 
     /**
      * Checks if entity is translatable
      *
      * @param ClassMetadata $classMetadata
-     * @param bool          $isRecursive   true to check for parent classes until trait is found
+     * @param bool          $isRecursive   true to check for parent classes until found
      *
      * @return boolean
      */
     private function isTranslatable(\ReflectionClass $reflClass, $isRecursive = false)
     {
-        $traitNames = $reflClass->getTraitNames();
-
-        $isSupported = in_array('Knp\DoctrineBehaviors\Model\Translatable\Translatable', $reflClass->getTraitNames());
+        $isSupported = $reflClass->hasProperty('translations');
 
         while ($isRecursive and !$isSupported and $reflClass->getParentClass()) {
             $reflClass = $reflClass->getParentClass();
@@ -128,9 +126,7 @@ class TranslatableListener implements EventSubscriber
 
     private function isTranslation(ClassMetadata $classMetadata)
     {
-        $traitNames = $classMetadata->reflClass->getTraitNames();
-
-        return in_array('Knp\DoctrineBehaviors\Model\Translatable\Translation', $traitNames);
+        return $classMetadata->reflClass->hasProperty('translatable');
     }
 
     public function postLoad(LifecycleEventArgs $eventArgs)
@@ -139,7 +135,7 @@ class TranslatableListener implements EventSubscriber
         $entity        = $eventArgs->getEntity();
         $classMetadata = $em->getClassMetadata(get_class($entity));
 
-        if (!$this->isTranslatable($classMetadata->reflClass, true)) {
+        if (!$classMetadata->reflClass->hasMethod('setCurrentLocale')) {
             return;
         }
 
