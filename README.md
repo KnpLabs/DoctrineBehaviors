@@ -22,7 +22,7 @@ It currently handles:
 Some behaviors (translatable, timestampable, softDeletable, blameable, geocodable) need Doctrine listeners in order to work.
 Make sure to activate them by reading the [Listeners](#listeners) section.  
 
-Traits are based on annotation driver.  
+Some traits are based on annotation driver.  
 You need to declare `use Doctrine\ORM\Mapping as ORM;` on top of your entity.
 
 
@@ -36,7 +36,7 @@ All you have to do is to define a Doctrine2 entity and use traits:
 
 use Doctrine\ORM\Mapping as ORM;
 
-use Knp\DoctrineBehaviors\ORM as ORMBehaviors;
+use Knp\DoctrineBehaviors\Model as ORMBehaviors;
 
 /**
  * @ORM\Entity(repositoryClass="CategoryRepository")
