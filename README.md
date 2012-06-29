@@ -223,6 +223,26 @@ so that when you try to call `getName` (for example) it will return you the tran
     $category->isDeleted(); // === true
 ```
 
+<a name="timestampable" id="timestampable"></a>
+### timestampable
+
+``` php
+
+<?php
+
+    $category = new Category;
+    $em->persist($category);
+    $em->flush();
+
+    $id = $category->getId();
+    $category = $em->getRepository('Category')->findOneById($id);
+
+    $category->getCreatedAt();
+    $category->getUpdatedAt();
+
+```
+
+
 <a name="blameable" id="blameable"></a>
 ### blameable
 
