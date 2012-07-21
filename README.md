@@ -16,6 +16,7 @@ It currently handles:
  * [loggable](#loggable)
  * [geocodable](#geocodable)
  * [filterable](#filterable)
+ * [sluggable](#sluggable)
 
 ## Notice:
 
@@ -315,6 +316,35 @@ It also provides an easy entry point to use 3rd party libraries like the exellen
     // find cities in a cricle of 500 km around point 47 lon., 7 lat.
     $nearCities = $repository->findByDistance(new Point(47, 7), 500);
 
+```
+
+<a name="sluggable" id="sluggable"></a>
+### sluggable
+
+Sluggable generates slugs (uniqueness is not guaranteed) for an entity.
+Will automatically generate on update/persist (you can disable the on update generation by overriding `getRegenerateSlugOnUpdate` to return false.
+You can also override the slug delimiter from the default hyphen by overriding `getSlugDelimiter`.
+Use cases include SEO (i.e. URLs like http://mysite.com/post/3/introduction-to-php)
+```php
+<?php
+use Knp\DoctrineBehaviors\ORM as ORMBehaviors;
+use Doctrine\ORM\Mapping as ORM;
+
+/**
+ * @ORM\Entity
+ */
+class BlogPost
+{
+    /**
+     * @ORM\Column(type="string")
+     */
+    protected $title;
+
+    public function getSluggableFields()
+    {
+        return [ 'title' ];
+    }
+}
 ```
 
 <a name="filterable" id="filterable"></a>
