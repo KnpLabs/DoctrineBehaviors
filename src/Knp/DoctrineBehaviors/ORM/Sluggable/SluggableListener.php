@@ -28,8 +28,7 @@ class SluggableListener implements EventSubscriber
 
         if ($this->isEntitySupported($classMetadata)) {
             if ($classMetadata->reflClass->hasMethod('generateSlug')) {
-                // Call the generateSlug function when the entity is persisted initially
-                // Not on update, though; because otherwise permalinks would get broken if fields changed
+                // Call the generateSlug function when the entity is persisted initially and when its updated
 
                 $classMetadata->addLifecycleCallback('generateSlug', Events::prePersist);
                 $classMetadata->addLifecycleCallback('generateSlug', Events::preUpdate);
