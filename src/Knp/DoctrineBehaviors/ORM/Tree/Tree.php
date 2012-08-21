@@ -60,7 +60,7 @@ trait Tree
      *
      * @return NodeInterface
      */
-    protected function buildTree($results)
+    public function buildTree($results)
     {
         if (!count($results)) {
             return;
