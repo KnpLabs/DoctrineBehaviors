@@ -129,15 +129,22 @@ class BlameableListener implements EventSubscriber
 
         $classMetadata = $em->getClassMetadata(get_class($entity));
         if ($this->isEntitySupported($classMetadata->reflClass, true)) {
-            $entity->setCreatedBy($this->getUser());
-            $entity->setUpdatedBy($this->getUser());
+            if (!$entity->getCreatedBy()) {
+                $entity->setCreatedBy($this->getUser());
 
-            $uow->propertyChanged($entity, 'createdBy', null, $entity->getCreatedBy());
-            $uow->propertyChanged($entity, 'updatedBy', null, $entity->getUpdatedBy());
-            $uow->scheduleExtraUpdate($entity, [
-                'createdBy' => [null, $entity->getCreatedBy()],
-                'updatedBy' => [null, $entity->getUpdatedBy()],
-            ]);
+                $uow->propertyChanged($entity, 'createdBy', null, $entity->getCreatedBy());
+                $uow->scheduleExtraUpdate($entity, [
+                    'createdBy' => [null, $entity->getCreatedBy()],
+                ]);
+            }
+            if (!$entity->getUpdatedBy()) {
+                $entity->setUpdatedBy($this->getUser());
+                $uow->propertyChanged($entity, 'updatedBy', null, $entity->getUpdatedBy());
+
+                $uow->scheduleExtraUpdate($entity, [
+                    'updatedBy' => [null, $entity->getUpdatedBy()],
+                ]);
+            }
         }
     }
 
