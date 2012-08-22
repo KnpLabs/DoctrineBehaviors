@@ -11,6 +11,8 @@
 
 namespace Knp\DoctrineBehaviors\ORM\Geocodable;
 
+use Knp\DoctrineBehaviors\ORM\Geocodable\Type\Point;
+
 
 use Doctrine\Common\Persistence\Mapping\ClassMetadata;
 use Doctrine\ORM\Event\LoadClassMetadataEventArgs;
@@ -96,12 +98,14 @@ class GeocodableListener implements EventSubscriber
         if ($this->isEntitySupported($classMetadata->reflClass)) {
 
             $oldValue = $entity->getLocation();
-            $entity->setLocation($this->getLocation($entity));
+            if (!$oldValue instanceof Point) {
+                $entity->setLocation($this->getLocation($entity));
 
-            $uow->propertyChanged($entity, 'location', $oldValue, $entity->getLocation());
-            $uow->scheduleExtraUpdate($entity, [
-                'location' => [$oldValue, $entity->getLocation()],
-            ]);
+                $uow->propertyChanged($entity, 'location', $oldValue, $entity->getLocation());
+                $uow->scheduleExtraUpdate($entity, [
+                    'location' => [$oldValue, $entity->getLocation()],
+                ]);
+            }
         }
     }
 
