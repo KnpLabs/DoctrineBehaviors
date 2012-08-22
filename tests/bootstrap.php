@@ -23,7 +23,7 @@ define('TESTS_PATH', __DIR__);
 define('TESTS_TEMP_DIR', __DIR__.'/temp');
 define('VENDOR_PATH', realpath(__DIR__ . '/../vendor'));
 
-$loader = require(VENDOR_PATH.'/.composer/autoload.php');
+$loader = require(VENDOR_PATH.'/autoload.php');
 $loader->add('BehaviorFixtures', __DIR__.'/fixtures');
 
 Doctrine\Common\Annotations\AnnotationRegistry::registerFile(
