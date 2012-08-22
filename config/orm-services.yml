@@ -9,6 +9,7 @@ parameters:
     knp.doctrine_behaviors.loggable_listener.class: Knp\DoctrineBehaviors\ORM\Loggable\LoggableListener
     knp.doctrine_behaviors.loggable_listener.logger_callable.class: Knp\DoctrineBehaviors\ORM\Loggable\LoggerCallable
     knp.doctrine_behaviors.geocodable_listener.class: Knp\DoctrineBehaviors\ORM\Geocodable\GeocodableListener
+    knp.doctrine_behaviors.sluggable_listener.class: Knp\DoctrineBehaviors\ORM\Sluggable\SluggableListener
 
 services:
     knp.doctrine_behaviors.translatable_listener:
@@ -71,3 +72,9 @@ services:
         public:  false
         tags:
             - { name: doctrine.event_subscriber }
+
+    knp.doctrine_behaviors.sluggable_listener:
+      class: %knp.doctrine_behaviors.sluggable_listener.class%
+      public: false
+      tags:
+        - { name: doctrine.event_subscriber }
