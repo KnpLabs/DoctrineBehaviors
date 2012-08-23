@@ -5,7 +5,7 @@ php:
 
 before_script:
   - sudo apt-get install -y postgresql-contrib-8.4
-  - psql -c 'create database orm_behaviors_test' -U postgres
+  - psql template1 -c 'create database orm_behaviors_test' -U postgres
   - psql -U postgres -d orm_behaviors_test -f /usr/share/postgresql/8.4/contrib/cube.sql
   - psql -U postgres -d orm_behaviors_test -f /usr/share/postgresql/8.4/contrib/earthdistance.sql
   - wget -nc http://getcomposer.org/composer.phar
