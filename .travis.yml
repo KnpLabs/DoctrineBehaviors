@@ -5,7 +5,7 @@ php:
 
 before_script:
   - sudo apt-get install -y postgresql-contrib-8.4
-  - sudo su -c "echo local all postgres trust >> /etc/postgresql/8.4/main/pg_hba.conf"
+  - 'sudo su -c "echo local all postgres trust >> /etc/postgresql/8.4/main/pg_hba.conf"'
   - psql -c 'create database orm_behaviors_test' -U postgres
   - psql -U postgres -d orm_behaviors_test -f /usr/share/postgresql/8.4/contrib/cube.sql
   - psql -U postgres -d orm_behaviors_test -f /usr/share/postgresql/8.4/contrib/earthdistance.sql
