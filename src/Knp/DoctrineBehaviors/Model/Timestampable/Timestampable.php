@@ -52,6 +52,16 @@ trait Timestampable
         return $this->updatedAt;
     }
 
+    public function setCreatedAt(\DateTime $createdAt)
+    {
+        $this->createdAt = $createdAt;
+    }
+
+    public function setUpdatedAt(\DateTime $updatedAt)
+    {
+        $this->updatedAt = $updatedAt;
+    }
+
     /**
      * Updates createdAt and updatedAt timestamps.
      */
