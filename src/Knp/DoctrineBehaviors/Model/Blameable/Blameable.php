@@ -18,6 +18,8 @@ namespace Knp\DoctrineBehaviors\Model\Blameable;
  */
 trait Blameable
 {
+    use BlameableMethods;
+
     /**
      * Will be mapped to either string or user entity
      * by BlameableListener
@@ -29,36 +31,4 @@ trait Blameable
      * by BlameableListener
      */
     private $updatedBy;
-
-    /**
-     * @param mixed the user representation
-     */
-    public function setCreatedBy($user)
-    {
-        $this->createdBy = $user;
-    }
-
-    /**
-     * @param mixed the user representation
-     */
-    public function setUpdatedBy($user)
-    {
-        $this->updatedBy = $user;
-    }
-
-    /**
-     * @return mixed the user who created entity
-     */
-    public function getCreatedBy()
-    {
-        return $this->createdBy;
-    }
-
-    /**
-     * @return mixed the user who last updated entity
-     */
-    public function getUpdatedBy()
-    {
-        return $this->updatedBy;
-    }
 }
