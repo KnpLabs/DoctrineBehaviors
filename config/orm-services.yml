@@ -70,6 +70,8 @@ services:
     knp.doctrine_behaviors.geocodable_listener:
         class:   %knp.doctrine_behaviors.geocodable_listener.class%
         public:  false
+        arguments:
+            - @?knp.doctrine_behaviors.geocodable_callable
         tags:
             - { name: doctrine.event_subscriber }
 
@@ -78,3 +80,4 @@ services:
       public: false
       tags:
         - { name: doctrine.event_subscriber }
+
