@@ -139,7 +139,7 @@ class GeocodableListener implements EventSubscriber
      */
     private function isEntitySupported(\ReflectionClass $reflClass)
     {
-        return in_array('Knp\DoctrineBehaviors\Model\Geocodable\Geocodable', $reflClass->getTraitNames());
+        return $reflClass->hasMethod('getLocation');
     }
 
     public function getSubscribedEvents()
