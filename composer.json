@@ -28,10 +28,6 @@
         "doctrine/orm":          ">=2.2",
         "doctrine/mongodb-odm":  "dev-master"
     },
-    "recommend": {
-        "doctrine/orm":          ">=2.2",
-        "doctrine/mongodb-odm":  "*"
-    },
     "autoload": {
         "psr-0": { "Knp\\DoctrineBehaviors": "src/" }
     },
