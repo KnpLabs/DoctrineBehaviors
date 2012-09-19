@@ -73,6 +73,11 @@ trait TranslatableMethods
      */
     public function translate($locale = null)
     {
+        return $this->doTranslate($locale);
+    }
+
+    protected function doTranslate($locale = null)
+    {
         if (null === $locale) {
             $locale = $this->getCurrentLocale();
         }
@@ -82,7 +87,7 @@ trait TranslatableMethods
             return $translation;
         }
 
-        if ($defaultTranslation = $this->findTranslationByLocale($this->getDefaultLocale())) {
+        if ($defaultTranslation = $this->findTranslationByLocale($this->getDefaultLocale(), false)) {
             return $defaultTranslation;
         }
 
@@ -104,6 +109,7 @@ trait TranslatableMethods
         foreach ($this->getNewTranslations() as $newTranslation) {
             if (!$this->getTranslations()->contains($newTranslation)) {
                 $this->addTranslation($newTranslation);
+                $this->getNewTranslations()->removeElement($newTranslation);
             }
         }
     }
@@ -148,15 +154,28 @@ trait TranslatableMethods
      * Finds specific translation in collection by its locale.
      *
      * @param string $locale The locale (en, ru, fr)
+     * @param bool   $withNewTranslations searched in new translations too
      *
      * @return Translation|null
      */
-    protected function findTranslationByLocale($locale)
+    protected function findTranslationByLocale($locale, $withNewTranslations = true)
     {
         $translations = $this->getTranslations()->filter(function($translation) use ($locale) {
             return $locale === $translation->getLocale();
         });
 
-        return $translations->first();
+        if ($translations->count()) {
+            return $translations->first();
+        }
+
+        if (!$withNewTranslations) {
+            return;
+        }
+
+        $newTranslations = $this->getNewTranslations()->filter(function($translation) use ($locale) {
+            return $locale === $translation->getLocale();
+        });
+
+        return $newTranslations->first();
     }
 }

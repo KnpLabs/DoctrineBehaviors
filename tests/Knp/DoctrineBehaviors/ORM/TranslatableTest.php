@@ -131,4 +131,21 @@ class TranslatableTest extends \PHPUnit_Framework_TestCase
             $meta->getAssociationMapping('translations')['type']
         );
     }
+
+    /**
+     * @test
+     */
+    public function should_create_only_one_time_the_same_translation()
+    {
+        $em = $this->getEntityManager();
+
+        $entity = new \BehaviorFixtures\ORM\TranslatableEntity();
+        $translation = $entity->translate('fr');
+        $translation->setTitle('fabuleux');
+        $entity->translate('fr')->setTitle('fabuleux2');
+        $entity->translate('fr')->setTitle('fabuleux3');
+
+        $this->assertEquals('fabuleux3', $entity->translate('fr')->getTitle());
+        $this->assertEquals(spl_object_hash($entity->translate('fr')), spl_object_hash($translation));
+    }
 }
