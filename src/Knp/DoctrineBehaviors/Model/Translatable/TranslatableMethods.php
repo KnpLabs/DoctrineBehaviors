@@ -47,7 +47,7 @@ trait TranslatableMethods
      */
     public function addTranslation($translation)
     {
-        $this->getTranslations()->add($translation);
+        $this->getTranslations()->set($translation->getLocale(), $translation);
         $translation->setTranslatable($this);
     }
 
@@ -95,7 +95,7 @@ trait TranslatableMethods
         $translation = new $class();
         $translation->setLocale($locale);
 
-        $this->getNewTranslations()->add($translation);
+        $this->getNewTranslations()->set($translation->getLocale(), $translation);
         $translation->setTranslatable($this);
 
         return $translation;
@@ -160,22 +160,16 @@ trait TranslatableMethods
      */
     protected function findTranslationByLocale($locale, $withNewTranslations = true)
     {
-        $translations = $this->getTranslations()->filter(function($translation) use ($locale) {
-            return $locale === $translation->getLocale();
-        });
+        $translation = $this->getTranslations()->get($locale);
 
-        if ($translations->count()) {
-            return $translations->first();
+        (\Doctrine\Common\Util\Debug::dump($this->getNewTranslations()->toArray()));
+
+        if ($translation) {
+            return $translation;
         }
 
-        if (!$withNewTranslations) {
-            return;
+        if ($withNewTranslations) {
+            return $this->getNewTranslations()->get($locale);
         }
-
-        $newTranslations = $this->getNewTranslations()->filter(function($translation) use ($locale) {
-            return $locale === $translation->getLocale();
-        });
-
-        return $newTranslations->first();
     }
 }

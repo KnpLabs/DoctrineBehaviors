@@ -59,6 +59,7 @@ class TranslatableListener implements EventSubscriber
             $classMetadata->mapOneToMany([
                 'fieldName'    => 'translations',
                 'mappedBy'     => 'translatable',
+                'indexBy'      => 'locale',
                 'cascade'      => ['persist', 'merge', 'remove'],
                 'targetEntity' => $classMetadata->name.'Translation'
             ]);
