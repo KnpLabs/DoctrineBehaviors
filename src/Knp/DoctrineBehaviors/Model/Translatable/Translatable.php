@@ -11,7 +11,6 @@
 
 namespace Knp\DoctrineBehaviors\Model\Translatable;
 
-
 /**
  * Translatable trait.
  *
