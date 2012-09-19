@@ -120,4 +120,46 @@ class BlameableTest extends \PHPUnit_Framework_TestCase
             'createBy and updatedBy have diverged since new update'
         );
     }
+
+    /**
+     * @test
+     */
+    public function should_only_persist_user_entity()
+    {
+        $user = new \BehaviorFixtures\ORM\UserEntity();
+        $user->setUsername('user');
+
+        $userCallback = function() use($user) {
+            return $user;
+        };
+
+        $em = $this->getEntityManager($this->getEventManager('anon.', $userCallback, get_class($user)));
+        $em->persist($user);
+        $em->flush();
+
+        $entity = new \BehaviorFixtures\ORM\BlameableEntity();
+
+        $em->persist($entity);
+        $em->flush();
+
+        $this->assertNull($entity->getCreatedBy(), 'createdBy is a not updated because not a user entity object');
+        $this->assertNull($entity->getUpdatedBy(), 'updatedBy is a not updated because not a user entity object');
+    }
+
+    /**
+     * @test
+     */
+    public function should_only_persist_user_string()
+    {
+        $user = new \BehaviorFixtures\ORM\UserEntity();
+        $em   = $this->getEntityManager($this->getEventManager($user));
+
+        $entity = new \BehaviorFixtures\ORM\BlameableEntity();
+
+        $em->persist($entity);
+        $em->flush();
+
+        $this->assertNull($entity->getCreatedBy(), 'createdBy is a not updated because not a user entity object');
+        $this->assertNull($entity->getUpdatedBy(), 'updatedBy is a not updated because not a user entity object');
+    }
 }

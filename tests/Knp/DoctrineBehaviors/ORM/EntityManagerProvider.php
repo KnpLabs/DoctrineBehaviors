@@ -6,6 +6,7 @@ use Doctrine\ORM\Mapping\Driver\AnnotationDriver;
 use Doctrine\ORM\EntityManager;
 use Doctrine\ORM\Tools\SchemaTool;
 use Doctrine\Common\EventManager;
+use Doctrine\ORM\Mapping\DefaultQuoteStrategy;
 
 trait EntityManagerProvider
 {
@@ -105,6 +106,12 @@ trait EntityManagerProvider
             ->expects($this->any())
             ->method('getDefaultRepositoryClassName')
             ->will($this->returnValue('Doctrine\\ORM\\EntityRepository'))
+        ;
+
+        $config
+            ->expects($this->any())
+            ->method('getQuoteStrategy')
+            ->will($this->returnValue(new DefaultQuoteStrategy))
         ;
 
         return $config;
