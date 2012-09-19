@@ -153,7 +153,7 @@ trait TranslatableMethods
     /**
      * Finds specific translation in collection by its locale.
      *
-     * @param string $locale The locale (en, ru, fr)
+     * @param string $locale              The locale (en, ru, fr)
      * @param bool   $withNewTranslations searched in new translations too
      *
      * @return Translation|null

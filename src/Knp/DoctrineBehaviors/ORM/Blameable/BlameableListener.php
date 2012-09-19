@@ -11,7 +11,6 @@
 
 namespace Knp\DoctrineBehaviors\ORM\Blameable;
 
-
 use Doctrine\Common\Persistence\Mapping\ClassMetadata;
 use Doctrine\ORM\Event\LoadClassMetadataEventArgs;
 use Doctrine\ORM\Event\LifecycleEventArgs;

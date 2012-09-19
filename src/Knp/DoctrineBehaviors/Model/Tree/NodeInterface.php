@@ -1,6 +1,5 @@
 <?php
 
-
 namespace Knp\DoctrineBehaviors\Model\Tree;
 
 use Doctrine\Common\Collections\Collection;
@@ -16,43 +15,43 @@ interface NodeInterface
     /**
      * @return string the id that will represent the node in the path
      **/
-    function getId();
+    public function getId();
 
     /**
      * @return string the materialized path,
      * eg the representation of path from all ancestors
      **/
-    function getMaterializedPath();
+    public function getMaterializedPath();
 
     /**
      * @return string the real materialized path,
      * eg the representation of path from all ancestors + current node
      **/
-    function getRealMaterializedPath();
+    public function getRealMaterializedPath();
 
     /**
      * @return string the materialized path from the parent, eg: the representation of path from all parent ancestors
      **/
-    function getParentMaterializedPath();
+    public function getParentMaterializedPath();
 
     /**
      * Set parent path.
      *
      * @param path the value to set.
      */
-    function setParentMaterializedPath($path);
+    public function setParentMaterializedPath($path);
 
     /**
      * @return NodeInterface the parent node
      **/
-    function getParentNode();
+    public function getParentNode();
 
     /**
      * @param string $path the materialized path, eg: the the materialized path to its parent
      *
      * @return NodeInterface $this Fluent interface
      **/
-    function setMaterializedPath($path);
+    public function setMaterializedPath($path);
 
     /**
      * Used to build the hierarchical tree.
@@ -66,29 +65,29 @@ interface NodeInterface
      *
      * @return NodeInterface $this Fluent interface
      **/
-    function setChildOf(NodeInterface $node);
+    public function setChildOf(NodeInterface $node);
 
     /**
      * @param NodeInterface the node to append to the children collection
      *
      * @return NodeInterface $this Fluent interface
      **/
-    function addChild(NodeInterface $node);
+    public function addChild(NodeInterface $node);
 
     /**
      * @return Collection the children collection
      **/
-    function getChildren();
+    public function getChildren();
 
     /**
      * @return bool if the node is a leaf (i.e has no children)
      **/
-    function isLeafNode();
+    public function isLeafNode();
 
     /**
      * @return bool if the node is a root (i.e has no parent)
      **/
-    function isRootNode();
+    public function isRootNode();
 
     /**
      * Tells if this node is a child of another node
@@ -96,19 +95,19 @@ interface NodeInterface
      *
      * @return boolean true if this node is a direct child of $node
      **/
-    function isChildOf(NodeInterface $node);
+    public function isChildOf(NodeInterface $node);
 
     /**
      *
      * @return integer the level of this node, eg: the depth compared to root node
      **/
-    function getNodeLevel();
+    public function getNodeLevel();
 
     /**
      * Builds a hierarchical tree from a flat collection of NodeInterface elements
      *
      * @return void
      **/
-    function buildTree(array $nodes);
+    public function buildTree(array $nodes);
 }
 

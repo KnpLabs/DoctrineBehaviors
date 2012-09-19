@@ -63,19 +63,19 @@ trait Sluggable
      */
     public function generateSlug()
     {
-        if( $this->getRegenerateSlugOnUpdate() || empty( $this->slug ) ) {
+        if ( $this->getRegenerateSlugOnUpdate() || empty( $this->slug ) ) {
             $fields = $this->getSluggableFields();
             $usableValues = [];
 
-            foreach($fields as $field) {
+            foreach ($fields as $field) {
                 // Too bad empty is a language construct...otherwise we could use the return value in a write context :)
                 $val = $this->{$field};
-                if( !empty( $val ) ) {
+                if ( !empty( $val ) ) {
                     $usableValues[] = $val;
                 }
             }
 
-            if( count($usableValues) < 1 ) {
+            if ( count($usableValues) < 1 ) {
                 throw new \UnexpectedValueException('Sluggable expects to have at least one usable (non-empty) field from the following: [ ' . implode($fields, ',') .' ]');
             }
 
@@ -83,7 +83,7 @@ trait Sluggable
             $sluggableText = implode($usableValues, ' ');
             $urlized = strtolower( trim( preg_replace("/[^a-zA-Z0-9\/_|+ -]/", '', iconv('UTF-8', 'ASCII//TRANSLIT', $sluggableText) ), $this->getSlugDelimiter() ) );
             $urlized = preg_replace("/[\/_|+ -]+/", $this->getSlugDelimiter(), $urlized);
-            
+
             $this->slug = $urlized;
         }
     }
