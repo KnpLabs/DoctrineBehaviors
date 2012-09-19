@@ -162,8 +162,6 @@ trait TranslatableMethods
     {
         $translation = $this->getTranslations()->get($locale);
 
-        (\Doctrine\Common\Util\Debug::dump($this->getNewTranslations()->toArray()));
-
         if ($translation) {
             return $translation;
         }
