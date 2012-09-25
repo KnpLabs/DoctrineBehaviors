@@ -50,4 +50,9 @@ trait BlameableMethods
         return $this->updatedBy;
     }
 
+
+    public function isBlameable()
+    {
+        return true;
+    }
 }

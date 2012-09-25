@@ -182,6 +182,9 @@ class BlameableListener implements EventSubscriber
 
         $classMetadata = $em->getClassMetadata(get_class($entity));
         if ($this->isEntitySupported($classMetadata->reflClass, true)) {
+            if (!$entity->isBlameable()) {
+                return;
+            }
             $user = $this->getUser();
             if ($this->isValidUser($user)) {
                 $oldValue = $entity->getUpdatedBy();
