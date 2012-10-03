@@ -79,4 +79,9 @@ class Point
     {
         return sprintf('(%F,%F)', $this->latitude, $this->longitude);
     }
+
+    public function isEmpty()
+    {
+        return empty($this->latitude) && empty($this->longitude);
+    }
 }

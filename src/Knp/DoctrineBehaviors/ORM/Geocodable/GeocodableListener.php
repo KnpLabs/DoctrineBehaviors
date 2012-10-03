@@ -87,7 +87,7 @@ class GeocodableListener implements EventSubscriber
     /**
      * @param LifecycleEventArgs $eventArgs
      */
-    public function prePersist(LifecycleEventArgs $eventArgs)
+    private function updateLocation(LifecycleEventArgs $eventArgs, $override = false)
     {
         $em = $eventArgs->getEntityManager();
         $uow = $em->getUnitOfWork();
@@ -97,7 +97,7 @@ class GeocodableListener implements EventSubscriber
         if ($this->isEntitySupported($classMetadata->reflClass)) {
 
             $oldValue = $entity->getLocation();
-            if (!$oldValue instanceof Point) {
+            if (!$oldValue instanceof Point || $override) {
                 $entity->setLocation($this->getLocation($entity));
 
                 $uow->propertyChanged($entity, 'location', $oldValue, $entity->getLocation());
@@ -108,12 +108,14 @@ class GeocodableListener implements EventSubscriber
         }
     }
 
-    /**
-     * @param LifecycleEventArgs $eventArgs
-     */
+    public function prePersist(LifecycleEventArgs $eventArgs)
+    {
+        $this->updateLocation($eventArgs, false);
+    }
+
     public function preUpdate(LifecycleEventArgs $eventArgs)
     {
-        $this->prePersist($eventArgs);
+        $this->updateLocation($eventArgs, true);
     }
 
     /**

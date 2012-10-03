@@ -11,6 +11,8 @@
 
 namespace Knp\DoctrineBehaviors\Model\Geocodable;
 
+use Knp\DoctrineBehaviors\ORM\Geocodable\Type\Point;
+
 /**Geocodable
  *  trait.
  *
@@ -38,7 +40,7 @@ trait Geocodable
      *
      * @param location the value to set.
      */
-    public function setLocation($location)
+    public function setLocation(Point $location)
     {
         $this->location = $location;
     }
