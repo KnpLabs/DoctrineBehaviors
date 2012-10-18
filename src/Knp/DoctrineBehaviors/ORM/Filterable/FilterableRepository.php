@@ -30,6 +30,15 @@ trait FilterableRepository
     abstract public function getLikeFilterColumns();
 
     /**
+     * Retrieve field which will be sorted using LOWER() LIKE
+     *
+     * Example format: ['e:name', 'e:description']
+     *
+     * @return array
+     */
+    abstract public function getILikeFilterColumns();
+
+    /**
      * Retrieve field which will be sorted using EQUAL
      *
      * Example format: ['e:name', 'e:description']
@@ -71,6 +80,13 @@ trait FilterableRepository
                     $qb
                         ->$compare(sprintf('%s LIKE :%s', $colName, $colParam))
                         ->setParameter($colParam, '%'.$value.'%')
+                    ;
+                }
+
+                if (in_array($col, $this->getILikeFilterColumns())) {
+                    $qb
+                        ->$compare(sprintf('LOWER(%s) LIKE :%s', $colName, $colParam))
+                        ->setParameter($colParam, '%'.strtolower($value).'%')
                     ;
                 }
 
