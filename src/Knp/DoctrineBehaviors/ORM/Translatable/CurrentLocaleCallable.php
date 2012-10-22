@@ -25,7 +25,7 @@ class CurrentLocaleCallable
 
         $request = $this->container->get('request');
 
-        return $request->getLocale() ?: $request->getDefaultLocale();
+        return $request->getLocale();
     }
 }
 
