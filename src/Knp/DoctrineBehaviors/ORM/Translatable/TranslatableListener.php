@@ -11,49 +11,19 @@
 
 namespace Knp\DoctrineBehaviors\ORM\Translatable;
 
-use Doctrine\Common\EventSubscriber,
-    Doctrine\ORM\Mapping\ClassMetadata,
-    Doctrine\ORM\Event\LoadClassMetadataEventArgs,
-    Doctrine\ORM\Event\LifecycleEventArgs,
-    Doctrine\ORM\Events;
+use Knp\DoctrineBehaviors\Translatable\TranslatableListener as BaseTranslatableListener;
+
+use Doctrine\ORM\Events;
+use Doctrine\Common\Persistence\Mapping\ClassMetadata;
 
 /**
  * Translatable Doctrine2 listener.
  *
  * Provides mapping for translatable entities and their translations.
  */
-class TranslatableListener implements EventSubscriber
+class TranslatableListener extends BaseTranslatableListener
 {
-    private $currentLocaleCallable;
-
-    public function __construct(callable $currentLocaleCallable = null)
-    {
-        $this->currentLocaleCallable = $currentLocaleCallable;
-    }
-
-    /**
-     * Adds mapping to the translatable and translations.
-     *
-     * @param LoadClassMetadataEventArgs $eventArgs The event arguments
-     */
-    public function loadClassMetadata(LoadClassMetadataEventArgs $eventArgs)
-    {
-        $classMetadata = $eventArgs->getClassMetadata();
-
-        if (null === $classMetadata->reflClass) {
-            return;
-        }
-
-        if ($this->isTranslatable($classMetadata->reflClass)) {
-            $this->mapTranslatable($classMetadata);
-        }
-
-        if ($this->isTranslation($classMetadata)) {
-            $this->mapTranslation($classMetadata);
-        }
-    }
-
-    private function mapTranslatable(ClassMetadata $classMetadata)
+    protected function mapTranslatable(ClassMetadata $classMetadata)
     {
         if (!$classMetadata->hasAssociation('translations')) {
             $classMetadata->mapOneToMany([
@@ -66,7 +36,7 @@ class TranslatableListener implements EventSubscriber
         }
     }
 
-    private function mapTranslation(ClassMetadata $classMetadata)
+    protected function mapTranslation(ClassMetadata $classMetadata)
     {
         if (!$classMetadata->hasAssociation('translatable')) {
             $classMetadata->mapManyToOne([
@@ -92,7 +62,7 @@ class TranslatableListener implements EventSubscriber
         }
     }
 
-    private function hasUniqueTranslationConstraint(ClassMetadata $classMetadata, $name)
+    protected function hasUniqueTranslationConstraint(ClassMetadata $classMetadata, $name)
     {
         if (!isset($classMetadata->table['uniqueConstraints'])) {
             return;
@@ -103,53 +73,6 @@ class TranslatableListener implements EventSubscriber
         });
 
         return 0 !== count($constraints);
-    }
-
-    /**
-     * Checks if entity is translatable
-     *
-     * @param ClassMetadata $classMetadata
-     * @param bool          $isRecursive   true to check for parent classes until found
-     *
-     * @return boolean
-     */
-    private function isTranslatable(\ReflectionClass $reflClass, $isRecursive = false)
-    {
-        $isSupported = $reflClass->hasProperty('translations');
-
-        while ($isRecursive and !$isSupported and $reflClass->getParentClass()) {
-            $reflClass = $reflClass->getParentClass();
-            $isSupported = $this->isTranslatable($reflClass, true);
-        }
-
-        return $isSupported;
-    }
-
-    private function isTranslation(ClassMetadata $classMetadata)
-    {
-        return $classMetadata->reflClass->hasProperty('translatable');
-    }
-
-    public function postLoad(LifecycleEventArgs $eventArgs)
-    {
-        $em            = $eventArgs->getEntityManager();
-        $entity        = $eventArgs->getEntity();
-        $classMetadata = $em->getClassMetadata(get_class($entity));
-
-        if (!$classMetadata->reflClass->hasMethod('setCurrentLocale')) {
-            return;
-        }
-
-        if ($locale = $this->getCurrentLocale()) {
-            $entity->setCurrentLocale($locale);
-        }
-    }
-
-    private function getCurrentLocale()
-    {
-        if ($currentLocaleCallable = $this->currentLocaleCallable) {
-            return $currentLocaleCallable();
-        }
     }
 
     /**

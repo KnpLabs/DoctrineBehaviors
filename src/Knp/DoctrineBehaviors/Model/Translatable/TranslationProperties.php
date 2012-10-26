@@ -22,11 +22,13 @@ trait TranslationProperties
      * @ORM\Id
      * @ORM\Column(type="integer")
      * @ORM\GeneratedValue(strategy="AUTO")
+     * @ODM\Id
      */
     protected $id;
 
     /**
      * @ORM\Column(type="string")
+     * @ODM\String
      */
     protected $locale;
 

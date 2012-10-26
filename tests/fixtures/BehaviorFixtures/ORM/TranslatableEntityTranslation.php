@@ -5,8 +5,11 @@ namespace BehaviorFixtures\ORM;
 use Doctrine\ORM\Mapping as ORM;
 use Knp\DoctrineBehaviors\Model;
 
+use Doctrine\ODM\MongoDB\Mapping\Annotations as ODM;
+
 /**
  * @ORM\Entity
+ * @ODM\EmbeddedDocument
  */
 class TranslatableEntityTranslation
 {
@@ -14,6 +17,7 @@ class TranslatableEntityTranslation
 
     /**
      * @ORM\Column(type="string")
+     * @ODM\String
      */
     private $title;
 

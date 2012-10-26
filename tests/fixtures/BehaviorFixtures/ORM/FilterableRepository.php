@@ -17,6 +17,11 @@ class FilterableRepository extends EntityRepository
         return ['e:name'];
     }
 
+    public function getILikeFilterColumns()
+    {
+        return [];
+    }
+
     public function getEqualFilterColumns()
     {
         return ['e:code'];
