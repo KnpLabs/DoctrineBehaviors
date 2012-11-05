@@ -2,7 +2,7 @@
 
 namespace Knp\DoctrineBehaviors\ORM\Tree;
 
-use Knp\DoctrineBehaviors\ORM\Tree\NodeInterface;
+use Knp\DoctrineBehaviors\Model\Tree\NodeInterface;
 use Doctrine\ORM\QueryBuilder;
 
 trait Tree

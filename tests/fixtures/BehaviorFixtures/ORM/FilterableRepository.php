@@ -12,6 +12,11 @@ class FilterableRepository extends EntityRepository
 {
     use Filterable\FilterableRepository;
 
+    public function getILikeFilterColumns()
+    {
+        return [];
+    }
+
     public function getLikeFilterColumns()
     {
         return ['e:name'];
