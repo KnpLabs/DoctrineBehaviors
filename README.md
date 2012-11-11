@@ -436,7 +436,7 @@ If you use symfony2, you can easilly register them by importing a service defini
 
     # app/config/config.yml
     imports:
-        - { resource: ../../vendor/knp-doctrine-behaviors/config/orm-services.yml }
+        - { resource: ../../vendor/knplabs/doctrine-behaviors/config/orm-services.yml }
 
 ```
 
