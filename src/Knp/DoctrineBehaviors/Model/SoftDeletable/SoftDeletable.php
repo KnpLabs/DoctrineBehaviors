@@ -21,7 +21,7 @@ trait SoftDeletable
     /**
      * @ORM\Column(type="datetime", nullable=true)
      */
-    private $deletedAt;
+    protected $deletedAt;
 
     /**
      * Marks entity as deleted.

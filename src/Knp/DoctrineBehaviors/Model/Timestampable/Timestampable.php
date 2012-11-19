@@ -23,14 +23,14 @@ trait Timestampable
      *
      * @ORM\Column(type="datetime", nullable=true)
      */
-    private $createdAt;
+    protected $createdAt;
 
     /**
      * @var DateTime $updatedAt
      *
      * @ORM\Column(type="datetime", nullable=true)
      */
-    private $updatedAt;
+    protected $updatedAt;
 
     /**
      * Returns createdAt value.
