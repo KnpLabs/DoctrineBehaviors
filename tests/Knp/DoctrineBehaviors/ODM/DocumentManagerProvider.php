@@ -6,6 +6,7 @@ use Doctrine\ODM\MongoDB\DocumentManager;
 use Doctrine\Common\EventManager;
 use Doctrine\ODM\MongoDB\Configuration;
 use Doctrine\ODM\MongoDB\Mapping\Driver\AnnotationDriver;
+use Doctrine\Common\Annotations\AnnotationReader;
 
 trait DocumentManagerProvider
 {
@@ -46,88 +47,20 @@ trait DocumentManagerProvider
      */
     protected function getAnnotatedConfig()
     {
-        // We need to mock every method except the ones which
-        // handle the filters
-        $configurationClass = 'Doctrine\ODM\MongoDB\Configuration';
-        $refl = new \ReflectionClass($configurationClass);
-        $methods = $refl->getMethods();
+        $config = new Configuration;
 
-        $mockMethods = array();
+        $config->setProxyDir(TESTS_TEMP_DIR);
+        $config->setProxyNamespace('Proxy');
 
-        foreach ($methods as $method) {
-            if (!in_array($method->name, ['addFilter', 'getFilterClassName', 'addCustomNumericFunction', 'getCustomNumericFunction'])) {
-                $mockMethods[] = $method->name;
-            }
-        }
+        $config->setHydratorDir(TESTS_TEMP_DIR);
+        $config->setHydratorNamespace('Hydrator');
 
-        $config = $this->getMock($configurationClass, $mockMethods);
+        $config->setDefaultDB('doctrine_behavior_test');
 
-        $config
-            ->expects($this->once())
-            ->method('getHydratorDir')
-            ->will($this->returnValue(TESTS_TEMP_DIR))
-        ;
-
-        $config
-            ->expects($this->once())
-            ->method('getHydratorNamespace')
-            ->will($this->returnValue('Hydrator'))
-        ;
-        $config
-            ->expects($this->once())
-            ->method('getProxyDir')
-            ->will($this->returnValue(TESTS_TEMP_DIR))
-        ;
-
-        $config
-            ->expects($this->once())
-            ->method('getProxyNamespace')
-            ->will($this->returnValue('Proxy'))
-        ;
-
-        $config
-            ->expects($this->once())
-            ->method('getAutoGenerateProxyClasses')
-            ->will($this->returnValue(true))
-        ;
-
-        $config
-            ->expects($this->once())
-            ->method('getDefaultCommitOptions')
-            ->will($this->returnValue([]))
-        ;
-
-        $config
-            ->expects($this->once())
-            ->method('getClassMetadataFactoryName')
-            ->will($this->returnValue('Doctrine\\ODM\\MongoDB\\Mapping\\ClassMetadataFactory'))
-        ;
-
-        $mappingDriver = $this->getMetadataDriverImpldmentation();
-
-        $config
-            ->expects($this->any())
-            ->method('getMetadataDriverImpl')
-            ->will($this->returnValue($mappingDriver))
-        ;
-
-        $config
-            ->expects($this->any())
-            ->method('getDefaultRepositoryClassName')
-            ->will($this->returnValue('Doctrine\\ODM\\MongoDB\\DocumentRepository'))
-        ;
+        $reader = new AnnotationReader();
+        $config->setMetadataDriverImpl(new AnnotationDriver($reader, __DIR__ . '/Documents'));
 
         return $config;
-    }
-
-    /**
-     * Creates default mapping driver
-     *
-     * @return \Doctrine\ORM\Mapping\Driver\Driver
-     */
-    protected function getMetadataDriverImpldmentation()
-    {
-        return new AnnotationDriver($_ENV['annotation_reader']);
     }
 
     /**

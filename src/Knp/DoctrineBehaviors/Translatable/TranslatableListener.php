@@ -83,16 +83,16 @@ abstract class TranslatableListener implements EventSubscriber
 
     public function postLoad(LifecycleEventArgs $eventArgs)
     {
-        $em            = $eventArgs->getEntityManager();
-        $entity        = $eventArgs->getEntity();
-        $classMetadata = $em->getClassMetadata(get_class($entity));
+        $om            = $eventArgs->getObjectManager();
+        $object        = $eventArgs->getObject();
+        $classMetadata = $om->getClassMetadata(get_class($object));
 
         if (!$classMetadata->reflClass->hasMethod('setCurrentLocale')) {
             return;
         }
 
         if ($locale = $this->getCurrentLocale()) {
-            $entity->setCurrentLocale($locale);
+            $object->setCurrentLocale($locale);
         }
     }
 

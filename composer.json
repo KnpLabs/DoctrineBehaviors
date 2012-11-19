@@ -27,6 +27,7 @@
     "require-dev": {
         "doctrine/orm":          ">=2.2",
         "doctrine/mongodb-odm":  "dev-master"
+        "doctrine/mongodb-odm":  "dev-master"
     },
     "autoload": {
         "psr-0": { "Knp\\DoctrineBehaviors": "src/" }
