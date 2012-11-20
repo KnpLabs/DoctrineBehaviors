@@ -67,7 +67,6 @@ class TranslatableTest extends \PHPUnit_Framework_TestCase
             'удивительный',
             $entity->translate('ru')->getTitle()
         );
-        die;
     }
 
     /**
