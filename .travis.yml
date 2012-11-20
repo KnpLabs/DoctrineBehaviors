@@ -3,6 +3,8 @@ language: php
 php:
   - 5.4
 
+services: mongodb
+
 before_script:
   - sudo apt-get install -y postgresql-contrib-8.4
   - 'sudo su -c "echo local all postgres trust > /etc/postgresql/8.4/main/pg_hba.conf"'
@@ -10,6 +12,7 @@ before_script:
   - psql -c 'create database orm_behaviors_test' -U postgres
   - psql -U postgres -d orm_behaviors_test -f /usr/share/postgresql/8.4/contrib/cube.sql
   - psql -U postgres -d orm_behaviors_test -f /usr/share/postgresql/8.4/contrib/earthdistance.sql
+  - pecl -q install mongo && echo "extension=mongo.so" >> `php --ini | grep "Loaded Configuration" | sed -e "s|.*:\s*||"`
   - composer install --dev
 
 script: phpunit
