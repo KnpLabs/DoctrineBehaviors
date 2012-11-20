@@ -108,6 +108,6 @@ interface NodeInterface
      *
      * @return void
      **/
-    public function buildTree(array $nodes);
+    public function buildTree($nodes);
 }
 

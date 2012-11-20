@@ -32,7 +32,8 @@ trait Node
     private $parentNode;
 
     /**
-     * @ORM\Column(type="string", length=255)
+     * @ORM\Column(type="text")
+     * @ODM\String
      */
     private $materializedPath = '';
 
@@ -124,7 +125,7 @@ trait Node
      **/
     public function getChildren()
     {
-        return $this->childNodes = $this->childNodes ?: new ArrayCollection;
+        return $this->childNodes = $this->childNodes ?: $this->childNodes = new ArrayCollection;
     }
 
     /**
@@ -214,7 +215,7 @@ trait Node
     /**
      * {@inheritdoc}
      **/
-    public function buildTree(array $results)
+    public function buildTree($results)
     {
         $this->getChildren()->clear();
         foreach ($results as $i => $node) {

@@ -2,6 +2,7 @@
 
 namespace BehaviorFixtures\ORM;
 
+use Doctrine\ODM\MongoDB\Mapping\Annotations as ODM;
 use Doctrine\ORM\Mapping as ORM;
 use Doctrine\Common\Collections\ArrayCollection;
 
@@ -9,6 +10,8 @@ use Knp\DoctrineBehaviors\Model\Tree;
 
 /**
  * @ORM\Entity(repositoryClass="BehaviorFixtures\ORM\TreeNodeEntityRepository")
+ * @ODM\Document
+ * @ODM\EmbeddedDocument
  */
 class TreeNodeEntity implements Tree\NodeInterface, \ArrayAccess
 {
@@ -17,6 +20,7 @@ class TreeNodeEntity implements Tree\NodeInterface, \ArrayAccess
     use Tree\Node;
 
     /**
+     * @ODM\Id(strategy="NONE")
      * @ORM\Id
      * @ORM\Column(type="integer")
      * @ORM\GeneratedValue(strategy="NONE")
@@ -30,7 +34,6 @@ class TreeNodeEntity implements Tree\NodeInterface, \ArrayAccess
 
     public function __construct($id = null)
     {
-        $this->children = new ArrayCollection;
         $this->id = $id;
     }
 
