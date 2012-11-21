@@ -27,6 +27,32 @@ Some traits are based on annotation driver.
 You need to declare `use Doctrine\ORM\Mapping as ORM;` on top of your entity.
 
 
+<a name="listeners" id="listeners"></a>
+## Listeners
+
+If you use symfony2, you can easilly register them by importing a service definition file:
+
+``` yaml
+
+    # app/config/config.yml
+    imports:
+        - { resource: ../../vendor/knplabs/doctrine-behaviors/config/orm-services.yml }
+
+```
+
+You can also register them using doctrine2 api:
+
+
+``` php
+
+<?php
+
+$em->getEventManager()->addEventSubscriber(new \Knp\DoctrineBehaviors\ORM\Translatable\TranslatableListener);
+// register more if needed
+
+```
+
+
 ## Usage
 
 All you have to do is to define a Doctrine2 entity and use traits:
@@ -427,30 +453,7 @@ Now we can filtering using:
     $products = $em->getRepository('Product')->filterBy(['o:code' => '21']);
 ```
 
-<a name="listeners" id="listeners"></a>
-## Listeners
 
-If you use symfony2, you can easilly register them by importing a service definition file:
-
-``` yaml
-
-    # app/config/config.yml
-    imports:
-        - { resource: ../../vendor/knplabs/doctrine-behaviors/config/orm-services.yml }
-
-```
-
-You can also register them using doctrine2 api:
-
-
-``` php
-
-<?php
-
-$em->getEventManager()->addEventSubscriber(new \Knp\DoctrineBehaviors\ORM\Translatable\TranslatableListener);
-// register more if needed
-
-```
 
 <a name="callables" id="callables"></a>
 ## callables
