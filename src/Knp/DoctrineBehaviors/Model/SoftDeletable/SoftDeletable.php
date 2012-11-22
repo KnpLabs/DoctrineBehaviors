@@ -32,7 +32,15 @@ trait SoftDeletable
     }
 
     /**
-     * Checks whether the entity was been deleted.
+     * Restore entity by undeleting it
+     */
+    public function restore()
+    {
+        $this->deletedAt = null;
+    }
+
+    /**
+     * Checks whether the entity has been deleted.
      *
      * @return Boolean
      */
