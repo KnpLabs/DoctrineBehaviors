@@ -42,7 +42,7 @@ class TreeListener implements EventSubscriber
             $classMetadata->mapManyEmbedded([
                 'fieldName'      => 'childNodes',
                 'targetDocument' => $classMetadata->name,
-                'strategy'       => 'pushAll',
+                'strategy'       => 'set',
             ]);
         }
     }
