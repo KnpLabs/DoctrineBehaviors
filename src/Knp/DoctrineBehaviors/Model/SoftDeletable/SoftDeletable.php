@@ -46,10 +46,11 @@ trait SoftDeletable
      */
     public function isDeleted()
     {
-        return null === $this->deletedAt
-            ? true
-            : $this->deletedAt <= (new \DateTime())
-        ;
+        if (null !== $this->deletedAt) {
+            return $this->deletedAt <= (new \DateTime());
+        }
+
+        return true;
     }
 
     /**
