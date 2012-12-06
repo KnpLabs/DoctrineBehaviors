@@ -16,7 +16,7 @@ use Doctrine\Common\EventSubscriber;
 abstract class AbstractListener implements EventSubscriber
 {
 
-    abstract public    function getSubscribedEvents();
+    abstract public function getSubscribedEvents();
     
     /**
      * Return TRUE if the given entity use the given trait, FALSE if not
@@ -32,9 +32,11 @@ abstract class AbstractListener implements EventSubscriber
 
         $parentClass = $class->getParentClass();
 
-        return (false === $isRecursive) || (false === $parentClass)
-            ? false
-            : $this->isEntityUseTrait($parentClass, $traitName, $isRecursive);
+        if ((false === $isRecursive) || (false === $parentClass)) {
+            return false;
+        }
+        
+        return $this->isEntityUseTrait($parentClass, $traitName, $isRecursive);
     }
 
     /**
@@ -60,8 +62,10 @@ abstract class AbstractListener implements EventSubscriber
 
         $parentClass = $class->getParentClass();
 
-        return (false === $isRecursive) || (false === $parentClass)
-            ? false
-            : $this->isEntityHasProperty($parentClass, $propertyName, $isRecursive);
+        if ((false === $isRecursive) || (false === $parentClass)) {
+            return false;
+        }
+        
+        return $this->isEntityHasProperty($parentClass, $propertyName, $isRecursive);
     }
 }
