@@ -6,6 +6,8 @@
 
 namespace Knp\DoctrineBehaviors\ORM\Sluggable;
 
+use Knp\DoctrineBehaviors\ORM\AbstractListener;
+
 use Doctrine\ORM\Event\LoadClassMetadataEventArgs,
     Doctrine\Common\EventSubscriber,
     Doctrine\ORM\Events,
@@ -16,7 +18,7 @@ use Doctrine\ORM\Event\LoadClassMetadataEventArgs,
  *
  * Adds mapping to sluggable entities.
  */
-class SluggableListener implements EventSubscriber
+class SluggableListener extends AbstractListener
 {
     public function loadClassMetadata(LoadClassMetadataEventArgs $eventArgs)
     {
@@ -48,10 +50,8 @@ class SluggableListener implements EventSubscriber
      *
      * @return Boolean
      */
-    private function isEntitySupported(ClassMetadata $classMetadata)
+    protected function isEntitySupported(ClassMetadata $classMetadata)
     {
-        $traitNames = $classMetadata->reflClass->getTraitNames();
-
-        return in_array('Knp\DoctrineBehaviors\Model\Sluggable\Sluggable', $traitNames);
+        return $this->isEntityUseTrait($classMetadata->reflClass, 'Knp\DoctrineBehaviors\Model\Sluggable\Sluggable');
     }
 }
