@@ -46,7 +46,11 @@ trait SoftDeletable
      */
     public function isDeleted()
     {
-        return null !== $this->deletedAt;
+        if (null !== $this->deletedAt) {
+            return $this->deletedAt <= (new \DateTime());
+        }
+
+        return true;
     }
 
     /**
@@ -57,5 +61,18 @@ trait SoftDeletable
     public function getDeletedAt()
     {
         return $this->deletedAt;
+    }
+
+    /**
+     * Set the delete date to given date.
+     *
+     * @param DateTime|null $date
+     * @param Object
+     */
+    public function setDeletedAt(\DateTime $date)
+    {
+        $this->deletedAt = $date;
+
+        return $this;
     }
 }
