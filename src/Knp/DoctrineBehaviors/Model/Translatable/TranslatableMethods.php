@@ -91,7 +91,7 @@ trait TranslatableMethods
             return $defaultTranslation;
         }
 
-        $class       = self::getTranslationEntityClass();
+        $class       = self::getTranslationClass();
         $translation = new $class();
         $translation->setLocale($locale);
 
@@ -145,7 +145,7 @@ trait TranslatableMethods
      *
      * @return string
      */
-    public static function getTranslationEntityClass()
+    public static function getTranslationClass()
     {
         return __CLASS__.'Translation';
     }
@@ -160,6 +160,7 @@ trait TranslatableMethods
      */
     protected function findTranslationByLocale($locale, $withNewTranslations = true)
     {
+        // with index by locale
         $translation = $this->getTranslations()->get($locale);
 
         if ($translation) {
@@ -167,7 +168,29 @@ trait TranslatableMethods
         }
 
         if ($withNewTranslations) {
-            return $this->getNewTranslations()->get($locale);
+            $translation = $this->getNewTranslations()->get($locale);
+            if ($translation) {
+                return $translation;
+            }
         }
+
+        // without index by locale
+        $translations = $this->getTranslations()->filter(function($translation) use ($locale) {
+            return $locale === $translation->getLocale();
+        });
+
+        if ($translations->count()) {
+            return $translations->first();
+        }
+
+        if (!$withNewTranslations) {
+            return;
+        }
+
+        $newTranslations = $this->getNewTranslations()->filter(function($translation) use ($locale) {
+            return $locale === $translation->getLocale();
+        });
+
+        return $newTranslations->first();
     }
 }

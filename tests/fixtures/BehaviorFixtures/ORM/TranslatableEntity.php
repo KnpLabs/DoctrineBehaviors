@@ -5,8 +5,11 @@ namespace BehaviorFixtures\ORM;
 use Doctrine\ORM\Mapping as ORM;
 use Knp\DoctrineBehaviors\Model;
 
+use Doctrine\ODM\MongoDB\Mapping\Annotations as ODM;
+
 /**
  * @ORM\Entity
+ * @ODM\Document
  */
 class TranslatableEntity
 {
@@ -16,6 +19,7 @@ class TranslatableEntity
      * @ORM\Id
      * @ORM\Column(type="integer")
      * @ORM\GeneratedValue(strategy="AUTO")
+     * @ODM\Id
      */
     private $id;
 

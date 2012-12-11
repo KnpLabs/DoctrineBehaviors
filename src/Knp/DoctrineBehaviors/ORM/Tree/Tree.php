@@ -66,7 +66,7 @@ trait Tree
             return;
         }
 
-        $root = $results[0];
+        $root = current($results);
         $root->buildTree($results);
 
         return $root;

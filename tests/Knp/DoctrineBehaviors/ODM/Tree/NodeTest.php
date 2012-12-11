@@ -1,17 +1,19 @@
 <?php
 
-namespace Tests\Knp\DoctrineBehaviors\ORM\Tree;
+namespace Tests\Knp\DoctrineBehaviors\ODM\Tree;
 
 use Knp\DoctrineBehaviors\Model\Tree\NodeInterface;
-use Tests\Knp\DoctrineBehaviors\ORM\EntityManagerProvider;
+use Tests\Knp\DoctrineBehaviors\ODM\DocumentManagerProvider;
 use BehaviorFixtures\ORM\TreeNodeEntity;
 use Doctrine\Common\Collections\ArrayCollection;
+use Doctrine\Common\EventManager;
+use Knp\DoctrineBehaviors\ODM\Tree\TreeListener;
 
-require_once __DIR__.'/../EntityManagerProvider.php';
+require_once __DIR__.'/../DocumentManagerProvider.php';
 
 class NodeTest extends \PHPUnit_Framework_TestCase
 {
-    use EntityManagerProvider;
+    use DocumentManagerProvider;
 
     protected function getUsedEntityFixtures()
     {
@@ -100,10 +102,10 @@ class NodeTest extends \PHPUnit_Framework_TestCase
     {
         $tree = $this->buildTree();
 
-        $this->assertSame($tree, $tree->getRootNode());
+        $this->assertEquals($tree, $tree->getRootNode());
         $this->assertNull($tree->getRootNode()->getParentNode());
 
-        $this->assertSame($tree, $tree->getChildren()->get(0)->getChildren()->get(0)->getRootNode());
+        $this->assertEquals($tree, $tree->getChildren()->get(0)->getChildren()->get(0)->getRootNode());
     }
 
     public function provideRootPaths()
@@ -280,7 +282,7 @@ class NodeTest extends \PHPUnit_Framework_TestCase
 
     public function testGetTree()
     {
-        $em = $this->getEntityManager();
+        $em = $this->getDocumentManager();
         $repo = $em->getRepository('BehaviorFixtures\ORM\TreeNodeEntity');
 
         $entity = new TreeNodeEntity(1);
@@ -288,13 +290,20 @@ class NodeTest extends \PHPUnit_Framework_TestCase
         $entity[0][0] = new TreeNodeEntity(3);
 
         $em->persist($entity);
-        $em->persist($entity[0]);
-        $em->persist($entity[0][0]);
         $em->flush();
 
-        $root = $repo->getTree();
+        $root = $repo->findAll()->getNext();
 
-        $this->assertSame($root[0][0], $entity[0][0]);
+        $this->assertEquals($root[0][0]->getId(), $entity[0][0]->getId());
+    }
+
+    protected function getEventManager()
+    {
+        $dm = new EventManager;
+
+        $dm->addEventSubscriber(new TreeListener);
+
+        return $dm;
     }
 }
 
