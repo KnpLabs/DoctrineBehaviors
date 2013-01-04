@@ -248,6 +248,31 @@ so that when you try to call `getName` (for example) it will return you the tran
 
     // but i'm "deleted"
     $category->isDeleted(); // === true
+    
+    // or 
+    $category->setDeletedAt((new \DateTime())->modify('+1 day'));
+```
+
+``` php
+
+<?php
+
+    $category = new Category;
+    $em->persist($category);
+    $em->flush();
+    
+    // I'll delete you tomorow
+    $category->setDeletedAt((new \DateTime())->modify('+1 day'));
+
+    // Ok, I'm here
+    $category->isDeleted(); // === false
+    
+    /*
+     *  24 hours later...
+     */
+     
+    // Ok I'm deleted
+    $category->isDeleted(); // === true
 ```
 
 <a name="timestampable" id="timestampable"></a>
