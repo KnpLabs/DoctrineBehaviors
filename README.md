@@ -248,9 +248,6 @@ so that when you try to call `getName` (for example) it will return you the tran
 
     // but i'm "deleted"
     $category->isDeleted(); // === true
-    
-    // or 
-    $category->setDeletedAt((new \DateTime())->modify('+1 day'));
 ```
 
 ``` php
