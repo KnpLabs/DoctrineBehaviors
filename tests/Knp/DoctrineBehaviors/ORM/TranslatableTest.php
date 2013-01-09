@@ -148,4 +148,26 @@ class TranslatableTest extends \PHPUnit_Framework_TestCase
         $this->assertEquals('fabuleux3', $entity->translate('fr')->getTitle());
         $this->assertEquals(spl_object_hash($entity->translate('fr')), spl_object_hash($translation));
     }
+
+    /**
+     * @test
+     */
+    public function should_remove_translation()
+    {
+        $em = $this->getEntityManager();
+
+        $entity = new \BehaviorFixtures\ORM\TranslatableEntity();
+        $entity->translate('en')->setTitle('Hello');
+        $entity->translate('nl')->setTitle('Hallo');
+        $entity->mergeNewTranslations();
+        $em->persist($entity);
+        $em->flush();
+
+        $nlTranslation = $entity->translate('nl');
+        $entity->removeTranslation($nlTranslation);
+        $em->flush();
+
+        $em->refresh($entity);
+        $this->assertNotEquals('Hallo', $entity->translate('nl')->getTitle());
+    }
 }
