@@ -57,11 +57,12 @@ class TranslatableListener implements EventSubscriber
     {
         if (!$classMetadata->hasAssociation('translations')) {
             $classMetadata->mapOneToMany([
-                'fieldName'    => 'translations',
-                'mappedBy'     => 'translatable',
-                'indexBy'      => 'locale',
-                'cascade'      => ['persist', 'merge', 'remove'],
-                'targetEntity' => $classMetadata->name.'Translation'
+                'fieldName'     => 'translations',
+                'mappedBy'      => 'translatable',
+                'indexBy'       => 'locale',
+                'cascade'       => ['persist', 'merge', 'remove'],
+                'targetEntity'  => $classMetadata->name.'Translation',
+                'orphanRemoval' => true
             ]);
         }
     }
