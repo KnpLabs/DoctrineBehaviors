@@ -67,6 +67,9 @@ class SoftDeletableTest extends \PHPUnit_Framework_TestCase
 
         $this->assertNotNull($entity);
         $this->assertFalse($entity->isDeleted());
+        $this->assertTrue($entity->willBeDeleted());
+        $this->assertTrue($entity->willBeDeleted((new \DateTime())->modify('+2 day')));
+        $this->assertFalse($entity->willBeDeleted((new \DateTime())->modify('+12 hour')));
 
         $entity->setDeletedAt((new \DateTime())->modify('-1 day'));
 
