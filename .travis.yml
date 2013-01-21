@@ -4,13 +4,13 @@ php:
   - 5.4
 
 before_script:
-  - sudo apt-get install -y postgresql-contrib-8.4
+  - sudo apt-get install -y postgresql
   - pecl -q install mongo && echo "extension=mongo.so" >> `php --ini | grep "Loaded Configuration" | sed -e "s|.*:\s*||"`
   - 'sudo su -c "echo local all postgres trust > /etc/postgresql/8.4/main/pg_hba.conf"'
   - sudo /etc/init.d/postgresql reload
   - psql -c 'create database orm_behaviors_test' -U postgres
-  - psql -U postgres -d orm_behaviors_test -f /usr/share/postgresql/8.4/contrib/cube.sql
-  - psql -U postgres -d orm_behaviors_test -f /usr/share/postgresql/8.4/contrib/earthdistance.sql
+  - psql clr -c "create extension cube"
+  - psql clr -c "create extension earthdistance"
   - composer install --dev
 
 script: phpunit
