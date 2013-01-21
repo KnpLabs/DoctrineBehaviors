@@ -97,6 +97,14 @@ class BlameableListener implements EventSubscriber
                 'nullable'   => true,
             ]);
         }
+
+        if (!$classMetadata->hasField('deletedBy')) {
+            $classMetadata->mapField([
+                'fieldName'  => 'deletedBy',
+                'type'       => 'string',
+                'nullable'   => true,
+            ]);
+        }
     }
 
     private function mapManyToOneUser(classMetadata $classMetadata)
@@ -110,6 +118,12 @@ class BlameableListener implements EventSubscriber
         if (!$classMetadata->hasAssociation('updatedBy')) {
             $classMetadata->mapManyToOne([
                 'fieldName'    => 'updatedBy',
+                'targetEntity' => $this->userEntity,
+            ]);
+        }
+        if (!$classMetadata->hasAssociation('deletedBy')) {
+            $classMetadata->mapManyToOne([
+                'fieldName'    => 'deletedBy',
                 'targetEntity' => $this->userEntity,
             ]);
         }
@@ -147,6 +161,17 @@ class BlameableListener implements EventSubscriber
 
                     $uow->scheduleExtraUpdate($entity, [
                         'updatedBy' => [null, $user],
+                    ]);
+                }
+            }
+            if (!$entity->getDeletedBy()) {
+                $user = $this->getUser();
+                if ($this->isValidUser($user)) {
+                    $entity->setDeletedBy($user);
+                    $uow->propertyChanged($entity, 'deletedBy', null, $user);
+
+                    $uow->scheduleExtraUpdate($entity, [
+                        'deletedBy' => [null, $user],
                     ]);
                 }
             }
@@ -193,6 +218,35 @@ class BlameableListener implements EventSubscriber
 
                 $uow->scheduleExtraUpdate($entity, [
                     'updatedBy' => [$oldValue, $user],
+                ]);
+            }
+        }
+    }
+
+    /**
+     * Stores the current user into deletedBy property
+     *
+     * @param LifecycleEventArgs $eventArgs
+     */
+    public function preRemove(LifecycleEventArgs $eventArgs)
+    {
+        $em =$eventArgs->getEntityManager();
+        $uow = $em->getUnitOfWork();
+        $entity = $eventArgs->getEntity();
+
+        $classMetadata = $em->getClassMetadata(get_class($entity));
+        if ($this->isEntitySupported($classMetadata->reflClass, true)) {
+            if (!$entity->isBlameable()) {
+                return;
+            }
+            $user = $this->getUser();
+            if ($this->isValidUser($user)) {
+                $oldValue = $entity->getDeletedBy();
+                $entity->setDeletedBy($user);
+                $uow->propertyChanged($entity, 'deletedBy', $oldValue, $user);
+
+                $uow->scheduleExtraUpdate($entity, [
+                    'deletedBy' => [$oldValue, $user],
                 ]);
             }
         }
@@ -254,6 +308,7 @@ class BlameableListener implements EventSubscriber
         $events = [
             Events::prePersist,
             Events::preUpdate,
+            Events::preRemove,
             Events::loadClassMetadata,
         ];
 
