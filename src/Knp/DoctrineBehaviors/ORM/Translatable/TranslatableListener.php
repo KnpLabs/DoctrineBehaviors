@@ -11,6 +11,8 @@
 
 namespace Knp\DoctrineBehaviors\ORM\Translatable;
 
+use Knp\DoctrineBehaviors\ORM\AbstractListener;
+
 use Doctrine\Common\EventSubscriber,
     Doctrine\ORM\Mapping\ClassMetadata,
     Doctrine\ORM\Event\LoadClassMetadataEventArgs,
@@ -22,7 +24,7 @@ use Doctrine\Common\EventSubscriber,
  *
  * Provides mapping for translatable entities and their translations.
  */
-class TranslatableListener implements EventSubscriber
+class TranslatableListener extends AbstractListener
 {
     private $currentLocaleCallable;
 
@@ -44,7 +46,7 @@ class TranslatableListener implements EventSubscriber
             return;
         }
 
-        if ($this->isTranslatable($classMetadata->reflClass)) {
+        if ($this->isTranslatable($classMetadata)) {
             $this->mapTranslatable($classMetadata);
         }
 
@@ -114,16 +116,9 @@ class TranslatableListener implements EventSubscriber
      *
      * @return boolean
      */
-    private function isTranslatable(\ReflectionClass $reflClass, $isRecursive = false)
+    private function isTranslatable(ClassMetadata $classMetadata, $isRecursive = false)
     {
-        $isSupported = $reflClass->hasProperty('translations');
-
-        while ($isRecursive and !$isSupported and $reflClass->getParentClass()) {
-            $reflClass = $reflClass->getParentClass();
-            $isSupported = $this->isTranslatable($reflClass, true);
-        }
-
-        return $isSupported;
+        return $this->isEntityHasProperty($classMetadata->reflClass, 'translations', $isRecursive);
     }
 
     private function isTranslation(ClassMetadata $classMetadata)
@@ -137,7 +132,7 @@ class TranslatableListener implements EventSubscriber
         $entity        = $eventArgs->getEntity();
         $classMetadata = $em->getClassMetadata(get_class($entity));
 
-        if (!$classMetadata->reflClass->hasMethod('setCurrentLocale')) {
+        if (!$this->isEntityHasMethod($classMetadata->reflClass, 'setCurrentLocale', false)) {
             return;
         }
 

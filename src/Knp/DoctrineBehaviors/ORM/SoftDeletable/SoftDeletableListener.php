@@ -11,6 +11,8 @@
 
 namespace Knp\DoctrineBehaviors\ORM\SoftDeletable;
 
+use Knp\DoctrineBehaviors\ORM\AbstractListener;
+
 use Doctrine\Common\Persistence\Mapping\ClassMetadata,
     Doctrine\Common\EventSubscriber,
     Doctrine\ORM\Event\OnFlushEventArgs,
@@ -22,7 +24,7 @@ use Doctrine\Common\Persistence\Mapping\ClassMetadata,
  * Listens to onFlush event and marks SoftDeletable entities
  * as deleted instead of really removing them.
  */
-class SoftDeletableListener implements EventSubscriber
+class SoftDeletableListener extends AbstractListener
 {
     /**
      * Listens to onFlush event.
@@ -59,9 +61,7 @@ class SoftDeletableListener implements EventSubscriber
      */
     private function isEntitySupported(ClassMetadata $classMetadata)
     {
-        $traitNames = $classMetadata->reflClass->getTraitNames();
-
-        return in_array('Knp\DoctrineBehaviors\Model\SoftDeletable\SoftDeletable', $traitNames);
+        return $this->isEntityUseTrait($classMetadata->reflClass, 'Knp\DoctrineBehaviors\Model\SoftDeletable\SoftDeletable');
     }
 
     /**

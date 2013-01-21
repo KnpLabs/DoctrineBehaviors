@@ -11,6 +11,8 @@
 
 namespace Knp\DoctrineBehaviors\ORM\Blameable;
 
+use Knp\DoctrineBehaviors\ORM\AbstractListener;
+
 use Doctrine\Common\Persistence\Mapping\ClassMetadata;
 use Doctrine\ORM\Event\LoadClassMetadataEventArgs;
 use Doctrine\ORM\Event\LifecycleEventArgs;
@@ -24,7 +26,7 @@ use Doctrine\Common\EventSubscriber,
  * Adds class metadata depending of user type (entity or string)
  * Listens to prePersist and PreUpdate lifecycle events
  */
-class BlameableListener implements EventSubscriber
+class BlameableListener extends AbstractListener
 {
     /**
      * @var callable
@@ -237,16 +239,9 @@ class BlameableListener implements EventSubscriber
      */
     private function isEntitySupported(\ReflectionClass $reflClass, $isRecursive = false)
     {
-        $isSupported = in_array('Knp\DoctrineBehaviors\Model\Blameable\Blameable', $reflClass->getTraitNames())
-            || in_array('Knp\DoctrineBehaviors\Model\Blameable\BlameableMethods', $reflClass->getTraitNames())
+        return $this->isEntityUseTrait($reflClass, 'Knp\DoctrineBehaviors\Model\Blameable\Blameable', $isRecursive)
+            || $this->isEntityUseTrait($reflClass, 'Knp\DoctrineBehaviors\Model\Blameable\BlameableMethods', $isRecursive)
         ;
-
-        while ($isRecursive and !$isSupported and $reflClass->getParentClass()) {
-            $reflClass = $reflClass->getParentClass();
-            $isSupported = $this->isEntitySupported($reflClass, true);
-        }
-
-        return $isSupported;
     }
 
     public function getSubscribedEvents()
