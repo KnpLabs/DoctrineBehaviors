@@ -11,6 +11,8 @@
 
 namespace Knp\DoctrineBehaviors\ORM\Translatable;
 
+use Knp\DoctrineBehaviors\Reflection\ClassAnalyzer;
+
 use Knp\DoctrineBehaviors\ORM\AbstractListener;
 
 use Doctrine\Common\EventSubscriber,
@@ -28,8 +30,10 @@ class TranslatableListener extends AbstractListener
 {
     private $currentLocaleCallable;
 
-    public function __construct(callable $currentLocaleCallable = null)
+    public function __construct(ClassAnalyzer $classAnalyzer, callable $currentLocaleCallable = null)
     {
+        parent::__construct($classAnalyzer);
+        
         $this->currentLocaleCallable = $currentLocaleCallable;
     }
 
@@ -118,12 +122,12 @@ class TranslatableListener extends AbstractListener
      */
     private function isTranslatable(ClassMetadata $classMetadata, $isRecursive = false)
     {
-        return $this->isEntityHasProperty($classMetadata->reflClass, 'translations', $isRecursive);
+        return $this->getClassAnalyzer()->isObjectHasProperty($classMetadata->reflClass, 'translations', $isRecursive);
     }
 
     private function isTranslation(ClassMetadata $classMetadata)
     {
-        return $classMetadata->reflClass->hasProperty('translatable');
+        return $this->getClassAnalyzer()->isObjectHasProperty($classMetadata->reflClass, 'translatable');
     }
 
     public function postLoad(LifecycleEventArgs $eventArgs)
@@ -132,7 +136,7 @@ class TranslatableListener extends AbstractListener
         $entity        = $eventArgs->getEntity();
         $classMetadata = $em->getClassMetadata(get_class($entity));
 
-        if (!$this->isEntityHasMethod($classMetadata->reflClass, 'setCurrentLocale', false)) {
+        if (!$this->getClassAnalyzer()->isObjectHasMethod($classMetadata->reflClass, 'setCurrentLocale', false)) {
             return;
         }
 

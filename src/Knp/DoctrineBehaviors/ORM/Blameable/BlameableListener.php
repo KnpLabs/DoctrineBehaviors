@@ -11,6 +11,8 @@
 
 namespace Knp\DoctrineBehaviors\ORM\Blameable;
 
+use Knp\DoctrineBehaviors\Reflection\ClassAnalyzer;
+
 use Knp\DoctrineBehaviors\ORM\AbstractListener;
 
 use Doctrine\Common\Persistence\Mapping\ClassMetadata;
@@ -49,8 +51,10 @@ class BlameableListener extends AbstractListener
      * @param callable
      * @param string $userEntity
      */
-    public function __construct(callable $userCallable = null, $userEntity = null)
+    public function __construct(ClassAnalyzer $classAnalyzer, callable $userCallable = null, $userEntity = null)
     {
+        parent::__construct($classAnalyzer);
+
         $this->userCallable = $userCallable;
         $this->userEntity = $userEntity;
     }
@@ -239,8 +243,8 @@ class BlameableListener extends AbstractListener
      */
     private function isEntitySupported(\ReflectionClass $reflClass, $isRecursive = false)
     {
-        return $this->isEntityUseTrait($reflClass, 'Knp\DoctrineBehaviors\Model\Blameable\Blameable', $isRecursive)
-            || $this->isEntityUseTrait($reflClass, 'Knp\DoctrineBehaviors\Model\Blameable\BlameableMethods', $isRecursive)
+        return $this->getClassAnalyzer()->isObjectUseTrait($reflClass, 'Knp\DoctrineBehaviors\Model\Blameable\Blameable', $isRecursive)
+            || $this->getClassAnalyzer()->isObjectUseTrait($reflClass, 'Knp\DoctrineBehaviors\Model\Blameable\BlameableMethods', $isRecursive)
         ;
     }
 

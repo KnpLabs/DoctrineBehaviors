@@ -11,6 +11,8 @@
 
 namespace Knp\DoctrineBehaviors\ORM\SoftDeletable;
 
+use Knp\DoctrineBehaviors\Reflection\ClassAnalyzer;
+
 use Knp\DoctrineBehaviors\ORM\AbstractListener;
 
 use Doctrine\Common\Persistence\Mapping\ClassMetadata,
@@ -61,7 +63,7 @@ class SoftDeletableListener extends AbstractListener
      */
     private function isEntitySupported(ClassMetadata $classMetadata)
     {
-        return $this->isEntityUseTrait($classMetadata->reflClass, 'Knp\DoctrineBehaviors\Model\SoftDeletable\SoftDeletable');
+        return $this->getClassAnalyzer()->isObjectUseTrait($classMetadata->reflClass, 'Knp\DoctrineBehaviors\Model\SoftDeletable\SoftDeletable');
     }
 
     /**

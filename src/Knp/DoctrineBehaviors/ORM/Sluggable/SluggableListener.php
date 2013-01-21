@@ -6,6 +6,8 @@
 
 namespace Knp\DoctrineBehaviors\ORM\Sluggable;
 
+use Knp\DoctrineBehaviors\Reflection\ClassAnalyzer;
+
 use Knp\DoctrineBehaviors\ORM\AbstractListener;
 
 use Doctrine\ORM\Event\LoadClassMetadataEventArgs,
@@ -52,6 +54,6 @@ class SluggableListener extends AbstractListener
      */
     protected function isEntitySupported(ClassMetadata $classMetadata)
     {
-        return $this->isEntityUseTrait($classMetadata->reflClass, 'Knp\DoctrineBehaviors\Model\Sluggable\Sluggable');
+        return $this->getClassAnalyzer()->isObjectUseTrait($classMetadata->reflClass, 'Knp\DoctrineBehaviors\Model\Sluggable\Sluggable');
     }
 }

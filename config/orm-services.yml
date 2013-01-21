@@ -1,4 +1,5 @@
 parameters:
+    knp.doctrine_behaviors.reflection.class_analyzer.class: Knp\DoctrineBehaviors\Reflection\ClassAnalyzer
     knp.doctrine_behaviors.translatable_listener.class: Knp\DoctrineBehaviors\ORM\Translatable\TranslatableListener
     knp.doctrine_behaviors.translatable_listener.current_locale_callable.class: Knp\DoctrineBehaviors\ORM\Translatable\CurrentLocaleCallable
     knp.doctrine_behaviors.softdeletable_listener.class: Knp\DoctrineBehaviors\ORM\SoftDeletable\SoftDeletableListener
@@ -12,10 +13,15 @@ parameters:
     knp.doctrine_behaviors.sluggable_listener.class: Knp\DoctrineBehaviors\ORM\Sluggable\SluggableListener
 
 services:
+    knp.doctrine_behaviors.reflection.class_analyzer:
+        class:   "%knp.doctrine_behaviors.reflection.class_analyzer.class%"
+        public:  false
+
     knp.doctrine_behaviors.translatable_listener:
         class:   "%knp.doctrine_behaviors.translatable_listener.class%"
         public:  false
         arguments:
+            - "@knp.doctrine_behaviors.reflection.class_analyzer"
             - "@knp.doctrine_behaviors.translatable_listener.current_locale_callable"
         tags:
             - { name: doctrine.event_subscriber }
@@ -29,18 +35,23 @@ services:
     knp.doctrine_behaviors.softdeletable_listener:
         class:   "%knp.doctrine_behaviors.softdeletable_listener.class%"
         public:  false
+        arguments:
+            - "@knp.doctrine_behaviors.reflection.class_analyzer"
         tags:
             - { name: doctrine.event_subscriber }
 
     knp.doctrine_behaviors.timestampable_listener:
         class:   "%knp.doctrine_behaviors.timestampable_listener.class%"
         public:  false
+        arguments:
+            - "@knp.doctrine_behaviors.reflection.class_analyzer"
         tags:
             - { name: doctrine.event_subscriber }
 
     knp.doctrine_behaviors.blameable_listener:
         class:   "%knp.doctrine_behaviors.blameable_listener.class%"
         arguments:
+            - "@knp.doctrine_behaviors.reflection.class_analyzer"
             - "@knp.doctrine_behaviors.blameable_listener.user_callable"
             - "%knp.doctrine_behaviors.blameable_listener.user_entity%"
         public:  false
@@ -50,12 +61,14 @@ services:
     knp.doctrine_behaviors.blameable_listener.user_callable:
         class:           "%knp.doctrine_behaviors.blameable_listener.user_callable.class%"
         arguments:
+            - "@knp.doctrine_behaviors.reflection.class_analyzer"
             - "@service_container" # because of circular dep
         public:  false
 
     knp.doctrine_behaviors.loggable_listener:
         class:   "%knp.doctrine_behaviors.loggable_listener.class%"
         arguments:
+            - "@knp.doctrine_behaviors.reflection.class_analyzer"
             - "@knp.doctrine_behaviors.loggable_listener.logger_callable"
         public:  false
         tags:
@@ -64,6 +77,7 @@ services:
     knp.doctrine_behaviors.loggable_listener.logger_callable:
         class:           "%knp.doctrine_behaviors.loggable_listener.logger_callable.class%"
         arguments:
+            - "@knp.doctrine_behaviors.reflection.class_analyzer"
             - "@logger"
         public:  false
 
@@ -71,13 +85,16 @@ services:
         class:   "%knp.doctrine_behaviors.geocodable_listener.class%"
         public:  false
         arguments:
+            - "@knp.doctrine_behaviors.reflection.class_analyzer"
             - "@?knp.doctrine_behaviors.geocodable_callable"
         tags:
             - { name: doctrine.event_subscriber }
 
     knp.doctrine_behaviors.sluggable_listener:
-      class: "%knp.doctrine_behaviors.sluggable_listener.class%"
-      public: false
-      tags:
-        - { name: doctrine.event_subscriber }
+        class: "%knp.doctrine_behaviors.sluggable_listener.class%"
+        public: false
+        arguments:
+            - "@knp.doctrine_behaviors.reflection.class_analyzer"
+        tags:
+            - { name: doctrine.event_subscriber }
 
