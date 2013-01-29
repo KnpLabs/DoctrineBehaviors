@@ -50,7 +50,7 @@ trait SoftDeletable
             return $this->deletedAt <= (new \DateTime());
         }
 
-        return true;
+        return false;
     }
 
     /**
