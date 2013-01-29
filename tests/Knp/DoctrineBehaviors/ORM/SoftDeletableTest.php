@@ -36,6 +36,7 @@ class SoftDeletableTest extends \PHPUnit_Framework_TestCase
         $em->flush();
 
         $this->assertNotNull($id = $entity->getId());
+        $this->assertFalse($entity->isDeleted());
 
         $em->remove($entity);
         $em->flush();
