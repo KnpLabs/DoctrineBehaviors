@@ -62,7 +62,6 @@ All you have to do is to define a Doctrine2 entity and use traits:
 <?php
 
 use Doctrine\ORM\Mapping as ORM;
-
 use Knp\DoctrineBehaviors\Model as ORMBehaviors;
 
 /**
@@ -75,7 +74,8 @@ class Category implements ORMBehaviors\Tree\NodeInterface, \ArrayAccess
         ORMBehaviors\Timestampable\Timestampable,
         ORMBehaviors\SoftDeletable\SoftDeletable,
         ORMBehaviors\Blameable\Blameable,
-        ORMBehaviors\Geocodable\Geocodable
+        ORMBehaviors\Geocodable\Geocodable,
+        ORMBehaviors\Sluggable\Sluggable
     ;
 
     /**
@@ -151,15 +151,14 @@ In order to use Translatable trait, you will have to create this entity.
 <?php
 
 use Doctrine\ORM\Mapping as ORM;
-
-use Knp\DoctrineBehaviors as DoctrineBehaviors;
+use Knp\DoctrineBehaviors\Model as ORMBehaviors;
 
 /**
  * @ORM\Entity
  */
 class CategoryTranslation
 {
-    use DoctrineBehaviors\Translatable\Translation;
+    use ORMBehaviors\Translatable\Translation;
 
     /**
      * @ORM\Column(type="string", length=255)
@@ -375,14 +374,17 @@ You can also override the slug delimiter from the default hyphen by overriding `
 Use cases include SEO (i.e. URLs like http://mysite.com/post/3/introduction-to-php)
 ```php
 <?php
-use Knp\DoctrineBehaviors\ORM as ORMBehaviors;
+
 use Doctrine\ORM\Mapping as ORM;
+use Knp\DoctrineBehaviors\Model as ORMBehaviors;
 
 /**
  * @ORM\Entity
  */
 class BlogPost
 {
+    use ORMBehaviors\Sluggable\Sluggable;
+
     /**
      * @ORM\Column(type="string")
      */
@@ -406,6 +408,7 @@ Joined filters example:
 
 ```php
 <?php
+
 use Doctrine\ORM\Mapping as ORM;
 
 /**
