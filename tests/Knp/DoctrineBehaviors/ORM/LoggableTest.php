@@ -2,6 +2,7 @@
 
 namespace Tests\Knp\DoctrineBehaviors\ORM;
 
+use Knp\DoctrineBehaviors\Reflection\ClassAnalyzer;
 use Doctrine\Common\EventManager;
 
 require_once 'EntityManagerProvider.php';
@@ -27,6 +28,7 @@ class LoggableTest extends \PHPUnit_Framework_TestCase
             $this->logs[] = $message;
         };
         $this->listener = new \Knp\DoctrineBehaviors\ORM\Loggable\LoggableListener(
+            new ClassAnalyzer(),
             $loggerCallback
         );
 

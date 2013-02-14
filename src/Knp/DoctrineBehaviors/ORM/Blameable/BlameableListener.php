@@ -11,6 +11,10 @@
 
 namespace Knp\DoctrineBehaviors\ORM\Blameable;
 
+use Knp\DoctrineBehaviors\Reflection\ClassAnalyzer;
+
+use Knp\DoctrineBehaviors\ORM\AbstractListener;
+
 use Doctrine\Common\Persistence\Mapping\ClassMetadata;
 use Doctrine\ORM\Event\LoadClassMetadataEventArgs;
 use Doctrine\ORM\Event\LifecycleEventArgs;
@@ -24,7 +28,7 @@ use Doctrine\Common\EventSubscriber,
  * Adds class metadata depending of user type (entity or string)
  * Listens to prePersist and PreUpdate lifecycle events
  */
-class BlameableListener implements EventSubscriber
+class BlameableListener extends AbstractListener
 {
     /**
      * @var callable
@@ -47,8 +51,10 @@ class BlameableListener implements EventSubscriber
      * @param callable
      * @param string $userEntity
      */
-    public function __construct(callable $userCallable = null, $userEntity = null)
+    public function __construct(ClassAnalyzer $classAnalyzer, callable $userCallable = null, $userEntity = null)
     {
+        parent::__construct($classAnalyzer);
+
         $this->userCallable = $userCallable;
         $this->userEntity = $userEntity;
     }
@@ -237,16 +243,9 @@ class BlameableListener implements EventSubscriber
      */
     private function isEntitySupported(\ReflectionClass $reflClass, $isRecursive = false)
     {
-        $isSupported = in_array('Knp\DoctrineBehaviors\Model\Blameable\Blameable', $reflClass->getTraitNames())
-            || in_array('Knp\DoctrineBehaviors\Model\Blameable\BlameableMethods', $reflClass->getTraitNames())
+        return $this->getClassAnalyzer()->isObjectUseTrait($reflClass, 'Knp\DoctrineBehaviors\Model\Blameable\Blameable', $isRecursive)
+            || $this->getClassAnalyzer()->isObjectUseTrait($reflClass, 'Knp\DoctrineBehaviors\Model\Blameable\BlameableMethods', $isRecursive)
         ;
-
-        while ($isRecursive and !$isSupported and $reflClass->getParentClass()) {
-            $reflClass = $reflClass->getParentClass();
-            $isSupported = $this->isEntitySupported($reflClass, true);
-        }
-
-        return $isSupported;
     }
 
     public function getSubscribedEvents()

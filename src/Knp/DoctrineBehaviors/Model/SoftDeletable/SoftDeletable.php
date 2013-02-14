@@ -54,6 +54,25 @@ trait SoftDeletable
     }
 
     /**
+     * Checks whether the entity will be deleted.
+     *
+     * @return Boolean
+     */
+    public function willBeDeleted(\DateTime $at = null)
+    {
+        if ($this->deletedAt === null) {
+
+            return false;
+        }
+        if ($at === null) {
+
+            return true;
+        }
+
+        return $this->deletedAt <= $at;
+    }
+
+    /**
      * Returns date on which entity was been deleted.
      *
      * @return DateTime|null

@@ -11,6 +11,10 @@
 
 namespace Knp\DoctrineBehaviors\ORM\Translatable;
 
+use Knp\DoctrineBehaviors\Reflection\ClassAnalyzer;
+
+use Knp\DoctrineBehaviors\ORM\AbstractListener;
+
 use Doctrine\Common\EventSubscriber,
     Doctrine\ORM\Mapping\ClassMetadata,
     Doctrine\ORM\Event\LoadClassMetadataEventArgs,
@@ -22,12 +26,14 @@ use Doctrine\Common\EventSubscriber,
  *
  * Provides mapping for translatable entities and their translations.
  */
-class TranslatableListener implements EventSubscriber
+class TranslatableListener extends AbstractListener
 {
     private $currentLocaleCallable;
 
-    public function __construct(callable $currentLocaleCallable = null)
+    public function __construct(ClassAnalyzer $classAnalyzer, callable $currentLocaleCallable = null)
     {
+        parent::__construct($classAnalyzer);
+        
         $this->currentLocaleCallable = $currentLocaleCallable;
     }
 
@@ -44,7 +50,7 @@ class TranslatableListener implements EventSubscriber
             return;
         }
 
-        if ($this->isTranslatable($classMetadata->reflClass)) {
+        if ($this->isTranslatable($classMetadata)) {
             $this->mapTranslatable($classMetadata);
         }
 
@@ -114,21 +120,14 @@ class TranslatableListener implements EventSubscriber
      *
      * @return boolean
      */
-    private function isTranslatable(\ReflectionClass $reflClass, $isRecursive = false)
+    private function isTranslatable(ClassMetadata $classMetadata, $isRecursive = false)
     {
-        $isSupported = $reflClass->hasProperty('translations');
-
-        while ($isRecursive and !$isSupported and $reflClass->getParentClass()) {
-            $reflClass = $reflClass->getParentClass();
-            $isSupported = $this->isTranslatable($reflClass, true);
-        }
-
-        return $isSupported;
+        return $this->getClassAnalyzer()->isObjectHasProperty($classMetadata->reflClass, 'translations', $isRecursive);
     }
 
     private function isTranslation(ClassMetadata $classMetadata)
     {
-        return $classMetadata->reflClass->hasProperty('translatable');
+        return $this->getClassAnalyzer()->isObjectHasProperty($classMetadata->reflClass, 'translatable');
     }
 
     public function postLoad(LifecycleEventArgs $eventArgs)
@@ -137,7 +136,7 @@ class TranslatableListener implements EventSubscriber
         $entity        = $eventArgs->getEntity();
         $classMetadata = $em->getClassMetadata(get_class($entity));
 
-        if (!$classMetadata->reflClass->hasMethod('setCurrentLocale')) {
+        if (!$this->getClassAnalyzer()->isObjectHasMethod($classMetadata->reflClass, 'setCurrentLocale', false)) {
             return;
         }
 

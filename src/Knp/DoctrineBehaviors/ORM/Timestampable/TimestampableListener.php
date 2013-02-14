@@ -11,6 +11,10 @@
 
 namespace Knp\DoctrineBehaviors\ORM\Timestampable;
 
+use Knp\DoctrineBehaviors\Reflection\ClassAnalyzer;
+
+use Knp\DoctrineBehaviors\ORM\AbstractListener;
+
 use Doctrine\ORM\Event\LoadClassMetadataEventArgs,
     Doctrine\Common\EventSubscriber,
     Doctrine\ORM\Events,
@@ -21,7 +25,7 @@ use Doctrine\ORM\Event\LoadClassMetadataEventArgs,
  *
  * Adds mapping to the timestampable entites.
  */
-class TimestampableListener implements EventSubscriber
+class TimestampableListener extends AbstractListener
 {
     public function loadClassMetadata(LoadClassMetadataEventArgs $eventArgs)
     {
@@ -32,7 +36,7 @@ class TimestampableListener implements EventSubscriber
         }
 
         if ($this->isEntitySupported($classMetadata)) {
-            if ($classMetadata->reflClass->hasMethod('updateTimestamps')) {
+            if ($this->getClassAnalyzer()->isObjectHasMethod($classMetadata->reflClass, 'updateTimestamps')) {
                 $classMetadata->addLifecycleCallback('updateTimestamps', Events::prePersist);
                 $classMetadata->addLifecycleCallback('updateTimestamps', Events::preUpdate);
             }
@@ -53,8 +57,6 @@ class TimestampableListener implements EventSubscriber
      */
     private function isEntitySupported(ClassMetadata $classMetadata)
     {
-        $traitNames = $classMetadata->reflClass->getTraitNames();
-
-        return in_array('Knp\DoctrineBehaviors\Model\Timestampable\Timestampable', $traitNames);
+        return $this->getClassAnalyzer()->isObjectUseTrait($classMetadata->reflClass, 'Knp\DoctrineBehaviors\Model\Timestampable\Timestampable');
     }
 }

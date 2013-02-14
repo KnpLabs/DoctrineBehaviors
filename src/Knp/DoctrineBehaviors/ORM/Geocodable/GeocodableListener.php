@@ -11,6 +11,10 @@
 
 namespace Knp\DoctrineBehaviors\ORM\Geocodable;
 
+use Knp\DoctrineBehaviors\Reflection\ClassAnalyzer;
+
+use Knp\DoctrineBehaviors\ORM\AbstractListener;
+
 use Knp\DoctrineBehaviors\ORM\Geocodable\Type\Point;
 
 use Doctrine\Common\Persistence\Mapping\ClassMetadata;
@@ -27,7 +31,7 @@ use Doctrine\Common\EventSubscriber,
  * GeocodableListener handle Geocodable entites
  * Adds doctrine point type
  */
-class GeocodableListener implements EventSubscriber
+class GeocodableListener extends AbstractListener
 {
     /**
      * @var callable
@@ -39,8 +43,10 @@ class GeocodableListener implements EventSubscriber
      *
      * @param callable
      */
-    public function __construct(callable $geolocationCallable = null)
+    public function __construct(ClassAnalyzer $classAnalyzer, callable $geolocationCallable = null)
     {
+        parent::__construct($classAnalyzer);
+        
         $this->geolocationCallable = $geolocationCallable;
     }
 
@@ -140,7 +146,7 @@ class GeocodableListener implements EventSubscriber
      */
     private function isEntitySupported(\ReflectionClass $reflClass)
     {
-        return $reflClass->hasMethod('getLocation');
+        return $this->getClassAnalyzer()->isObjectHasMethod($reflClass, 'getLocation');
     }
 
     public function getSubscribedEvents()
