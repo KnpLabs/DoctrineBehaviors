@@ -76,7 +76,6 @@ services:
     knp.doctrine_behaviors.loggable_listener.logger_callable:
         class:           "%knp.doctrine_behaviors.loggable_listener.logger_callable.class%"
         arguments:
-            - "@knp.doctrine_behaviors.reflection.class_analyzer"
             - "@logger"
         public:  false
 
