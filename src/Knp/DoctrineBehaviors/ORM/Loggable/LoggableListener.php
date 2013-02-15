@@ -11,6 +11,10 @@
 
 namespace Knp\DoctrineBehaviors\ORM\Loggable;
 
+use Knp\DoctrineBehaviors\Reflection\ClassAnalyzer;
+
+use Knp\DoctrineBehaviors\ORM\AbstractListener;
+
 use Doctrine\ORM\Event\LifecycleEventArgs;
 
 use Doctrine\Common\EventSubscriber,
@@ -21,7 +25,7 @@ use Doctrine\Common\EventSubscriber,
  * LoggableListener handle Loggable entites
  * Listens to lifecycle events
  */
-class LoggableListener implements EventSubscriber
+class LoggableListener extends AbstractListener
 {
     /**
      * @var callable
@@ -33,8 +37,10 @@ class LoggableListener implements EventSubscriber
      *
      * @param callable
      */
-    public function __construct(callable $loggerCallable)
+    public function __construct(ClassAnalyzer $classAnalyzer, callable $loggerCallable)
     {
+        parent::__construct($classAnalyzer);
+        
         $this->loggerCallable = $loggerCallable;
     }
 
@@ -96,7 +102,7 @@ class LoggableListener implements EventSubscriber
      */
     private function isEntitySupported(\ReflectionClass $reflClass)
     {
-        return in_array('Knp\DoctrineBehaviors\Model\Loggable\Loggable', $reflClass->getTraitNames());
+        return $this->getClassAnalyzer()->isObjectUseTrait($reflClass, 'Knp\DoctrineBehaviors\Model\Loggable\Loggable');
     }
 
     public function getSubscribedEvents()

@@ -2,6 +2,7 @@
 
 namespace Tests\Knp\DoctrineBehaviors\ORM;
 
+use Knp\DoctrineBehaviors\Reflection\ClassAnalyzer;
 use Knp\DoctrineBehaviors\ORM\Geocodable\Type\Point;
 use Doctrine\Common\EventManager;
 
@@ -23,6 +24,7 @@ class GeocodableTest extends \PHPUnit_Framework_TestCase
         $em = new EventManager;
 
         $em->addEventSubscriber(new \Knp\DoctrineBehaviors\ORM\Geocodable\GeocodableListener(
+            new ClassAnalyzer(),
             function($entity) {
                 if ($location = $entity->getLocation()) {
                     return $location;

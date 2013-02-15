@@ -2,6 +2,7 @@
 
 namespace Tests\Knp\DoctrineBehaviors\ORM;
 
+use Knp\DoctrineBehaviors\Reflection\ClassAnalyzer;
 use Doctrine\Common\EventManager;
 
 require_once 'EntityManagerProvider.php';
@@ -25,6 +26,7 @@ class BlameableTest extends \PHPUnit_Framework_TestCase
         $em = new EventManager;
 
         $this->listener = new \Knp\DoctrineBehaviors\ORM\Blameable\BlameableListener(
+            new ClassAnalyzer(),
             $userCallback,
             $userEntity
         );

@@ -2,6 +2,7 @@
 
 namespace Tests\Knp\DoctrineBehaviors\ORM;
 
+use Knp\DoctrineBehaviors\Reflection\ClassAnalyzer;
 use Doctrine\Common\EventManager;
 
 require_once 'EntityManagerProvider.php';
@@ -21,7 +22,9 @@ class SoftDeletableTest extends \PHPUnit_Framework_TestCase
     {
         $em = new EventManager;
 
-        $em->addEventSubscriber(new \Knp\DoctrineBehaviors\ORM\SoftDeletable\SoftDeletableListener);
+        $em->addEventSubscriber(
+            new \Knp\DoctrineBehaviors\ORM\SoftDeletable\SoftDeletableListener(new ClassAnalyzer())
+        );
 
         return $em;
     }
@@ -68,6 +71,9 @@ class SoftDeletableTest extends \PHPUnit_Framework_TestCase
 
         $this->assertNotNull($entity);
         $this->assertFalse($entity->isDeleted());
+        $this->assertTrue($entity->willBeDeleted());
+        $this->assertTrue($entity->willBeDeleted((new \DateTime())->modify('+2 day')));
+        $this->assertFalse($entity->willBeDeleted((new \DateTime())->modify('+12 hour')));
 
         $entity->setDeletedAt((new \DateTime())->modify('-1 day'));
 
