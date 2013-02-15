@@ -61,7 +61,6 @@ services:
     knp.doctrine_behaviors.blameable_listener.user_callable:
         class:           "%knp.doctrine_behaviors.blameable_listener.user_callable.class%"
         arguments:
-            - "@knp.doctrine_behaviors.reflection.class_analyzer"
             - "@service_container" # because of circular dep
         public:  false
 
