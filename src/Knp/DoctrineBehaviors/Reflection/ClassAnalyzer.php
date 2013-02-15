@@ -33,7 +33,7 @@ class ClassAnalyzer
             return false;
         }
         
-        return $this->isEntityUseTrait($parentClass, $traitName, $isRecursive);
+        return $this->isObjectUseTrait($parentClass, $traitName, $isRecursive);
     }
 
     /**
