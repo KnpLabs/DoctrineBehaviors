@@ -74,10 +74,6 @@ class ClassAnalyzer
      */
     public function getRealTraitMethodName(\ReflectionClass $class, $traitName, $methodName)
     {
-        if (!$this->hasTrait($class, $traitName)) {
-            return null;
-        }
-
         $aliases = $class->getTraitAliases();
         $methodFullName = sprintf('%s::%s', $traitName, $methodName);
 

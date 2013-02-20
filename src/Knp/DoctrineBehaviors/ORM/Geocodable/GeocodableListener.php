@@ -163,7 +163,7 @@ class GeocodableListener extends AbstractListener
      */
     private function isEntitySupported(\ReflectionClass $reflClass)
     {
-        return $this->getClassAnalyzer()->hasMethod($reflClass, 'getLocation');
+        return $this->getClassAnalyzer()->hasTrait($reflClass, 'Knp\DoctrineBehaviors\Model\Geocodable\Geocodable');
     }
 
     public function getSubscribedEvents()
