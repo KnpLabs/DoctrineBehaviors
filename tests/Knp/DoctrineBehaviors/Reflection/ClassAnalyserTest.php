@@ -20,7 +20,7 @@ class ClassAnalyserTest extends \PHPUnit_Framework_TestCase
 
         $object = new DeletableEntity;
 
-        $use = $analyser->isObjectUseTrait(
+        $use = $analyser->hasTrait(
             new \ReflectionClass($object), 
             'Knp\DoctrineBehaviors\Model\SoftDeletable\SoftDeletable', 
             false
@@ -38,7 +38,7 @@ class ClassAnalyserTest extends \PHPUnit_Framework_TestCase
 
         $object = new DeletableEntity;
 
-        $use = $analyser->isObjectUseTrait(
+        $use = $analyser->hasTrait(
             new \ReflectionClass($object), 
             'Knp\DoctrineBehaviors\Model\Blameable\Blameable', 
             false
@@ -56,7 +56,7 @@ class ClassAnalyserTest extends \PHPUnit_Framework_TestCase
 
         $object = new DeletableEntityInherit;
 
-        $use = $analyser->isObjectUseTrait(
+        $use = $analyser->hasTrait(
             new \ReflectionClass($object), 
             'Knp\DoctrineBehaviors\Model\SoftDeletable\SoftDeletable', 
             false
@@ -64,7 +64,7 @@ class ClassAnalyserTest extends \PHPUnit_Framework_TestCase
 
         $this->assertFalse($use);
 
-        $useInherit = $analyser->isObjectUseTrait(
+        $useInherit = $analyser->hasTrait(
             new \ReflectionClass($object), 
             'Knp\DoctrineBehaviors\Model\SoftDeletable\SoftDeletable', 
             true
@@ -82,7 +82,7 @@ class ClassAnalyserTest extends \PHPUnit_Framework_TestCase
 
         $object = new GeocodableEntity;
 
-        $use = $analyser->isObjectHasMethod(
+        $use = $analyser->hasMethod(
             new \ReflectionClass($object), 
             'getLocation'
         );
@@ -99,7 +99,7 @@ class ClassAnalyserTest extends \PHPUnit_Framework_TestCase
 
         $object = new DeletableEntity;
 
-        $use = $analyser->isObjectHasMethod(
+        $use = $analyser->hasMethod(
             new \ReflectionClass($object), 
             'getLocation'
         );
@@ -116,10 +116,9 @@ class ClassAnalyserTest extends \PHPUnit_Framework_TestCase
 
         $object = new TranslatableEntity;
 
-        $use = $analyser->isObjectHasProperty(
+        $use = $analyser->hasProperty(
             new \ReflectionClass($object), 
-            'translations', 
-            false
+            'translations'
         );
 
         $this->assertTrue($use);
@@ -134,10 +133,9 @@ class ClassAnalyserTest extends \PHPUnit_Framework_TestCase
 
         $object = new DeletableEntity;
 
-        $use = $analyser->isObjectHasProperty(
+        $use = $analyser->hasProperty(
             new \ReflectionClass($object), 
-            'translations', 
-            false
+            'translations'
         );
 
         $this->assertFalse($use);
@@ -146,16 +144,15 @@ class ClassAnalyserTest extends \PHPUnit_Framework_TestCase
     /**
      * @test
      */
-    public function it_should_test_if_object_or_his_perent_classes_has_a_property () {
+    public function it_should_test_if_object_or_his_parent_classes_has_a_property () {
 
         $analyser = new ClassAnalyzer;
 
         $object = new DeletableEntityInherit;
 
-        $use = $analyser->isObjectHasProperty(
+        $use = $analyser->hasProperty(
             new \ReflectionClass($object), 
-            'deletedAt', 
-            true
+            'deletedAt'
         );
 
         $this->assertTrue($use);

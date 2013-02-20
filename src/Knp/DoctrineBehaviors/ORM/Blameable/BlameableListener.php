@@ -243,8 +243,8 @@ class BlameableListener extends AbstractListener
      */
     private function isEntitySupported(\ReflectionClass $reflClass, $isRecursive = false)
     {
-        return $this->getClassAnalyzer()->isObjectUseTrait($reflClass, 'Knp\DoctrineBehaviors\Model\Blameable\Blameable', $isRecursive)
-            || $this->getClassAnalyzer()->isObjectUseTrait($reflClass, 'Knp\DoctrineBehaviors\Model\Blameable\BlameableMethods', $isRecursive)
+        return $this->getClassAnalyzer()->hasTrait($reflClass, 'Knp\DoctrineBehaviors\Model\Blameable\Blameable', $isRecursive)
+            || $this->getClassAnalyzer()->hasTrait($reflClass, 'Knp\DoctrineBehaviors\Model\Blameable\BlameableMethods', $isRecursive)
         ;
     }
 

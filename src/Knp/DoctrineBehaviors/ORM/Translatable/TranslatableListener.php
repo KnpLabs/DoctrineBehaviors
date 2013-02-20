@@ -122,12 +122,12 @@ class TranslatableListener extends AbstractListener
      */
     private function isTranslatable(ClassMetadata $classMetadata, $isRecursive = false)
     {
-        return $this->getClassAnalyzer()->isObjectHasProperty($classMetadata->reflClass, 'translations', $isRecursive);
+        return $this->getClassAnalyzer()->hasProperty($classMetadata->reflClass, 'translations', $isRecursive);
     }
 
     private function isTranslation(ClassMetadata $classMetadata)
     {
-        return $this->getClassAnalyzer()->isObjectHasProperty($classMetadata->reflClass, 'translatable');
+        return $this->getClassAnalyzer()->hasProperty($classMetadata->reflClass, 'translatable');
     }
 
     public function postLoad(LifecycleEventArgs $eventArgs)
@@ -136,7 +136,7 @@ class TranslatableListener extends AbstractListener
         $entity        = $eventArgs->getEntity();
         $classMetadata = $em->getClassMetadata(get_class($entity));
 
-        if (!$this->getClassAnalyzer()->isObjectHasMethod($classMetadata->reflClass, 'setCurrentLocale', false)) {
+        if (!$this->getClassAnalyzer()->hasMethod($classMetadata->reflClass, 'setCurrentLocale', false)) {
             return;
         }
 
