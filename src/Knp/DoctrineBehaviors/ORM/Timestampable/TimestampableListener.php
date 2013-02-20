@@ -36,10 +36,18 @@ class TimestampableListener extends AbstractListener
         }
 
         if ($this->isEntitySupported($classMetadata)) {
-            if ($this->getClassAnalyzer()->hasMethod($classMetadata->reflClass, 'updateTimestamps')) {
-                $classMetadata->addLifecycleCallback('updateTimestamps', Events::prePersist);
-                $classMetadata->addLifecycleCallback('updateTimestamps', Events::preUpdate);
-            }
+
+            $updateTimestamps = $this
+                ->getClassAnalyzer()
+                ->getRealTraitMethodName(
+                    $classMetadata->reflClass,
+                    'Knp\DoctrineBehaviors\Model\Timestampable\Timestampable',
+                    'updateTimestamps'
+                )
+            ;
+
+            $classMetadata->addLifecycleCallback($updateTimestamps, Events::prePersist);
+            $classMetadata->addLifecycleCallback($updateTimestamps, Events::preUpdate);
         }
     }
 
