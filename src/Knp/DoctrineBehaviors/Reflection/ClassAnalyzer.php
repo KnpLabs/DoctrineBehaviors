@@ -21,7 +21,7 @@ class ClassAnalyzer
      * @param string $traitName
      * @param boolean $isRecursive
      */
-    public function isObjectUseTrait(\ReflectionClass $class, $traitName, $isRecursive = false)
+    public function hasTrait(\ReflectionClass $class, $traitName, $isRecursive = false)
     {
         if (in_array($traitName, $class->getTraitNames())) {
             return true;
@@ -33,7 +33,7 @@ class ClassAnalyzer
             return false;
         }
         
-        return $this->isObjectUseTrait($parentClass, $traitName, $isRecursive);
+        return $this->hasTrait($parentClass, $traitName, $isRecursive);
     }
 
     /**
@@ -41,7 +41,7 @@ class ClassAnalyzer
      * @param ReflectionClass $class
      * @param string $methodName
      */
-    public function isObjectHasMethod(\ReflectionClass $class, $methodName)
+    public function hasMethod(\ReflectionClass $class, $methodName)
     {
         return $class->hasMethod($methodName);
     }
@@ -51,7 +51,7 @@ class ClassAnalyzer
      * @param ReflectionClass $class
      * @param string $propertyName
      */
-    public function isObjectHasProperty(\ReflectionClass $class, $propertyName, $isRecursive = false)
+    public function hasProperty(\ReflectionClass $class, $propertyName)
     {
         if ($class->hasProperty($propertyName)) {
             return true;
@@ -59,10 +59,10 @@ class ClassAnalyzer
 
         $parentClass = $class->getParentClass();
 
-        if ((false === $isRecursive) || (false === $parentClass)) {
+        if (false === $parentClass) {
             return false;
         }
         
-        return $this->isEntityHasProperty($parentClass, $propertyName, $isRecursive);
+        return $this->hasProperty($parentClass, $propertyName);
     }
 }
