@@ -8,6 +8,7 @@ use BehaviorFixtures\ORM\DeletableEntityInherit;
 use BehaviorFixtures\ORM\GeocodableEntity;
 use BehaviorFixtures\ORM\GeocodableRenamedEntity;
 use BehaviorFixtures\ORM\TranslatableEntity;
+use BehaviorFixtures\ORM\TranslatableEntityTranslation;
 
 class ClassAnalyserTest extends \PHPUnit_Framework_TestCase
 {
@@ -75,6 +76,32 @@ class ClassAnalyserTest extends \PHPUnit_Framework_TestCase
         );
 
         $this->assertTrue($useInherit);
+    }
+
+    /**
+     * @test
+     */
+    public function it_should_test_if_object_use_trait_used_by_a_trait ()
+    {
+
+        $analyser = new ClassAnalyzer;
+
+        $object = new TranslatableEntityTranslation;
+
+        $useTranslation = $analyser->hasTrait(
+            new \ReflectionClass($object), 
+            'Knp\DoctrineBehaviors\Model\Translatable\Translation', 
+            true
+        );
+
+        $useTranslationProperties = $analyser->hasTrait(
+            new \ReflectionClass($object), 
+            'Knp\DoctrineBehaviors\Model\Translatable\TranslationProperties', 
+            true
+        );
+
+        $this->assertTrue($useTranslation);
+        $this->assertFalse($useTranslationProperties);
     }
 
     /**
