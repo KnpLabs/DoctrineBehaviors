@@ -74,9 +74,7 @@ class GeocodableRenamedEntity
      * @return privateLocation.
      */
     public function getLocation()
-    {
-        throw new \Exception("Error Processing Request", 1);
-        
+    {        
         return $this->privateLocation;
     }
 
