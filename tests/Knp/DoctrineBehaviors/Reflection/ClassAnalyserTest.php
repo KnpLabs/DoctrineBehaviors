@@ -6,6 +6,7 @@ use Knp\DoctrineBehaviors\Reflection\ClassAnalyzer;
 use BehaviorFixtures\ORM\DeletableEntity;
 use BehaviorFixtures\ORM\DeletableEntityInherit;
 use BehaviorFixtures\ORM\GeocodableEntity;
+use BehaviorFixtures\ORM\GeocodableRenamedEntity;
 use BehaviorFixtures\ORM\TranslatableEntity;
 
 class ClassAnalyserTest extends \PHPUnit_Framework_TestCase
@@ -14,7 +15,8 @@ class ClassAnalyserTest extends \PHPUnit_Framework_TestCase
     /**
      * @test
      */
-    public function it_should_test_if_object_use_trait () {
+    public function it_should_test_if_object_use_trait ()
+    {
 
         $analyser = new ClassAnalyzer;
 
@@ -32,7 +34,8 @@ class ClassAnalyserTest extends \PHPUnit_Framework_TestCase
     /**
      * @test
      */
-    public function it_should_test_if_object_dont_use_trait () {
+    public function it_should_test_if_object_dont_use_trait ()
+    {
 
         $analyser = new ClassAnalyzer;
 
@@ -50,7 +53,8 @@ class ClassAnalyserTest extends \PHPUnit_Framework_TestCase
     /**
      * @test
      */
-    public function it_should_test_if_object_or_his_parent_classes_use_trait () {
+    public function it_should_test_if_object_or_his_parent_classes_use_trait ()
+    {
 
         $analyser = new ClassAnalyzer;
 
@@ -76,7 +80,8 @@ class ClassAnalyserTest extends \PHPUnit_Framework_TestCase
     /**
      * @test
      */
-    public function it_should_test_if_object_has_a_method () {
+    public function it_should_test_if_object_has_a_method ()
+    {
 
         $analyser = new ClassAnalyzer;
 
@@ -93,7 +98,8 @@ class ClassAnalyserTest extends \PHPUnit_Framework_TestCase
     /**
      * @test
      */
-    public function it_should_test_if_object_dont_has_a_method () {
+    public function it_should_test_if_object_dont_has_a_method ()
+    {
 
         $analyser = new ClassAnalyzer;
 
@@ -110,7 +116,8 @@ class ClassAnalyserTest extends \PHPUnit_Framework_TestCase
     /**
      * @test
      */
-    public function it_should_test_if_object_has_a_property () {
+    public function it_should_test_if_object_has_a_property ()
+    {
 
         $analyser = new ClassAnalyzer;
 
@@ -127,7 +134,8 @@ class ClassAnalyserTest extends \PHPUnit_Framework_TestCase
     /**
      * @test
      */
-    public function it_should_test_if_object_dont_has_a_property () {
+    public function it_should_test_if_object_dont_has_a_property ()
+    {
 
         $analyser = new ClassAnalyzer;
 
@@ -144,7 +152,8 @@ class ClassAnalyserTest extends \PHPUnit_Framework_TestCase
     /**
      * @test
      */
-    public function it_should_test_if_object_or_his_parent_classes_has_a_property () {
+    public function it_should_test_if_object_or_his_parent_classes_has_a_property ()
+    {
 
         $analyser = new ClassAnalyzer;
 
@@ -156,6 +165,94 @@ class ClassAnalyserTest extends \PHPUnit_Framework_TestCase
         );
 
         $this->assertTrue($use);
+    }
+
+    /**
+     * @test
+     */
+    public function it_should_return_renamed_trait_method()
+    {
+
+        $analyzer = new ClassAnalyzer;
+
+        $object = new GeocodableRenamedEntity;
+
+        $name = $analyzer->getRealTraitMethodName(
+            new \ReflectionClass($object),
+            'Knp\DoctrineBehaviors\Model\Geocodable\Geocodable',
+            'getLocation'
+        );
+
+        $this->assertEquals($name, 'getTraitLocation');
+
+        $name2 = $analyzer->getRealTraitMethodName(
+            new \ReflectionClass($object),
+            'Knp\DoctrineBehaviors\Model\Geocodable\Geocodable',
+            'setLocation'
+        );
+
+        $this->assertEquals($name2, 'setTraitLocation');
+
+    }
+
+    /**
+     * @test
+     */
+    public function it_should_return_trait_method_when_not_renamed()
+    {
+
+        $analyzer = new ClassAnalyzer;
+
+        $object = new DeletableEntity;
+
+        $name = $analyzer->getRealTraitMethodName(
+            new \ReflectionClass($object),
+            'Knp\DoctrineBehaviors\Model\SoftDeletable\SoftDeletable',
+            'restore'
+        );
+
+        $this->assertEquals($name, 'restore');
+
+    }
+
+    /**
+     * @test
+     */
+    public function it_should_return_null_when_object_dont_use_trait()
+    {
+
+        $analyzer = new ClassAnalyzer;
+
+        $object = new GeocodableEntity;
+
+        $name = $analyzer->getRealTraitMethodName(
+            new \ReflectionClass($object),
+            'Knp\DoctrineBehaviors\Model\SoftDeletable\SoftDeletable',
+            'restore'
+        );
+
+        $this->assertNull($name);
+
+    }
+
+    /**
+     * @test
+     */
+    public function it_should_return_null_when_the_method_dont_exists()
+    {
+
+        $analyzer = new ClassAnalyzer;
+
+        $object = new DeletableEntity;
+
+        $name = $analyzer->getRealTraitMethodName(
+            new \ReflectionClass($object),
+            'Knp\DoctrineBehaviors\Model\SoftDeletable\SoftDeletable',
+            'getLocation'
+        );
+
+        $this->assertNull($name);
+
     }
 
 }
