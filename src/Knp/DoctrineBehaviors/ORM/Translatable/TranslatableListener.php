@@ -123,16 +123,14 @@ class TranslatableListener extends AbstractListener
     private function isTranslatable(ClassMetadata $classMetadata)
     {
         return (
-               $this->getClassAnalyzer()->hasTrait($classMetadata->reflClass, 'Knp\DoctrineBehaviors\Model\Translatable\TranslatableProperties', true)
-            || $this->getClassAnalyzer()->hasTrait($classMetadata->reflClass, 'Knp\DoctrineBehaviors\Model\Translatable\Translatable', true)
+            $this->getClassAnalyzer()->hasTrait($classMetadata->reflClass, 'Knp\DoctrineBehaviors\Model\Translatable\Translatable', true)
         );
     }
 
     private function isTranslation(ClassMetadata $classMetadata)
     {
         return (
-               $this->getClassAnalyzer()->hasTrait($classMetadata->reflClass, 'Knp\DoctrineBehaviors\Model\Translatable\TranslationProperties', true)
-            || $this->getClassAnalyzer()->hasTrait($classMetadata->reflClass, 'Knp\DoctrineBehaviors\Model\Translatable\Translation', true)
+            $this->getClassAnalyzer()->hasTrait($classMetadata->reflClass, 'Knp\DoctrineBehaviors\Model\Translatable\Translation', true)
         );
     }
 
@@ -146,7 +144,7 @@ class TranslatableListener extends AbstractListener
             ->getClassAnalyzer()
             ->getRealTraitMethodName(
                 $classMetadata->reflClass,
-                'Knp\DoctrineBehaviors\Model\Translatable\TranslatableMethods',
+                'Knp\DoctrineBehaviors\Model\Translatable\Translatable',
                 'setCurrentLocale'
             )
         ;

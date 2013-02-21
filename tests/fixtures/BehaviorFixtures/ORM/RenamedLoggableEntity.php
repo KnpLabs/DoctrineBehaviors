@@ -10,7 +10,11 @@ use Knp\DoctrineBehaviors\Model;
  */
 class RenamedLoggableEntity
 {
-    use Model\Loggable\Loggable;
+    use Model\Loggable\Loggable
+    {
+        Model\Loggable\Loggable::getUpdateLogMessage as getTraitUpdateLogMessage;
+        Model\Loggable\Loggable::getRemoveLogMessage as getTraitRemoveLogMessage;
+    }
 
     /**
      * @ORM\Id
@@ -52,5 +56,15 @@ class RenamedLoggableEntity
     public function setTitle($title)
     {
         $this->title = $title;
+    }
+
+    public function getUpdateLogMessage()
+    {
+        throw new BadMethodCallException($this, 'getUpdateLogMessage');
+    }
+
+    public function getRemoveLogMessage()
+    {
+        throw new BadMethodCallException($this, 'getRemoveLogMessage');
     }
 }

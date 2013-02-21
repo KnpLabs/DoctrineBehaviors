@@ -153,7 +153,7 @@ class BlameableListener extends AbstractListener
                 ->getClassAnalyzer()
                 ->getRealTraitMethodName(
                     $classMetadata->reflClass,
-                    'Knp\DoctrineBehaviors\Model\Blameable\BlameableMethods',
+                    'Knp\DoctrineBehaviors\Model\Blameable\Blameable',
                     'getCreatedBy'
                 )
             ;
@@ -162,7 +162,7 @@ class BlameableListener extends AbstractListener
                 ->getClassAnalyzer()
                 ->getRealTraitMethodName(
                     $classMetadata->reflClass,
-                    'Knp\DoctrineBehaviors\Model\Blameable\BlameableMethods',
+                    'Knp\DoctrineBehaviors\Model\Blameable\Blameable',
                     'setCreatedBy'
                 )
             ;
@@ -171,7 +171,7 @@ class BlameableListener extends AbstractListener
                 ->getClassAnalyzer()
                 ->getRealTraitMethodName(
                     $classMetadata->reflClass,
-                    'Knp\DoctrineBehaviors\Model\Blameable\BlameableMethods',
+                    'Knp\DoctrineBehaviors\Model\Blameable\Blameable',
                     'getUpdatedBy'
                 )
             ;
@@ -180,8 +180,26 @@ class BlameableListener extends AbstractListener
                 ->getClassAnalyzer()
                 ->getRealTraitMethodName(
                     $classMetadata->reflClass,
-                    'Knp\DoctrineBehaviors\Model\Blameable\BlameableMethods',
+                    'Knp\DoctrineBehaviors\Model\Blameable\Blameable',
                     'setUpdatedBy'
+                )
+            ;
+
+            $getDeletedBy = $this
+                ->getClassAnalyzer()
+                ->getRealTraitMethodName(
+                    $classMetadata->reflClass,
+                    'Knp\DoctrineBehaviors\Model\Blameable\Blameable',
+                    'getDeletedBy'
+                )
+            ;
+
+            $setDeletedBy = $this
+                ->getClassAnalyzer()
+                ->getRealTraitMethodName(
+                    $classMetadata->reflClass,
+                    'Knp\DoctrineBehaviors\Model\Blameable\Blameable',
+                    'setDeletedBy'
                 )
             ;
 
@@ -207,10 +225,10 @@ class BlameableListener extends AbstractListener
                     ]);
                 }
             }
-            if (!$entity->getDeletedBy()) {
+            if (!$entity->{$getDeletedBy}()) {
                 $user = $this->getUser();
                 if ($this->isValidUser($user)) {
-                    $entity->setDeletedBy($user);
+                    $entity->{$setDeletedBy}($user);
                     $uow->propertyChanged($entity, 'deletedBy', null, $user);
 
                     $uow->scheduleExtraUpdate($entity, [
@@ -250,7 +268,17 @@ class BlameableListener extends AbstractListener
 
         $classMetadata = $em->getClassMetadata(get_class($entity));
         if ($this->isEntitySupported($classMetadata->reflClass, true)) {
-            if (!$entity->isBlameable()) {
+            
+            $isBlameable = $this
+                ->getClassAnalyzer()
+                ->getRealTraitMethodName(
+                    $classMetadata->reflClass,
+                    'Knp\DoctrineBehaviors\Model\Blameable\Blameable',
+                    'isBlameable'
+                )
+            ;
+
+            if (null === $isBlameable || !$entity->{$isBlameable}()) {
                 return;
             }
 
@@ -258,7 +286,7 @@ class BlameableListener extends AbstractListener
                 ->getClassAnalyzer()
                 ->getRealTraitMethodName(
                     $classMetadata->reflClass,
-                    'Knp\DoctrineBehaviors\Model\Blameable\BlameableMethods',
+                    'Knp\DoctrineBehaviors\Model\Blameable\Blameable',
                     'getUpdatedBy'
                 )
             ;
@@ -267,7 +295,7 @@ class BlameableListener extends AbstractListener
                 ->getClassAnalyzer()
                 ->getRealTraitMethodName(
                     $classMetadata->reflClass,
-                    'Knp\DoctrineBehaviors\Model\Blameable\BlameableMethods',
+                    'Knp\DoctrineBehaviors\Model\Blameable\Blameable',
                     'setUpdatedBy'
                 )
             ;
@@ -298,13 +326,42 @@ class BlameableListener extends AbstractListener
 
         $classMetadata = $em->getClassMetadata(get_class($entity));
         if ($this->isEntitySupported($classMetadata->reflClass, true)) {
-            if (!$entity->isBlameable()) {
+            
+            $isBlameable = $this
+                ->getClassAnalyzer()
+                ->getRealTraitMethodName(
+                    $classMetadata->reflClass,
+                    'Knp\DoctrineBehaviors\Model\Blameable\Blameable',
+                    'isBlameable'
+                )
+            ;
+
+            if (null === $isBlameable || !$entity->{$isBlameable}()) {
                 return;
             }
+
+            $getDeletedBy = $this
+                ->getClassAnalyzer()
+                ->getRealTraitMethodName(
+                    $classMetadata->reflClass,
+                    'Knp\DoctrineBehaviors\Model\Blameable\Blameable',
+                    'getDeletedBy'
+                )
+            ;
+
+            $setDeletedBy = $this
+                ->getClassAnalyzer()
+                ->getRealTraitMethodName(
+                    $classMetadata->reflClass,
+                    'Knp\DoctrineBehaviors\Model\Blameable\Blameable',
+                    'setDeletedBy'
+                )
+            ;
+
             $user = $this->getUser();
             if ($this->isValidUser($user)) {
-                $oldValue = $entity->getDeletedBy();
-                $entity->setDeletedBy($user);
+                $oldValue = $entity->{$getDeletedBy}();
+                $entity->{$setDeletedBy}($user);
                 $uow->propertyChanged($entity, 'deletedBy', $oldValue, $user);
 
                 $uow->scheduleExtraUpdate($entity, [
@@ -354,7 +411,7 @@ class BlameableListener extends AbstractListener
     private function isEntitySupported(\ReflectionClass $reflClass, $isRecursive = false)
     {
         return $this->getClassAnalyzer()->hasTrait($reflClass, 'Knp\DoctrineBehaviors\Model\Blameable\Blameable', $isRecursive)
-            || $this->getClassAnalyzer()->hasTrait($reflClass, 'Knp\DoctrineBehaviors\Model\Blameable\BlameableMethods', $isRecursive)
+            || $this->getClassAnalyzer()->hasTrait($reflClass, 'Knp\DoctrineBehaviors\Model\Blameable\Blameable', $isRecursive)
         ;
     }
 

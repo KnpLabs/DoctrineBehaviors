@@ -11,7 +11,11 @@ use Knp\DoctrineBehaviors\ORM\Geocodable\Type\Point;
  */
 class RenamedGeocodableEntity
 {
-    use Model\Geocodable\Geocodable;
+    use Model\Geocodable\Geocodable
+    {
+        Model\Geocodable\Geocodable::getLocation as getTraitLocation;
+        Model\Geocodable\Geocodable::setLocation as setTraitLocation;
+    }
 
     /**
      * @ORM\Id
@@ -27,7 +31,7 @@ class RenamedGeocodableEntity
 
     public function __construct($latitude = 0, $longitude = 0)
     {
-        $this->setLocation(new Point($latitude, $longitude));
+        $this->setTraitLocation(new Point($latitude, $longitude));
     }
 
     /**
@@ -58,5 +62,15 @@ class RenamedGeocodableEntity
     public function setTitle($title)
     {
         $this->title = $title;
+    }
+
+    public function getLocation()
+    {
+        throw new BadMethodCallException($this, 'getLocation');
+    }
+
+    public function setLocation()
+    {
+        throw new BadMethodCallException($this, 'setLocation');
     }
 }

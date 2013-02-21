@@ -12,6 +12,7 @@
 namespace Knp\DoctrineBehaviors\Model\Translatable;
 
 use Doctrine\Common\Collections\ArrayCollection;
+use Knp\DoctrineBehaviors\Reflection\ClassAnalyzer;
 
 /**
  * Translatable trait.
@@ -65,8 +66,29 @@ trait Translatable
      */
     public function addTranslation($translation)
     {
-        $this->getTranslations()->set($translation->getLocale(), $translation);
-        $translation->setTranslatable($this);
+        $analyser   = new ClassAnalyzer;
+        $rfl        = new \ReflectionClass($this);
+
+        $getTranslations = $analyser->getRealTraitMethodName(
+            $rfl,
+            'Knp\DoctrineBehaviors\Model\Translatable\Translatable',
+            'getTranslations'
+        );
+
+        $getLocale = $analyser->getRealTraitMethodName(
+            new \ReflectionClass($translation),
+            'Knp\DoctrineBehaviors\Model\Translatable\Translation',
+            'getLocale'
+        );
+
+        $setTranslatable = $analyser->getRealTraitMethodName(
+            new \ReflectionClass($translation),
+            'Knp\DoctrineBehaviors\Model\Translatable\Translation',
+            'setTranslatable'
+        );
+
+        $this->{$getTranslations}()->set($translation->{$getLocale}(), $translation);
+        $translation->{$setTranslatable}($this);
     }
 
     /**
@@ -76,7 +98,16 @@ trait Translatable
      */
     public function removeTranslation($translation)
     {
-        $this->getTranslations()->removeElement($translation);
+        $analyser   = new ClassAnalyzer;
+        $rfl        = new \ReflectionClass($this);
+
+        $getTranslations = $analyser->getRealTraitMethodName(
+            $rfl,
+            'Knp\DoctrineBehaviors\Model\Translatable\Translatable',
+            'getTranslations'
+        );
+
+        $this->{$getTranslations}()->removeElement($translation);
     }
 
     /**
@@ -91,30 +122,103 @@ trait Translatable
      */
     public function translate($locale = null)
     {
-        return $this->doTranslate($locale);
+        $doTranslate = (new ClassAnalyzer)
+            ->getRealTraitMethodName(
+                new \ReflectionClass($this),
+                'Knp\DoctrineBehaviors\Model\Translatable\Translatable',
+                'doTranslate'
+            )
+        ;
+
+        return $this->{$doTranslate}($locale);
     }
 
     protected function doTranslate($locale = null)
     {
+
+        $analyser   = new ClassAnalyzer;
+        $rfl        = new \ReflectionClass($this);
+
         if (null === $locale) {
-            $locale = $this->getCurrentLocale();
+
+            $getCurrentLocale = $analyser->getRealTraitMethodName(
+                $rfl,
+                'Knp\DoctrineBehaviors\Model\Translatable\Translatable',
+                'getCurrentLocale'
+            );
+
+            $locale = $this->{$getCurrentLocale}();
         }
 
-        $translation = $this->findTranslationByLocale($locale);
-        if ($translation and !$translation->isEmpty()) {
-            return $translation;
+        $findTranslationByLocale = $analyser->getRealTraitMethodName(
+            $rfl,
+            'Knp\DoctrineBehaviors\Model\Translatable\Translatable',
+            'findTranslationByLocale'
+        );
+
+        $getDefaultLocale = $analyser->getRealTraitMethodName(
+            $rfl,
+            'Knp\DoctrineBehaviors\Model\Translatable\Translatable',
+            'getDefaultLocale'
+        );
+
+        $translation = $this->{$findTranslationByLocale}($locale);
+
+        if ($translation) {
+            
+            $isEmpty = $analyser->getRealTraitMethodName(
+                new \ReflectionClass($translation),
+                'Knp\DoctrineBehaviors\Model\Translatable\Translation',
+                'isEmpty'
+            );
+
+            if (!$translation->{$isEmpty}()) {
+                return $translation;
+            }
         }
 
-        if ($defaultTranslation = $this->findTranslationByLocale($this->getDefaultLocale(), false)) {
+        if ($defaultTranslation = $this->{$findTranslationByLocale}($this->{$getDefaultLocale}(), false)) {
             return $defaultTranslation;
         }
 
-        $class       = self::getTranslationEntityClass();
-        $translation = new $class();
-        $translation->setLocale($locale);
+        $getTranslationEntityClass = $analyser->getRealTraitMethodName(
+            $rfl,
+            'Knp\DoctrineBehaviors\Model\Translatable\Translatable',
+            'getTranslationEntityClass'
+        );
 
-        $this->getNewTranslations()->set($translation->getLocale(), $translation);
-        $translation->setTranslatable($this);
+        $class          = self::{$getTranslationEntityClass}();
+        $translation = new $class();
+
+        $setLocale = $analyser->getRealTraitMethodName(
+            new \ReflectionClass($translation),
+            'Knp\DoctrineBehaviors\Model\Translatable\Translation',
+            'setLocale'
+        );
+
+        $translation->{$setLocale}($locale);
+
+        $getNewTranslations = $analyser->getRealTraitMethodName(
+            $rfl,
+            'Knp\DoctrineBehaviors\Model\Translatable\Translatable',
+            'getNewTranslations'
+        );
+
+        $getLocale = $analyser->getRealTraitMethodName(
+            new \ReflectionClass($translation),
+            'Knp\DoctrineBehaviors\Model\Translatable\Translation',
+            'getLocale'
+        );
+
+        $this->{$getNewTranslations}()->set($translation->{$getLocale}(), $translation);
+        
+        $setTranslatable = $analyser->getRealTraitMethodName(
+            new \ReflectionClass($translation),
+            'Knp\DoctrineBehaviors\Model\Translatable\Translation',
+            'setTranslatable'
+        );
+
+        $translation->{$setTranslatable}($this);
 
         return $translation;
     }
@@ -124,10 +228,31 @@ trait Translatable
      */
     public function mergeNewTranslations()
     {
-        foreach ($this->getNewTranslations() as $newTranslation) {
-            if (!$this->getTranslations()->contains($newTranslation)) {
-                $this->addTranslation($newTranslation);
-                $this->getNewTranslations()->removeElement($newTranslation);
+        $analyser   = new ClassAnalyzer;
+        $rfl        = new \ReflectionClass($this);
+
+        $getNewTranslations = $analyser->getRealTraitMethodName(
+            $rfl,
+            'Knp\DoctrineBehaviors\Model\Translatable\Translatable',
+            'getNewTranslations'
+        );
+
+        $getTranslations = $analyser->getRealTraitMethodName(
+            $rfl,
+            'Knp\DoctrineBehaviors\Model\Translatable\Translatable',
+            'getTranslations'
+        );
+
+        $addTranslation = $analyser->getRealTraitMethodName(
+            $rfl,
+            'Knp\DoctrineBehaviors\Model\Translatable\Translatable',
+            'addTranslation'
+        );
+
+        foreach ($this->{$getNewTranslations}() as $newTranslation) {
+            if (!$this->{$getTranslations}()->contains($newTranslation)) {
+                $this->{$addTranslation}($newTranslation);
+                $this->{$getNewTranslations}()->removeElement($newTranslation);
             }
         }
     }
@@ -142,7 +267,15 @@ trait Translatable
 
     public function getCurrentLocale()
     {
-        return $this->currentLocale ?: $this->getDefaultLocale();
+        $getDefaultLocale = (new ClassAnalyzer)
+            ->getRealTraitMethodName(
+                new \ReflectionClass($this),
+                'Knp\DoctrineBehaviors\Model\Translatable\Translatable',
+                'getDefaultLocale'
+            )
+        ;
+
+        return $this->currentLocale ?: $this->{$getDefaultLocale}();
     }
 
     public function getDefaultLocale()
@@ -152,8 +285,24 @@ trait Translatable
 
     protected function proxyCurrentLocaleTranslation($method, array $arguments = [])
     {
+        $translate = (new ClassAnalyzer)
+            ->getRealTraitMethodName(
+                new \ReflectionClass($this),
+                'Knp\DoctrineBehaviors\Model\Translatable\Translatable',
+                'translate'
+            )
+        ;
+
+        $getCurrentLocale = (new ClassAnalyzer)
+            ->getRealTraitMethodName(
+                new \ReflectionClass($this),
+                'Knp\DoctrineBehaviors\Model\Translatable\Translatable',
+                'getCurrentLocale'
+            )
+        ;
+
         return call_user_func_array(
-            [$this->translate($this->getCurrentLocale()), $method],
+            [$this->{$translate}($this->{$getCurrentLocale}()), $method],
             $arguments
         );
     }
@@ -178,14 +327,30 @@ trait Translatable
      */
     protected function findTranslationByLocale($locale, $withNewTranslations = true)
     {
-        $translation = $this->getTranslations()->get($locale);
+
+        $analyser   = new ClassAnalyzer;
+        $rfl        = new \ReflectionClass($this);
+
+        $getNewTranslations = $analyser->getRealTraitMethodName(
+            $rfl,
+            'Knp\DoctrineBehaviors\Model\Translatable\Translatable',
+            'getNewTranslations'
+        );
+
+        $getTranslations = $analyser->getRealTraitMethodName(
+            $rfl,
+            'Knp\DoctrineBehaviors\Model\Translatable\Translatable',
+            'getTranslations'
+        );
+
+        $translation = $this->{$getTranslations}()->get($locale);
 
         if ($translation) {
             return $translation;
         }
 
         if ($withNewTranslations) {
-            return $this->getNewTranslations()->get($locale);
+            return $this->{$getNewTranslations}()->get($locale);
         }
     }
 }

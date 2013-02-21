@@ -10,7 +10,14 @@ use Knp\DoctrineBehaviors\Model;
  */
 class RenamedTimestampableEntity
 {
-    use Model\Timestampable\Timestampable;
+    use Model\Timestampable\Timestampable
+    {
+        Model\Timestampable\Timestampable::getCreatedAt     as getTraitCreatedAt;
+        Model\Timestampable\Timestampable::getUpdatedAt     as getTraitUpdatedAt;
+        Model\Timestampable\Timestampable::setCreatedAt     as setTraitCreatedAt;
+        Model\Timestampable\Timestampable::setUpdatedAt     as setTraitUpdatedAt;
+        Model\Timestampable\Timestampable::updateTimestamps as updateTraitTimestamps;
+    }
 
     /**
      * @ORM\Id
@@ -52,5 +59,30 @@ class RenamedTimestampableEntity
     public function setTitle($title)
     {
         $this->title = $title;
+    }
+
+    public function getCreatedAt()
+    {
+        throw new BadMethodCallException($this, 'getCreatedAt');
+    }
+
+    public function getUpdatedAt()
+    {
+        throw new BadMethodCallException($this, 'getUpdatedAt');
+    }
+
+    public function setCreatedAt()
+    {
+        throw new BadMethodCallException($this, 'setCreatedAt');
+    }
+
+    public function setUpdatedAt()
+    {
+        throw new BadMethodCallException($this, 'setUpdatedAt');
+    }
+
+    public function updateTimestamps()
+    {
+        throw new BadMethodCallException($this, 'updateTimestamps');
     }
 }
