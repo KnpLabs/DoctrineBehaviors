@@ -102,13 +102,30 @@ class GeocodableListener extends AbstractListener
         $classMetadata = $em->getClassMetadata(get_class($entity));
         if ($this->isEntitySupported($classMetadata->reflClass)) {
 
-            $oldValue = $entity->getLocation();
-            if (!$oldValue instanceof Point || $override) {
-                $entity->setLocation($this->getLocation($entity));
+            $getLocation = $this
+                ->getClassAnalyzer()
+                ->getRealTraitMethodName(
+                    $classMetadata->reflClass,
+                    'Knp\DoctrineBehaviors\Model\Geocodable\Geocodable',
+                    'getLocation'
+                )
+            ;
+            $setLocation = $this
+                ->getClassAnalyzer()
+                ->getRealTraitMethodName(
+                    $classMetadata->reflClass,
+                    'Knp\DoctrineBehaviors\Model\Geocodable\Geocodable',
+                    'setLocation'
+                )
+            ;
 
-                $uow->propertyChanged($entity, 'location', $oldValue, $entity->getLocation());
+            $oldValue = $entity->{$getLocation}();
+            if (!$oldValue instanceof Point || $override) {
+                $entity->{$setLocation}($this->getLocation($entity));
+
+                $uow->propertyChanged($entity, 'location', $oldValue, $entity->{$getLocation}());
                 $uow->scheduleExtraUpdate($entity, [
-                    'location' => [$oldValue, $entity->getLocation()],
+                    'location' => [$oldValue, $entity->{$getLocation}()],
                 ]);
             }
         }
@@ -146,7 +163,7 @@ class GeocodableListener extends AbstractListener
      */
     private function isEntitySupported(\ReflectionClass $reflClass)
     {
-        return $this->getClassAnalyzer()->hasMethod($reflClass, 'getLocation');
+        return $this->getClassAnalyzer()->hasTrait($reflClass, 'Knp\DoctrineBehaviors\Model\Geocodable\Geocodable');
     }
 
     public function getSubscribedEvents()

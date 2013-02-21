@@ -31,12 +31,18 @@ class SluggableListener extends AbstractListener
         }
 
         if ($this->isEntitySupported($classMetadata)) {
-            if ($classMetadata->reflClass->hasMethod('generateSlug')) {
-                // Call the generateSlug function when the entity is persisted initially and when its updated
 
-                $classMetadata->addLifecycleCallback('generateSlug', Events::prePersist);
-                $classMetadata->addLifecycleCallback('generateSlug', Events::preUpdate);
-            }
+            $generateSlug = $this
+                ->getClassAnalyzer()
+                ->getRealTraitMethodName(
+                    $classMetadata->reflClass,
+                    'Knp\DoctrineBehaviors\Model\Sluggable\Sluggable',
+                    'generateSlug'
+                )
+            ;
+
+            $classMetadata->addLifecycleCallback($generateSlug, Events::prePersist);
+            $classMetadata->addLifecycleCallback($generateSlug, Events::preUpdate);
         }
     }
 

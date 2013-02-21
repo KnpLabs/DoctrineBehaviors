@@ -148,10 +148,47 @@ class BlameableListener extends AbstractListener
 
         $classMetadata = $em->getClassMetadata(get_class($entity));
         if ($this->isEntitySupported($classMetadata->reflClass, true)) {
-            if (!$entity->getCreatedBy()) {
+
+            $getCreatedBy = $this
+                ->getClassAnalyzer()
+                ->getRealTraitMethodName(
+                    $classMetadata->reflClass,
+                    'Knp\DoctrineBehaviors\Model\Blameable\BlameableMethods',
+                    'getCreatedBy'
+                )
+            ;
+
+            $setCreatedBy = $this
+                ->getClassAnalyzer()
+                ->getRealTraitMethodName(
+                    $classMetadata->reflClass,
+                    'Knp\DoctrineBehaviors\Model\Blameable\BlameableMethods',
+                    'setCreatedBy'
+                )
+            ;
+
+            $getUpdatedBy = $this
+                ->getClassAnalyzer()
+                ->getRealTraitMethodName(
+                    $classMetadata->reflClass,
+                    'Knp\DoctrineBehaviors\Model\Blameable\BlameableMethods',
+                    'getUpdatedBy'
+                )
+            ;
+
+            $setUpdatedBy = $this
+                ->getClassAnalyzer()
+                ->getRealTraitMethodName(
+                    $classMetadata->reflClass,
+                    'Knp\DoctrineBehaviors\Model\Blameable\BlameableMethods',
+                    'setUpdatedBy'
+                )
+            ;
+
+            if (!$entity->{$getCreatedBy}()) {
                 $user = $this->getUser();
                 if ($this->isValidUser($user)) {
-                    $entity->setCreatedBy($user);
+                    $entity->{$setCreatedBy}($user);
 
                     $uow->propertyChanged($entity, 'createdBy', null, $user);
                     $uow->scheduleExtraUpdate($entity, [
@@ -159,10 +196,10 @@ class BlameableListener extends AbstractListener
                     ]);
                 }
             }
-            if (!$entity->getUpdatedBy()) {
+            if (!$entity->{$getUpdatedBy}()) {
                 $user = $this->getUser();
                 if ($this->isValidUser($user)) {
-                    $entity->setUpdatedBy($user);
+                    $entity->{$setUpdatedBy}($user);
                     $uow->propertyChanged($entity, 'updatedBy', null, $user);
 
                     $uow->scheduleExtraUpdate($entity, [
@@ -216,10 +253,29 @@ class BlameableListener extends AbstractListener
             if (!$entity->isBlameable()) {
                 return;
             }
+
+            $getUpdatedBy = $this
+                ->getClassAnalyzer()
+                ->getRealTraitMethodName(
+                    $classMetadata->reflClass,
+                    'Knp\DoctrineBehaviors\Model\Blameable\BlameableMethods',
+                    'getUpdatedBy'
+                )
+            ;
+
+            $setUpdatedBy = $this
+                ->getClassAnalyzer()
+                ->getRealTraitMethodName(
+                    $classMetadata->reflClass,
+                    'Knp\DoctrineBehaviors\Model\Blameable\BlameableMethods',
+                    'setUpdatedBy'
+                )
+            ;
+
             $user = $this->getUser();
             if ($this->isValidUser($user)) {
-                $oldValue = $entity->getUpdatedBy();
-                $entity->setUpdatedBy($user);
+                $oldValue = $entity->{$getUpdatedBy}();
+                $entity->{$setUpdatedBy}($user);
                 $uow->propertyChanged($entity, 'updatedBy', $oldValue, $user);
 
                 $uow->scheduleExtraUpdate($entity, [

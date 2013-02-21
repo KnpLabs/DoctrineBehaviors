@@ -120,14 +120,20 @@ class TranslatableListener extends AbstractListener
      *
      * @return boolean
      */
-    private function isTranslatable(ClassMetadata $classMetadata, $isRecursive = false)
+    private function isTranslatable(ClassMetadata $classMetadata)
     {
-        return $this->getClassAnalyzer()->hasProperty($classMetadata->reflClass, 'translations', $isRecursive);
+        return (
+               $this->getClassAnalyzer()->hasTrait($classMetadata->reflClass, 'Knp\DoctrineBehaviors\Model\Translatable\TranslatableProperties', true)
+            || $this->getClassAnalyzer()->hasTrait($classMetadata->reflClass, 'Knp\DoctrineBehaviors\Model\Translatable\Translatable', true)
+        );
     }
 
     private function isTranslation(ClassMetadata $classMetadata)
     {
-        return $this->getClassAnalyzer()->hasProperty($classMetadata->reflClass, 'translatable');
+        return (
+               $this->getClassAnalyzer()->hasTrait($classMetadata->reflClass, 'Knp\DoctrineBehaviors\Model\Translatable\TranslationProperties', true)
+            || $this->getClassAnalyzer()->hasTrait($classMetadata->reflClass, 'Knp\DoctrineBehaviors\Model\Translatable\Translation', true)
+        );
     }
 
     public function postLoad(LifecycleEventArgs $eventArgs)
@@ -136,12 +142,21 @@ class TranslatableListener extends AbstractListener
         $entity        = $eventArgs->getEntity();
         $classMetadata = $em->getClassMetadata(get_class($entity));
 
-        if (!$this->getClassAnalyzer()->hasMethod($classMetadata->reflClass, 'setCurrentLocale', false)) {
+        $setCurrentLocale = $this
+            ->getClassAnalyzer()
+            ->getRealTraitMethodName(
+                $classMetadata->reflClass,
+                'Knp\DoctrineBehaviors\Model\Translatable\TranslatableMethods',
+                'setCurrentLocale'
+            )
+        ;
+
+        if (null === $setCurrentLocale) {
             return;
         }
 
         if ($locale = $this->getCurrentLocale()) {
-            $entity->setCurrentLocale($locale);
+            $entity->{$setCurrentLocale}($locale);
         }
     }
 
