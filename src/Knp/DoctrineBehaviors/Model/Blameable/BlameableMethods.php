@@ -35,6 +35,14 @@ trait BlameableMethods
     }
 
     /**
+     * @param mixed the user representation
+     */
+    public function setDeletedBy($user)
+    {
+        $this->deletedBy = $user;
+    }
+
+    /**
      * @return mixed the user who created entity
      */
     public function getCreatedBy()
@@ -48,6 +56,14 @@ trait BlameableMethods
     public function getUpdatedBy()
     {
         return $this->updatedBy;
+    }
+
+    /**
+     * @return mixed the user who removed entity
+     */
+    public function getDeletedBy()
+    {
+        return $this->deletedBy;
     }
 
 
