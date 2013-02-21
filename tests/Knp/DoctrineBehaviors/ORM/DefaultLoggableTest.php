@@ -7,7 +7,7 @@ use Doctrine\Common\EventManager;
 
 require_once 'EntityManagerProvider.php';
 
-class LoggableTest extends \PHPUnit_Framework_TestCase
+class DefaultLoggableTest extends \PHPUnit_Framework_TestCase
 {
     private $listener;
     private $logs = [];
@@ -16,9 +16,20 @@ class LoggableTest extends \PHPUnit_Framework_TestCase
 
     protected function getUsedEntityFixtures()
     {
-        return [
-            'BehaviorFixtures\\ORM\\LoggableEntity',
-        ];
+        return array(
+            $this->getTestedEntityClass()
+        );
+    }
+
+    protected function getTestedEntityClass()
+    {
+        return "\BehaviorFixtures\ORM\DefaultLoggableEntity";
+    }
+
+    protected function getTestedEntity()
+    {
+        $class = $this->getTestedEntityClass();
+        return new $class;
     }
 
     protected function getEventManager()
@@ -44,7 +55,7 @@ class LoggableTest extends \PHPUnit_Framework_TestCase
     {
         $em = $this->getEntityManager($this->getEventManager());
 
-        $entity = new \BehaviorFixtures\ORM\LoggableEntity();
+        $entity = $this->getTestedEntity();
         $entity->setTitle('test');
 
         $em->persist($entity);
@@ -53,7 +64,7 @@ class LoggableTest extends \PHPUnit_Framework_TestCase
         $this->assertCount(1, $this->logs);
         $this->assertEquals(
             $this->logs[0],
-            'BehaviorFixtures\ORM\LoggableEntity #1 : property "title" changed from "" to "test"'
+            substr($this->getTestedEntityClass(), 1) . ' #1 : property "title" changed from "" to "test"'
         );
     }
 
@@ -64,7 +75,7 @@ class LoggableTest extends \PHPUnit_Framework_TestCase
     {
         $em = $this->getEntityManager($this->getEventManager());
 
-        $entity = new \BehaviorFixtures\ORM\LoggableEntity();
+        $entity = $this->getTestedEntity();
 
         $em->persist($entity);
         $em->flush();
@@ -75,7 +86,7 @@ class LoggableTest extends \PHPUnit_Framework_TestCase
         $this->assertCount(2, $this->logs);
         $this->assertEquals(
             $this->logs[1],
-            'BehaviorFixtures\ORM\LoggableEntity #1 : property "title" changed from "" to "test2"'
+            substr($this->getTestedEntityClass(), 1) . ' #1 : property "title" changed from "" to "test2"'
         );
     }
 
@@ -86,7 +97,7 @@ class LoggableTest extends \PHPUnit_Framework_TestCase
     {
         $em = $this->getEntityManager($this->getEventManager());
 
-        $entity = new \BehaviorFixtures\ORM\LoggableEntity();
+        $entity = $this->getTestedEntity();
 
         $em->persist($entity);
         $em->flush();
@@ -105,7 +116,7 @@ class LoggableTest extends \PHPUnit_Framework_TestCase
     {
         $em = $this->getEntityManager($this->getEventManager());
 
-        $entity = new \BehaviorFixtures\ORM\LoggableEntity();
+        $entity = $this->getTestedEntity();
 
         $em->persist($entity);
         $em->flush();
@@ -116,7 +127,7 @@ class LoggableTest extends \PHPUnit_Framework_TestCase
         $this->assertCount(2, $this->logs);
         $this->assertEquals(
             $this->logs[1],
-            'BehaviorFixtures\ORM\LoggableEntity #1 removed'
+            substr($this->getTestedEntityClass(), 1) . ' #1 removed'
         );
     }
 }

@@ -8,9 +8,9 @@ use Knp\DoctrineBehaviors\Model;
 /**
  * @ORM\Entity
  */
-class TimestampableEntity
+class RenamedLoggableEntity
 {
-    use Model\Timestampable\Timestampable;
+    use Model\Loggable\Loggable;
 
     /**
      * @ORM\Id

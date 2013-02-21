@@ -7,18 +7,29 @@ use Doctrine\Common\EventManager;
 
 require_once 'EntityManagerProvider.php';
 
-class BlameableTest extends \PHPUnit_Framework_TestCase
+class DefaultBlameableTest extends \PHPUnit_Framework_TestCase
 {
-    private $listener;
+    protected $listener;
 
     use EntityManagerProvider;
 
     protected function getUsedEntityFixtures()
     {
         return [
-            'BehaviorFixtures\\ORM\\BlameableEntity',
+            $this->getTestedEntityClass(),
             'BehaviorFixtures\\ORM\\UserEntity'
         ];
+    }
+
+    protected function getTestedEntityClass()
+    {
+        return "\BehaviorFixtures\ORM\DefaultBlameableEntity";
+    }
+
+    protected function getTestedEntity()
+    {
+        $class = $this->getTestedEntityClass();
+        return new $class;
     }
 
     protected function getEventManager($user = null, $userCallback = null, $userEntity = null)
@@ -41,7 +52,7 @@ class BlameableTest extends \PHPUnit_Framework_TestCase
     {
         $em = $this->getEntityManager($this->getEventManager('user'));
 
-        $entity = new \BehaviorFixtures\ORM\BlameableEntity();
+        $entity = $this->getTestedEntity();
 
         $em->persist($entity);
         $em->flush();
@@ -54,7 +65,7 @@ class BlameableTest extends \PHPUnit_Framework_TestCase
     {
         $em = $this->getEntityManager($this->getEventManager('user'));
 
-        $entity = new \BehaviorFixtures\ORM\BlameableEntity();
+        $entity = $this->getTestedEntity();
 
         $em->persist($entity);
         $em->flush();
@@ -66,12 +77,12 @@ class BlameableTest extends \PHPUnit_Framework_TestCase
         $listener = array_pop($listeners);
         $listener->setUser('user2');
 
-        $entity = $em->getRepository('BehaviorFixtures\ORM\BlameableEntity')->find($id);
+        $entity = $em->getRepository($this->getTestedEntityClass())->find($id);
         $entity->setTitle('test'); // need to modify at least one column to trigger onUpdate
         $em->flush();
         $em->clear();
 
-        //$entity = $em->getRepository('BehaviorFixtures\ORM\BlameableEntity')->find($id);
+        //$entity = $em->getRepository($this->getTestedEntityClass())->find($id);
         $this->assertEquals($createdBy, $entity->getCreatedBy(), 'createdBy is constant');
         $this->assertEquals('user2', $entity->getUpdatedBy());
 
@@ -86,7 +97,7 @@ class BlameableTest extends \PHPUnit_Framework_TestCase
     {
         $em = $this->getEntityManager($this->getEventManager('user'));
 
-        $entity = new \BehaviorFixtures\ORM\BlameableEntity();
+        $entity = $this->getTestedEntity();
 
         $em->persist($entity);
         $em->flush();
@@ -97,7 +108,7 @@ class BlameableTest extends \PHPUnit_Framework_TestCase
         $listener = array_pop($listeners);
         $listener->setUser('user3');
 
-        $entity = $em->getRepository('BehaviorFixtures\ORM\BlameableEntity')->find($id);
+        $entity = $em->getRepository($this->getTestedEntityClass())->find($id);
         $em->remove($entity);
         $em->flush();
         $em->clear();
@@ -122,7 +133,7 @@ class BlameableTest extends \PHPUnit_Framework_TestCase
         $em->persist($user2);
         $em->flush();
 
-        $entity = new \BehaviorFixtures\ORM\BlameableEntity();
+        $entity = $this->getTestedEntity();
 
         $em->persist($entity);
         $em->flush();
@@ -130,7 +141,7 @@ class BlameableTest extends \PHPUnit_Framework_TestCase
         $createdBy = $entity->getCreatedBy();
         $this->listener->setUser($user2); // switch user for update
 
-        $entity = $em->getRepository('BehaviorFixtures\ORM\BlameableEntity')->find($id);
+        $entity = $em->getRepository($this->getTestedEntityClass())->find($id);
         $entity->setTitle('test'); // need to modify at least one column to trigger onUpdate
         $em->flush();
         $em->clear();
@@ -162,7 +173,7 @@ class BlameableTest extends \PHPUnit_Framework_TestCase
         $em->persist($user);
         $em->flush();
 
-        $entity = new \BehaviorFixtures\ORM\BlameableEntity();
+        $entity = $this->getTestedEntity();
 
         $em->persist($entity);
         $em->flush();
@@ -179,7 +190,7 @@ class BlameableTest extends \PHPUnit_Framework_TestCase
         $user = new \BehaviorFixtures\ORM\UserEntity();
         $em   = $this->getEntityManager($this->getEventManager($user));
 
-        $entity = new \BehaviorFixtures\ORM\BlameableEntity();
+        $entity = $this->getTestedEntity();
 
         $em->persist($entity);
         $em->flush();

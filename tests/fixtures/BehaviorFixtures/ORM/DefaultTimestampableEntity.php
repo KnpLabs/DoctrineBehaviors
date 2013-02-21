@@ -8,9 +8,9 @@ use Knp\DoctrineBehaviors\Model;
 /**
  * @ORM\Entity
  */
-class BlameableEntity
+class DefaultTimestampableEntity
 {
-    use Model\Blameable\Blameable;
+    use Model\Timestampable\Timestampable;
 
     /**
      * @ORM\Id

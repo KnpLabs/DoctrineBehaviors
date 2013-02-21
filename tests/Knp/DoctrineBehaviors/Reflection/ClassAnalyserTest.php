@@ -3,12 +3,12 @@
 namespace Tests\Knp\DoctrineBehaviors\Reflection;
 
 use Knp\DoctrineBehaviors\Reflection\ClassAnalyzer;
-use BehaviorFixtures\ORM\DeletableEntity;
+use BehaviorFixtures\ORM\DefaultDeletableEntity as DeletableEntity;
 use BehaviorFixtures\ORM\DeletableEntityInherit;
-use BehaviorFixtures\ORM\GeocodableEntity;
-use BehaviorFixtures\ORM\GeocodableRenamedEntity;
-use BehaviorFixtures\ORM\TranslatableEntity;
-use BehaviorFixtures\ORM\TranslatableEntityTranslation;
+use BehaviorFixtures\ORM\DefaultGeocodableEntity;
+use BehaviorFixtures\ORM\RenamedGeocodableEntity;
+use BehaviorFixtures\ORM\DefaultTranslatableEntity as TranslatableEntity;
+use BehaviorFixtures\ORM\DefaultTranslatableEntityTranslation as TranslatableEntityTranslation;
 
 class ClassAnalyserTest extends \PHPUnit_Framework_TestCase
 {
@@ -112,7 +112,7 @@ class ClassAnalyserTest extends \PHPUnit_Framework_TestCase
 
         $analyser = new ClassAnalyzer;
 
-        $object = new GeocodableEntity;
+        $object = new DefaultGeocodableEntity;
 
         $use = $analyser->hasMethod(
             new \ReflectionClass($object), 
@@ -202,7 +202,7 @@ class ClassAnalyserTest extends \PHPUnit_Framework_TestCase
 
         $analyzer = new ClassAnalyzer;
 
-        $object = new GeocodableRenamedEntity;
+        $object = new RenamedGeocodableEntity;
 
         $name = $analyzer->getRealTraitMethodName(
             new \ReflectionClass($object),
@@ -250,7 +250,7 @@ class ClassAnalyserTest extends \PHPUnit_Framework_TestCase
 
         $analyzer = new ClassAnalyzer;
 
-        $object = new GeocodableEntity;
+        $object = new DefaultGeocodableEntity;
 
         $name = $analyzer->getRealTraitMethodName(
             new \ReflectionClass($object),

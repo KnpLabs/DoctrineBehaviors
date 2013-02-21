@@ -4,14 +4,13 @@ namespace BehaviorFixtures\ORM;
 
 use Doctrine\ORM\Mapping as ORM;
 use Knp\DoctrineBehaviors\Model;
-use Knp\DoctrineBehaviors\ORM\Geocodable\Type\Point;
 
 /**
- * @ORM\Entity(repositoryClass="BehaviorFixtures\ORM\GeoCodableEntityRepository")
+ * @ORM\Entity
  */
-class GeocodableEntity
+class RenamedBlameableEntity
 {
-    use Model\Geocodable\Geocodable;
+    use Model\Blameable\Blameable;
 
     /**
      * @ORM\Id
@@ -24,11 +23,6 @@ class GeocodableEntity
      * @ORM\Column(type="string", nullable=true)
      */
     private $title;
-
-    public function __construct($latitude = 0, $longitude = 0)
-    {
-        $this->setLocation(new Point($latitude, $longitude));
-    }
 
     /**
      * Returns object id.
