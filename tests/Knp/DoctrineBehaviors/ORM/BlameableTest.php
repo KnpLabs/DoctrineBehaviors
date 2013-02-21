@@ -82,6 +82,29 @@ class BlameableTest extends \PHPUnit_Framework_TestCase
         );
     }
 
+    public function testRemove()
+    {
+        $em = $this->getEntityManager($this->getEventManager('user'));
+
+        $entity = new \BehaviorFixtures\ORM\BlameableEntity();
+
+        $em->persist($entity);
+        $em->flush();
+        $id = $entity->getId();
+        $em->clear();
+
+        $listeners = $em->getEventManager()->getListeners()['preRemove'];
+        $listener = array_pop($listeners);
+        $listener->setUser('user3');
+
+        $entity = $em->getRepository('BehaviorFixtures\ORM\BlameableEntity')->find($id);
+        $em->remove($entity);
+        $em->flush();
+        $em->clear();
+
+        $this->assertEquals('user3', $entity->getDeletedBy());
+    }
+
     public function testListenerWithUserCallback()
     {
         $user = new \BehaviorFixtures\ORM\UserEntity();
