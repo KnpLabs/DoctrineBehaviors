@@ -43,7 +43,7 @@ trait Renamable
 
         $methodName = $this
             ->getRenamedTraitMethodClassAnalyser()
-            ->getRealTraitMethodName(
+            ->getTraitMethodName(
                 new \ReflectionClass($this),
                 $explodedName[0],
                 $explodedName[1]

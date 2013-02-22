@@ -72,7 +72,7 @@ class ClassAnalyzer
      * @param string $traitName
      * @param string $propertyName
      */
-    public function getRealTraitMethodName(\ReflectionClass $class, $traitName, $methodName)
+    public function getTraitMethodName(\ReflectionClass $class, $traitName, $methodName)
     {
         $aliases = $class->getTraitAliases();
         $methodFullName = sprintf('%s::%s', $traitName, $methodName);
