@@ -27,7 +27,7 @@ trait Renamable
         return $this->renamedTraitMethodClassAnalyser;
     }
 
-    public function callTraitMethod() 
+    final public function callTraitMethod() 
     {
         $args = func_get_args();
 
