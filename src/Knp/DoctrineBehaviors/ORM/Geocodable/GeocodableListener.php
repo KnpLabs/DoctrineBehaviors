@@ -102,30 +102,13 @@ class GeocodableListener extends AbstractListener
         $classMetadata = $em->getClassMetadata(get_class($entity));
         if ($this->isEntitySupported($classMetadata->reflClass)) {
 
-            $getLocation = $this
-                ->getClassAnalyzer()
-                ->getRealTraitMethodName(
-                    $classMetadata->reflClass,
-                    'Knp\DoctrineBehaviors\Model\Geocodable\Geocodable',
-                    'getLocation'
-                )
-            ;
-            $setLocation = $this
-                ->getClassAnalyzer()
-                ->getRealTraitMethodName(
-                    $classMetadata->reflClass,
-                    'Knp\DoctrineBehaviors\Model\Geocodable\Geocodable',
-                    'setLocation'
-                )
-            ;
-
-            $oldValue = $entity->{$getLocation}();
+            $oldValue = $entity->callTraitMethod('Knp\DoctrineBehaviors\Model\Geocodable\Geocodable::getLocation');
             if (!$oldValue instanceof Point || $override) {
-                $entity->{$setLocation}($this->getLocation($entity));
+                $entity->$entity->callTraitMethod('Knp\DoctrineBehaviors\Model\Geocodable\Geocodable::setLocation', $this->getLocation($entity));
 
-                $uow->propertyChanged($entity, 'location', $oldValue, $entity->{$getLocation}());
+                $uow->propertyChanged($entity, 'location', $oldValue, $entity->callTraitMethod('Knp\DoctrineBehaviors\Model\Geocodable\Geocodable::getLocation'));
                 $uow->scheduleExtraUpdate($entity, [
-                    'location' => [$oldValue, $entity->{$getLocation}()],
+                    'location' => [$oldValue, $entity->callTraitMethod('Knp\DoctrineBehaviors\Model\Geocodable\Geocodable::getLocation')],
                 ]);
             }
         }
