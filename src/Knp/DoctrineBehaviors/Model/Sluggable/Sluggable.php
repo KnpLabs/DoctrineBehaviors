@@ -63,8 +63,24 @@ trait Sluggable
      */
     public function generateSlug()
     {
-        if ( $this->getRegenerateSlugOnUpdate() || empty( $this->slug ) ) {
-            $fields = $this->getSluggableFields();
+
+        $analyser   = new \Knp\DoctrineBehaviors\Reflection\ClassAnalyzer;
+        $rfl        = new \ReflectionClass($this);
+
+        $getRegenerateSlugOnUpdate = $analyser->getRealTraitMethodName(
+            $rfl,
+            'Knp\DoctrineBehaviors\Model\Sluggable\Sluggable',
+            'getRegenerateSlugOnUpdate'
+        );
+
+        $getSluggableFields = $analyser->getRealTraitMethodName(
+            $rfl,
+            'Knp\DoctrineBehaviors\Model\Sluggable\Sluggable',
+            'getSluggableFields'
+        );
+
+        if ( $this->{$getRegenerateSlugOnUpdate}() || empty( $this->slug ) ) {
+            $fields = $this->{$getSluggableFields}();
             $usableValues = [];
 
             foreach ($fields as $field) {
@@ -79,10 +95,16 @@ trait Sluggable
                 throw new \UnexpectedValueException('Sluggable expects to have at least one usable (non-empty) field from the following: [ ' . implode($fields, ',') .' ]');
             }
 
+            $getSlugDelimiter = $analyser->getRealTraitMethodName(
+                $rfl,
+                'Knp\DoctrineBehaviors\Model\Sluggable\Sluggable',
+                'getSlugDelimiter'
+            );
+
             // generate the slug itself
             $sluggableText = implode($usableValues, ' ');
-            $urlized = strtolower( trim( preg_replace("/[^a-zA-Z0-9\/_|+ -]/", '', iconv('UTF-8', 'ASCII//TRANSLIT', $sluggableText) ), $this->getSlugDelimiter() ) );
-            $urlized = preg_replace("/[\/_|+ -]+/", $this->getSlugDelimiter(), $urlized);
+            $urlized = strtolower( trim( preg_replace("/[^a-zA-Z0-9\/_|+ -]/", '', iconv('UTF-8', 'ASCII//TRANSLIT', $sluggableText) ), $this->{$getSlugDelimiter}() ) );
+            $urlized = preg_replace("/[\/_|+ -]+/", $this->{$getSlugDelimiter}(), $urlized);
 
             $this->slug = $urlized;
         }
