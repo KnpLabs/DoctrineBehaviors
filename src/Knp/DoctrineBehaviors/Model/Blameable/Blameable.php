@@ -11,6 +11,8 @@
 
 namespace Knp\DoctrineBehaviors\Model\Blameable;
 
+use Knp\DoctrineBehaviors\Reflection\Renamable;
+
 /**
  * Blameable trait.
  *
@@ -18,6 +20,7 @@ namespace Knp\DoctrineBehaviors\Model\Blameable;
  */
 trait Blameable
 {
+    use Renamable;
 
     /**
      * Will be mapped to either string or user entity
