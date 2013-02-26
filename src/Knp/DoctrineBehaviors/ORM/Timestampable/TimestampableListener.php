@@ -39,7 +39,7 @@ class TimestampableListener extends AbstractListener
 
             $updateTimestamps = $this
                 ->getClassAnalyzer()
-                ->getRealTraitMethodName(
+                ->getTraitMethodName(
                     $classMetadata->reflClass,
                     'Knp\DoctrineBehaviors\Model\Timestampable\Timestampable',
                     'updateTimestamps'
