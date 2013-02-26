@@ -8,7 +8,7 @@ use Knp\DoctrineBehaviors\Model;
 /**
  * @ORM\Entity
  */
-class TranslatableEntity
+class DefaultTranslatableEntity
 {
     use Model\Translatable\Translatable;
 

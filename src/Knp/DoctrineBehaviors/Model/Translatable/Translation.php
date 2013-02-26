@@ -11,6 +11,8 @@
 
 namespace Knp\DoctrineBehaviors\Model\Translatable;
 
+use Knp\DoctrineBehaviors\Reflection\Renamable;
+
 /**
  * Translation trait.
  *
@@ -18,7 +20,85 @@ namespace Knp\DoctrineBehaviors\Model\Translatable;
  */
 trait Translation
 {
-    use TranslationProperties,
-        TranslationMethods
-    ;
+    use Renamable;
+
+    /**
+     * @ORM\Id
+     * @ORM\Column(type="integer")
+     * @ORM\GeneratedValue(strategy="AUTO")
+     */
+    protected $id;
+
+    /**
+     * @ORM\Column(type="string")
+     */
+    protected $locale;
+
+    /**
+     * Will be mapped to translatable entity
+     * by TranslatableListener
+     */
+    protected $translatable;
+    
+    /**
+     * Returns translation ID.
+     *
+     * @return integer The ID.
+     */
+    public function getId()
+    {
+        return $this->id;
+    }
+
+    /**
+     * Sets entity, that this translation should be mapped to.
+     *
+     * @param Translatable $translatable The translatable
+     */
+    public function setTranslatable($translatable)
+    {
+        $this->translatable = $translatable;
+    }
+
+    /**
+     * Returns entity, that this translation is mapped to.
+     *
+     * @return Translatable
+     */
+    public function getTranslatable()
+    {
+        return $this->translatable;
+    }
+
+    /**
+     * Sets locale name for this translation.
+     *
+     * @param string $locale The locale
+     */
+    public function setLocale($locale)
+    {
+        $this->locale = $locale;
+    }
+
+    /**
+     * Returns this translation locale.
+     *
+     * @return string
+     */
+    public function getLocale()
+    {
+        return $this->locale;
+    }
+
+    /**
+     * Tells if translation is empty
+     *
+     * @return bool true if translation is not filled
+     */
+    public function isEmpty()
+    {
+        return false;
+    }
+
+
 }

@@ -5,7 +5,7 @@ namespace BehaviorFixtures\ORM;
 /**
  * @ORM\Entity
  */
-class DeletableEntityInherit extends DeletableEntity
+class DeletableEntityInherit extends DefaultDeletableEntity
 {
 
     /**

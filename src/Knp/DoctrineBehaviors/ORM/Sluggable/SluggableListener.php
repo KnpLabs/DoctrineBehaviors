@@ -6,8 +6,6 @@
 
 namespace Knp\DoctrineBehaviors\ORM\Sluggable;
 
-use Knp\DoctrineBehaviors\Reflection\ClassAnalyzer;
-
 use Knp\DoctrineBehaviors\ORM\AbstractListener;
 
 use Doctrine\ORM\Event\LoadClassMetadataEventArgs,
@@ -31,12 +29,18 @@ class SluggableListener extends AbstractListener
         }
 
         if ($this->isEntitySupported($classMetadata)) {
-            if ($classMetadata->reflClass->hasMethod('generateSlug')) {
-                // Call the generateSlug function when the entity is persisted initially and when its updated
 
-                $classMetadata->addLifecycleCallback('generateSlug', Events::prePersist);
-                $classMetadata->addLifecycleCallback('generateSlug', Events::preUpdate);
-            }
+            $generateSlug = $this
+                ->getClassAnalyzer()
+                ->getTraitMethodName(
+                    $classMetadata->reflClass,
+                    'Knp\DoctrineBehaviors\Model\Sluggable\Sluggable',
+                    'generateSlug'
+                )
+            ;
+
+            $classMetadata->addLifecycleCallback($generateSlug, Events::prePersist);
+            $classMetadata->addLifecycleCallback($generateSlug, Events::preUpdate);
         }
     }
 

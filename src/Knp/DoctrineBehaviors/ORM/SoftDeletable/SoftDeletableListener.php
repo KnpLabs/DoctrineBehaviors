@@ -11,8 +11,6 @@
 
 namespace Knp\DoctrineBehaviors\ORM\SoftDeletable;
 
-use Knp\DoctrineBehaviors\Reflection\ClassAnalyzer;
-
 use Knp\DoctrineBehaviors\ORM\AbstractListener;
 
 use Doctrine\Common\Persistence\Mapping\ClassMetadata,
@@ -41,14 +39,15 @@ class SoftDeletableListener extends AbstractListener
         foreach ($uow->getScheduledEntityDeletions() as $entity) {
             $classMetadata = $em->getClassMetadata(get_class($entity));
             if ($this->isEntitySupported($classMetadata)) {
-                $oldValue = $entity->getDeletedAt();
 
-                $entity->delete();
+                $oldValue = $entity->callTraitMethod('Knp\DoctrineBehaviors\Model\SoftDeletable\SoftDeletable::getDeletedAt');
+
+                $entity->callTraitMethod('Knp\DoctrineBehaviors\Model\SoftDeletable\SoftDeletable::delete');
                 $em->persist($entity);
 
-                $uow->propertyChanged($entity, 'deletedAt', $oldValue, $entity->getDeletedAt());
+                $uow->propertyChanged($entity, 'deletedAt', $oldValue, $entity->callTraitMethod('Knp\DoctrineBehaviors\Model\SoftDeletable\SoftDeletable::getDeletedAt'));
                 $uow->scheduleExtraUpdate($entity, [
-                    'deletedAt' => [$oldValue, $entity->getDeletedAt()]
+                    'deletedAt' => [$oldValue, $entity->callTraitMethod('Knp\DoctrineBehaviors\Model\SoftDeletable\SoftDeletable::getDeletedAt')]
                 ]);
             }
         }

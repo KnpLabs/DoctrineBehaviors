@@ -8,16 +8,38 @@ use Doctrine\ORM\Mapping\ClassMetadataInfo;
 
 require_once 'EntityManagerProvider.php';
 
-class TranslatableTest extends \PHPUnit_Framework_TestCase
+class DefaultTranslatableTest extends \PHPUnit_Framework_TestCase
 {
     use EntityManagerProvider;
 
     protected function getUsedEntityFixtures()
     {
         return [
-            'BehaviorFixtures\\ORM\\TranslatableEntity',
-            'BehaviorFixtures\\ORM\\TranslatableEntityTranslation'
+            $this->getTestedTranslatableEntityClass(),
+            $this->getTestedTranslationEntityClass()
         ];
+    }
+
+    protected function getTestedTranslatableEntityClass()
+    {
+        return "\BehaviorFixtures\ORM\DefaultTranslatableEntity";
+    }
+    
+    protected function getTestedTranslatableEntity()
+    {
+        $class = $this->getTestedTranslatableEntityClass();
+        return new $class;
+    }
+
+    protected function getTestedTranslationEntityClass()
+    {
+        return "\BehaviorFixtures\ORM\DefaultTranslatableEntityTranslation";
+    }
+
+    protected function getTestedTranslationEntity()
+    {
+        $class = $this->getTestedTranslationEntityClass();
+        return new $class;
     }
 
     protected function getEventManager()
@@ -42,7 +64,7 @@ class TranslatableTest extends \PHPUnit_Framework_TestCase
     {
         $em = $this->getEntityManager();
 
-        $entity = new \BehaviorFixtures\ORM\TranslatableEntity();
+        $entity = $this->getTestedTranslatableEntity();
         $entity->translate('fr')->setTitle('fabuleux');
         $entity->translate('en')->setTitle('awesome');
         $entity->translate('ru')->setTitle('удивительный');
@@ -54,7 +76,7 @@ class TranslatableTest extends \PHPUnit_Framework_TestCase
         $em->clear();
 
         $entity = $em
-            ->getRepository('BehaviorFixtures\ORM\TranslatableEntity')
+            ->getRepository($this->getTestedTranslatableEntityClass())
             ->find($id)
         ;
 
@@ -81,10 +103,10 @@ class TranslatableTest extends \PHPUnit_Framework_TestCase
     {
         $em = $this->getEntityManager();
 
-        $entity = new \BehaviorFixtures\ORM\TranslatableEntity();
+        $entity = $this->getTestedTranslatableEntity();
 
         $this->assertInstanceOf(
-            'BehaviorFixtures\ORM\TranslatableEntityTranslation',
+            $this->getTestedTranslationEntityClass(),
             $entity->translate('fr')
         );
     }
@@ -96,7 +118,7 @@ class TranslatableTest extends \PHPUnit_Framework_TestCase
     {
         $em = $this->getEntityManager();
 
-        $entity = new \BehaviorFixtures\ORM\TranslatableEntity();
+        $entity = $this->getTestedTranslatableEntity();
         $entity->setTitle('test'); // magic method
         $entity->mergeNewTranslations();
         $em->persist($entity);
@@ -104,7 +126,7 @@ class TranslatableTest extends \PHPUnit_Framework_TestCase
         $id = $entity->getId();
         $em->clear();
 
-        $entity = $em->getRepository('BehaviorFixtures\ORM\TranslatableEntity')->find($id);
+        $entity = $em->getRepository($this->getTestedTranslatableEntityClass())->find($id);
 
         $this->assertEquals('en', $entity->getCurrentLocale());
         $this->assertEquals('test', $entity->getTitle());
@@ -114,19 +136,19 @@ class TranslatableTest extends \PHPUnit_Framework_TestCase
     /**
      * @test
      */
-    public function should_have_ontToMany_relation()
+    public function should_have_oneToMany_relation()
     {
         $em = $this->getEntityManager();
 
-        $meta = $em->getClassMetadata('BehaviorFixtures\ORM\TranslatableEntityTranslation');
+        $meta = $em->getClassMetadata($this->getTestedTranslationEntityClass());
         $this->assertEquals(
-            'BehaviorFixtures\ORM\TranslatableEntity',
+            substr($this->getTestedTranslatableEntityClass(), 1),
             $meta->getAssociationTargetClass('translatable')
         );
 
-        $meta = $em->getClassMetadata('BehaviorFixtures\ORM\TranslatableEntity');
+        $meta = $em->getClassMetadata($this->getTestedTranslatableEntityClass());
         $this->assertEquals(
-            'BehaviorFixtures\ORM\TranslatableEntityTranslation',
+            substr($this->getTestedTranslationEntityClass(), 1),
             $meta->getAssociationTargetClass('translations')
         );
         $this->assertTrue($meta->isAssociationInverseSide('translations'));
@@ -144,7 +166,7 @@ class TranslatableTest extends \PHPUnit_Framework_TestCase
     {
         $em = $this->getEntityManager();
 
-        $entity = new \BehaviorFixtures\ORM\TranslatableEntity();
+        $entity = $this->getTestedTranslatableEntity();
         $translation = $entity->translate('fr');
         $translation->setTitle('fabuleux');
         $entity->translate('fr')->setTitle('fabuleux2');
@@ -161,7 +183,7 @@ class TranslatableTest extends \PHPUnit_Framework_TestCase
     {
         $em = $this->getEntityManager();
 
-        $entity = new \BehaviorFixtures\ORM\TranslatableEntity();
+        $entity = $this->getTestedTranslatableEntity();
         $entity->translate('en')->setTitle('Hello');
         $entity->translate('nl')->setTitle('Hallo');
         $entity->mergeNewTranslations();

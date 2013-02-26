@@ -11,6 +11,8 @@
 
 namespace Knp\DoctrineBehaviors\Model\Blameable;
 
+use Knp\DoctrineBehaviors\Reflection\Renamable;
+
 /**
  * Blameable trait.
  *
@@ -18,7 +20,7 @@ namespace Knp\DoctrineBehaviors\Model\Blameable;
  */
 trait Blameable
 {
-    use BlameableMethods;
+    use Renamable;
 
     /**
      * Will be mapped to either string or user entity
@@ -37,4 +39,57 @@ trait Blameable
      * by BlameableListener
      */
     private $deletedBy;
+
+    /**
+     * @param mixed the user representation
+     */
+    public function setCreatedBy($user)
+    {
+        $this->createdBy = $user;
+    }
+
+    /**
+     * @param mixed the user representation
+     */
+    public function setUpdatedBy($user)
+    {
+        $this->updatedBy = $user;
+    }
+
+    /**
+     * @param mixed the user representation
+     */
+    public function setDeletedBy($user)
+    {
+        $this->deletedBy = $user;
+    }
+
+    /**
+     * @return mixed the user who created entity
+     */
+    public function getCreatedBy()
+    {
+        return $this->createdBy;
+    }
+
+    /**
+     * @return mixed the user who last updated entity
+     */
+    public function getUpdatedBy()
+    {
+        return $this->updatedBy;
+    }
+
+    /**
+     * @return mixed the user who removed entity
+     */
+    public function getDeletedBy()
+    {
+        return $this->deletedBy;
+    }
+
+    public function isBlameable()
+    {
+        return true;
+    }
 }

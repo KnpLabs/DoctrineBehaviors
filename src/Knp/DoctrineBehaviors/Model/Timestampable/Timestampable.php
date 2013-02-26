@@ -11,6 +11,8 @@
 
 namespace Knp\DoctrineBehaviors\Model\Timestampable;
 
+use Knp\DoctrineBehaviors\Reflection\Renamable;
+
 /**
  * Timestampable trait.
  *
@@ -18,7 +20,9 @@ namespace Knp\DoctrineBehaviors\Model\Timestampable;
  */
 trait Timestampable
 {
-    /**
+    use Renamable;
+
+        /**
      * @var DateTime $createdAt
      *
      * @ORM\Column(type="datetime", nullable=true)

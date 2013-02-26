@@ -7,15 +7,26 @@ use Doctrine\Common\EventManager;
 
 require_once 'EntityManagerProvider.php';
 
-class SluggableTest extends \PHPUnit_Framework_TestCase
+class DefaultSluggableTest extends \PHPUnit_Framework_TestCase
 {
     use EntityManagerProvider;
 
     protected function getUsedEntityFixtures()
     {
         return array(
-            'BehaviorFixtures\\ORM\\SluggableEntity'
+            $this->getTestedEntityClass()
         );
+    }
+
+    protected function getTestedEntityClass()
+    {
+        return "\BehaviorFixtures\ORM\DefaultSluggableEntity";
+    }
+
+    protected function getTestedEntity()
+    {
+        $class = $this->getTestedEntityClass();
+        return new $class;
     }
 
     protected function getEventManager()
@@ -33,7 +44,7 @@ class SluggableTest extends \PHPUnit_Framework_TestCase
     {
         $em = $this->getEntityManager();
 
-        $entity = new \BehaviorFixtures\ORM\SluggableEntity();
+        $entity = $this->getTestedEntity();
 
         $expected = 'the-name';
 
@@ -46,7 +57,7 @@ class SluggableTest extends \PHPUnit_Framework_TestCase
 
         $em->clear();
 
-        $entity = $em->getRepository('BehaviorFixtures\ORM\SluggableEntity')->find($id);
+        $entity = $em->getRepository($this->getTestedEntityClass())->find($id);
 
         $this->assertNotNull($entity);
         $this->assertEquals($entity->getSlug(), $expected);
@@ -56,7 +67,7 @@ class SluggableTest extends \PHPUnit_Framework_TestCase
     {
         $em = $this->getEntityManager();
 
-        $entity = new \BehaviorFixtures\ORM\SluggableEntity();
+        $entity = $this->getTestedEntity();
 
         $expected = 'the-name';
 
@@ -77,7 +88,7 @@ class SluggableTest extends \PHPUnit_Framework_TestCase
     {
         $em = $this->getEntityManager();
 
-        $entity = new \BehaviorFixtures\ORM\SluggableEntity();
+        $entity = $this->getTestedEntity();
 
         $expected = 'the-name';
 

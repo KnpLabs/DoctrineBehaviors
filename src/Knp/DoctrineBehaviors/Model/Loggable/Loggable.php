@@ -11,6 +11,8 @@
 
 namespace Knp\DoctrineBehaviors\Model\Loggable;
 
+use Knp\DoctrineBehaviors\Reflection\Renamable;
+
 /**
  * Loggable trait.
  *
@@ -18,6 +20,8 @@ namespace Knp\DoctrineBehaviors\Model\Loggable;
  */
 trait Loggable
 {
+    use Renamable;
+    
     /**
      * @return string some log informations
      */

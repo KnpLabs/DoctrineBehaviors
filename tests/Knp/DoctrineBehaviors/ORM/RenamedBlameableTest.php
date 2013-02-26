@@ -2,82 +2,56 @@
 
 namespace Tests\Knp\DoctrineBehaviors\ORM;
 
-use Knp\DoctrineBehaviors\Reflection\ClassAnalyzer;
-use Doctrine\Common\EventManager;
+require_once 'DefaultBlameableTest.php';
 
-require_once 'EntityManagerProvider.php';
-
-class BlameableTest extends \PHPUnit_Framework_TestCase
+class RenamedBlameableTest extends DefaultBlameableTest
 {
-    private $listener;
-
-    use EntityManagerProvider;
-
-    protected function getUsedEntityFixtures()
+    protected function getTestedEntityClass()
     {
-        return [
-            'BehaviorFixtures\\ORM\\BlameableEntity',
-            'BehaviorFixtures\\ORM\\UserEntity'
-        ];
-    }
-
-    protected function getEventManager($user = null, $userCallback = null, $userEntity = null)
-    {
-        $em = new EventManager;
-
-        $this->listener = new \Knp\DoctrineBehaviors\ORM\Blameable\BlameableListener(
-            new ClassAnalyzer(),
-            $userCallback,
-            $userEntity
-        );
-        $this->listener->setUser($user);
-
-        $em->addEventSubscriber($this->listener);
-
-        return $em;
+        return "\BehaviorFixtures\ORM\RenamedBlameableEntity";
     }
 
     public function testCreate()
     {
         $em = $this->getEntityManager($this->getEventManager('user'));
 
-        $entity = new \BehaviorFixtures\ORM\BlameableEntity();
+        $entity = $this->getTestedEntity();
 
         $em->persist($entity);
         $em->flush();
 
-        $this->assertEquals('user', $entity->getCreatedBy());
-        $this->assertEquals('user', $entity->getUpdatedBy());
+        $this->assertEquals('user', $entity->getTraitCreatedBy());
+        $this->assertEquals('user', $entity->getTraitUpdatedBy());
     }
 
     public function testUpdate()
     {
         $em = $this->getEntityManager($this->getEventManager('user'));
 
-        $entity = new \BehaviorFixtures\ORM\BlameableEntity();
+        $entity = $this->getTestedEntity();
 
         $em->persist($entity);
         $em->flush();
         $id = $entity->getId();
-        $createdBy = $entity->getCreatedBy();
+        $createdBy = $entity->getTraitCreatedBy();
         $em->clear();
 
         $listeners = $em->getEventManager()->getListeners()['preUpdate'];
         $listener = array_pop($listeners);
         $listener->setUser('user2');
 
-        $entity = $em->getRepository('BehaviorFixtures\ORM\BlameableEntity')->find($id);
+        $entity = $em->getRepository($this->getTestedEntityClass())->find($id);
         $entity->setTitle('test'); // need to modify at least one column to trigger onUpdate
         $em->flush();
         $em->clear();
 
-        //$entity = $em->getRepository('BehaviorFixtures\ORM\BlameableEntity')->find($id);
-        $this->assertEquals($createdBy, $entity->getCreatedBy(), 'createdBy is constant');
-        $this->assertEquals('user2', $entity->getUpdatedBy());
+        //$entity = $em->getRepository($this->getTestedEntityClass())->find($id);
+        $this->assertEquals($createdBy, $entity->getTraitCreatedBy(), 'createdBy is constant');
+        $this->assertEquals('user2', $entity->getTraitUpdatedBy());
 
         $this->assertNotEquals(
-            $entity->getCreatedBy(),
-            $entity->getUpdatedBy(),
+            $entity->getTraitCreatedBy(),
+            $entity->getTraitUpdatedBy(),
             'createBy and updatedBy have diverged since new update'
         );
     }
@@ -86,7 +60,7 @@ class BlameableTest extends \PHPUnit_Framework_TestCase
     {
         $em = $this->getEntityManager($this->getEventManager('user'));
 
-        $entity = new \BehaviorFixtures\ORM\BlameableEntity();
+        $entity = $this->getTestedEntity();
 
         $em->persist($entity);
         $em->flush();
@@ -97,12 +71,12 @@ class BlameableTest extends \PHPUnit_Framework_TestCase
         $listener = array_pop($listeners);
         $listener->setUser('user3');
 
-        $entity = $em->getRepository('BehaviorFixtures\ORM\BlameableEntity')->find($id);
+        $entity = $em->getRepository($this->getTestedEntityClass())->find($id);
         $em->remove($entity);
         $em->flush();
         $em->clear();
 
-        $this->assertEquals('user3', $entity->getDeletedBy());
+        $this->assertEquals('user3', $entity->getTraitDeletedBy());
     }
 
     public function testListenerWithUserCallback()
@@ -122,26 +96,26 @@ class BlameableTest extends \PHPUnit_Framework_TestCase
         $em->persist($user2);
         $em->flush();
 
-        $entity = new \BehaviorFixtures\ORM\BlameableEntity();
+        $entity = $this->getTestedEntity();
 
         $em->persist($entity);
         $em->flush();
         $id = $entity->getId();
-        $createdBy = $entity->getCreatedBy();
+        $createdBy = $entity->getTraitCreatedBy();
         $this->listener->setUser($user2); // switch user for update
 
-        $entity = $em->getRepository('BehaviorFixtures\ORM\BlameableEntity')->find($id);
+        $entity = $em->getRepository($this->getTestedEntityClass())->find($id);
         $entity->setTitle('test'); // need to modify at least one column to trigger onUpdate
         $em->flush();
         $em->clear();
 
-        $this->assertInstanceOf('BehaviorFixtures\\ORM\\UserEntity', $entity->getCreatedBy(), 'createdBy is a user object');
-        $this->assertEquals($createdBy->getUsername(), $entity->getCreatedBy()->getUsername(), 'createdBy is constant');
-        $this->assertEquals($user2->getUsername(), $entity->getUpdatedBy()->getUsername());
+        $this->assertInstanceOf('BehaviorFixtures\\ORM\\UserEntity', $entity->getTraitCreatedBy(), 'createdBy is a user object');
+        $this->assertEquals($createdBy->getUsername(), $entity->getTraitCreatedBy()->getUsername(), 'createdBy is constant');
+        $this->assertEquals($user2->getUsername(), $entity->getTraitUpdatedBy()->getUsername());
 
         $this->assertNotEquals(
-            $entity->getCreatedBy(),
-            $entity->getUpdatedBy(),
+            $entity->getTraitCreatedBy(),
+            $entity->getTraitUpdatedBy(),
             'createBy and updatedBy have diverged since new update'
         );
     }
@@ -162,13 +136,13 @@ class BlameableTest extends \PHPUnit_Framework_TestCase
         $em->persist($user);
         $em->flush();
 
-        $entity = new \BehaviorFixtures\ORM\BlameableEntity();
+        $entity = $this->getTestedEntity();
 
         $em->persist($entity);
         $em->flush();
 
-        $this->assertNull($entity->getCreatedBy(), 'createdBy is a not updated because not a user entity object');
-        $this->assertNull($entity->getUpdatedBy(), 'updatedBy is a not updated because not a user entity object');
+        $this->assertNull($entity->getTraitCreatedBy(), 'createdBy is a not updated because not a user entity object');
+        $this->assertNull($entity->getTraitUpdatedBy(), 'updatedBy is a not updated because not a user entity object');
     }
 
     /**
@@ -179,12 +153,13 @@ class BlameableTest extends \PHPUnit_Framework_TestCase
         $user = new \BehaviorFixtures\ORM\UserEntity();
         $em   = $this->getEntityManager($this->getEventManager($user));
 
-        $entity = new \BehaviorFixtures\ORM\BlameableEntity();
+        $entity = $this->getTestedEntity();
 
         $em->persist($entity);
         $em->flush();
 
-        $this->assertNull($entity->getCreatedBy(), 'createdBy is a not updated because not a user entity object');
-        $this->assertNull($entity->getUpdatedBy(), 'updatedBy is a not updated because not a user entity object');
+        $this->assertNull($entity->getTraitCreatedBy(), 'createdBy is a not updated because not a user entity object');
+        $this->assertNull($entity->getTraitUpdatedBy(), 'updatedBy is a not updated because not a user entity object');
     }
+
 }

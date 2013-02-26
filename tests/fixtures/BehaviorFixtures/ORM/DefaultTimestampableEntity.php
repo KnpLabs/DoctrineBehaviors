@@ -8,7 +8,7 @@ use Knp\DoctrineBehaviors\Model;
 /**
  * @ORM\Entity
  */
-class TimestampableEntity
+class DefaultTimestampableEntity
 {
     use Model\Timestampable\Timestampable;
 

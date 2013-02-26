@@ -8,15 +8,26 @@ use Doctrine\Common\EventManager;
 
 require_once 'EntityManagerProvider.php';
 
-class GeocodableTest extends \PHPUnit_Framework_TestCase
+class DefaultGeocodableTest extends \PHPUnit_Framework_TestCase
 {
     use EntityManagerProvider;
 
     protected function getUsedEntityFixtures()
     {
         return array(
-            'BehaviorFixtures\\ORM\\GeocodableEntity'
+            $this->getTestedEntityClass()
         );
+    }
+
+    protected function getTestedEntityClass()
+    {
+        return "\BehaviorFixtures\ORM\DefaultGeocodableEntity";
+    }
+
+    protected function getTestedEntity($latitude = 0, $longitude = 0)
+    {
+        $class = $this->getTestedEntityClass();
+        return new $class($latitude, $longitude);
     }
 
     protected function getEventManager()
@@ -26,7 +37,15 @@ class GeocodableTest extends \PHPUnit_Framework_TestCase
         $em->addEventSubscriber(new \Knp\DoctrineBehaviors\ORM\Geocodable\GeocodableListener(
             new ClassAnalyzer(),
             function($entity) {
-                if ($location = $entity->getLocation()) {
+                $analyser = new ClassAnalyzer;
+
+                $getLocation = $analyser->getRealTraitMethodName(
+                    new \ReflectionClass($entity),
+                    'Knp\DoctrineBehaviors\Model\Geocodable\Geocodable',
+                    'getLocation'
+                );
+
+                if ($location = $entity->{$getLocation}()) {
                     return $location;
                 }
 
@@ -44,7 +63,7 @@ class GeocodableTest extends \PHPUnit_Framework_TestCase
     {
         $em = $this->getEntityManager();
 
-        $entity = new \BehaviorFixtures\ORM\GeocodableEntity();
+        $entity = $this->getTestedEntity();
 
         $em->persist($entity);
         $em->flush();
@@ -59,11 +78,11 @@ class GeocodableTest extends \PHPUnit_Framework_TestCase
             'dbname' => 'orm_behaviors_test',
         ]);
 
-        $nantes  = new \BehaviorFixtures\ORM\GeocodableEntity(47.218635,  -1.544266);
+        $nantes  = $this->getTestedEntity(47.218635,  -1.544266);
         $nantes->setTitle('Nantes');
-        $paris   = new \BehaviorFixtures\ORM\GeocodableEntity(48.858842,   2.355194);
+        $paris   = $this->getTestedEntity(48.858842,   2.355194);
         $paris->setTitle('Paris');
-        $newYork = new \BehaviorFixtures\ORM\GeocodableEntity(40.742786, -73.989272);
+        $newYork = $this->getTestedEntity(40.742786, -73.989272);
         $newYork->setTitle('New-York');
 
         $em->persist($nantes);
@@ -71,7 +90,7 @@ class GeocodableTest extends \PHPUnit_Framework_TestCase
         $em->persist($newYork);
         $em->flush();
 
-        $repo = $em->getRepository('BehaviorFixtures\ORM\GeocodableEntity');
+        $repo = $em->getRepository($this->getTestedEntityClass());
 
         $cities = $repo->findByDistance(new Point(47.896319, 7.352943), 500);
         $this->assertCount(1, $cities, 'Paris is less than 500km far from Reguisheim');

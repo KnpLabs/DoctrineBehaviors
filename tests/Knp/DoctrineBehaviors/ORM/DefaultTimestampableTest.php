@@ -7,15 +7,26 @@ use Doctrine\Common\EventManager;
 
 require_once 'EntityManagerProvider.php';
 
-class TimestampableTest extends \PHPUnit_Framework_TestCase
+class DefaultTimestampableTest extends \PHPUnit_Framework_TestCase
 {
     use EntityManagerProvider;
 
     protected function getUsedEntityFixtures()
     {
         return array(
-            'BehaviorFixtures\\ORM\\TimestampableEntity'
+            $this->getTestedEntityClass()
         );
+    }
+
+    protected function getTestedEntityClass()
+    {
+        return "\BehaviorFixtures\ORM\DefaultTimestampableEntity";
+    }
+
+    protected function getTestedEntity()
+    {
+        $class = $this->getTestedEntityClass();
+        return new $class;
     }
 
     protected function getEventManager()
@@ -33,7 +44,7 @@ class TimestampableTest extends \PHPUnit_Framework_TestCase
     {
         $em = $this->getEntityManager();
 
-        $entity = new \BehaviorFixtures\ORM\TimestampableEntity();
+        $entity = $this->getTestedEntity();
 
         $em->persist($entity);
         $em->flush();
@@ -52,7 +63,7 @@ class TimestampableTest extends \PHPUnit_Framework_TestCase
     {
         $em = $this->getEntityManager();
 
-        $entity = new \BehaviorFixtures\ORM\TimestampableEntity();
+        $entity = $this->getTestedEntity();
 
         $em->persist($entity);
         $em->flush();
@@ -63,12 +74,12 @@ class TimestampableTest extends \PHPUnit_Framework_TestCase
         // wait for a second:
         sleep(1);
 
-        $entity = $em->getRepository('BehaviorFixtures\ORM\TimestampableEntity')->find($id);
+        $entity = $em->getRepository($this->getTestedEntityClass())->find($id);
         $entity->setTitle('test'); // need to modify at least one column to trigger onUpdate
         $em->flush();
         $em->clear();
 
-        $entity = $em->getRepository('BehaviorFixtures\ORM\TimestampableEntity')->find($id);
+        $entity = $em->getRepository($this->getTestedEntityClass())->find($id);
         $this->assertEquals($createdAt, $entity->getCreatedAt(), 'createdAt is constant');
 
         $this->assertNotEquals(

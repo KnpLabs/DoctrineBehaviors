@@ -11,6 +11,8 @@
 
 namespace Knp\DoctrineBehaviors\Model\SoftDeletable;
 
+use Knp\DoctrineBehaviors\Reflection\Renamable;
+
 /**
  * SoftDeletable trait.
  *
@@ -18,6 +20,8 @@ namespace Knp\DoctrineBehaviors\Model\SoftDeletable;
  */
 trait SoftDeletable
 {
+    use Renamable;
+
     /**
      * @ORM\Column(type="datetime", nullable=true)
      */

@@ -8,7 +8,7 @@ use Knp\DoctrineBehaviors\Model;
 /**
  * @ORM\Entity
  */
-class DeletableEntity
+class DefaultDeletableEntity
 {
     use Model\SoftDeletable\SoftDeletable;
 

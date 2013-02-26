@@ -120,14 +120,18 @@ class TranslatableListener extends AbstractListener
      *
      * @return boolean
      */
-    private function isTranslatable(ClassMetadata $classMetadata, $isRecursive = false)
+    private function isTranslatable(ClassMetadata $classMetadata)
     {
-        return $this->getClassAnalyzer()->hasProperty($classMetadata->reflClass, 'translations', $isRecursive);
+        return (
+            $this->getClassAnalyzer()->hasTrait($classMetadata->reflClass, 'Knp\DoctrineBehaviors\Model\Translatable\Translatable', true)
+        );
     }
 
     private function isTranslation(ClassMetadata $classMetadata)
     {
-        return $this->getClassAnalyzer()->hasProperty($classMetadata->reflClass, 'translatable');
+        return (
+            $this->getClassAnalyzer()->hasTrait($classMetadata->reflClass, 'Knp\DoctrineBehaviors\Model\Translatable\Translation', true)
+        );
     }
 
     public function postLoad(LifecycleEventArgs $eventArgs)
@@ -136,12 +140,12 @@ class TranslatableListener extends AbstractListener
         $entity        = $eventArgs->getEntity();
         $classMetadata = $em->getClassMetadata(get_class($entity));
 
-        if (!$this->getClassAnalyzer()->hasMethod($classMetadata->reflClass, 'setCurrentLocale', false)) {
+        if (!$this->isTranslatable($classMetadata)) {
             return;
         }
 
         if ($locale = $this->getCurrentLocale()) {
-            $entity->setCurrentLocale($locale);
+            $entity->callTraitMethod('Knp\DoctrineBehaviors\Model\Translatable\Translatable::setCurrentLocale', $locale);
         }
     }
 

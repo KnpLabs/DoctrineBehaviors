@@ -65,4 +65,28 @@ class ClassAnalyzer
         
         return $this->hasProperty($parentClass, $propertyName);
     }
+
+    /**
+     * Return TRUE if the given object has the given property, FALSE if not
+     * @param ReflectionClass $class
+     * @param string $traitName
+     * @param string $propertyName
+     */
+    public function getTraitMethodName(\ReflectionClass $class, $traitName, $methodName)
+    {
+        $aliases = $class->getTraitAliases();
+        $methodFullName = sprintf('%s::%s', $traitName, $methodName);
+
+        if (in_array($methodFullName, $aliases)) {
+
+            return array_search($methodFullName, $aliases);
+        }
+
+        if ($this->hasMethod($class, $methodName)) {
+            
+            return $methodName;
+        }
+
+        return null;
+    }
 }
