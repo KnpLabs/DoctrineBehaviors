@@ -6,6 +6,8 @@
 
 namespace Knp\DoctrineBehaviors\Model\Sluggable;
 
+use Knp\DoctrineBehaviors\Reflection\Renamable;
+
 /**
  * Sluggable trait.
  *
@@ -13,6 +15,8 @@ namespace Knp\DoctrineBehaviors\Model\Sluggable;
  */
 trait Sluggable
 {
+    use Renamable;
+
     /**
      * @var string $slug
      *
@@ -64,23 +68,8 @@ trait Sluggable
     public function generateSlug()
     {
 
-        $analyser   = new \Knp\DoctrineBehaviors\Reflection\ClassAnalyzer;
-        $rfl        = new \ReflectionClass($this);
-
-        $getRegenerateSlugOnUpdate = $analyser->getRealTraitMethodName(
-            $rfl,
-            'Knp\DoctrineBehaviors\Model\Sluggable\Sluggable',
-            'getRegenerateSlugOnUpdate'
-        );
-
-        $getSluggableFields = $analyser->getRealTraitMethodName(
-            $rfl,
-            'Knp\DoctrineBehaviors\Model\Sluggable\Sluggable',
-            'getSluggableFields'
-        );
-
-        if ( $this->{$getRegenerateSlugOnUpdate}() || empty( $this->slug ) ) {
-            $fields = $this->{$getSluggableFields}();
+        if ( $this->callTraitMethod('Knp\DoctrineBehaviors\Model\Sluggable\Sluggable::getRegenerateSlugOnUpdate') || empty( $this->slug ) ) {
+            $fields = $this->callTraitMethod('Knp\DoctrineBehaviors\Model\Sluggable\Sluggable::getSluggableFields');
             $usableValues = [];
 
             foreach ($fields as $field) {
@@ -95,16 +84,10 @@ trait Sluggable
                 throw new \UnexpectedValueException('Sluggable expects to have at least one usable (non-empty) field from the following: [ ' . implode($fields, ',') .' ]');
             }
 
-            $getSlugDelimiter = $analyser->getRealTraitMethodName(
-                $rfl,
-                'Knp\DoctrineBehaviors\Model\Sluggable\Sluggable',
-                'getSlugDelimiter'
-            );
-
             // generate the slug itself
             $sluggableText = implode($usableValues, ' ');
-            $urlized = strtolower( trim( preg_replace("/[^a-zA-Z0-9\/_|+ -]/", '', iconv('UTF-8', 'ASCII//TRANSLIT', $sluggableText) ), $this->{$getSlugDelimiter}() ) );
-            $urlized = preg_replace("/[\/_|+ -]+/", $this->{$getSlugDelimiter}(), $urlized);
+            $urlized = strtolower( trim( preg_replace("/[^a-zA-Z0-9\/_|+ -]/", '', iconv('UTF-8', 'ASCII//TRANSLIT', $sluggableText) ), $this->callTraitMethod('Knp\DoctrineBehaviors\Model\Sluggable\Sluggable::getSlugDelimiter') ) );
+            $urlized = preg_replace("/[\/_|+ -]+/", $this->callTraitMethod('Knp\DoctrineBehaviors\Model\Sluggable\Sluggable::getSlugDelimiter'), $urlized);
 
             $this->slug = $urlized;
         }

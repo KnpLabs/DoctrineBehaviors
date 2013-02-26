@@ -34,7 +34,7 @@ class SluggableListener extends AbstractListener
 
             $generateSlug = $this
                 ->getClassAnalyzer()
-                ->getRealTraitMethodName(
+                ->getTraitMethodName(
                     $classMetadata->reflClass,
                     'Knp\DoctrineBehaviors\Model\Sluggable\Sluggable',
                     'generateSlug'
