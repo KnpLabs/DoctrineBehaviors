@@ -11,8 +11,6 @@
 
 namespace Knp\DoctrineBehaviors\ORM\SoftDeletable;
 
-use Knp\DoctrineBehaviors\Reflection\ClassAnalyzer;
-
 use Knp\DoctrineBehaviors\ORM\AbstractListener;
 
 use Doctrine\Common\Persistence\Mapping\ClassMetadata,

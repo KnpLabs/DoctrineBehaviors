@@ -11,8 +11,6 @@
 
 namespace Knp\DoctrineBehaviors\ORM\Timestampable;
 
-use Knp\DoctrineBehaviors\Reflection\ClassAnalyzer;
-
 use Knp\DoctrineBehaviors\ORM\AbstractListener;
 
 use Doctrine\ORM\Event\LoadClassMetadataEventArgs,
