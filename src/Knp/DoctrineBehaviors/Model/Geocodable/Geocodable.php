@@ -12,6 +12,7 @@
 namespace Knp\DoctrineBehaviors\Model\Geocodable;
 
 use Knp\DoctrineBehaviors\ORM\Geocodable\Type\Point;
+use Knp\DoctrineBehaviors\Reflection\Renamable;
 
 /**Geocodable
  *  trait.
@@ -20,6 +21,8 @@ use Knp\DoctrineBehaviors\ORM\Geocodable\Type\Point;
  */
 trait Geocodable
 {
+    use Renamable;
+    
     /**
      * @ORM\Column(type="point", nullable=true)
      */
