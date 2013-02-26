@@ -11,6 +11,8 @@
 
 namespace Knp\DoctrineBehaviors\Model\Translatable;
 
+use Knp\DoctrineBehaviors\Reflection\Renamable;
+
 /**
  * Translation trait.
  *
@@ -18,6 +20,8 @@ namespace Knp\DoctrineBehaviors\Model\Translatable;
  */
 trait Translation
 {
+    use Renamable;
+
     /**
      * @ORM\Id
      * @ORM\Column(type="integer")

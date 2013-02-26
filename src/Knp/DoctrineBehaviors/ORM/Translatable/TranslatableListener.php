@@ -140,21 +140,12 @@ class TranslatableListener extends AbstractListener
         $entity        = $eventArgs->getEntity();
         $classMetadata = $em->getClassMetadata(get_class($entity));
 
-        $setCurrentLocale = $this
-            ->getClassAnalyzer()
-            ->getRealTraitMethodName(
-                $classMetadata->reflClass,
-                'Knp\DoctrineBehaviors\Model\Translatable\Translatable',
-                'setCurrentLocale'
-            )
-        ;
-
-        if (null === $setCurrentLocale) {
+        if (!$this->isTranslatable($classMetadata)) {
             return;
         }
 
         if ($locale = $this->getCurrentLocale()) {
-            $entity->{$setCurrentLocale}($locale);
+            $entity->callTraitMethod('Knp\DoctrineBehaviors\Model\Translatable\Translatable::setCurrentLocale', $locale);
         }
     }
 
