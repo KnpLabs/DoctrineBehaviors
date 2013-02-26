@@ -67,20 +67,10 @@ class LoggableListener extends AbstractListener
         $classMetadata = $em->getClassMetadata(get_class($entity));
 
         if ($this->isEntitySupported($classMetadata->reflClass)) {
-
-            $getUpdateLogMessage = $this
-                ->getClassAnalyzer()
-                ->getRealTraitMethodName(
-                    $classMetadata->reflClass,
-                    'Knp\DoctrineBehaviors\Model\Loggable\Loggable',
-                    'getUpdateLogMessage'
-                )
-            ;
-
             $uow->computeChangeSet($classMetadata, $entity);
             $changeSet = $uow->getEntityChangeSet($entity);
 
-            $message = $entity->{$getUpdateLogMessage}($changeSet);
+            $message = $entity->callTraitMethod('Knp\DoctrineBehaviors\Model\Loggable\Loggable::getUpdateLogMessage', $changeSet);
             $loggerCallable = $this->loggerCallable;
             $loggerCallable($message);
         }
@@ -93,17 +83,7 @@ class LoggableListener extends AbstractListener
         $classMetadata = $em->getClassMetadata(get_class($entity));
 
         if ($this->isEntitySupported($classMetadata->reflClass)) {
-
-            $getRemoveLogMessage = $this
-                ->getClassAnalyzer()
-                ->getRealTraitMethodName(
-                    $classMetadata->reflClass,
-                    'Knp\DoctrineBehaviors\Model\Loggable\Loggable',
-                    'getRemoveLogMessage'
-                )
-            ;
-
-            $message = $entity->{$getRemoveLogMessage}();
+            $message = $entity->callTraitMethod('Knp\DoctrineBehaviors\Model\Loggable\Loggable::getRemoveLogMessage');
             $loggerCallable = $this->loggerCallable;
             $loggerCallable($message);
         }
