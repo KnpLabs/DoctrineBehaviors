@@ -204,7 +204,7 @@ class ClassAnalyserTest extends \PHPUnit_Framework_TestCase
 
         $object = new RenamedGeocodableEntity;
 
-        $name = $analyzer->getRealTraitMethodName(
+        $name = $analyzer->getTraitMethodName(
             new \ReflectionClass($object),
             'Knp\DoctrineBehaviors\Model\Geocodable\Geocodable',
             'getLocation'
@@ -212,7 +212,7 @@ class ClassAnalyserTest extends \PHPUnit_Framework_TestCase
 
         $this->assertEquals($name, 'getTraitLocation');
 
-        $name2 = $analyzer->getRealTraitMethodName(
+        $name2 = $analyzer->getTraitMethodName(
             new \ReflectionClass($object),
             'Knp\DoctrineBehaviors\Model\Geocodable\Geocodable',
             'setLocation'
@@ -232,7 +232,7 @@ class ClassAnalyserTest extends \PHPUnit_Framework_TestCase
 
         $object = new DeletableEntity;
 
-        $name = $analyzer->getRealTraitMethodName(
+        $name = $analyzer->getTraitMethodName(
             new \ReflectionClass($object),
             'Knp\DoctrineBehaviors\Model\SoftDeletable\SoftDeletable',
             'restore'
@@ -252,7 +252,7 @@ class ClassAnalyserTest extends \PHPUnit_Framework_TestCase
 
         $object = new DefaultGeocodableEntity;
 
-        $name = $analyzer->getRealTraitMethodName(
+        $name = $analyzer->getTraitMethodName(
             new \ReflectionClass($object),
             'Knp\DoctrineBehaviors\Model\SoftDeletable\SoftDeletable',
             'restore'
@@ -272,7 +272,7 @@ class ClassAnalyserTest extends \PHPUnit_Framework_TestCase
 
         $object = new DeletableEntity;
 
-        $name = $analyzer->getRealTraitMethodName(
+        $name = $analyzer->getTraitMethodName(
             new \ReflectionClass($object),
             'Knp\DoctrineBehaviors\Model\SoftDeletable\SoftDeletable',
             'getLocation'
