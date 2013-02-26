@@ -42,32 +42,14 @@ class SoftDeletableListener extends AbstractListener
             $classMetadata = $em->getClassMetadata(get_class($entity));
             if ($this->isEntitySupported($classMetadata)) {
 
-                $getDeletedAt = $this
-                    ->getClassAnalyzer()
-                    ->getRealTraitMethodName(
-                        $classMetadata->reflClass,
-                        'Knp\DoctrineBehaviors\Model\SoftDeletable\SoftDeletable',
-                        'getDeletedAt'
-                    )
-                ;
+                $oldValue = $entity->callTraitMethod('Knp\DoctrineBehaviors\Model\SoftDeletable\SoftDeletable::getDeletedAt');
 
-                $delete = $this
-                    ->getClassAnalyzer()
-                    ->getRealTraitMethodName(
-                        $classMetadata->reflClass,
-                        'Knp\DoctrineBehaviors\Model\SoftDeletable\SoftDeletable',
-                        'delete'
-                    )
-                ;
-
-                $oldValue = $entity->{$getDeletedAt}();
-
-                $entity->{$delete}();
+                $entity->callTraitMethod('Knp\DoctrineBehaviors\Model\SoftDeletable\SoftDeletable::delete');
                 $em->persist($entity);
 
-                $uow->propertyChanged($entity, 'deletedAt', $oldValue, $entity->{$getDeletedAt}());
+                $uow->propertyChanged($entity, 'deletedAt', $oldValue, $entity->callTraitMethod('Knp\DoctrineBehaviors\Model\SoftDeletable\SoftDeletable::getDeletedAt'));
                 $uow->scheduleExtraUpdate($entity, [
-                    'deletedAt' => [$oldValue, $entity->{$getDeletedAt}()]
+                    'deletedAt' => [$oldValue, $entity->callTraitMethod('Knp\DoctrineBehaviors\Model\SoftDeletable\SoftDeletable::getDeletedAt')]
                 ]);
             }
         }
