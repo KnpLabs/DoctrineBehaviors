@@ -102,7 +102,7 @@ trait Tree
     }
 
     /**
-     * manipulates the lfat tree query builder before executing it.
+     * manipulates the flat tree query builder before executing it.
      * Override this method to customize the tree query
      *
      * @param QueryBuilder $qb
