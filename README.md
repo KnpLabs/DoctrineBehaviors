@@ -130,7 +130,7 @@ You now have a working `Category` that behaves like:
     $root = $em->getRepository('Category')->getTree();
 
     $root->getParent(); // null
-    $root->getNodeChildren(); // collection
+    $root->getChildren(); // collection
     $root[0][1]; // node or null
     $root->isLeaf(); // boolean
     $root->isRoot(); // boolean
