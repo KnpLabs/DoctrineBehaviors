@@ -140,7 +140,7 @@ trait Node
     /**
      * {@inheritdoc}
      **/
-    public function isIndirectChildOf(NodeInterface $node)
+    public function isIndirectChildNodeOf(NodeInterface $node)
     {
         return $this->getRealMaterializedPath() !== $node->getRealMaterializedPath()
             && 0 === strpos($this->getRealMaterializedPath(), $node->getRealMaterializedPath());
