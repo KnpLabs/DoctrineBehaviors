@@ -37,7 +37,7 @@ interface NodeInterface
     /**
      * Set parent path.
      *
-     * @param path the value to set.
+     * @param string $path the value to set.
      */
     public function setParentMaterializedPath($path);
 
@@ -65,19 +65,19 @@ interface NodeInterface
      *
      * @return NodeInterface $this Fluent interface
      **/
-    public function setChildOf(NodeInterface $node);
+    public function setChildNodeOf(NodeInterface $node);
 
     /**
-     * @param NodeInterface the node to append to the children collection
+     * @param NodeInterface $node the node to append to the children collection
      *
      * @return NodeInterface $this Fluent interface
      **/
-    public function addChild(NodeInterface $node);
+    public function addChildNode(NodeInterface $node);
 
     /**
      * @return Collection the children collection
      **/
-    public function getChildren();
+    public function getChildNodes();
 
     /**
      * @return bool if the node is a leaf (i.e has no children)
@@ -95,7 +95,7 @@ interface NodeInterface
      *
      * @return boolean true if this node is a direct child of $node
      **/
-    public function isChildOf(NodeInterface $node);
+    public function isChildNodeOf(NodeInterface $node);
 
     /**
      *
