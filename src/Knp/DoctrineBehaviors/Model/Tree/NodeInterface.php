@@ -37,7 +37,7 @@ interface NodeInterface
     /**
      * Set parent path.
      *
-     * @param path the value to set.
+     * @param string $path the value to set.
      */
     public function setParentMaterializedPath($path);
 
@@ -68,7 +68,7 @@ interface NodeInterface
     public function setChildNodeOf(NodeInterface $node);
 
     /**
-     * @param NodeInterface the node to append to the children collection
+     * @param NodeInterface $node the node to append to the children collection
      *
      * @return NodeInterface $this Fluent interface
      **/

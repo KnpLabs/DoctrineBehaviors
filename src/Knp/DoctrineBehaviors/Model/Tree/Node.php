@@ -22,16 +22,18 @@ use Doctrine\Common\Collections\ArrayCollection;
 trait Node
 {
     /**
-     * @param Collection the children in the tree
+     * @var ArrayCollection $childNodes the children in the tree
      */
     private $childNodes;
 
     /**
-     * @param NodeInterface the parent in the tree
+     * @var NodeInterface $parentNode the parent in the tree
      */
     private $parentNode;
 
     /**
+     * @var string $materializedPath
+     *
      * @ORM\Column(type="string", length=255)
      */
     private $materializedPath = '';
