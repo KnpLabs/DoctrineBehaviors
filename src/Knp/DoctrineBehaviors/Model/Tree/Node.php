@@ -22,16 +22,18 @@ use Doctrine\Common\Collections\ArrayCollection;
 trait Node
 {
     /**
-     * @param Collection the children in the tree
+     * @var ArrayCollection $childNodes the children in the tree
      */
     private $childNodes;
 
     /**
-     * @param NodeInterface the parent in the tree
+     * @var NodeInterface $parentNode the parent in the tree
      */
     private $parentNode;
 
     /**
+     * @var string $materializedPath
+     *
      * @ORM\Column(type="string", length=255)
      */
     private $materializedPath = '';
@@ -116,13 +118,13 @@ trait Node
 
     public function isLeafNode()
     {
-        return 0 === $this->getChildren()->count();
+        return 0 === $this->getChildNodes()->count();
     }
 
     /**
      * {@inheritdoc}
      **/
-    public function getChildren()
+    public function getChildNodes()
     {
         return $this->childNodes = $this->childNodes ?: new ArrayCollection;
     }
@@ -130,15 +132,15 @@ trait Node
     /**
      * {@inheritdoc}
      **/
-    public function addChild(NodeInterface $node)
+    public function addChildNode(NodeInterface $node)
     {
-        $this->getChildren()->add($node);
+        $this->getChildNodes()->add($node);
     }
 
     /**
      * {@inheritdoc}
      **/
-    public function isIndirectChildOf(NodeInterface $node)
+    public function isIndirectChildNodeOf(NodeInterface $node)
     {
         return $this->getRealMaterializedPath() !== $node->getRealMaterializedPath()
             && 0 === strpos($this->getRealMaterializedPath(), $node->getRealMaterializedPath());
@@ -147,7 +149,7 @@ trait Node
     /**
      * {@inheritdoc}
      **/
-    public function isChildOf(NodeInterface $node)
+    public function isChildNodeOf(NodeInterface $node)
     {
         return $this->getParentMaterializedPath() === $node->getRealMaterializedPath();
     }
@@ -155,7 +157,7 @@ trait Node
     /**
      * {@inheritdoc}
      **/
-    public function setChildOf(NodeInterface $node)
+    public function setChildNodeOf(NodeInterface $node)
     {
         $id = $this->getId();
         if (empty($id)) {
@@ -166,14 +168,14 @@ trait Node
         $this->setMaterializedPath($path);
 
         if (null !== $this->parentNode) {
-            $this->parentNode->getChildren()->removeElement($this);
+            $this->parentNode->getChildNodes()->removeElement($this);
         }
 
         $this->parentNode = $node;
-        $this->parentNode->addChild($this);
+        $this->parentNode->addChildNode($this);
 
-        foreach ($this->getChildren() as $child) {
-            $child->setChildOf($this);
+        foreach ($this->getChildNodes() as $child) {
+            $child->setChildNodeOf($this);
         }
 
         return $this;
@@ -193,7 +195,7 @@ trait Node
     public function setParentNode(NodeInterface $node)
     {
         $this->parentNode = $node;
-        $this->setChildOf($this->parentNode);
+        $this->setChildNodeOf($this->parentNode);
 
         return $this;
     }
@@ -216,7 +218,7 @@ trait Node
      **/
     public function buildTree(array $results)
     {
-        $this->getChildren()->clear();
+        $this->getChildNodes()->clear();
         foreach ($results as $i => $node) {
             if ($node->getMaterializedPath() === $this->getRealMaterializedPath()) {
                 $node->setParentNode($this);
@@ -254,7 +256,7 @@ trait Node
             $tree = array($this->getId() => array('node' => $prepare($this), 'children' => array()));
         }
 
-        foreach ($this->getChildren() as $node) {
+        foreach ($this->getChildNodes() as $node) {
             $tree[$this->getId()]['children'][$node->getId()] = array('node' => $prepare($node), 'children' => array());
             $node->toArray($prepare, $tree[$this->getId()]['children']);
         }
@@ -281,7 +283,7 @@ trait Node
             $tree = array($this->getId() => $prepare($this));
         }
 
-        foreach ($this->getChildren() as $node) {
+        foreach ($this->getChildNodes() as $node) {
             $tree[$node->getId()] = $prepare($node);
             $node->toFlatArray($prepare, $tree);
         }
@@ -291,24 +293,24 @@ trait Node
 
     public function offsetSet($offset, $node)
     {
-        $node->setChildOf($this);
+        $node->setChildNodeOf($this);
 
         return $this;
     }
 
     public function offsetExists($offset)
     {
-        return isset($this->getChildren()[$offset]);
+        return isset($this->getChildNodes()[$offset]);
     }
 
     public function offsetUnset($offset)
     {
-        unset($this->getChildren()[$offset]);
+        unset($this->getChildNodes()[$offset]);
     }
 
     public function offsetGet($offset)
     {
-        return $this->getChildren()[$offset];
+        return $this->getChildNodes()[$offset];
     }
 
     /**
