@@ -84,6 +84,20 @@ class SoftDeletableTest extends \PHPUnit_Framework_TestCase
 
         $this->assertNotNull($entity);
         $this->assertTrue($entity->isDeleted());
+    }
 
+    public function testDeleteInheritance()
+    {
+        $em = $this->getEntityManager();
+
+        $entity = new \BehaviorFixtures\ORM\DeletableEntityInherit();
+
+        $em->persist($entity);
+        $em->flush();
+
+        $em->remove($entity);
+        $em->flush();
+
+        $this->assertTrue($entity->isDeleted());
     }
 }
