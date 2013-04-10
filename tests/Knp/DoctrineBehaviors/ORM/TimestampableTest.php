@@ -29,7 +29,10 @@ class TimestampableTest extends \PHPUnit_Framework_TestCase
         return $em;
     }
 
-    public function testCreate()
+    /**
+     * @test
+     */
+    public function it_should_initialize_create_and_update_datetime_when_created()
     {
         $em = $this->getEntityManager();
 
@@ -48,7 +51,10 @@ class TimestampableTest extends \PHPUnit_Framework_TestCase
         );
     }
 
-    public function testUpdate()
+    /**
+     * @test
+     */
+    public function it_should_modify_update_datetime_when_updated_but_not_the_creation_datetime()
     {
         $em = $this->getEntityManager();
 
@@ -64,7 +70,7 @@ class TimestampableTest extends \PHPUnit_Framework_TestCase
         sleep(1);
 
         $entity = $em->getRepository('BehaviorFixtures\ORM\TimestampableEntity')->find($id);
-        $entity->setTitle('test'); // need to modify at least one column to trigger onUpdate
+        $entity->setTitle('test');
         $em->flush();
         $em->clear();
 
@@ -78,7 +84,10 @@ class TimestampableTest extends \PHPUnit_Framework_TestCase
         );
     }
 
-    public function it_should_return_the_same_timestamp_when_not_updated()
+    /**
+     * @test
+     */
+    public function it_should_return_the_same_datetime_when_not_updated()
     {
         $em = $this->getEntityManager();
 
@@ -88,23 +97,64 @@ class TimestampableTest extends \PHPUnit_Framework_TestCase
         $em->flush();
         $id = $entity->getId();
         $createdAt = $entity->getCreatedAt();
-        $udatedAt = $entity->getUpdatedAt();
+        $updatedAt = $entity->getUpdatedAt();
         $em->clear();
+
+        sleep(1);
 
         $entity = $em->getRepository('BehaviorFixtures\ORM\TimestampableEntity')->find($id);
         $em->persist($entity);
         $em->flush();
         $em->clear();
 
-        $this->assertNotEquals(
+        $this->assertEquals(
             $entity->getCreatedAt(),
             $createdAt,
             'Creation timestamp has changed'
         );
 
-        $this->assertNotEquals(
+        $this->assertEquals(
             $entity->getUpdatedAt(),
-            $updateAt,
+            $updatedAt,
+            'Update timestamp has changed'
+        );
+    }
+
+    /**
+     * @test
+     */
+    public function it_should_modify_update_datetime_only_once()
+    {
+        $em = $this->getEntityManager();
+
+        $entity = new \BehaviorFixtures\ORM\TimestampableEntity();
+
+        $em->persist($entity);
+        $em->flush();
+        $id = $entity->getId();
+        $createdAt = $entity->getCreatedAt();
+        $em->clear();
+
+        sleep(1);
+
+        $entity = $em->getRepository('BehaviorFixtures\ORM\TimestampableEntity')->find($id);
+        $entity->setTitle('test');
+        $em->flush();
+        $updatedAt = $entity->getUpdatedAt();
+
+        sleep(1);
+
+        $em->flush();
+
+        $this->assertEquals(
+            $entity->getCreatedAt(),
+            $createdAt,
+            'Creation timestamp has changed'
+        );
+
+        $this->assertEquals(
+            $entity->getUpdatedAt(),
+            $updatedAt,
             'Update timestamp has changed'
         );
     }
