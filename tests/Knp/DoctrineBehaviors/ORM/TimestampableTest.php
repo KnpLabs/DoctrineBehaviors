@@ -77,4 +77,35 @@ class TimestampableTest extends \PHPUnit_Framework_TestCase
             'createat and updatedAt have diverged since new update'
         );
     }
+
+    public function it_should_return_the_same_timestamp_when_not_updated()
+    {
+        $em = $this->getEntityManager();
+
+        $entity = new \BehaviorFixtures\ORM\TimestampableEntity();
+
+        $em->persist($entity);
+        $em->flush();
+        $id = $entity->getId();
+        $createdAt = $entity->getCreatedAt();
+        $udatedAt = $entity->getUpdatedAt();
+        $em->clear();
+
+        $entity = $em->getRepository('BehaviorFixtures\ORM\TimestampableEntity')->find($id);
+        $em->persist($entity);
+        $em->flush();
+        $em->clear();
+
+        $this->assertNotEquals(
+            $entity->getCreatedAt(),
+            $createdAt,
+            'Creation timestamp has changed'
+        );
+
+        $this->assertNotEquals(
+            $entity->getUpdatedAt(),
+            $updateAt,
+            'Update timestamp has changed'
+        );
+    }
 }
