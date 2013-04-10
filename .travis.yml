@@ -13,5 +13,5 @@ before_script:
   - sudo -u postgres psql orm_behaviors_test -c "create extension earthdistance"
   - composer install --dev
 
-script: phpunit
+script: phpunit --testdox
 
