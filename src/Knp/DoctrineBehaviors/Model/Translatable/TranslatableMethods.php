@@ -67,16 +67,17 @@ trait TranslatableMethods
      * If any translation doesn't exist, it will be added to newTranslations collection.
      * In order to persist new translations, call mergeNewTranslations method, before flush
      *
-     * @param string $locale The locale (en, ru, fr) | null If null, will try with current locale
+     * @param string  $locale   The locale (en, ru, fr) | null If null, will try with current locale
+     * @param boolean $fallback Should we fall back to the default locale, if present?
      *
      * @return Translation
      */
-    public function translate($locale = null)
+    public function translate($locale = null, $fallback = true)
     {
-        return $this->doTranslate($locale);
+        return $this->doTranslate($locale, $fallback);
     }
 
-    protected function doTranslate($locale = null)
+    protected function doTranslate($locale = null, $fallback = true)
     {
         if (null === $locale) {
             $locale = $this->getCurrentLocale();
@@ -87,8 +88,12 @@ trait TranslatableMethods
             return $translation;
         }
 
-        if ($defaultTranslation = $this->findTranslationByLocale($this->getDefaultLocale(), false)) {
-            return $defaultTranslation;
+        // Only fallback when $fallback is set
+        // This makes it possible to do new translations when one is already defined for the default locale
+        if ($fallback) {
+            if ($defaultTranslation = $this->findTranslationByLocale($this->getDefaultLocale(), false)) {
+                return $defaultTranslation;
+            }
         }
 
         $class       = self::getTranslationEntityClass();
