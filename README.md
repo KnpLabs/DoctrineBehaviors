@@ -346,10 +346,10 @@ It also provides an easy entry point to use 3rd party libraries like the exellen
     $geocoder = new \Geocoder\Geocoder;
     // register geocoder providers
 
-    // $listener instanceof GeocodableListener
+    // $listener instanceof GeocodableListener (add "knp.doctrine_behaviors.geocodable_listener" into your services.yml)
     $listener->setGeolocationCallable(function($entity) use($geocoder) {
         $location = $geocoder->geocode($entity->getAddress());
-        $geocoder->setLocation(new Point(
+        return new Point(
             $location->getLatitude(),
             $location->getLongitude()
         ));
