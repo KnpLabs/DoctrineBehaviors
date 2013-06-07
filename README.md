@@ -75,6 +75,7 @@ class Category implements ORMBehaviors\Tree\NodeInterface, \ArrayAccess
         ORMBehaviors\SoftDeletable\SoftDeletable,
         ORMBehaviors\Blameable\Blameable,
         ORMBehaviors\Geocodable\Geocodable,
+        ORMBehaviors\Loggable\Loggable,
         ORMBehaviors\Sluggable\Sluggable
     ;
 
@@ -328,6 +329,57 @@ Then, you can use it like that:
 
 Loggable is able to track lifecycle modifications and log them using any third party log system.
 A loggable [callable](#callables) is used to get the logger from anywhere you want.
+
+``` php
+
+<?php
+
+/**
+ * @ORM\Entity
+ */
+class Category
+{
+    use ORMBehaviors\Loggable\Loggable;
+
+    // you can override the default log messages defined in trait:
+    public function getUpdateLogMessage(array $changeSets = [])
+    {
+        return 'Changed: '.print_r($changeSets, true);
+    }
+    
+    public function getRemoveLogMessage()
+    {
+        return 'removed!';
+    }
+}
+
+```
+
+These messages are then passed to the configured callable.
+You can define your own, by passing another callable to the LoggableListener:
+
+
+``` php
+
+<?php
+
+$em->getEventManager()->addEventSubscriber(
+    new \Knp\DoctrineBehaviors\ORM\Loggable\LoggableListener(
+        new ClassAnalyzer,
+        function($message) {
+            // do stuff with message
+        }
+    )
+);
+
+
+```
+
+If you're using symfony, you can also configure which callable to use:
+
+    // app/config/config.yml
+    parameters:
+        knp.doctrine_behaviors.loggable_listener.logger_callable.class: Your\InvokableClass
 
 
 <a name="geocodable" id="geocodable"></a>
