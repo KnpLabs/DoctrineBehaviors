@@ -100,7 +100,7 @@ class LoggableListener extends AbstractListener
      * @param  ReflectionClass $reflClass
      * @return boolean
      */
-    private function isEntitySupported(\ReflectionClass $reflClass)
+    protected function isEntitySupported(\ReflectionClass $reflClass)
     {
         return $this->getClassAnalyzer()->hasTrait($reflClass, 'Knp\DoctrineBehaviors\Model\Loggable\Loggable');
     }
