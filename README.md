@@ -196,6 +196,9 @@ Now you can work on translations using `translate` or `getTranslations` methods.
     $category->translate('fr')->setName('Chaussures');
     $category->translate('en')->setName('Shoes');
     $em->persist($category);
+    
+    // In order to persist new translations, call mergeNewTranslations method, before flush
+    $category->mergeNewTranslations();
 
     $category->translate('en')->getName();
 
