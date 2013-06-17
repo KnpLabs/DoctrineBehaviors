@@ -22,17 +22,17 @@ trait TranslatableProperties
      * Will be mapped to translatable entity
      * by TranslatableListener
      */
-    private $translations;
+    protected $translations;
 
     /**
      * Will be merged with persisted translations on mergeNewTranslations call
      *
      * @see mergeNewTranslations
      */
-    private $newTranslations;
+    protected $newTranslations;
 
     /**
      * currentLocale is a non persisted field configured during postLoad event
      */
-    private $currentLocale;
+    protected $currentLocale;
 }
