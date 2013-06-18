@@ -16,7 +16,6 @@ use Knp\DoctrineBehaviors\Reflection\ClassAnalyzer;
 use Knp\DoctrineBehaviors\ORM\AbstractListener;
 
 use Doctrine\ORM\Event\LoadClassMetadataEventArgs,
-    Doctrine\Common\EventSubscriber,
     Doctrine\ORM\Events,
     Doctrine\ORM\Mapping\ClassMetadata;
 
@@ -27,6 +26,15 @@ use Doctrine\ORM\Event\LoadClassMetadataEventArgs,
  */
 class TimestampableListener extends AbstractListener
 {
+    protected $recursiveTrait;
+
+    public function __construct(ClassAnalyzer $classAnalyser, $recursiveTrait)
+    {
+        parent::__construct($classAnalyser);
+
+        $this->recursiveTrait = (boolean) $recursiveTrait;
+    }
+
     public function loadClassMetadata(LoadClassMetadataEventArgs $eventArgs)
     {
         $classMetadata = $eventArgs->getClassMetadata();
@@ -57,6 +65,6 @@ class TimestampableListener extends AbstractListener
      */
     private function isEntitySupported(ClassMetadata $classMetadata)
     {
-        return $this->getClassAnalyzer()->hasTrait($classMetadata->reflClass, 'Knp\DoctrineBehaviors\Model\Timestampable\Timestampable');
+        return $this->getClassAnalyzer()->hasTrait($classMetadata->reflClass, 'Knp\DoctrineBehaviors\Model\Timestampable\Timestampable', $this->recursiveTrait);
     }
 }
