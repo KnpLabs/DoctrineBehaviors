@@ -50,9 +50,13 @@ class LoggableTest extends \PHPUnit_Framework_TestCase
         $em->persist($entity);
         $em->flush();
 
-        $this->assertCount(1, $this->logs);
+        $this->assertCount(2, $this->logs);
         $this->assertEquals(
             $this->logs[0],
+            'BehaviorFixtures\ORM\LoggableEntity #1 created'
+        );
+        $this->assertEquals(
+            $this->logs[1],
             'BehaviorFixtures\ORM\LoggableEntity #1 : property "title" changed from "" to "test"'
         );
     }
@@ -72,9 +76,9 @@ class LoggableTest extends \PHPUnit_Framework_TestCase
         $entity->setTitle('test2');
         $em->flush();
 
-        $this->assertCount(2, $this->logs);
+        $this->assertCount(3, $this->logs);
         $this->assertEquals(
-            $this->logs[1],
+            $this->logs[2],
             'BehaviorFixtures\ORM\LoggableEntity #1 : property "title" changed from "" to "test2"'
         );
     }
@@ -95,7 +99,7 @@ class LoggableTest extends \PHPUnit_Framework_TestCase
         $entity->setTitle(null);
         $em->flush();
 
-        $this->assertCount(1, $this->logs);
+        $this->assertCount(2, $this->logs);
     }
 
     /**
@@ -113,9 +117,9 @@ class LoggableTest extends \PHPUnit_Framework_TestCase
         $em->remove($entity);
         $em->flush();
 
-        $this->assertCount(2, $this->logs);
+        $this->assertCount(3, $this->logs);
         $this->assertEquals(
-            $this->logs[1],
+            $this->logs[2],
             'BehaviorFixtures\ORM\LoggableEntity #1 removed'
         );
     }

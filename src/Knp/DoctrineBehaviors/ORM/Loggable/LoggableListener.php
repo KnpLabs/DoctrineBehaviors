@@ -40,12 +40,22 @@ class LoggableListener extends AbstractListener
     public function __construct(ClassAnalyzer $classAnalyzer, callable $loggerCallable)
     {
         parent::__construct($classAnalyzer);
-        
+
         $this->loggerCallable = $loggerCallable;
     }
 
     public function postPersist(LifecycleEventArgs $eventArgs)
     {
+        $em            = $eventArgs->getEntityManager();
+        $entity        = $eventArgs->getEntity();
+        $classMetadata = $em->getClassMetadata(get_class($entity));
+
+        if ($this->isEntitySupported($classMetadata->reflClass)) {
+            $message = $entity->getCreateLogMessage();
+            $loggerCallable = $this->loggerCallable;
+            $loggerCallable($message);
+        }
+
         return $this->logChangeSet($eventArgs);
     }
 
