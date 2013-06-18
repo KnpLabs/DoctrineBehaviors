@@ -38,6 +38,11 @@ trait Loggable
         return implode("\n", $message);
     }
 
+    public function getCreateLogMessage()
+    {
+        return sprintf('%s #%d created', __CLASS__, $this->getId());
+    }
+
     public function getRemoveLogMessage()
     {
         return sprintf('%s #%d removed', __CLASS__, $this->getId());
