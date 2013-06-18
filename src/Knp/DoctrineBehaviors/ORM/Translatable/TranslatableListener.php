@@ -30,9 +30,9 @@ class TranslatableListener extends AbstractListener
 {
     private $currentLocaleCallable;
 
-    public function __construct(ClassAnalyzer $classAnalyzer, callable $currentLocaleCallable = null)
+    public function __construct(ClassAnalyzer $classAnalyzer, $isRecursive, callable $currentLocaleCallable = null)
     {
-        parent::__construct($classAnalyzer);
+        parent::__construct($classAnalyzer, $isRecursive);
         
         $this->currentLocaleCallable = $currentLocaleCallable;
     }
@@ -136,7 +136,7 @@ class TranslatableListener extends AbstractListener
         $entity        = $eventArgs->getEntity();
         $classMetadata = $em->getClassMetadata(get_class($entity));
 
-        if (!$this->getClassAnalyzer()->hasMethod($classMetadata->reflClass, 'setCurrentLocale', false)) {
+        if (!$this->getClassAnalyzer()->hasMethod($classMetadata->reflClass, 'setCurrentLocale')) {
             return;
         }
 

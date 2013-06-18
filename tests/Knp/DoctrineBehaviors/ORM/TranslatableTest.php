@@ -26,6 +26,7 @@ class TranslatableTest extends \PHPUnit_Framework_TestCase
 
         $em->addEventSubscriber(new \Knp\DoctrineBehaviors\ORM\Translatable\TranslatableListener(
             new ClassAnalyzer(),
+            false,
             function()
             {
                 return 'en';

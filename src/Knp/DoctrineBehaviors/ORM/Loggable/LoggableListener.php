@@ -37,10 +37,9 @@ class LoggableListener extends AbstractListener
      *
      * @param callable
      */
-    public function __construct(ClassAnalyzer $classAnalyzer, callable $loggerCallable)
+    public function __construct(ClassAnalyzer $classAnalyzer, $isRecursive, callable $loggerCallable)
     {
-        parent::__construct($classAnalyzer);
-
+        parent::__construct($classAnalyzer, $isRecursive);
         $this->loggerCallable = $loggerCallable;
     }
 
@@ -112,7 +111,7 @@ class LoggableListener extends AbstractListener
      */
     protected function isEntitySupported(\ReflectionClass $reflClass)
     {
-        return $this->getClassAnalyzer()->hasTrait($reflClass, 'Knp\DoctrineBehaviors\Model\Loggable\Loggable');
+        return $this->getClassAnalyzer()->hasTrait($reflClass, 'Knp\DoctrineBehaviors\Model\Loggable\Loggable', $this->isRecursive);
     }
 
     public function getSubscribedEvents()

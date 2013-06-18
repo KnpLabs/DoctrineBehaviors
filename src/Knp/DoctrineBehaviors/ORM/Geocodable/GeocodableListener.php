@@ -43,9 +43,9 @@ class GeocodableListener extends AbstractListener
      *
      * @param callable
      */
-    public function __construct(ClassAnalyzer $classAnalyzer, callable $geolocationCallable = null)
+    public function __construct(ClassAnalyzer $classAnalyzer, $isRecursive, callable $geolocationCallable = null)
     {
-        parent::__construct($classAnalyzer);
+        parent::__construct($classAnalyzer, $isRecursive);
         
         $this->geolocationCallable = $geolocationCallable;
     }
