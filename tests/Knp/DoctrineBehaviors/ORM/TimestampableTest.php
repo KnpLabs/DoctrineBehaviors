@@ -23,7 +23,7 @@ class TimestampableTest extends \PHPUnit_Framework_TestCase
         $em = new EventManager;
 
         $em->addEventSubscriber(
-            new \Knp\DoctrineBehaviors\ORM\Timestampable\TimestampableListener(new ClassAnalyzer())
+            new \Knp\DoctrineBehaviors\ORM\Timestampable\TimestampableListener(new ClassAnalyzer(), false)
         );
 
         return $em;
