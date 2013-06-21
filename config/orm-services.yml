@@ -1,10 +1,10 @@
 parameters:
     knp.doctrine_behaviors.reflection.class_analyzer.class: Knp\DoctrineBehaviors\Reflection\ClassAnalyzer
+    knp.doctrine_behaviors.reflection.is_recursive: true
     knp.doctrine_behaviors.translatable_listener.class: Knp\DoctrineBehaviors\ORM\Translatable\TranslatableListener
     knp.doctrine_behaviors.translatable_listener.current_locale_callable.class: Knp\DoctrineBehaviors\ORM\Translatable\CurrentLocaleCallable
     knp.doctrine_behaviors.softdeletable_listener.class: Knp\DoctrineBehaviors\ORM\SoftDeletable\SoftDeletableListener
     knp.doctrine_behaviors.timestampable_listener.class: Knp\DoctrineBehaviors\ORM\Timestampable\TimestampableListener
-    knp.doctrine_behaviors.timestampable_listener.recursive_trait: true
     knp.doctrine_behaviors.blameable_listener.class: Knp\DoctrineBehaviors\ORM\Blameable\BlameableListener
     knp.doctrine_behaviors.blameable_listener.user_callable.class: Knp\DoctrineBehaviors\ORM\Blameable\UserCallable
     knp.doctrine_behaviors.blameable_listener.user_entity: ~
@@ -23,6 +23,7 @@ services:
         public:  false
         arguments:
             - "@knp.doctrine_behaviors.reflection.class_analyzer"
+            - "%knp.doctrine_behaviors.reflection.is_recursive%"
             - "@knp.doctrine_behaviors.translatable_listener.current_locale_callable"
         tags:
             - { name: doctrine.event_subscriber }
@@ -38,6 +39,7 @@ services:
         public:  false
         arguments:
             - "@knp.doctrine_behaviors.reflection.class_analyzer"
+            - "%knp.doctrine_behaviors.reflection.is_recursive%"
         tags:
             - { name: doctrine.event_subscriber }
 
@@ -46,7 +48,7 @@ services:
         public:  false
         arguments:
             - "@knp.doctrine_behaviors.reflection.class_analyzer"
-            - "%knp.doctrine_behaviors.timestampable_listener.recursive_trait%"
+            - "%knp.doctrine_behaviors.reflection.is_recursive%"
         tags:
             - { name: doctrine.event_subscriber }
 
@@ -54,6 +56,7 @@ services:
         class:   "%knp.doctrine_behaviors.blameable_listener.class%"
         arguments:
             - "@knp.doctrine_behaviors.reflection.class_analyzer"
+            - "%knp.doctrine_behaviors.reflection.is_recursive%"
             - "@knp.doctrine_behaviors.blameable_listener.user_callable"
             - "%knp.doctrine_behaviors.blameable_listener.user_entity%"
         public:  false
@@ -70,6 +73,7 @@ services:
         class:   "%knp.doctrine_behaviors.loggable_listener.class%"
         arguments:
             - "@knp.doctrine_behaviors.reflection.class_analyzer"
+            - "%knp.doctrine_behaviors.reflection.is_recursive%"
             - "@knp.doctrine_behaviors.loggable_listener.logger_callable"
         public:  false
         tags:
@@ -86,6 +90,7 @@ services:
         public:  false
         arguments:
             - "@knp.doctrine_behaviors.reflection.class_analyzer"
+            - "%knp.doctrine_behaviors.reflection.is_recursive%"
             - "@?knp.doctrine_behaviors.geocodable_callable"
         tags:
             - { name: doctrine.event_subscriber }
@@ -95,6 +100,7 @@ services:
         public: false
         arguments:
             - "@knp.doctrine_behaviors.reflection.class_analyzer"
+            - "%knp.doctrine_behaviors.reflection.is_recursive%"
         tags:
             - { name: doctrine.event_subscriber }
 
