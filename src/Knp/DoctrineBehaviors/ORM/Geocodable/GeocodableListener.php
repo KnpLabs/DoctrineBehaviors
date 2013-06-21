@@ -146,7 +146,7 @@ class GeocodableListener extends AbstractListener
      */
     private function isEntitySupported(\ReflectionClass $reflClass)
     {
-        return $this->getClassAnalyzer()->hasMethod($reflClass, 'getLocation', $this->isRecursive());
+        return $this->getClassAnalyzer()->hasMethod($reflClass, 'getLocation', $this->isRecursive);
     }
 
     public function getSubscribedEvents()

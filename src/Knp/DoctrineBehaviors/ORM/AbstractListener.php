@@ -30,10 +30,5 @@ abstract class AbstractListener implements EventSubscriber
         return $this->classAnalyser;
     }
 
-    protected function isRecursive()
-    {
-        return $this->isRecursive;
-    }
-
     abstract public function getSubscribedEvents();
 }
