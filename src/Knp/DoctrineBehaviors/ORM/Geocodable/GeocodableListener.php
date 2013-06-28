@@ -39,8 +39,6 @@ class GeocodableListener extends AbstractListener
     private $geolocationCallable;
 
     /**
-     * @constructor
-     *
      * @param callable
      */
     public function __construct(ClassAnalyzer $classAnalyzer, callable $geolocationCallable = null)

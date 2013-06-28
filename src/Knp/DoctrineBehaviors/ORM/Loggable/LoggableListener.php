@@ -33,8 +33,6 @@ class LoggableListener extends AbstractListener
     private $loggerCallable;
 
     /**
-     * @constructor
-     *
      * @param callable
      */
     public function __construct(ClassAnalyzer $classAnalyzer, callable $loggerCallable)
