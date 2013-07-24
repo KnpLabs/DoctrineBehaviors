@@ -24,8 +24,6 @@ class UserCallable
     private $container;
 
     /**
-     * @constructor
-     *
      * @param callable
      * @param string $userEntity
      */

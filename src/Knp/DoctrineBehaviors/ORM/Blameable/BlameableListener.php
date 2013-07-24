@@ -46,8 +46,6 @@ class BlameableListener extends AbstractListener
     private $userEntity;
 
     /**
-     * @constructor
-     *
      * @param callable
      * @param string $userEntity
      */
