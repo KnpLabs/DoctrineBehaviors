@@ -29,6 +29,7 @@ class LoggableTest extends \PHPUnit_Framework_TestCase
         };
         $this->listener = new \Knp\DoctrineBehaviors\ORM\Loggable\LoggableListener(
             new ClassAnalyzer(),
+            false,
             $loggerCallback
         );
 

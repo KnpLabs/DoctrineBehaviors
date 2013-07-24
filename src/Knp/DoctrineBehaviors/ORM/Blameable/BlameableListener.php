@@ -49,9 +49,9 @@ class BlameableListener extends AbstractListener
      * @param callable
      * @param string $userEntity
      */
-    public function __construct(ClassAnalyzer $classAnalyzer, callable $userCallable = null, $userEntity = null)
+    public function __construct(ClassAnalyzer $classAnalyzer, $isRecursive, callable $userCallable = null, $userEntity = null)
     {
-        parent::__construct($classAnalyzer);
+        parent::__construct($classAnalyzer, $isRecursive);
 
         $this->userCallable = $userCallable;
         $this->userEntity = $userEntity;
