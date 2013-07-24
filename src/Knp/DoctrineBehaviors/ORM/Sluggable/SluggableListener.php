@@ -54,6 +54,6 @@ class SluggableListener extends AbstractListener
      */
     protected function isEntitySupported(ClassMetadata $classMetadata)
     {
-        return $this->getClassAnalyzer()->hasTrait($classMetadata->reflClass, 'Knp\DoctrineBehaviors\Model\Sluggable\Sluggable');
+        return $this->getClassAnalyzer()->hasTrait($classMetadata->reflClass, 'Knp\DoctrineBehaviors\Model\Sluggable\Sluggable', $this->isRecursive);
     }
 }
