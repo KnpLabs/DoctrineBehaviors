@@ -36,7 +36,7 @@ trait Node
      *
      * @ORM\Column(type="string", length=255)
      */
-    private $materializedPath = '';
+    protected $materializedPath = '';
 
     /**
      * Returns path separator for entity's materialized path.

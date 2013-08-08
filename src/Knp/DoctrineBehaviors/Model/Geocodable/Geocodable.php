@@ -23,7 +23,7 @@ trait Geocodable
     /**
      * @ORM\Column(type="point", nullable=true)
      */
-    private $location;
+    protected $location;
 
     /**
      * Get location.
