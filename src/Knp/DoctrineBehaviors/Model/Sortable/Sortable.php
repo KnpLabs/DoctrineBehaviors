@@ -7,7 +7,7 @@ trait Sortable
     /**
      * @ORM\Column(type="integer")
      */
-    private $sort = 1;
+    protected $sort = 1;
 
     private $reordered = false;
 

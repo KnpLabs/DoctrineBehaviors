@@ -18,7 +18,7 @@ trait Sluggable
      *
      * @ORM\Column(type="string")
      */
-    private $slug;
+    protected $slug;
 
     /**
      * Returns an array of the fields used to generate the slug.
