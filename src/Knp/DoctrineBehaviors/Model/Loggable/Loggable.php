@@ -25,6 +25,12 @@ trait Loggable
     {
         $message = [];
         foreach ($changeSets as $property => $changeSet) {
+            for($i = 0 , $s = sizeof($changeSet); $i < $s ; $i++) {
+                if ($changeSet[$i] instanceof \DateTime) {
+                    $changeSet[$i] = $changeSet[$i]->format("Y-m-d H:M:S");
+                }
+            }
+            
             $message[] = sprintf(
                 '%s #%d : property "%s" changed from "%s" to "%s"',
                 __CLASS__,
