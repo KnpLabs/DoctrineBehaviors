@@ -33,6 +33,6 @@ class LoggerCallable
 
     public function __invoke($message)
     {
-        $this->logger->log($message);
+        $this->logger->debug($message);
     }
 }
