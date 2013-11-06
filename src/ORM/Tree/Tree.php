@@ -47,12 +47,13 @@ trait Tree
      *
      * @param string $path
      * @param string $rootAlias
+     * @param array  $extraParams To be used in addFlatTreeConditions
      *
      * @return NodeInterface a node
      */
-    public function getTree($path = '', $rootAlias = 't')
+    public function getTree($path = '', $rootAlias = 't', $extraParams = array())
     {
-        $results = $this->getFlatTree($path, $rootAlias);
+        $results = $this->getFlatTree($path, $rootAlias, $extraParams);
 
         return $this->buildTree($results);
     }
@@ -91,10 +92,11 @@ trait Tree
      *
      * @param string $path
      * @param string $rootAlias
+     * @param array  $extraParams To be used in addFlatTreeConditions
      *
      * @return QueryBuilder
      */
-    public function getFlatTreeQB($path = '', $rootAlias = 't')
+    public function getFlatTreeQB($path = '', $rootAlias = 't', $extraParams = array())
     {
         $qb = $this->createQueryBuilder($rootAlias)
             ->andWhere($rootAlias.'.materializedPath LIKE :path')
@@ -110,7 +112,7 @@ trait Tree
             ;
         }
 
-        $this->addFlatTreeConditions($qb);
+        $this->addFlatTreeConditions($qb, $extraParams);
 
         return $qb;
     }
@@ -120,20 +122,25 @@ trait Tree
      * Override this method to customize the tree query
      *
      * @param QueryBuilder $qb
+     * @param array        $extraParams
      */
-    protected function addFlatTreeConditions(QueryBuilder $qb)
+    protected function addFlatTreeConditions(QueryBuilder $qb, $extraParams)
     {
     }
 
     /**
      * Executes the flat tree query builder
+     * 
+     * @param string $path
+     * @param string $rootAlias
+     * @param array  $extraParams To be used in addFlatTreeConditions
      *
      * @return array the flat resultset
      */
-    public function getFlatTree($path, $rootAlias = 't')
+    public function getFlatTree($path, $rootAlias = 't', $extraParams = array())
     {
         return $this
-            ->getFlatTreeQB($path, $rootAlias)
+            ->getFlatTreeQB($path, $rootAlias, $extraParams)
             ->getQuery()
             ->execute()
         ;
