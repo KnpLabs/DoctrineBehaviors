@@ -49,6 +49,19 @@ trait Sluggable
     }
 
     /**
+     * Sets the entity's slug.
+     *
+     * @param $slug
+     * @return $this
+     */
+    public function setSlug($slug)
+    {
+        $this->slug = $slug;
+
+        return $this;
+    }
+    
+    /**
      * Returns the entity's slug.
      *
      * @return string
