@@ -20,26 +20,35 @@ trait BlameableMethods
 {
     /**
      * @param mixed the user representation
+     * @return $this
      */
     public function setCreatedBy($user)
     {
         $this->createdBy = $user;
+
+        return $this;
     }
 
     /**
      * @param mixed the user representation
+     * @return $this
      */
     public function setUpdatedBy($user)
     {
         $this->updatedBy = $user;
+
+        return $this;
     }
 
     /**
      * @param mixed the user representation
+     * @return $this
      */
     public function setDeletedBy($user)
     {
         $this->deletedBy = $user;
+
+        return $this;
     }
 
     /**
