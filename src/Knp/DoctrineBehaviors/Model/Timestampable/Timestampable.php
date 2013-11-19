@@ -19,14 +19,14 @@ namespace Knp\DoctrineBehaviors\Model\Timestampable;
 trait Timestampable
 {
     /**
-     * @var DateTime $createdAt
+     * @var \DateTime $createdAt
      *
      * @ORM\Column(type="datetime", nullable=true)
      */
     protected $createdAt;
 
     /**
-     * @var DateTime $updatedAt
+     * @var \DateTime $updatedAt
      *
      * @ORM\Column(type="datetime", nullable=true)
      */
@@ -35,7 +35,7 @@ trait Timestampable
     /**
      * Returns createdAt value.
      *
-     * @return DateTime
+     * @return \DateTime
      */
     public function getCreatedAt()
     {
@@ -45,7 +45,7 @@ trait Timestampable
     /**
      * Returns updatedAt value.
      *
-     * @return DateTime
+     * @return \DateTime
      */
     public function getUpdatedAt()
     {
