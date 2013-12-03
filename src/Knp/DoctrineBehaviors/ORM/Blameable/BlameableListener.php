@@ -117,18 +117,27 @@ class BlameableListener extends AbstractListener
             $classMetadata->mapManyToOne([
                 'fieldName'    => 'createdBy',
                 'targetEntity' => $this->userEntity,
+                'joinColumns'  => array(array(
+                    'onDelete'             => 'SET NULL'
+                ))
             ]);
         }
         if (!$classMetadata->hasAssociation('updatedBy')) {
             $classMetadata->mapManyToOne([
                 'fieldName'    => 'updatedBy',
                 'targetEntity' => $this->userEntity,
+                'joinColumns'  => array(array(
+                    'onDelete'             => 'SET NULL'
+                ))
             ]);
         }
         if (!$classMetadata->hasAssociation('deletedBy')) {
             $classMetadata->mapManyToOne([
                 'fieldName'    => 'deletedBy',
                 'targetEntity' => $this->userEntity,
+                'joinColumns'  => array(array(
+                    'onDelete'             => 'SET NULL'
+                ))
             ]);
         }
     }
