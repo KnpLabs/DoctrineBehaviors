@@ -134,6 +134,9 @@ trait TranslatableMethods
 
     protected function proxyCurrentLocaleTranslation($method, array $arguments = [])
     {
+        if (!method_exists(self::getTranslationEntityClass(), $method))
+            $method = 'get'. ucfirst($method);
+
         return call_user_func_array(
             [$this->translate($this->getCurrentLocale()), $method],
             $arguments
