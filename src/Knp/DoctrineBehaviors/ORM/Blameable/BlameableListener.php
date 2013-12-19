@@ -168,17 +168,6 @@ class BlameableListener extends AbstractListener
                     ]);
                 }
             }
-            if (!$entity->getDeletedBy()) {
-                $user = $this->getUser();
-                if ($this->isValidUser($user)) {
-                    $entity->setDeletedBy($user);
-                    $uow->propertyChanged($entity, 'deletedBy', null, $user);
-
-                    $uow->scheduleExtraUpdate($entity, [
-                        'deletedBy' => [null, $user],
-                    ]);
-                }
-            }
         }
     }
 
