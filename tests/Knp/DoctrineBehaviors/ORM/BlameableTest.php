@@ -49,6 +49,7 @@ class BlameableTest extends \PHPUnit_Framework_TestCase
 
         $this->assertEquals('user', $entity->getCreatedBy());
         $this->assertEquals('user', $entity->getUpdatedBy());
+        $this->assertNull($entity->getDeletedBy());
     }
 
     public function testUpdate()
