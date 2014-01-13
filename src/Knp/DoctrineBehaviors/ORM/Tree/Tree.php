@@ -8,6 +8,21 @@ use Doctrine\ORM\QueryBuilder;
 trait Tree
 {
     /**
+     * Constructs a query builder to get all root nodes
+     *
+     * @param string $rootAlias
+     *
+     * @return QueryBuilder
+     */
+    public function getRootNodesQB($rootAlias = 't')
+    {
+        return $this->createQueryBuilder($rootAlias)
+            ->andWhere($rootAlias.'.materializedPath = :empty')
+            ->setParameter('empty', '')
+        ;
+    }
+
+    /**
      * Returns all root nodes
      *
      * @api
@@ -18,12 +33,11 @@ trait Tree
      */
     public function getRootNodes($rootAlias = 't')
     {
-        $qb = $this->createQueryBuilder($rootAlias)
-            ->andWhere($rootAlias.'.materializedPath = :empty')
-            ->setParameter('empty', '')
+        return $this
+            ->getRootNodesQB($rootAlias)
+            ->getQuery()
+            ->execute()
         ;
-
-        return $qb->getQuery()->execute();
     }
 
     /**
