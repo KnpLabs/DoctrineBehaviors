@@ -4,6 +4,7 @@ namespace Tests\Knp\DoctrineBehaviors\ORM;
 
 use Doctrine\ORM\Mapping\Driver\AnnotationDriver;
 use Doctrine\ORM\EntityManager;
+use Doctrine\ORM\Repository\DefaultRepositoryFactory;
 use Doctrine\ORM\Tools\SchemaTool;
 use Doctrine\Common\EventManager;
 use Doctrine\ORM\Mapping\DefaultQuoteStrategy;
@@ -112,6 +113,12 @@ trait EntityManagerProvider
             ->expects($this->any())
             ->method('getQuoteStrategy')
             ->will($this->returnValue(new DefaultQuoteStrategy))
+        ;
+
+        $config
+            ->expects($this->any())
+            ->method('getRepositoryFactory')
+            ->will($this->returnValue(new DefaultRepositoryFactory()))
         ;
 
         return $config;
