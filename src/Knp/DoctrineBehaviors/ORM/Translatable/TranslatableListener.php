@@ -122,12 +122,16 @@ class TranslatableListener extends AbstractListener
      */
     private function isTranslatable(ClassMetadata $classMetadata, $isRecursive = false)
     {
-        return $this->getClassAnalyzer()->hasProperty($classMetadata->reflClass, 'translations', $isRecursive);
+        return $this->getClassAnalyzer()->hasTrait($classMetadata->reflClass, 'Knp\DoctrineBehaviors\Model\Translatable\Translatable', $this->isRecursive);
     }
 
+    /**
+     * @param  ClassMetadata $classMetadata
+     * @return boolean
+     */
     private function isTranslation(ClassMetadata $classMetadata)
     {
-        return $this->getClassAnalyzer()->hasProperty($classMetadata->reflClass, 'translatable');
+        return $this->getClassAnalyzer()->hasTrait($classMetadata->reflClass, 'Knp\DoctrineBehaviors\Model\Translatable\Translation', $this->isRecursive);
     }
 
     public function postLoad(LifecycleEventArgs $eventArgs)
