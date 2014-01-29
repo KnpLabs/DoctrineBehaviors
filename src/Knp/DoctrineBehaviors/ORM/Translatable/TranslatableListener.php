@@ -29,12 +29,17 @@ use Doctrine\Common\EventSubscriber,
 class TranslatableListener extends AbstractListener
 {
     private $currentLocaleCallable;
+    private $translatableTrait;
+    private $translationTrait;
 
-    public function __construct(ClassAnalyzer $classAnalyzer, $isRecursive, callable $currentLocaleCallable = null)
+    public function __construct(ClassAnalyzer $classAnalyzer, $isRecursive, callable $currentLocaleCallable = null,
+                                $translatableTrait, $translationTrait)
     {
         parent::__construct($classAnalyzer, $isRecursive);
-        
+
         $this->currentLocaleCallable = $currentLocaleCallable;
+        $this->translatableTrait = $translatableTrait;
+        $this->translationTrait = $translationTrait;
     }
 
     /**
@@ -122,7 +127,7 @@ class TranslatableListener extends AbstractListener
      */
     private function isTranslatable(ClassMetadata $classMetadata, $isRecursive = false)
     {
-        return $this->getClassAnalyzer()->hasTrait($classMetadata->reflClass, 'Knp\DoctrineBehaviors\Model\Translatable\Translatable', $this->isRecursive);
+        return $this->getClassAnalyzer()->hasTrait($classMetadata->reflClass, $this->translatableTrait, $this->isRecursive);
     }
 
     /**
@@ -131,7 +136,7 @@ class TranslatableListener extends AbstractListener
      */
     private function isTranslation(ClassMetadata $classMetadata)
     {
-        return $this->getClassAnalyzer()->hasTrait($classMetadata->reflClass, 'Knp\DoctrineBehaviors\Model\Translatable\Translation', $this->isRecursive);
+        return $this->getClassAnalyzer()->hasTrait($classMetadata->reflClass, $this->translationTrait, $this->isRecursive);
     }
 
     public function postLoad(LifecycleEventArgs $eventArgs)
