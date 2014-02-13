@@ -241,10 +241,11 @@ so that when you try to call `getName` (for example) it will return you the tran
     $em->flush();
 
     // get id
-    $id = $em->getId();
+    $id = $category->getId();
 
     // now remove it
     $em->remove($category);
+    $em->flush();
 
     // hey, i'm still here:
     $category = $em->getRepository('Category')->findOneById($id);
