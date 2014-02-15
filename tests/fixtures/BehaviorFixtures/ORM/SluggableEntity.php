@@ -68,7 +68,7 @@ class SluggableEntity
         return $this;
     }
 
-    protected function getSluggableFields()
+    public function getSluggableFields()
     {
         return [ 'name' ];
     }
