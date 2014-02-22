@@ -82,7 +82,7 @@ trait Sluggable
 
             foreach ($fields as $field) {
                 // Too bad empty is a language construct...otherwise we could use the return value in a write context :)
-                $val = $this->{$field};
+                $val = $this->{'get'.ucfirst($field)}();
                 if ( !empty( $val ) ) {
                     $usableValues[] = $val;
                 }
