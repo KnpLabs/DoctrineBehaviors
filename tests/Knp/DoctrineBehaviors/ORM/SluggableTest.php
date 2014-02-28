@@ -97,4 +97,40 @@ class SluggableTest extends \PHPUnit_Framework_TestCase
         
         $this->assertEquals($entity->getSlug(), $expected);
     }
+
+    /**
+     * @test
+     */
+    public function shouldTransliterateSlug()
+    {
+        $em = $this->getEntityManager();
+        $entity = new \BehaviorFixtures\ORM\SluggableEntity();
+
+        $expected = 'privet';
+
+        $entity->setName('Привет!');
+
+        $em->persist($entity);
+        $em->flush();
+
+        $this->assertEquals($expected, $entity->getSlug());
+    }
+
+    /**
+     * @test
+     */
+    public function shouldTransliterateSlugInRussian()
+    {
+        $em = $this->getEntityManager();
+        $entity = new \BehaviorFixtures\ORM\RussianSluggableEntity();
+
+        $expected = 'ya-budu-zhdatj-tebya';
+
+        $entity->setName('Я буду ждать тебя!');
+
+        $em->persist($entity);
+        $em->flush();
+
+        $this->assertEquals($expected, $entity->getSlug());
+    }
 }

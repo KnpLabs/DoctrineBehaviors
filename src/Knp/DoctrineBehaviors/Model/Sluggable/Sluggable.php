@@ -93,11 +93,29 @@ trait Sluggable
             }
 
             // generate the slug itself
-            $sluggableText = implode($usableValues, ' ');
-            $urlized = strtolower( trim( preg_replace("/[^a-zA-Z0-9\/_|+ -]/", '', iconv('UTF-8', 'ASCII//TRANSLIT', $sluggableText) ), $this->getSlugDelimiter() ) );
-            $urlized = preg_replace("/[\/_|+ -]+/", $this->getSlugDelimiter(), $urlized);
+            $transliterator = $this->getTransliterator();
 
-            $this->slug = $urlized;
+            if (!is_callable($transliterator)) {
+                throw new \RuntimeException("Sluggable::getTransliterator() method must return callable.");
+            }
+
+            $this->slug = call_user_func($transliterator, implode($usableValues, ' '));
         }
+    }
+
+    /**
+     * This method should return any php callable which can create slug from given string.
+     * Feel free to override this any way you want.
+     *
+     * @return callable
+     */
+    protected function getTransliterator()
+    {
+        return function($string) {
+            $string = transliterator_transliterate("Any-Latin; NFD; [:Nonspacing Mark:] Remove; NFC; [:Punctuation:] Remove; Lower();", $string);
+            $string = preg_replace('/[-\s]+/', '-', $string);
+
+            return trim($string, '-');
+        };
     }
 }
