@@ -88,6 +88,10 @@ class GeocodableListener extends AbstractListener
             $em->getConfiguration()->addCustomNumericFunction(
                 'DISTANCE', 'Knp\DoctrineBehaviors\ORM\Geocodable\Query\AST\Functions\DistanceFunction'
             );
+
+            $em->getConfiguration()->addCustomNumericFunction(
+                'DISTANCE_IN_METERS', 'Knp\DoctrineBehaviors\ORM\Geocodable\Query\AST\Functions\DistanceInMetersFunction'
+            );
         }
     }
 

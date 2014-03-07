@@ -25,8 +25,10 @@
         "doctrine/common":  ">=2.2"
     },
     "require-dev": {
-        "doctrine/orm":          ">=2.2",
-        "doctrine/mongodb-odm":  "dev-master"
+        "ext-pdo_sqlite":       "*",
+        "doctrine/orm":         ">=2.2",
+        "doctrine/mongodb-odm": "dev-master",
+        "phpunit/phpunit":      "~3.7"
     },
     "autoload": {
         "psr-0": { "Knp\\DoctrineBehaviors": "src/" }
