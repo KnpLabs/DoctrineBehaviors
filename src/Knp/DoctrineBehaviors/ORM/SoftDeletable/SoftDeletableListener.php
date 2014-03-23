@@ -63,7 +63,10 @@ class SoftDeletableListener extends AbstractListener
      */
     private function isEntitySupported(ClassMetadata $classMetadata)
     {
-        return $this->getClassAnalyzer()->hasTrait($classMetadata->reflClass, 'Knp\DoctrineBehaviors\Model\SoftDeletable\SoftDeletable', $this->isRecursive);
+        return $this->getClassAnalyzer()->hasTrait($classMetadata->reflClass, 'Knp\DoctrineBehaviors\Model\SoftDeletable\SoftDeletable', $this->isRecursive)
+            || $this->getClassAnalyzer()->hasTrait($classMetadata->reflClass, 'Knp\DoctrineBehaviors\Model\SoftDeletable\SoftDeletableMethods', $this->isRecursive)
+            || $this->getClassAnalyzer()->hasTrait($classMetadata->reflClass, 'Knp\DoctrineBehaviors\Model\SoftDeletable\SoftDeletableProperties', $this->isRecursive)
+        ;
     }
 
     /**

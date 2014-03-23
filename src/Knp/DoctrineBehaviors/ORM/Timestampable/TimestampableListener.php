@@ -56,6 +56,9 @@ class TimestampableListener extends AbstractListener
      */
     private function isEntitySupported(ClassMetadata $classMetadata)
     {
-        return $this->getClassAnalyzer()->hasTrait($classMetadata->reflClass, 'Knp\DoctrineBehaviors\Model\Timestampable\Timestampable', $this->isRecursive);
+        return $this->getClassAnalyzer()->hasTrait($classMetadata->reflClass, 'Knp\DoctrineBehaviors\Model\Timestampable\Timestampable', $this->isRecursive)
+            || $this->getClassAnalyzer()->hasTrait($classMetadata->reflClass, 'Knp\DoctrineBehaviors\Model\Timestampable\TimestampableMethods', $this->isRecursive)
+            || $this->getClassAnalyzer()->hasTrait($classMetadata->reflClass, 'Knp\DoctrineBehaviors\Model\Timestampable\TimestampableProperties', $this->isRecursive)
+        ;
     }
 }
