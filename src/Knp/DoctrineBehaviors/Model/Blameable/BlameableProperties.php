@@ -16,9 +16,23 @@ namespace Knp\DoctrineBehaviors\Model\Blameable;
  *
  * Should be used inside entity where you need to track which user created or updated it
  */
-trait Blameable
+trait BlameableProperties
 {
-    use BlameableProperties,
-        BlameableMethods
-    ;
+    /**
+     * Will be mapped to either string or user entity
+     * by BlameableListener
+     */
+    protected $createdBy;
+
+    /**
+     * Will be mapped to either string or user entity
+     * by BlameableListener
+     */
+    protected $updatedBy;
+
+    /**
+     * Will be mapped to either string or user entity
+     * by BlameableListener
+     */
+    protected $deletedBy;
 }

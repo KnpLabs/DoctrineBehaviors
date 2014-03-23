@@ -26,6 +26,15 @@ use Doctrine\ORM\Event\LoadClassMetadataEventArgs,
  */
 class TimestampableListener extends AbstractListener
 {
+    private $timestampableTrait;
+
+    public function __construct(ClassAnalyzer $classAnalyzer, $isRecursive, $timestampableTrait)
+    {
+        parent::__construct($classAnalyzer, $isRecursive);
+
+        $this->timestampableTrait = $timestampableTrait;
+    }
+    
     public function loadClassMetadata(LoadClassMetadataEventArgs $eventArgs)
     {
         $classMetadata = $eventArgs->getClassMetadata();
@@ -34,7 +43,7 @@ class TimestampableListener extends AbstractListener
             return;
         }
 
-        if ($this->isEntitySupported($classMetadata)) {
+        if ($this->isTimestampable($classMetadata)) {
             if ($this->getClassAnalyzer()->hasMethod($classMetadata->reflClass, 'updateTimestamps')) {
                 $classMetadata->addLifecycleCallback('updateTimestamps', Events::prePersist);
                 $classMetadata->addLifecycleCallback('updateTimestamps', Events::preUpdate);
@@ -46,19 +55,16 @@ class TimestampableListener extends AbstractListener
     {
         return [Events::loadClassMetadata];
     }
-
+    
     /**
-     * Checks whether provided entity is supported.
+     * Checks if entity is timestampable
      *
      * @param ClassMetadata $classMetadata The metadata
      *
      * @return Boolean
      */
-    private function isEntitySupported(ClassMetadata $classMetadata)
+    private function isTimestampable(ClassMetadata $classMetadata)
     {
-        return $this->getClassAnalyzer()->hasTrait($classMetadata->reflClass, 'Knp\DoctrineBehaviors\Model\Timestampable\Timestampable', $this->isRecursive)
-            || $this->getClassAnalyzer()->hasTrait($classMetadata->reflClass, 'Knp\DoctrineBehaviors\Model\Timestampable\TimestampableMethods', $this->isRecursive)
-            || $this->getClassAnalyzer()->hasTrait($classMetadata->reflClass, 'Knp\DoctrineBehaviors\Model\Timestampable\TimestampableProperties', $this->isRecursive)
-        ;
+        return $this->getClassAnalyzer()->hasTrait($classMetadata->reflClass, $this->timestampableTrait, $this->isRecursive);
     }
 }

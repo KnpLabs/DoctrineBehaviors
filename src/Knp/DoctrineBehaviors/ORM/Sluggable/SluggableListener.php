@@ -22,6 +22,15 @@ use Doctrine\ORM\Event\LoadClassMetadataEventArgs,
  */
 class SluggableListener extends AbstractListener
 {
+    private $sluggableTrait;
+
+    public function __construct(ClassAnalyzer $classAnalyzer, $isRecursive, $sluggableTrait)
+    {
+        parent::__construct($classAnalyzer, $isRecursive);
+
+        $this->sluggableTrait = $sluggableTrait;
+    }
+    
     public function loadClassMetadata(LoadClassMetadataEventArgs $eventArgs)
     {
         $classMetadata = $eventArgs->getClassMetadata();
@@ -30,7 +39,7 @@ class SluggableListener extends AbstractListener
             return;
         }
 
-        if ($this->isEntitySupported($classMetadata)) {
+        if ($this->isSluggable($classMetadata)) {
             if ($classMetadata->reflClass->hasMethod('generateSlug')) {
                 // Call the generateSlug function when the entity is persisted initially and when its updated
 
@@ -46,14 +55,14 @@ class SluggableListener extends AbstractListener
     }
 
     /**
-     * Checks whether provided entity is supported.
+     * Checks if entity is sluggable
      *
      * @param ClassMetadata $classMetadata The metadata
      *
-     * @return Boolean
+     * @return boolean
      */
-    protected function isEntitySupported(ClassMetadata $classMetadata)
+    private function isSluggable(ClassMetadata $classMetadata)
     {
-        return $this->getClassAnalyzer()->hasTrait($classMetadata->reflClass, 'Knp\DoctrineBehaviors\Model\Sluggable\Sluggable', $this->isRecursive);
+        return $this->getClassAnalyzer()->hasTrait($classMetadata->reflClass, $this->sluggableTrait, $this->isRecursive);
     }
 }
