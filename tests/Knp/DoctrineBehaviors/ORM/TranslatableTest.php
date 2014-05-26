@@ -32,7 +32,8 @@ class TranslatableTest extends \PHPUnit_Framework_TestCase
                 return 'en';
             },
             'Knp\DoctrineBehaviors\Model\Translatable\Translatable',
-            'Knp\DoctrineBehaviors\Model\Translatable\Translation'
+            'Knp\DoctrineBehaviors\Model\Translatable\Translation',
+            'LAZY'
         ));
 
         return $em;
