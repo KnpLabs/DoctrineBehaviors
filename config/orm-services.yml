@@ -5,6 +5,8 @@ parameters:
     knp.doctrine_behaviors.translatable_listener.current_locale_callable.class: Knp\DoctrineBehaviors\ORM\Translatable\CurrentLocaleCallable
     knp.doctrine_behaviors.translatable_listener.translatable_trait: Knp\DoctrineBehaviors\Model\Translatable\Translatable
     knp.doctrine_behaviors.translatable_listener.translation_trait: Knp\DoctrineBehaviors\Model\Translatable\Translation
+    knp.doctrine_behaviors.translatable_listener.translatable_fetch_method: LAZY
+    knp.doctrine_behaviors.translatable_listener.translation_fetch_method: LAZY
     knp.doctrine_behaviors.softdeletable_listener.class: Knp\DoctrineBehaviors\ORM\SoftDeletable\SoftDeletableListener
     knp.doctrine_behaviors.timestampable_listener.class: Knp\DoctrineBehaviors\ORM\Timestampable\TimestampableListener
     knp.doctrine_behaviors.blameable_listener.class: Knp\DoctrineBehaviors\ORM\Blameable\BlameableListener
@@ -29,6 +31,8 @@ services:
             - "@knp.doctrine_behaviors.translatable_listener.current_locale_callable"
             - "%knp.doctrine_behaviors.translatable_listener.translatable_trait%"
             - "%knp.doctrine_behaviors.translatable_listener.translation_trait%"
+            - "%knp.doctrine_behaviors.translatable_listener.translatable_fetch_method%"
+            - "%knp.doctrine_behaviors.translatable_listener.translation_fetch_method%"
         tags:
             - { name: doctrine.event_subscriber }
 
