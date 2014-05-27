@@ -17,6 +17,7 @@ use Knp\DoctrineBehaviors\ORM\AbstractListener;
 
 use Doctrine\Common\EventSubscriber,
     Doctrine\ORM\Mapping\ClassMetadata,
+    Doctrine\ORM\Mapping\ClassMetadataInfo,
     Doctrine\ORM\Event\LoadClassMetadataEventArgs,
     Doctrine\ORM\Event\LifecycleEventArgs,
     Doctrine\ORM\Events;
@@ -31,15 +32,19 @@ class TranslatableListener extends AbstractListener
     private $currentLocaleCallable;
     private $translatableTrait;
     private $translationTrait;
+    private $translatableFetchMode;
+    private $translationFetchMode;
 
     public function __construct(ClassAnalyzer $classAnalyzer, $isRecursive, callable $currentLocaleCallable = null,
-                                $translatableTrait, $translationTrait)
+                                $translatableTrait, $translationTrait, $translatableFetchMode, $translationFetchMode)
     {
         parent::__construct($classAnalyzer, $isRecursive);
 
         $this->currentLocaleCallable = $currentLocaleCallable;
         $this->translatableTrait = $translatableTrait;
         $this->translationTrait = $translationTrait;
+        $this->translatableFetchMode = $this->convertFetchString($translatableFetchMode);
+        $this->translationFetchMode = $this->convertFetchString($translationFetchMode);
     }
 
     /**
@@ -72,6 +77,7 @@ class TranslatableListener extends AbstractListener
                 'mappedBy'      => 'translatable',
                 'indexBy'       => 'locale',
                 'cascade'       => ['persist', 'merge', 'remove'],
+                'fetch'         => $this->translatableFetchMode,
                 'targetEntity'  => $classMetadata->name.'Translation',
                 'orphanRemoval' => true
             ]);
@@ -84,6 +90,7 @@ class TranslatableListener extends AbstractListener
             $classMetadata->mapManyToOne([
                 'fieldName'    => 'translatable',
                 'inversedBy'   => 'translations',
+                'fetch'         => $this->translationFetchMode,
                 'joinColumns'  => [[
                     'name'                 => 'translatable_id',
                     'referencedColumnName' => 'id',
@@ -101,6 +108,28 @@ class TranslatableListener extends AbstractListener
                     'columns' => ['translatable_id', 'locale' ]
                 ]],
             ]);
+        }
+    }
+
+    /**
+     * Convert string FETCH mode to required string
+     *
+     * @param $fetchMode
+     *
+     * @return int
+     */
+    private function convertFetchString($fetchMode){
+        if (is_int($fetchMode)) return $fetchmode;
+
+        switch($fetchMode){
+            case "LAZY":
+                return ClassMetadataInfo::FETCH_LAZY;
+            case "EAGER":
+                return ClassMetadataInfo::FETCH_EAGER;
+            case "EXTRA_LAZY":
+                return ClassMetadataInfo::FETCH_EXTRA_LAZY;
+            default:
+                return ClassMetadataInfo::FETCH_LAZY;
         }
     }
 
