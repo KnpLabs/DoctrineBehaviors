@@ -44,15 +44,18 @@ class BlameableListener extends AbstractListener
      * userEntity name
      */
     private $userEntity;
+    
+    private $blameableTrait;
 
     /**
      * @param callable
      * @param string $userEntity
      */
-    public function __construct(ClassAnalyzer $classAnalyzer, $isRecursive, callable $userCallable = null, $userEntity = null)
+    public function __construct(ClassAnalyzer $classAnalyzer, $isRecursive, $blameableTrait, callable $userCallable = null, $userEntity = null)
     {
         parent::__construct($classAnalyzer, $isRecursive);
 
+        $this->blameableTrait = $blameableTrait;
         $this->userCallable = $userCallable;
         $this->userEntity = $userEntity;
     }
@@ -70,7 +73,7 @@ class BlameableListener extends AbstractListener
             return;
         }
 
-        if ($this->isEntitySupported($classMetadata->reflClass)) {
+        if ($this->isBlameable($classMetadata)) {
             $this->mapEntity($classMetadata);
         }
     }
@@ -154,7 +157,7 @@ class BlameableListener extends AbstractListener
         $entity = $eventArgs->getEntity();
 
         $classMetadata = $em->getClassMetadata(get_class($entity));
-        if ($this->isEntitySupported($classMetadata->reflClass, true)) {
+        if ($this->isBlameable($classMetadata, true)) {
             if (!$entity->getCreatedBy()) {
                 $user = $this->getUser();
                 if ($this->isValidUser($user)) {
@@ -208,7 +211,7 @@ class BlameableListener extends AbstractListener
         $entity = $eventArgs->getEntity();
 
         $classMetadata = $em->getClassMetadata(get_class($entity));
-        if ($this->isEntitySupported($classMetadata->reflClass, true)) {
+        if ($this->isBlameable($classMetadata, true)) {
             if (!$entity->isBlameable()) {
                 return;
             }
@@ -237,7 +240,7 @@ class BlameableListener extends AbstractListener
         $entity = $eventArgs->getEntity();
 
         $classMetadata = $em->getClassMetadata(get_class($entity));
-        if ($this->isEntitySupported($classMetadata->reflClass, true)) {
+        if ($this->isBlameable($classMetadata, true)) {
             if (!$entity->isBlameable()) {
                 return;
             }
@@ -283,21 +286,6 @@ class BlameableListener extends AbstractListener
         return $callable();
     }
 
-    /**
-     * Checks if entity supports Blameable
-     *
-     * @param ClassMetadata $classMetadata
-     * @param bool          $isRecursive   true to check for parent classes until trait is found
-     *
-     * @return boolean
-     */
-    private function isEntitySupported(\ReflectionClass $reflClass, $isRecursive = false)
-    {
-        return $this->getClassAnalyzer()->hasTrait($reflClass, 'Knp\DoctrineBehaviors\Model\Blameable\Blameable', $isRecursive)
-            || $this->getClassAnalyzer()->hasTrait($reflClass, 'Knp\DoctrineBehaviors\Model\Blameable\BlameableMethods', $isRecursive)
-        ;
-    }
-
     public function getSubscribedEvents()
     {
         $events = [
@@ -313,5 +301,18 @@ class BlameableListener extends AbstractListener
     public function setUserCallable(callable $callable)
     {
         $this->userCallable = $callable;
+    }
+    
+    /**
+     * Checks if entity is blameable
+     *
+     * @param ClassMetadata $classMetadata The metadata
+     * @param bool          $isRecursive   true to check for parent classes until trait is found
+     *
+     * @return Boolean
+     */
+    private function isBlameable(ClassMetadata $classMetadata, $isRecursive = false)
+    {
+        return $this->getClassAnalyzer()->hasTrait($classMetadata->reflClass, $this->blameableTrait, $isRecursive);
     }
 }

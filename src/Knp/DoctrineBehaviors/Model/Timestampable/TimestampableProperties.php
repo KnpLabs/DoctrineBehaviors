@@ -16,9 +16,19 @@ namespace Knp\DoctrineBehaviors\Model\Timestampable;
  *
  * Should be used inside entity, that needs to be timestamped.
  */
-trait Timestampable
+trait TimestampableProperties
 {
-    use TimestampableProperties,
-        TimestampableMethods
-    ;
+    /**
+     * @var \DateTime $createdAt
+     *
+     * @ORM\Column(type="datetime", nullable=true)
+     */
+    protected $createdAt;
+
+    /**
+     * @var \DateTime $updatedAt
+     *
+     * @ORM\Column(type="datetime", nullable=true)
+     */
+    protected $updatedAt;
 }

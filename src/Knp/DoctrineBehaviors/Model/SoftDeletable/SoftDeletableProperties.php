@@ -16,9 +16,10 @@ namespace Knp\DoctrineBehaviors\Model\SoftDeletable;
  *
  * Should be used inside entity, that needs to be self-deleted.
  */
-trait SoftDeletable
+trait SoftDeletableProperties
 {
-    use SoftDeletableProperties,
-        SoftDeletableMethods
-    ;
+    /**
+     * @ORM\Column(type="datetime", nullable=true)
+     */
+    protected $deletedAt;
 }

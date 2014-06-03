@@ -26,6 +26,7 @@ class GeocodableTest extends \PHPUnit_Framework_TestCase
         $em->addEventSubscriber(new \Knp\DoctrineBehaviors\ORM\Geocodable\GeocodableListener(
             new ClassAnalyzer(),
             false,
+            'Knp\DoctrineBehaviors\Model\Geocodable\Geocodable',
             function($entity) {
                 if ($location = $entity->getLocation()) {
                     return $location;

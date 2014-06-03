@@ -8,14 +8,19 @@ parameters:
     knp.doctrine_behaviors.translatable_listener.translatable_fetch_method: LAZY
     knp.doctrine_behaviors.translatable_listener.translation_fetch_method: LAZY
     knp.doctrine_behaviors.softdeletable_listener.class: Knp\DoctrineBehaviors\ORM\SoftDeletable\SoftDeletableListener
+    knp.doctrine_behaviors.softdeletable_listener.softdeletable_trait: Knp\DoctrineBehaviors\Model\SoftDeletable\SoftDeletable
     knp.doctrine_behaviors.timestampable_listener.class: Knp\DoctrineBehaviors\ORM\Timestampable\TimestampableListener
+    knp.doctrine_behaviors.timestampable_listener.timestampable_trait: Knp\DoctrineBehaviors\Model\Timestampable\Timestampable
     knp.doctrine_behaviors.blameable_listener.class: Knp\DoctrineBehaviors\ORM\Blameable\BlameableListener
+    knp.doctrine_behaviors.blameable_listener.blameable_trait: Knp\DoctrineBehaviors\Model\Blameable\Blameable
     knp.doctrine_behaviors.blameable_listener.user_callable.class: Knp\DoctrineBehaviors\ORM\Blameable\UserCallable
     knp.doctrine_behaviors.blameable_listener.user_entity: ~
     knp.doctrine_behaviors.loggable_listener.class: Knp\DoctrineBehaviors\ORM\Loggable\LoggableListener
     knp.doctrine_behaviors.loggable_listener.logger_callable.class: Knp\DoctrineBehaviors\ORM\Loggable\LoggerCallable
     knp.doctrine_behaviors.geocodable_listener.class: Knp\DoctrineBehaviors\ORM\Geocodable\GeocodableListener
+    knp.doctrine_behaviors.geocodable_listener.geocodable_trait: Knp\DoctrineBehaviors\Model\Geocodable\Geocodable
     knp.doctrine_behaviors.sluggable_listener.class: Knp\DoctrineBehaviors\ORM\Sluggable\SluggableListener
+    knp.doctrine_behaviors.sluggable_listener.sluggable_trait: Knp\DoctrineBehaviors\Model\Sluggable\Sluggable
 
 services:
     knp.doctrine_behaviors.reflection.class_analyzer:
@@ -48,6 +53,7 @@ services:
         arguments:
             - "@knp.doctrine_behaviors.reflection.class_analyzer"
             - "%knp.doctrine_behaviors.reflection.is_recursive%"
+            - "%knp.doctrine_behaviors.softdeletable_listener.softdeletable_trait%"
         tags:
             - { name: doctrine.event_subscriber }
 
@@ -57,6 +63,7 @@ services:
         arguments:
             - "@knp.doctrine_behaviors.reflection.class_analyzer"
             - "%knp.doctrine_behaviors.reflection.is_recursive%"
+            - "%knp.doctrine_behaviors.timestampable_listener.timestampable_trait%"
         tags:
             - { name: doctrine.event_subscriber }
 
@@ -65,6 +72,7 @@ services:
         arguments:
             - "@knp.doctrine_behaviors.reflection.class_analyzer"
             - "%knp.doctrine_behaviors.reflection.is_recursive%"
+            - "%knp.doctrine_behaviors.blameable_listener.blameable_trait%"
             - "@knp.doctrine_behaviors.blameable_listener.user_callable"
             - "%knp.doctrine_behaviors.blameable_listener.user_entity%"
         public:  false
@@ -99,6 +107,7 @@ services:
         arguments:
             - "@knp.doctrine_behaviors.reflection.class_analyzer"
             - "%knp.doctrine_behaviors.reflection.is_recursive%"
+            - "%knp.doctrine_behaviors.geocodable_listener.geocodable_trait%"
             - "@?knp.doctrine_behaviors.geocodable_callable"
         tags:
             - { name: doctrine.event_subscriber }
@@ -109,6 +118,7 @@ services:
         arguments:
             - "@knp.doctrine_behaviors.reflection.class_analyzer"
             - "%knp.doctrine_behaviors.reflection.is_recursive%"
+            - "knp.doctrine_behaviors.sluggable_listener.sluggable_trait"
         tags:
             - { name: doctrine.event_subscriber }
 

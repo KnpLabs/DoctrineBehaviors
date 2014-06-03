@@ -37,14 +37,17 @@ class GeocodableListener extends AbstractListener
      * @var callable
      */
     private $geolocationCallable;
-
+    
+    private $geocodableTrait;
+    
     /**
      * @param callable
      */
-    public function __construct(ClassAnalyzer $classAnalyzer, $isRecursive, callable $geolocationCallable = null)
+    public function __construct(ClassAnalyzer $classAnalyzer, $isRecursive, $geocodableTrait, callable $geolocationCallable = null)
     {
         parent::__construct($classAnalyzer, $isRecursive);
         
+        $this->geocodableTrait = $geocodableTrait;
         $this->geolocationCallable = $geolocationCallable;
     }
 
@@ -61,7 +64,7 @@ class GeocodableListener extends AbstractListener
             return;
         }
 
-        if ($this->isEntitySupported($classMetadata->reflClass)) {
+        if ($this->isGeocodable($classMetadata)) {
 
             if (!Type::hasType('point')) {
                 Type::addType('point', 'Knp\DoctrineBehaviors\DBAL\Types\PointType');
@@ -98,7 +101,7 @@ class GeocodableListener extends AbstractListener
         $entity = $eventArgs->getEntity();
 
         $classMetadata = $em->getClassMetadata(get_class($entity));
-        if ($this->isEntitySupported($classMetadata->reflClass)) {
+        if ($this->isGeocodable($classMetadata)) {
 
             $oldValue = $entity->getLocation();
             if (!$oldValue instanceof Point || $override) {
@@ -137,14 +140,15 @@ class GeocodableListener extends AbstractListener
     }
 
     /**
-     * Checks if entity supports Geocodable
+     * Checks if entity is geocodable
      *
-     * @param  ClassMetadata $classMetadata
+     * @param ClassMetadata $classMetadata The metadata
+     *
      * @return boolean
      */
-    private function isEntitySupported(\ReflectionClass $reflClass)
+    private function isGeocodable(ClassMetadata $classMetadata)
     {
-        return $this->getClassAnalyzer()->hasTrait($reflClass, 'Knp\DoctrineBehaviors\Model\Geocodable\Geocodable');
+        return $this->getClassAnalyzer()->hasTrait($classMetadata->reflClass, $this->geocodableTrait, $this->isRecursive);
     }
 
     public function getSubscribedEvents()

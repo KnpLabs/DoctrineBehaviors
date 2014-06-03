@@ -23,8 +23,11 @@ class SluggableTest extends \PHPUnit_Framework_TestCase
         $em = new EventManager;
 
         $em->addEventSubscriber(
-            new \Knp\DoctrineBehaviors\ORM\Sluggable\SluggableListener(new ClassAnalyzer(), false)
-        );
+            new \Knp\DoctrineBehaviors\ORM\Sluggable\SluggableListener(
+                new ClassAnalyzer(), 
+                false,
+                'Knp\DoctrineBehaviors\Model\Sluggable\Sluggable'
+        ));
 
         return $em;
     }

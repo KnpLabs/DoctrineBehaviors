@@ -11,9 +11,12 @@ namespace Knp\DoctrineBehaviors\Model\Sluggable;
  *
  * Should be used inside entities for which slugs should automatically be generated on creation for SEO/permalinks.
  */
-trait Sluggable
+trait SluggableProperties
 {
-    use SluggableProperties,
-        SluggableMethods
-    ;
+    /**
+     * @var string $slug
+     *
+     * @ORM\Column(type="string")
+     */
+    protected $slug;
 }
