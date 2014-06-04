@@ -118,7 +118,7 @@ services:
         arguments:
             - "@knp.doctrine_behaviors.reflection.class_analyzer"
             - "%knp.doctrine_behaviors.reflection.is_recursive%"
-            - "knp.doctrine_behaviors.sluggable_listener.sluggable_trait"
+            - "%knp.doctrine_behaviors.sluggable_listener.sluggable_trait%"
         tags:
             - { name: doctrine.event_subscriber }
 
