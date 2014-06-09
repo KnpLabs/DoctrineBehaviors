@@ -71,12 +71,12 @@ trait TranslatableMethods
      *
      * @return Translation
      */
-    public function translate($locale = null)
+    public function translate($locale = null, $fallbackToDefault = true)
     {
-        return $this->doTranslate($locale);
+        return $this->doTranslate($locale, $fallbackToDefault);
     }
 
-    protected function doTranslate($locale = null)
+    protected function doTranslate($locale = null, $fallbackToDefault = true)
     {
         if (null === $locale) {
             $locale = $this->getCurrentLocale();
@@ -87,7 +87,7 @@ trait TranslatableMethods
             return $translation;
         }
 
-        if ($defaultTranslation = $this->findTranslationByLocale($this->getDefaultLocale(), false)) {
+        if ($fallbackToDefault && $defaultTranslation = $this->findTranslationByLocale($this->getDefaultLocale(), false)) {
             return $defaultTranslation;
         }
 
