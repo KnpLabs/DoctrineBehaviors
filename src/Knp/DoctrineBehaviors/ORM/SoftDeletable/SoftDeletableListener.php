@@ -28,6 +28,15 @@ use Doctrine\Common\Persistence\Mapping\ClassMetadata,
  */
 class SoftDeletableListener extends AbstractListener
 {
+    private $softDeletableTrait;
+
+    public function __construct(ClassAnalyzer $classAnalyzer, $isRecursive, $softDeletableTrait)
+    {
+        parent::__construct($classAnalyzer, $isRecursive);
+
+        $this->softDeletableTrait = $softDeletableTrait;
+    }
+    
     /**
      * Listens to onFlush event.
      *
@@ -40,7 +49,7 @@ class SoftDeletableListener extends AbstractListener
 
         foreach ($uow->getScheduledEntityDeletions() as $entity) {
             $classMetadata = $em->getClassMetadata(get_class($entity));
-            if ($this->isEntitySupported($classMetadata)) {
+            if ($this->isSoftDeletable($classMetadata)) {
                 $oldValue = $entity->getDeletedAt();
 
                 $entity->delete();
@@ -55,15 +64,15 @@ class SoftDeletableListener extends AbstractListener
     }
 
     /**
-     * Checks whether provided entity is supported.
+     * Checks if entity is softDeletable
      *
      * @param ClassMetadata $classMetadata The metadata
      *
      * @return Boolean
      */
-    private function isEntitySupported(ClassMetadata $classMetadata)
+    private function isSoftDeletable(ClassMetadata $classMetadata)
     {
-        return $this->getClassAnalyzer()->hasTrait($classMetadata->reflClass, 'Knp\DoctrineBehaviors\Model\SoftDeletable\SoftDeletable', $this->isRecursive);
+        return $this->getClassAnalyzer()->hasTrait($classMetadata->reflClass, $this->softDeletableTrait, $this->isRecursive);
     }
 
     /**

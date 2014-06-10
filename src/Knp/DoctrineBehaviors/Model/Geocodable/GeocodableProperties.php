@@ -18,9 +18,10 @@ use Knp\DoctrineBehaviors\ORM\Geocodable\Type\Point;
  *
  * Should be used inside entity where you need to manipulate geographical information
  */
-trait Geocodable
+trait GeocodableProperties
 {
-    use GeocodableProperties,
-        GeocodableMethods
-    ;
+    /**
+     * @ORM\Column(type="point", nullable=true)
+     */
+    protected $location;
 }
