@@ -17,6 +17,7 @@ parameters:
     knp.doctrine_behaviors.blameable_listener.user_entity: ~
     knp.doctrine_behaviors.loggable_listener.class: Knp\DoctrineBehaviors\ORM\Loggable\LoggableListener
     knp.doctrine_behaviors.loggable_listener.logger_callable.class: Knp\DoctrineBehaviors\ORM\Loggable\LoggerCallable
+    knp.doctrine_behaviors.loggable_listener.loggable_trait: Knp\DoctrineBehaviors\Model\Loggable\Loggable
     knp.doctrine_behaviors.geocodable_listener.class: Knp\DoctrineBehaviors\ORM\Geocodable\GeocodableListener
     knp.doctrine_behaviors.geocodable_listener.geocodable_trait: Knp\DoctrineBehaviors\Model\Geocodable\Geocodable
     knp.doctrine_behaviors.sluggable_listener.class: Knp\DoctrineBehaviors\ORM\Sluggable\SluggableListener
@@ -91,6 +92,7 @@ services:
             - "@knp.doctrine_behaviors.reflection.class_analyzer"
             - "%knp.doctrine_behaviors.reflection.is_recursive%"
             - "@knp.doctrine_behaviors.loggable_listener.logger_callable"
+            - "%knp.doctrine_behaviors.loggable_listener.loggable_trait%"
         public:  false
         tags:
             - { name: doctrine.event_subscriber }

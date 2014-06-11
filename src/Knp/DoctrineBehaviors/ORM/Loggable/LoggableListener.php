@@ -17,7 +17,8 @@ use Knp\DoctrineBehaviors\ORM\AbstractListener;
 
 use Doctrine\ORM\Event\LifecycleEventArgs;
 
-use Doctrine\Common\EventSubscriber,
+use Doctrine\Common\Persistence\Mapping\ClassMetadata,
+    Doctrine\Common\EventSubscriber,
     Doctrine\ORM\Event\OnFlushEventArgs,
     Doctrine\ORM\Events;
 
@@ -31,14 +32,16 @@ class LoggableListener extends AbstractListener
      * @var callable
      */
     private $loggerCallable;
+    private $loggableTrait;
 
     /**
      * @param callable
      */
-    public function __construct(ClassAnalyzer $classAnalyzer, $isRecursive, callable $loggerCallable)
+    public function __construct(ClassAnalyzer $classAnalyzer, $isRecursive, callable $loggerCallable, $loggableTrait)
     {
         parent::__construct($classAnalyzer, $isRecursive);
         $this->loggerCallable = $loggerCallable;
+        $this->loggableTrait  = $loggableTrait;
     }
 
     public function postPersist(LifecycleEventArgs $eventArgs)
@@ -47,7 +50,7 @@ class LoggableListener extends AbstractListener
         $entity        = $eventArgs->getEntity();
         $classMetadata = $em->getClassMetadata(get_class($entity));
 
-        if ($this->isEntitySupported($classMetadata->reflClass)) {
+        if ($this->isLoggable($classMetadata)) {
             $message = $entity->getCreateLogMessage();
             $loggerCallable = $this->loggerCallable;
             $loggerCallable($message);
@@ -73,7 +76,7 @@ class LoggableListener extends AbstractListener
         $entity        = $eventArgs->getEntity();
         $classMetadata = $em->getClassMetadata(get_class($entity));
 
-        if ($this->isEntitySupported($classMetadata->reflClass)) {
+        if ($this->isLoggable($classMetadata)) {
             $uow->computeChangeSet($classMetadata, $entity);
             $changeSet = $uow->getEntityChangeSet($entity);
 
@@ -89,7 +92,7 @@ class LoggableListener extends AbstractListener
         $entity        = $eventArgs->getEntity();
         $classMetadata = $em->getClassMetadata(get_class($entity));
 
-        if ($this->isEntitySupported($classMetadata->reflClass)) {
+        if ($this->isLoggable($classMetadata)) {
             $message = $entity->getRemoveLogMessage();
             $loggerCallable = $this->loggerCallable;
             $loggerCallable($message);
@@ -104,12 +107,12 @@ class LoggableListener extends AbstractListener
     /**
      * Checks if entity supports Loggable
      *
-     * @param  ReflectionClass $reflClass
+     * @param ClassMetadata $classMetadata The metadata
      * @return boolean
      */
-    protected function isEntitySupported(\ReflectionClass $reflClass)
+    protected function isLoggable(ClassMetadata $classMetadata)
     {
-        return $this->getClassAnalyzer()->hasTrait($reflClass, 'Knp\DoctrineBehaviors\Model\Loggable\Loggable', $this->isRecursive);
+        return $this->getClassAnalyzer()->hasTrait($classMetadata->reflClass, $this->loggableTrait, $this->isRecursive);
     }
 
     public function getSubscribedEvents()
