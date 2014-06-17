@@ -29,10 +29,10 @@ class ClassAnalyzer
 
         $parentClass = $class->getParentClass();
 
-        if ((false === $isRecursive) || (false === $parentClass)) {
+        if ((false === $isRecursive) || (false === $parentClass) || (null === $parentClass)) {
             return false;
         }
-        
+
         return $this->hasTrait($parentClass, $traitName, $isRecursive);
     }
 
