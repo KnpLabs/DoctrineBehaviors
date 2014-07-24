@@ -6,16 +6,18 @@ use Doctrine\ORM\Query\AST\Functions\FunctionNode;
 use Doctrine\ORM\Query\Lexer;
 use Doctrine\ORM\Query\SqlWalker;
 use Doctrine\ORM\Query\Parser;
+use Doctrine\ORM\Query\AST\PathExpression;
 
 /**
- * DQL function for calculating distances between two points
+ * DQL function for calculating distances in meters between two points
  *
- *   DISTANCE(entity.point, POINT(:param))
+ * DISTANCE(entity.point, :latitude, :longitude)
  */
 class DistanceFunction extends FunctionNode
 {
-    private $firstArg;
-    private $secondArg;
+    private $entityLocation;
+    private $latitude;
+    private $longitude;
 
     /**
      * Returns SQL representation of this function.
@@ -26,11 +28,16 @@ class DistanceFunction extends FunctionNode
      */
     public function getSql(SqlWalker $sqlWalker)
     {
-        return sprintf('%s <@> %s',
-            $this->firstArg->dispatch($sqlWalker),
-            $this->secondArg->dispatch($sqlWalker)
+        $entityLocation = $this->entityLocation->dispatch($sqlWalker);
+        return sprintf('earth_distance(ll_to_earth(%s[0], %s[1]),ll_to_earth(%s, %s))',
+            $entityLocation,
+            $entityLocation,
+            $this->latitude->dispatch($sqlWalker),
+            $this->longitude->dispatch($sqlWalker)
         );
     }
+
+
 
     /**
      * Parses DQL function.
@@ -41,9 +48,11 @@ class DistanceFunction extends FunctionNode
     {
         $parser->match(Lexer::T_IDENTIFIER);
         $parser->match(Lexer::T_OPEN_PARENTHESIS);
-        $this->firstArg = $parser->ArithmeticPrimary();
+        $this->entityLocation = $parser->ArithmeticPrimary();
         $parser->match(Lexer::T_COMMA);
-        $this->secondArg = $parser->ArithmeticPrimary();
+        $this->latitude = $parser->ArithmeticPrimary();
+        $parser->match(Lexer::T_COMMA);
+        $this->longitude = $parser->ArithmeticPrimary();
         $parser->match(Lexer::T_CLOSE_PARENTHESIS);
     }
 }
