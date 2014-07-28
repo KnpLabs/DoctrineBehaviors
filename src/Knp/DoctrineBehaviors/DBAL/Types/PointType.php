@@ -65,4 +65,17 @@ class PointType extends Type
 
         return sprintf('(%F,%F)', $value->getLatitude(), $value->getLongitude());
     }
+    
+    /**
+     * Get an array of database types that map to this Doctrine type.
+     *
+     * @param AbstractPlatform $platform
+     * @return array
+     */
+    public function getMappedDatabaseTypes(AbstractPlatform $platform)
+    {
+        return array(
+            'point' => 'point',
+        );
+    }
 }
