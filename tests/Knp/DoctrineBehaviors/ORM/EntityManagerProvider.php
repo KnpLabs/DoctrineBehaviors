@@ -1,7 +1,8 @@
 <?php
 
-namespace Tests\Knp\DoctrineBehaviors\ORM;
+namespace tests\Knp\DoctrineBehaviors\ORM;
 
+use Doctrine\ORM\Configuration;
 use Doctrine\ORM\Mapping\Driver\AnnotationDriver;
 use Doctrine\ORM\EntityManager;
 use Doctrine\ORM\Repository\DefaultRepositoryFactory;
@@ -37,7 +38,7 @@ trait EntityManagerProvider
         $config = is_null($config) ? $this->getAnnotatedConfig() : $config;
         $em = EntityManager::create($conn, $config, $evm ?: $this->getEventManager());
 
-        $schema = array_map(function($class) use ($em) {
+        $schema = array_map(function ($class) use ($em) {
             return $em->getClassMetadata($class);
         }, (array) $this->getUsedEntityFixtures());
 
@@ -51,7 +52,7 @@ trait EntityManagerProvider
     /**
      * Get annotation mapping configuration
      *
-     * @return Doctrine\ORM\Configuration
+     * @return \Doctrine\ORM\Configuration
      */
     protected function getAnnotatedConfig()
     {
@@ -119,6 +120,12 @@ trait EntityManagerProvider
             ->expects($this->any())
             ->method('getRepositoryFactory')
             ->will($this->returnValue(new DefaultRepositoryFactory()))
+        ;
+
+        $config
+            ->expects($this->any())
+            ->method('getDefaultQueryHints')
+            ->will($this->returnValue([]))
         ;
 
         return $config;

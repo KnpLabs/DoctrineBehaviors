@@ -59,12 +59,13 @@ trait FilterableRepository
     /**
      * Filter values
      *
-     * @param  array                            $filters - array like ['e:name' => 'nameValue'] where "e" is entity alias query, so we can filter using joins.
-     * @return Doctrine\DBAL\Query\QueryBuilder
+     * @param  array                      $filters - array like ['e:name' => 'nameValue'] where "e" is entity alias query, so we can filter using joins.
+     * @param \Doctrine\ORM\QueryBuilder
+     * @return \Doctrine\ORM\QueryBuilder
      */
     public function filterBy(array $filters, QueryBuilder $qb = null)
     {
-        $filters = array_filter($filters, function($filter) {
+        $filters = array_filter($filters, function ($filter) {
             return !empty($filter);
         });
 
