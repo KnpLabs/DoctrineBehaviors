@@ -1,6 +1,6 @@
 <?php
 
-namespace Tests\Knp\DoctrineBehaviors\ORM;
+namespace tests\Knp\DoctrineBehaviors\ORM;
 
 use BehaviorFixtures\ORM\FilterableEntity;
 
@@ -23,7 +23,7 @@ class FilterableRepositoryTest extends \PHPUnit_Framework_TestCase
     public function shouldFilterByNameUsingLike()
     {
         $this->createEntities();
-
+        /**@var \BehaviorFixtures\ORM\FilterableRepository $repository*/
         $repository = $this->getEntityManager()->getRepository('BehaviorFixtures\ORM\FilterableEntity');
 
         $collection = $repository->filterBy(['e:name' => 'name'])->getQuery()->execute();
