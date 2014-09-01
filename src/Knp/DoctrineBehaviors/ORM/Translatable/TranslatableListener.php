@@ -150,11 +150,9 @@ class TranslatableListener extends AbstractListener
      * Checks if entity is translatable
      *
      * @param ClassMetadata $classMetadata
-     * @param bool          $isRecursive   true to check for parent classes until found
-     *
      * @return boolean
      */
-    private function isTranslatable(ClassMetadata $classMetadata, $isRecursive = false)
+    private function isTranslatable(ClassMetadata $classMetadata)
     {
         return $this->getClassAnalyzer()->hasTrait($classMetadata->reflClass, $this->translatableTrait, $this->isRecursive);
     }

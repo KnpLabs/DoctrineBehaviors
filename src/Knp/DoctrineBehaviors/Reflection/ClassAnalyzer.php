@@ -23,8 +23,14 @@ class ClassAnalyzer
      */
     public function hasTrait(\ReflectionClass $class, $traitName, $isRecursive = false)
     {
-        if (in_array($traitName, $class->getTraitNames())) {
-            return true;
+        foreach ($class->getTraits() as $trait) {
+            if ($traitName === $trait->getName()) {
+                return true;
+            }
+
+            if (true === $isRecursive && $this->hasTrait($trait, $traitName, $isRecursive)) {
+                return true;
+            }
         }
 
         $parentClass = $class->getParentClass();

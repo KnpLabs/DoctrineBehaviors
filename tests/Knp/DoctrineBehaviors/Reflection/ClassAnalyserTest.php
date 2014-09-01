@@ -7,6 +7,7 @@ use BehaviorFixtures\ORM\DeletableEntity;
 use BehaviorFixtures\ORM\DeletableEntityInherit;
 use BehaviorFixtures\ORM\GeocodableEntity;
 use BehaviorFixtures\ORM\TranslatableEntity;
+use BehaviorFixtures\ORM\TranslatableEntityViaIntermediateTrait;
 
 class ClassAnalyserTest extends \PHPUnit_Framework_TestCase
 {
@@ -71,6 +72,32 @@ class ClassAnalyserTest extends \PHPUnit_Framework_TestCase
         );
 
         $this->assertTrue($useInherit);
+    }
+
+    /**
+     * @test
+     */
+    public function it_should_test_if_object_or_his_intermediate_traits_use_trait () {
+
+        $analyser = new ClassAnalyzer;
+
+        $object = new TranslatableEntityViaIntermediateTrait;
+
+        $use = $analyser->hasTrait(
+            new \ReflectionClass($object),
+            'Knp\DoctrineBehaviors\Model\Translatable\Translatable',
+            false
+        );
+
+        $this->assertFalse($use);
+
+        $useIntermediate = $analyser->hasTrait(
+            new \ReflectionClass($object),
+            'Knp\DoctrineBehaviors\Model\Translatable\Translatable',
+            true
+        );
+
+        $this->assertTrue($useIntermediate);
     }
 
     /**
