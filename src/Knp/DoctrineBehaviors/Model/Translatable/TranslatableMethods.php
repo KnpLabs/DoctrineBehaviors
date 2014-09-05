@@ -67,16 +67,17 @@ trait TranslatableMethods
      * If any translation doesn't exist, it will be added to newTranslations collection.
      * In order to persist new translations, call mergeNewTranslations method, before flush
      *
-     * @param string $locale The locale (en, ru, fr) | null If null, will try with current locale
+     * @param string  $locale     The locale (en, ru, fr) | null If null, will try with current locale
+     * @param boolean $useDefault If it should return translation in default locale
      *
      * @return Translation
      */
-    public function translate($locale = null)
+    public function translate($locale = null, $useDefault=true)
     {
-        return $this->doTranslate($locale);
+        return $this->doTranslate($locale, $useDefault);
     }
 
-    protected function doTranslate($locale = null)
+    protected function doTranslate($locale = null, $useDefault=true)
     {
         if (null === $locale) {
             $locale = $this->getCurrentLocale();
@@ -87,7 +88,7 @@ trait TranslatableMethods
             return $translation;
         }
 
-        if ($defaultTranslation = $this->findTranslationByLocale($this->getDefaultLocale(), false)) {
+        if ($useDefault && $defaultTranslation = $this->findTranslationByLocale($this->getDefaultLocale(), false)) {
             return $defaultTranslation;
         }
 
