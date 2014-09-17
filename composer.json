@@ -35,6 +35,9 @@
         "psr-0": { "Knp\\DoctrineBehaviors": "src/" }
     },
     "minimum-stability": "dev",
+    "config": {
+        "bin-dir": "bin"
+    },
     "extra": {
         "branch-alias": {
             "dev-master": "1.0.x-dev"
