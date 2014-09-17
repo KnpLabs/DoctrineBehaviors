@@ -13,7 +13,7 @@ namespace Knp\DoctrineBehaviors\ORM\Loggable;
 
 use Knp\DoctrineBehaviors\Reflection\ClassAnalyzer;
 
-use Knp\DoctrineBehaviors\ORM\AbstractListener;
+use Knp\DoctrineBehaviors\ORM\AbstractSubscriber;
 
 use Doctrine\ORM\Event\LifecycleEventArgs;
 
@@ -22,10 +22,10 @@ use Doctrine\Common\EventSubscriber,
     Doctrine\ORM\Events;
 
 /**
- * LoggableListener handle Loggable entites
+ * LoggableSubscriber handle Loggable entites
  * Listens to lifecycle events
  */
-class LoggableListener extends AbstractListener
+class LoggableSubscriber extends AbstractSubscriber
 {
     /**
      * @var callable

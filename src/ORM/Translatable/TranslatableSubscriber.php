@@ -13,7 +13,7 @@ namespace Knp\DoctrineBehaviors\ORM\Translatable;
 
 use Knp\DoctrineBehaviors\Reflection\ClassAnalyzer;
 
-use Knp\DoctrineBehaviors\ORM\AbstractListener;
+use Knp\DoctrineBehaviors\ORM\AbstractSubscriber;
 
 use Doctrine\Common\EventSubscriber,
     Doctrine\ORM\Mapping\ClassMetadata,
@@ -27,7 +27,7 @@ use Doctrine\Common\EventSubscriber,
  *
  * Provides mapping for translatable entities and their translations.
  */
-class TranslatableListener extends AbstractListener
+class TranslatableSubscriber extends AbstractSubscriber
 {
     private $currentLocaleCallable;
     private $translatableTrait;

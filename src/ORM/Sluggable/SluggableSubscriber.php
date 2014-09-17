@@ -8,7 +8,7 @@ namespace Knp\DoctrineBehaviors\ORM\Sluggable;
 
 use Knp\DoctrineBehaviors\Reflection\ClassAnalyzer;
 
-use Knp\DoctrineBehaviors\ORM\AbstractListener;
+use Knp\DoctrineBehaviors\ORM\AbstractSubscriber;
 
 use Doctrine\ORM\Event\LoadClassMetadataEventArgs,
     Doctrine\Common\EventSubscriber,
@@ -20,7 +20,7 @@ use Doctrine\ORM\Event\LoadClassMetadataEventArgs,
  *
  * Adds mapping to sluggable entities.
  */
-class SluggableListener extends AbstractListener
+class SluggableSubscriber extends AbstractSubscriber
 {
     private $sluggableTrait;
 
@@ -30,7 +30,7 @@ class SluggableListener extends AbstractListener
 
         $this->sluggableTrait = $sluggableTrait;
     }
-    
+
     public function loadClassMetadata(LoadClassMetadataEventArgs $eventArgs)
     {
         $classMetadata = $eventArgs->getClassMetadata();

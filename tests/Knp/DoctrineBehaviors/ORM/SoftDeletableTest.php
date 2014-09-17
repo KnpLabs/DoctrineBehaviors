@@ -23,8 +23,8 @@ class SoftDeletableTest extends \PHPUnit_Framework_TestCase
         $em = new EventManager;
 
         $em->addEventSubscriber(
-            new \Knp\DoctrineBehaviors\ORM\SoftDeletable\SoftDeletableListener(
-                new ClassAnalyzer(), 
+            new \Knp\DoctrineBehaviors\ORM\SoftDeletable\SoftDeletableSubscriber(
+                new ClassAnalyzer(),
                 true,
                 'Knp\DoctrineBehaviors\Model\SoftDeletable\SoftDeletable'
         ));

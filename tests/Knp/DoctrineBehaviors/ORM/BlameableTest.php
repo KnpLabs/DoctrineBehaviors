@@ -25,7 +25,7 @@ class BlameableTest extends \PHPUnit_Framework_TestCase
     {
         $em = new EventManager;
 
-        $this->listener = new \Knp\DoctrineBehaviors\ORM\Blameable\BlameableListener(
+        $this->listener = new \Knp\DoctrineBehaviors\ORM\Blameable\BlameableSubscriber(
             new ClassAnalyzer(),
             false,
             'Knp\DoctrineBehaviors\Model\Blameable\Blameable',

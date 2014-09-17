@@ -13,7 +13,7 @@ namespace Knp\DoctrineBehaviors\ORM\SoftDeletable;
 
 use Knp\DoctrineBehaviors\Reflection\ClassAnalyzer;
 
-use Knp\DoctrineBehaviors\ORM\AbstractListener;
+use Knp\DoctrineBehaviors\ORM\AbstractSubscriber;
 
 use Doctrine\Common\Persistence\Mapping\ClassMetadata,
     Doctrine\Common\EventSubscriber,
@@ -26,7 +26,7 @@ use Doctrine\Common\Persistence\Mapping\ClassMetadata,
  * Listens to onFlush event and marks SoftDeletable entities
  * as deleted instead of really removing them.
  */
-class SoftDeletableListener extends AbstractListener
+class SoftDeletableSubscriber extends AbstractSubscriber
 {
     private $softDeletableTrait;
 
@@ -36,7 +36,7 @@ class SoftDeletableListener extends AbstractListener
 
         $this->softDeletableTrait = $softDeletableTrait;
     }
-    
+
     /**
      * Listens to onFlush event.
      *
