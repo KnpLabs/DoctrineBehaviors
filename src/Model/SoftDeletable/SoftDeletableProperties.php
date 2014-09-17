@@ -18,8 +18,5 @@ namespace Knp\DoctrineBehaviors\Model\SoftDeletable;
  */
 trait SoftDeletableProperties
 {
-    /**
-     * @ORM\Column(type="datetime", nullable=true)
-     */
     protected $deletedAt;
 }

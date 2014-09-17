@@ -46,6 +46,14 @@ class SluggableSubscriber extends AbstractSubscriber
                 $classMetadata->addLifecycleCallback('generateSlug', Events::prePersist);
                 $classMetadata->addLifecycleCallback('generateSlug', Events::preUpdate);
             }
+
+            if (!$classMetadata->hasField('slug')) {
+                $classMetadata->mapField(array(
+                    'fieldName' => 'slug',
+                    'type'      => 'string',
+                    'nullable'  => true
+                ));
+            }
         }
     }
 
