@@ -65,6 +65,10 @@ class TimestampableSubscriber extends AbstractSubscriber
      */
     private function isTimestampable(ClassMetadata $classMetadata)
     {
-        return $this->getClassAnalyzer()->hasTrait($classMetadata->reflClass, $this->timestampableTrait, $this->isRecursive);
+        return $this->getClassAnalyzer()->hasTrait(
+            $classMetadata->reflClass,
+            $this->timestampableTrait,
+            $this->isRecursive
+        );
     }
 }

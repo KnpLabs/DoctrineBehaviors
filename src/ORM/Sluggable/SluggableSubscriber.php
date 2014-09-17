@@ -63,6 +63,10 @@ class SluggableSubscriber extends AbstractSubscriber
      */
     private function isSluggable(ClassMetadata $classMetadata)
     {
-        return $this->getClassAnalyzer()->hasTrait($classMetadata->reflClass, $this->sluggableTrait, $this->isRecursive);
+        return $this->getClassAnalyzer()->hasTrait(
+            $classMetadata->reflClass,
+            $this->sluggableTrait,
+            $this->isRecursive
+        );
     }
 }
