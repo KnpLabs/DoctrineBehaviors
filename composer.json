@@ -35,6 +35,7 @@
         "psr-4": { "Knp\\DoctrineBehaviors\\": "src/" }
     },
     "minimum-stability": "dev",
+    "prefer-stable": true,
     "config": {
         "bin-dir": "bin"
     },
