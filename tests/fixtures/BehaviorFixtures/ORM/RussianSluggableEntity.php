@@ -11,8 +11,8 @@ use Knp\DoctrineBehaviors\Model;
  */
 class RussianSluggableEntity extends SluggableEntity
 {
-    protected function getTransliterator()
+    protected function transliterate($string)
     {
-        return ['\Knp\DoctrineBehaviors\Model\Sluggable\Utils', 'transliterateRussian'];
+        return \Knp\DoctrineBehaviors\Model\Sluggable\Utils::transliterateRussian($string);
     }
 } 
