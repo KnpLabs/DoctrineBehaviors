@@ -13,7 +13,7 @@ namespace Knp\DoctrineBehaviors\ORM\Blameable;
 
 use Knp\DoctrineBehaviors\Reflection\ClassAnalyzer;
 
-use Knp\DoctrineBehaviors\ORM\AbstractListener;
+use Knp\DoctrineBehaviors\ORM\AbstractSubscriber;
 
 use Doctrine\Common\Persistence\Mapping\ClassMetadata;
 use Doctrine\ORM\Event\LoadClassMetadataEventArgs;
@@ -24,11 +24,11 @@ use Doctrine\Common\EventSubscriber,
     Doctrine\ORM\Events;
 
 /**
- * BlameableListener handle Blameable entites
+ * BlameableSubscriber handle Blameable entites
  * Adds class metadata depending of user type (entity or string)
  * Listens to prePersist and PreUpdate lifecycle events
  */
-class BlameableListener extends AbstractListener
+class BlameableSubscriber extends AbstractSubscriber
 {
     /**
      * @var callable
@@ -44,7 +44,7 @@ class BlameableListener extends AbstractListener
      * userEntity name
      */
     private $userEntity;
-    
+
     private $blameableTrait;
 
     /**
@@ -302,7 +302,7 @@ class BlameableListener extends AbstractListener
     {
         $this->userCallable = $callable;
     }
-    
+
     /**
      * Checks if entity is blameable
      *

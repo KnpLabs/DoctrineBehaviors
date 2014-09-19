@@ -13,7 +13,7 @@ namespace Knp\DoctrineBehaviors\ORM\Geocodable;
 
 use Knp\DoctrineBehaviors\Reflection\ClassAnalyzer;
 
-use Knp\DoctrineBehaviors\ORM\AbstractListener;
+use Knp\DoctrineBehaviors\ORM\AbstractSubscriber;
 
 use Knp\DoctrineBehaviors\ORM\Geocodable\Type\Point;
 
@@ -28,25 +28,25 @@ use Doctrine\Common\EventSubscriber,
     Doctrine\ORM\Events;
 
 /**
- * GeocodableListener handle Geocodable entites
+ * GeocodableSubscriber handle Geocodable entites
  * Adds doctrine point type
  */
-class GeocodableListener extends AbstractListener
+class GeocodableSubscriber extends AbstractSubscriber
 {
     /**
      * @var callable
      */
     private $geolocationCallable;
-    
+
     private $geocodableTrait;
-    
+
     /**
      * @param callable
      */
     public function __construct(ClassAnalyzer $classAnalyzer, $isRecursive, $geocodableTrait, callable $geolocationCallable = null)
     {
         parent::__construct($classAnalyzer, $isRecursive);
-        
+
         $this->geocodableTrait = $geocodableTrait;
         $this->geolocationCallable = $geolocationCallable;
     }

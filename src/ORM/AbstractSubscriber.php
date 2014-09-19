@@ -14,7 +14,7 @@ namespace Knp\DoctrineBehaviors\ORM;
 use Doctrine\Common\EventSubscriber;
 use Knp\DoctrineBehaviors\Reflection\ClassAnalyzer;
 
-abstract class AbstractListener implements EventSubscriber
+abstract class AbstractSubscriber implements EventSubscriber
 {
     private $classAnalyser;
     protected $isRecursive;

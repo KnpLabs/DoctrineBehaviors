@@ -3,7 +3,7 @@
 [![Build Status](https://secure.travis-ci.org/KnpLabs/DoctrineBehaviors.png)](http://travis-ci.org/KnpLabs/DoctrineBehaviors)
 
 
-This php 5.4+ library is a collection of traits 
+This php 5.4+ library is a collection of traits
 that add behaviors to Doctrine2 entites and repositories.
 
 It currently handles:
@@ -21,9 +21,9 @@ It currently handles:
 ## Notice:
 
 Some behaviors (translatable, timestampable, softDeletable, blameable, geocodable) need Doctrine listeners in order to work.
-Make sure to activate them by reading the [Listeners](#listeners) section.  
+Make sure to activate them by reading the [Listeners](#listeners) section.
 
-Some traits are based on annotation driver.  
+Some traits are based on annotation driver.
 You need to declare `use Doctrine\ORM\Mapping as ORM;` on top of your entity.
 
 
@@ -141,7 +141,7 @@ You now have a working `Category` that behaves like:
 <a name="translatable" id="translatable"></a>
 ### translatable:
 
-Translatable behavior waits for a Category**Translation** entity.  
+Translatable behavior waits for a Category**Translation** entity.
 This naming convention avoids you to handle manually entity associations. It is handled automatically by the TranslationListener.
 
 In order to use Translatable trait, you will have to create this entity.
@@ -199,7 +199,7 @@ After updating the database, ie. with `./console doctrine:schema:update --force`
     $category->translate('fr')->setName('Chaussures');
     $category->translate('en')->setName('Shoes');
     $em->persist($category);
-    
+
     // In order to persist new translations, call mergeNewTranslations method, before flush
     $category->mergeNewTranslations();
 
@@ -264,17 +264,17 @@ so that when you try to call `getName` (for example) it will return you the tran
     $category = new Category;
     $em->persist($category);
     $em->flush();
-    
+
     // I'll delete you tomorow
     $category->setDeletedAt((new \DateTime())->modify('+1 day'));
 
     // Ok, I'm here
     $category->isDeleted(); // === false
-    
+
     /*
      *  24 hours later...
      */
-     
+
     // Ok I'm deleted
     $category->isDeleted(); // === true
 ```
@@ -353,7 +353,7 @@ class Category
     {
         return 'Changed: '.print_r($changeSets, true);
     }
-    
+
     public function getRemoveLogMessage()
     {
         return 'removed!';
@@ -394,7 +394,7 @@ If you're using symfony, you can also configure which callable to use:
 
 Geocodable Provides extensions to PostgreSQL platform in order to work with cube and earthdistance extensions.
 
-It allows you to query entities based on geographical coordinates.  
+It allows you to query entities based on geographical coordinates.
 It also provides an easy entry point to use 3rd party libraries like the exellent [geocoder](https://github.com/willdurand/Geocoder) to transform addresses into latitude and longitude.
 
 
