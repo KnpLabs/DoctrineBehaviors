@@ -16,7 +16,7 @@ use Doctrine\ORM\Event\LoadClassMetadataEventArgs,
     Doctrine\ORM\Mapping\ClassMetadata;
 
 /**
- * Sluggable listener.
+ * Sluggable subscriber.
  *
  * Adds mapping to sluggable entities.
  */

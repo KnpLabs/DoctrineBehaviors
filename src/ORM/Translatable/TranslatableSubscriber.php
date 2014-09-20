@@ -23,7 +23,7 @@ use Doctrine\Common\EventSubscriber,
     Doctrine\ORM\Events;
 
 /**
- * Translatable Doctrine2 listener.
+ * Translatable Doctrine2 subscriber.
  *
  * Provides mapping for translatable entities and their translations.
  */
@@ -191,7 +191,7 @@ class TranslatableSubscriber extends AbstractSubscriber
     }
 
     /**
-     * Returns hash of events, that this listener is bound to.
+     * Returns hash of events, that this subscriber is bound to.
      *
      * @return array
      */

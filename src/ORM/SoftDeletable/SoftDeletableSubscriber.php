@@ -21,7 +21,7 @@ use Doctrine\Common\Persistence\Mapping\ClassMetadata,
     Doctrine\ORM\Events;
 
 /**
- * SoftDeletable Doctrine2 listener.
+ * SoftDeletable Doctrine2 subscriber.
  *
  * Listens to onFlush event and marks SoftDeletable entities
  * as deleted instead of really removing them.
@@ -76,7 +76,7 @@ class SoftDeletableSubscriber extends AbstractSubscriber
     }
 
     /**
-     * Returns list of events, that this listener is listening to.
+     * Returns list of events, that this subscriber is listening to.
      *
      * @return array
      */
