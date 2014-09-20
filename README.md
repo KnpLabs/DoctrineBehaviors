@@ -30,7 +30,7 @@ You need to declare `use Doctrine\ORM\Mapping as ORM;` on top of your entity.
 <a name="listeners" id="listeners"></a>
 ## Listeners
 
-If you use symfony2, you can easilly register them by importing a service definition file:
+If you use symfony2, you can easily register them by importing a service definition file:
 
 ``` yaml
 
