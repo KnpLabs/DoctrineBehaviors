@@ -20,8 +20,5 @@ use Knp\DoctrineBehaviors\ORM\Geocodable\Type\Point;
  */
 trait GeocodableProperties
 {
-    /**
-     * @ORM\Column(type="point", nullable=true)
-     */
     protected $location;
 }

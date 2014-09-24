@@ -46,6 +46,14 @@ class SluggableSubscriber extends AbstractSubscriber
                 $classMetadata->addLifecycleCallback('generateSlug', Events::prePersist);
                 $classMetadata->addLifecycleCallback('generateSlug', Events::preUpdate);
             }
+
+            if (!$classMetadata->hasField('slug')) {
+                $classMetadata->mapField(array(
+                    'fieldName' => 'slug',
+                    'type'      => 'string',
+                    'nullable'  => true
+                ));
+            }
         }
     }
 
@@ -63,6 +71,10 @@ class SluggableSubscriber extends AbstractSubscriber
      */
     private function isSluggable(ClassMetadata $classMetadata)
     {
-        return $this->getClassAnalyzer()->hasTrait($classMetadata->reflClass, $this->sluggableTrait, $this->isRecursive);
+        return $this->getClassAnalyzer()->hasTrait(
+            $classMetadata->reflClass,
+            $this->sluggableTrait,
+            $this->isRecursive
+        );
     }
 }

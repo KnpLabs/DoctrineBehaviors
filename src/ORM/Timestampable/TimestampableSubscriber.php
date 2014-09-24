@@ -48,6 +48,16 @@ class TimestampableSubscriber extends AbstractSubscriber
                 $classMetadata->addLifecycleCallback('updateTimestamps', Events::prePersist);
                 $classMetadata->addLifecycleCallback('updateTimestamps', Events::preUpdate);
             }
+
+            foreach (array('createdAt', 'updatedAt') as $field) {
+                if (!$classMetadata->hasField($field)) {
+                    $classMetadata->mapField(array(
+                        'fieldName' => $field,
+                        'type'      => 'datetime',
+                        'nullable'  => true
+                    ));
+                }
+            }
         }
     }
 
@@ -65,6 +75,10 @@ class TimestampableSubscriber extends AbstractSubscriber
      */
     private function isTimestampable(ClassMetadata $classMetadata)
     {
-        return $this->getClassAnalyzer()->hasTrait($classMetadata->reflClass, $this->timestampableTrait, $this->isRecursive);
+        return $this->getClassAnalyzer()->hasTrait(
+            $classMetadata->reflClass,
+            $this->timestampableTrait,
+            $this->isRecursive
+        );
     }
 }

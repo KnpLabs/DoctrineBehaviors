@@ -13,10 +13,5 @@ namespace Knp\DoctrineBehaviors\Model\Sluggable;
  */
 trait SluggableProperties
 {
-    /**
-     * @var string $slug
-     *
-     * @ORM\Column(type="string")
-     */
     protected $slug;
 }

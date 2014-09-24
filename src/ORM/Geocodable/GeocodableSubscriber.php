@@ -88,6 +88,12 @@ class GeocodableSubscriber extends AbstractSubscriber
             $em->getConfiguration()->addCustomNumericFunction(
                 'DISTANCE', 'Knp\DoctrineBehaviors\ORM\Geocodable\Query\AST\Functions\DistanceFunction'
             );
+
+            $classMetadata->mapField([
+                'fieldName'  => 'location',
+                'type'       => 'point',
+                'nullable'   => true
+            ]);
         }
     }
 

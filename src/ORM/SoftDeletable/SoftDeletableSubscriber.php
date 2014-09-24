@@ -15,7 +15,8 @@ use Knp\DoctrineBehaviors\Reflection\ClassAnalyzer;
 
 use Knp\DoctrineBehaviors\ORM\AbstractSubscriber;
 
-use Doctrine\Common\Persistence\Mapping\ClassMetadata,
+use Doctrine\ORM\Event\LoadClassMetadataEventArgs,
+    Doctrine\Common\Persistence\Mapping\ClassMetadata,
     Doctrine\Common\EventSubscriber,
     Doctrine\ORM\Event\OnFlushEventArgs,
     Doctrine\ORM\Events;
@@ -82,6 +83,26 @@ class SoftDeletableSubscriber extends AbstractSubscriber
      */
     public function getSubscribedEvents()
     {
-        return [Events::onFlush];
+        return [Events::onFlush, Events::loadClassMetadata];
+    }
+
+    public function loadClassMetadata(LoadClassMetadataEventArgs $eventArgs)
+    {
+        $classMetadata = $eventArgs->getClassMetadata();
+
+        if (null === $classMetadata->reflClass) {
+            return;
+        }
+
+        if ($this->isSoftDeletable($classMetadata)) {
+
+            if (!$classMetadata->hasField('deletedAt')) {
+                $classMetadata->mapField(array(
+                    'fieldName' => 'deletedAt',
+                    'type'      => 'datetime',
+                    'nullable'  => true
+                ));
+            }
+        }
     }
 }

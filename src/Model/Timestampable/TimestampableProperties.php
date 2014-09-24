@@ -18,17 +18,7 @@ namespace Knp\DoctrineBehaviors\Model\Timestampable;
  */
 trait TimestampableProperties
 {
-    /**
-     * @var \DateTime $createdAt
-     *
-     * @ORM\Column(type="datetime", nullable=true)
-     */
     protected $createdAt;
 
-    /**
-     * @var \DateTime $updatedAt
-     *
-     * @ORM\Column(type="datetime", nullable=true)
-     */
     protected $updatedAt;
 }
