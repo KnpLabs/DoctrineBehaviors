@@ -97,7 +97,7 @@ class TranslatableTest extends \PHPUnit_Framework_TestCase
     /**
      * @test
      */
-    public function listener_should_configure_entity_with_current_locale()
+    public function subscriber_should_configure_entity_with_current_locale()
     {
         $em = $this->getEntityManager();
 

@@ -20,7 +20,7 @@ use Doctrine\ORM\Event\LoadClassMetadataEventArgs,
     Doctrine\ORM\Mapping\ClassMetadata;
 
 /**
- * Timestampable listener.
+ * Timestampable subscriber.
  *
  * Adds mapping to the timestampable entites.
  */

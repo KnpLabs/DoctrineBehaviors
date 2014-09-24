@@ -20,17 +20,17 @@ It currently handles:
 
 ## Notice:
 
-Some behaviors (translatable, timestampable, softDeletable, blameable, geocodable) need Doctrine listeners in order to work.
-Make sure to activate them by reading the [Listeners](#listeners) section.
+Some behaviors (translatable, timestampable, softDeletable, blameable, geocodable) need Doctrine subscribers in order to work.
+Make sure to activate them by reading the [Subscribers](#subscribers) section.
 
 Some traits are based on annotation driver.
 You need to declare `use Doctrine\ORM\Mapping as ORM;` on top of your entity.
 
 
-<a name="listeners" id="listeners"></a>
-## Listeners
+<a name="subscribers" id="subscribers"></a>
+## Subscribers
 
-If you use symfony2, you can easilly register them by importing a service definition file:
+If you use symfony2, you can easily register them by importing a service definition file:
 
 ``` yaml
 
@@ -47,7 +47,7 @@ You can also register them using doctrine2 api:
 
 <?php
 
-$em->getEventManager()->addEventSubscriber(new \Knp\DoctrineBehaviors\ORM\Translatable\TranslatableListener);
+$em->getEventManager()->addEventSubscriber(new \Knp\DoctrineBehaviors\ORM\Translatable\TranslatableSubscriber);
 // register more if needed
 
 ```
@@ -142,7 +142,7 @@ You now have a working `Category` that behaves like:
 ### translatable:
 
 Translatable behavior waits for a Category**Translation** entity.
-This naming convention avoids you to handle manually entity associations. It is handled automatically by the TranslationListener.
+This naming convention avoids you to handle manually entity associations. It is handled automatically by the TranslationSubscriber.
 
 In order to use Translatable trait, you will have to create this entity.
 
@@ -209,7 +209,7 @@ After updating the database, ie. with `./console doctrine:schema:update --force`
 
 #### guess the current locale
 
-You can configure the way the listener guesses the current locale, by giving a callable as its first argument.
+You can configure the way the subscriber guesses the current locale, by giving a callable as its first argument.
 This library provides a callable object (`Knp\DoctrineBehaviors\ORM\Translatable\CurrentLocaleCallable`) that returns the current locale using Symfony2.
 
 
@@ -305,16 +305,16 @@ so that when you try to call `getName` (for example) it will return you the tran
 Blameable is able to track creators and updators of a given entity.
 A blameable [callable](#callables) is used to get the current user from your application.
 
-In the case you are using a Doctrine Entity to represent your users, you can configure the listener
+In the case you are using a Doctrine Entity to represent your users, you can configure the subscriber
 to manage automatically the association between this user entity and your entites.
 
-Using symfony2, all you have to do is to configure the DI parameter named `%knp.doctrine_behaviors.blameable_listener.user_entity%` with a fully qualified namespace,
+Using symfony2, all you have to do is to configure the DI parameter named `%knp.doctrine_behaviors.blameable_subscriber.user_entity%` with a fully qualified namespace,
 for example:
 
     # app/config/config.yml
 
     parameters:
-        knp.doctrine_behaviors.blameable_listener.user_entity: AppBundle\Entity\User
+        knp.doctrine_behaviors.blameable_subscriber.user_entity: AppBundle\Entity\User
 
 Then, you can use it like that:
 
@@ -325,7 +325,7 @@ Then, you can use it like that:
     $category = new Category;
     $em->persist($category);
 
-    // instances of %knp.doctrine_behaviors.blameable_listener.user_entity%
+    // instances of %knp.doctrine_behaviors.blameable_subscriber.user_entity%
     $creator = $em->getCreatedBy();
     $updater = $em->getUpdatedBy();
 
@@ -363,7 +363,7 @@ class Category
 ```
 
 These messages are then passed to the configured callable.
-You can define your own, by passing another callable to the LoggableListener:
+You can define your own, by passing another callable to the LoggableSubscriber:
 
 
 ``` php
@@ -371,7 +371,7 @@ You can define your own, by passing another callable to the LoggableListener:
 <?php
 
 $em->getEventManager()->addEventSubscriber(
-    new \Knp\DoctrineBehaviors\ORM\Loggable\LoggableListener(
+    new \Knp\DoctrineBehaviors\ORM\Loggable\LoggableSubscriber(
         new ClassAnalyzer,
         function($message) {
             // do stuff with message
@@ -386,7 +386,7 @@ If you're using symfony, you can also configure which callable to use:
 
     // app/config/config.yml
     parameters:
-        knp.doctrine_behaviors.loggable_listener.logger_callable.class: Your\InvokableClass
+        knp.doctrine_behaviors.loggable_subscriber.logger_callable.class: Your\InvokableClass
 
 
 <a name="geocodable" id="geocodable"></a>
@@ -405,8 +405,8 @@ It also provides an easy entry point to use 3rd party libraries like the exellen
     $geocoder = new \Geocoder\Geocoder;
     // register geocoder providers
 
-    // $listener instanceof GeocodableListener (add "knp.doctrine_behaviors.geocodable_listener" into your services.yml)
-    $listener->setGeolocationCallable(function($entity) use($geocoder) {
+    // $subscriber instanceof GeocodableSubscriber (add "knp.doctrine_behaviors.geocodable_subscriber" into your services.yml)
+    $subscriber->setGeolocationCallable(function($entity) use($geocoder) {
         $location = $geocoder->geocode($entity->getAddress());
         return new Point(
             $location->getLatitude(),
@@ -542,7 +542,7 @@ Now we can filtering using:
 <a name="callables" id="callables"></a>
 ## callables
 
-Callables are used by some listeners like blameable and geocodable to fill information based on 3rd party system.
+Callables are used by some subscribers like blameable and geocodable to fill information based on 3rd party system.
 
 For example, the blameable callable can be any symfony2 service that implements  `__invoke` method or any anonymous function, as soon as they return currently logged in user representation (which means everything, a User entity, a string, a username, ...).
 For an example of DI service that is invoked, look at the `Knp\DoctrineBehaviors\ORM\Blameable\UserCallable` class.

@@ -32,7 +32,7 @@ trait TranslationProperties
 
     /**
      * Will be mapped to translatable entity
-     * by TranslatableListener
+     * by TranslatableSubscriber
      */
     protected $translatable;
 }

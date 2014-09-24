@@ -20,19 +20,19 @@ trait BlameableProperties
 {
     /**
      * Will be mapped to either string or user entity
-     * by BlameableListener
+     * by BlameableSubscriber
      */
     protected $createdBy;
 
     /**
      * Will be mapped to either string or user entity
-     * by BlameableListener
+     * by BlameableSubscriber
      */
     protected $updatedBy;
 
     /**
      * Will be mapped to either string or user entity
-     * by BlameableListener
+     * by BlameableSubscriber
      */
     protected $deletedBy;
 }

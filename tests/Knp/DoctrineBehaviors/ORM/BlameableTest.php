@@ -9,7 +9,7 @@ require_once 'EntityManagerProvider.php';
 
 class BlameableTest extends \PHPUnit_Framework_TestCase
 {
-    private $listener;
+    private $subscriber;
 
     use EntityManagerProvider;
 
@@ -25,16 +25,16 @@ class BlameableTest extends \PHPUnit_Framework_TestCase
     {
         $em = new EventManager;
 
-        $this->listener = new \Knp\DoctrineBehaviors\ORM\Blameable\BlameableSubscriber(
+        $this->subscriber = new \Knp\DoctrineBehaviors\ORM\Blameable\BlameableSubscriber(
             new ClassAnalyzer(),
             false,
             'Knp\DoctrineBehaviors\Model\Blameable\Blameable',
             $userCallback,
             $userEntity
         );
-        $this->listener->setUser($user);
+        $this->subscriber->setUser($user);
 
-        $em->addEventSubscriber($this->listener);
+        $em->addEventSubscriber($this->subscriber);
 
         return $em;
     }
@@ -65,9 +65,9 @@ class BlameableTest extends \PHPUnit_Framework_TestCase
         $createdBy = $entity->getCreatedBy();
         $em->clear();
 
-        $listeners = $em->getEventManager()->getListeners()['preUpdate'];
-        $listener = array_pop($listeners);
-        $listener->setUser('user2');
+        $subscribers = $em->getEventManager()->getListeners()['preUpdate'];
+        $subscriber = array_pop($subscribers);
+        $subscriber->setUser('user2');
 
         $entity = $em->getRepository('BehaviorFixtures\ORM\BlameableEntity')->find($id);
         $entity->setTitle('test'); // need to modify at least one column to trigger onUpdate
@@ -96,9 +96,9 @@ class BlameableTest extends \PHPUnit_Framework_TestCase
         $id = $entity->getId();
         $em->clear();
 
-        $listeners = $em->getEventManager()->getListeners()['preRemove'];
-        $listener = array_pop($listeners);
-        $listener->setUser('user3');
+        $subscribers = $em->getEventManager()->getListeners()['preRemove'];
+        $subscriber = array_pop($subscribers);
+        $subscriber->setUser('user3');
 
         $entity = $em->getRepository('BehaviorFixtures\ORM\BlameableEntity')->find($id);
         $em->remove($entity);
@@ -108,7 +108,7 @@ class BlameableTest extends \PHPUnit_Framework_TestCase
         $this->assertEquals('user3', $entity->getDeletedBy());
     }
 
-    public function testListenerWithUserCallback()
+    public function testSubscriberWithUserCallback()
     {
         $user = new \BehaviorFixtures\ORM\UserEntity();
         $user->setUsername('user');
@@ -131,7 +131,7 @@ class BlameableTest extends \PHPUnit_Framework_TestCase
         $em->flush();
         $id = $entity->getId();
         $createdBy = $entity->getCreatedBy();
-        $this->listener->setUser($user2); // switch user for update
+        $this->subscriber->setUser($user2); // switch user for update
 
         $entity = $em->getRepository('BehaviorFixtures\ORM\BlameableEntity')->find($id);
         $entity->setTitle('test'); // need to modify at least one column to trigger onUpdate

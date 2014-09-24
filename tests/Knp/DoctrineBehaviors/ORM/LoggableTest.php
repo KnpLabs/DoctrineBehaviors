@@ -9,7 +9,7 @@ require_once 'EntityManagerProvider.php';
 
 class LoggableTest extends \PHPUnit_Framework_TestCase
 {
-    private $listener;
+    private $subscriber;
     private $logs = [];
 
     use EntityManagerProvider;
@@ -27,13 +27,13 @@ class LoggableTest extends \PHPUnit_Framework_TestCase
         $loggerCallback = function($message) {
             $this->logs[] = $message;
         };
-        $this->listener = new \Knp\DoctrineBehaviors\ORM\Loggable\LoggableSubscriber(
+        $this->subscriber = new \Knp\DoctrineBehaviors\ORM\Loggable\LoggableSubscriber(
             new ClassAnalyzer(),
             false,
             $loggerCallback
         );
 
-        $em->addEventSubscriber($this->listener);
+        $em->addEventSubscriber($this->subscriber);
 
         return $em;
     }
