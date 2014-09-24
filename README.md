@@ -23,9 +23,6 @@ It currently handles:
 Some behaviors (translatable, timestampable, softDeletable, blameable, geocodable) need Doctrine subscribers in order to work.
 Make sure to activate them by reading the [Subscribers](#subscribers) section.
 
-Some traits are based on annotation driver.
-You need to declare `use Doctrine\ORM\Mapping as ORM;` on top of your entity.
-
 
 <a name="subscribers" id="subscribers"></a>
 ## Subscribers
