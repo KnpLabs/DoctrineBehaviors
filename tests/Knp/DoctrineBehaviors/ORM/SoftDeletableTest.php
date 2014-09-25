@@ -103,4 +103,19 @@ class SoftDeletableTest extends \PHPUnit_Framework_TestCase
 
         $this->assertTrue($entity->isDeleted());
     }
+
+    /**
+     * @test
+     * @expectedException Exception
+     */
+    public function should_notice_deprecation()
+    {
+        set_error_handler(function() {throw new \Exception; }, E_USER_DEPRECATED);
+        new \Knp\DoctrineBehaviors\ORM\SoftDeletable\SoftDeletableListener;
+    }
+
+    public function tearDown()
+    {
+        restore_error_handler();
+    }
 }

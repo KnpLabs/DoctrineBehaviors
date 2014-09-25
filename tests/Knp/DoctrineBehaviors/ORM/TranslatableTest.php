@@ -180,4 +180,19 @@ class TranslatableTest extends \PHPUnit_Framework_TestCase
         $em->refresh($entity);
         $this->assertNotEquals('Hallo', $entity->translate('nl')->getTitle());
     }
+
+    /**
+     * @test
+     * @expectedException Exception
+     */
+    public function should_notice_deprecation()
+    {
+        set_error_handler(function() {throw new \Exception; }, E_USER_DEPRECATED);
+        new \Knp\DoctrineBehaviors\ORM\Translatable\TranslatableListener;
+    }
+
+    public function tearDown()
+    {
+        restore_error_handler();
+    }
 }

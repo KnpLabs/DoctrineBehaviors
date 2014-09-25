@@ -190,4 +190,19 @@ class BlameableTest extends \PHPUnit_Framework_TestCase
         $this->assertNull($entity->getCreatedBy(), 'createdBy is a not updated because not a user entity object');
         $this->assertNull($entity->getUpdatedBy(), 'updatedBy is a not updated because not a user entity object');
     }
+
+    /**
+     * @test
+     * @expectedException Exception
+     */
+    public function should_notice_deprecation()
+    {
+        set_error_handler(function() {throw new \Exception; }, E_USER_DEPRECATED);
+        new \Knp\DoctrineBehaviors\ORM\Blameable\BlameableListener;
+    }
+
+    public function tearDown()
+    {
+        restore_error_handler();
+    }
 }

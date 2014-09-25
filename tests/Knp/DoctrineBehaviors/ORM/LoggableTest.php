@@ -124,4 +124,19 @@ class LoggableTest extends \PHPUnit_Framework_TestCase
             'BehaviorFixtures\ORM\LoggableEntity #1 removed'
         );
     }
+
+    /**
+     * @test
+     * @expectedException Exception
+     */
+    public function should_notice_deprecation()
+    {
+        set_error_handler(function() {throw new \Exception; }, E_USER_DEPRECATED);
+        new \Knp\DoctrineBehaviors\ORM\Loggable\LoggableListener;
+    }
+
+    public function tearDown()
+    {
+        restore_error_handler();
+    }
 }

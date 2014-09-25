@@ -161,4 +161,19 @@ class TimestampableTest extends \PHPUnit_Framework_TestCase
             'Update timestamp has changed'
         );
     }
+
+    /**
+     * @test
+     * @expectedException Exception
+     */
+    public function should_notice_deprecation()
+    {
+        set_error_handler(function() {throw new \Exception; }, E_USER_DEPRECATED);
+        new \Knp\DoctrineBehaviors\ORM\Timestampable\TimestampableListener;
+    }
+
+    public function tearDown()
+    {
+        restore_error_handler();
+    }
 }

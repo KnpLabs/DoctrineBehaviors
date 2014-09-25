@@ -100,4 +100,19 @@ class SluggableTest extends \PHPUnit_Framework_TestCase
 
         $this->assertEquals($entity->getSlug(), $expected);
     }
+
+    /**
+     * @test
+     * @expectedException Exception
+     */
+    public function should_notice_deprecation()
+    {
+        set_error_handler(function() {throw new \Exception; }, E_USER_DEPRECATED);
+        new \Knp\DoctrineBehaviors\ORM\Sluggable\SluggableListener;
+    }
+
+    public function tearDown()
+    {
+        restore_error_handler();
+    }
 }

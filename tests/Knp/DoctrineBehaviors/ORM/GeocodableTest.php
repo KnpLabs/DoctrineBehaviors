@@ -110,4 +110,19 @@ class GeocodableTest extends \PHPUnit_Framework_TestCase
         $cities = $repo->findByDistance(new Point(47.896319, 7.352943), 6223000);
         $this->assertCount(3, $cities, 'Paris, Nantes and New-York are less than 6223 km far from Reguisheim');
     }
+
+    /**
+     * @test
+     * @expectedException Exception
+     */
+    public function should_notice_deprecation()
+    {
+        set_error_handler(function() {throw new \Exception; }, E_USER_DEPRECATED);
+        new \Knp\DoctrineBehaviors\ORM\Geocodable\GeocodableListener;
+    }
+
+    public function tearDown()
+    {
+        restore_error_handler();
+    }
 }
