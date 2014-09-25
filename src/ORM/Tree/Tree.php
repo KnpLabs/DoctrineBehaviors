@@ -7,6 +7,8 @@ use Doctrine\ORM\QueryBuilder;
 
 trait Tree
 {
+    abstract public function createQueryBuilder($alias, $indexBy = null);
+
     /**
      * Constructs a query builder to get all root nodes
      *
