@@ -4,9 +4,6 @@ namespace Knp\DoctrineBehaviors\Model\Sortable;
 
 trait Sortable
 {
-    /**
-     * @ORM\Column(type="integer")
-     */
     protected $sort = 1;
 
     private $reordered = false;
