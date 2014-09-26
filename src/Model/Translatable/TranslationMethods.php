@@ -18,15 +18,6 @@ namespace Knp\DoctrineBehaviors\Model\Translatable;
  */
 trait TranslationMethods
 {
-    /**
-     * Returns translation ID.
-     *
-     * @return integer The ID.
-     */
-    public function getId()
-    {
-        return $this->id;
-    }
 
     /**
      * Sets entity, that this translation should be mapped to.

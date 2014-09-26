@@ -13,6 +13,23 @@ class TranslatableEntityTranslation
     use Model\Translatable\Translation;
 
     /**
+     * @ORM\Id
+     * @ORM\Column(type="integer")
+     * @ORM\GeneratedValue(strategy="AUTO")
+     */
+    protected $id;
+
+    /**
+     * Returns translation ID.
+     *
+     * @return integer The ID.
+     */
+    public function getId()
+    {
+        return $this->id;
+    }
+
+    /**
      * @ORM\Column(type="string")
      */
     private $title;
