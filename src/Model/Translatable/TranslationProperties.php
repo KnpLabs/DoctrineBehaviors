@@ -25,9 +25,6 @@ trait TranslationProperties
      */
     protected $id;
 
-    /**
-     * @ORM\Column(type="string")
-     */
     protected $locale;
 
     /**

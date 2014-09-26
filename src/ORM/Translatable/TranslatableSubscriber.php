@@ -109,6 +109,14 @@ class TranslatableSubscriber extends AbstractSubscriber
                 ]],
             ]);
         }
+
+        if (!$classMetadata->hasField('locale')) {
+            $classMetadata->mapField(array(
+                'fieldName' => 'locale',
+                'type'      => 'string'
+            ));
+        }
+
     }
 
     /**
