@@ -82,7 +82,10 @@ class TranslatableSubscriber extends AbstractSubscriber
 
     /**
      * Kept for BC-compatibility purposes : people expect this lib to map ids for
-     * translations
+     * translations.
+     *
+     * @deprecated It should be removed because it probably does not work with
+     *             every doctrine version.
      *
      * @see https://github.com/doctrine/doctrine2/blob/0bff6aadbc9f3fd8167a320d9f4f6cf269382da0/lib/Doctrine/ORM/Mapping/ClassMetadataFactory.php#L508
      */
