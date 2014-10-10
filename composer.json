@@ -28,7 +28,6 @@
         "ext-pdo_sqlite":       "*",
         "ext-pdo_pgsql":        "*",
         "doctrine/orm":         ">=2.2",
-        "doctrine/mongodb-odm": "dev-master",
         "phpunit/phpunit":      "~3.7"
     },
     "autoload": {
