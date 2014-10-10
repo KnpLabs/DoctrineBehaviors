@@ -119,7 +119,7 @@ class TranslatableSubscriber extends AbstractSubscriber
      * @return int
      */
     private function convertFetchString($fetchMode){
-        if (is_int($fetchMode)) return $fetchmode;
+        if (is_int($fetchMode)) return $fetchMode;
 
         switch($fetchMode){
             case "LAZY":
