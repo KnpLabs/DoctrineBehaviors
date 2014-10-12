@@ -110,17 +110,21 @@ trait EntityManagerProvider
             ->will($this->returnValue('Doctrine\\ORM\\EntityRepository'))
         ;
 
-        $config
-            ->expects($this->any())
-            ->method('getQuoteStrategy')
-            ->will($this->returnValue(new DefaultQuoteStrategy))
-        ;
+        if (class_exists('Doctrine\ORM\Mapping\DefaultQuoteStrategy')) {
+            $config
+                ->expects($this->any())
+                ->method('getQuoteStrategy')
+                ->will($this->returnValue(new DefaultQuoteStrategy))
+            ;
+        }
 
-        $config
-            ->expects($this->any())
-            ->method('getRepositoryFactory')
-            ->will($this->returnValue(new DefaultRepositoryFactory()))
-        ;
+        if (class_exists('Doctrine\ORM\Repository\DefaultRepositoryFactory')) {
+            $config
+                ->expects($this->any())
+                ->method('getRepositoryFactory')
+                ->will($this->returnValue(new DefaultRepositoryFactory()))
+            ;
+        }
 
         $config
             ->expects($this->any())
