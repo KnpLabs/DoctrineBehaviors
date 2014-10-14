@@ -138,10 +138,11 @@ You now have a working `Category` that behaves like:
 <a name="translatable" id="translatable"></a>
 ### translatable:
 
-Translatable behavior waits for a Category**Translation** entity.
-This naming convention avoids you to handle manually entity associations. It is handled automatically by the TranslationSubscriber.
+If you're working on a `Category` entity, the `Translatable` behavior expects a
+**CategoryTranslation** entity.  This naming convention avoids you to handle manually entity associations.
+It is handled automatically by the TranslationSubscriber.
 
-In order to use Translatable trait, you will have to create this entity.
+In order to use the Translatable trait, you will have to create this `CategoryTranslation` entity.
 
 
 ``` php
@@ -164,6 +165,11 @@ class CategoryTranslation
     protected $name;
 
     /**
+     * @ORM\Column(type="string", length=255)
+     */
+    protected $description;
+
+    /**
      * @return string
      */
     public function getName()
@@ -179,10 +185,47 @@ class CategoryTranslation
     {
         $this->name = $name;
     }
+
+    /**
+     * @return string
+     */
+    public function getDescription()
+    {
+        return $this->description;
+    }
+
+    /**
+     * @param  string
+     * @return null
+     */
+    public function setDescription($description)
+    {
+        $this->description = $description;
+    }
 }
+```
+The corresponding Category entity needs to `use ORMBehaviors\Translatable\Translatable;`
+and should only contain fields that you do not need to translate.
 
 ```
-The corresponding Category entity needs to `use ORMBehaviors\Translatable\Translatable;`.
+<?php
+use Doctrine\ORM\Mapping as ORM;
+use Knp\DoctrineBehaviors\Model as ORMBehaviors;
+
+/**
+ * @ORM\Entity
+ */
+class Category
+{
+    use ORMBehaviors\Translatable\Translatable;
+
+    /**
+     * @ORM\Column(type="string", length=255)
+     */
+    protected $someFieldYouDoNotNeedToTranslate;
+}
+```
+
 
 NB If you generate the entity with `./console doctrine:generate:entity`, you have to remove the private $id and the `setId` and `getId` functions.
 
