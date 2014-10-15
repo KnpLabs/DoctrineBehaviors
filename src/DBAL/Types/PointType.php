@@ -2,6 +2,7 @@
 
 namespace Knp\DoctrineBehaviors\DBAL\Types;
 
+use Doctrine\DBAL\Platforms\MySqlPlatform;
 use Doctrine\DBAL\Types\Type;
 use Doctrine\DBAL\Platforms\AbstractPlatform;
 use Knp\DoctrineBehaviors\ORM\Geocodable\Type\Point;
@@ -26,6 +27,8 @@ class PointType extends Type
      *
      * @param array            $fieldDeclaration The field declaration.
      * @param AbstractPlatform $platform         The currently used database platform.
+     *
+     * @return string
      */
     public function getSQLDeclaration(array $fieldDeclaration, AbstractPlatform $platform)
     {
@@ -43,10 +46,16 @@ class PointType extends Type
     public function convertToPHPValue($value, AbstractPlatform $platform)
     {
         if (!$value) {
-            return;
+            return null;
         }
 
-        return Point::fromString($value);
+        if ($platform instanceof MySqlPlatform) {
+            $data = sscanf($value, 'POINT(%f %f)');
+        } else {
+            $data = sscanf($value, "(%f,%f)");
+        }
+
+        return new Point($data[0], $data[1]);
     }
 
     /**
@@ -60,9 +69,62 @@ class PointType extends Type
     public function convertToDatabaseValue($value, AbstractPlatform $platform)
     {
         if (!$value) {
-            return;
+            return null;
         }
 
-        return sprintf('(%F,%F)', $value->getLatitude(), $value->getLongitude());
+        if ($platform instanceof MySqlPlatform) {
+            $format = "POINT(%F %F)";
+        } else {
+            $format = "(%F, %F)";
+        }
+
+        return sprintf($format, $value->getLatitude(), $value->getLongitude());
+    }
+
+    /**
+     * Does working with this column require SQL conversion functions?
+     *
+     * This is a metadata function that is required for example in the ORM.
+     * Usage of {@link convertToDatabaseValueSQL} and
+     * {@link convertToPHPValueSQL} works for any type and mostly
+     * does nothing. This method can additionally be used for optimization purposes.
+     *
+     * @return boolean
+     */
+    public function canRequireSQLConversion()
+    {
+        return true;
+    }
+
+    /**
+     * Modifies the SQL expression (identifier, parameter) to convert to a database value.
+     *
+     * @param string                                    $sqlExpr
+     * @param \Doctrine\DBAL\Platforms\AbstractPlatform $platform
+     *
+     * @return string
+     */
+    public function convertToDatabaseValueSQL($sqlExpr, AbstractPlatform $platform)
+    {
+        if ($platform instanceof MySqlPlatform) {
+            return sprintf('PointFromText(%s)', $sqlExpr);
+        } else {
+            return parent::convertToDatabaseValueSQL($sqlExpr, $platform);
+        }
+    }
+
+    /**
+     * @param string                                    $sqlExpr
+     * @param \Doctrine\DBAL\Platforms\AbstractPlatform $platform
+     *
+     * @return string
+     */
+    public function convertToPHPValueSQL($sqlExpr, $platform)
+    {
+        if ($platform instanceof MySqlPlatform) {
+            return sprintf('AsText(%s)', $sqlExpr);
+        } else {
+            return parent::convertToPHPValueSQL($sqlExpr, $platform);
+        }
     }
 }
