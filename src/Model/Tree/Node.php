@@ -31,11 +31,6 @@ trait Node
      */
     private $parentNode;
 
-    /**
-     * @var string $materializedPath
-     *
-     * @ORM\Column(type="string", length=255)
-     */
     protected $materializedPath = '';
 
     /**

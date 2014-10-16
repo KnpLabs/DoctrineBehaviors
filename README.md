@@ -227,8 +227,6 @@ class Category
 ```
 
 
-NB If you generate the entity with `./console doctrine:generate:entity`, you have to remove the private $id and the `setId` and `getId` functions.
-
 After updating the database, ie. with `./console doctrine:schema:update --force`, you can now work on translations using `translate` or `getTranslations` methods.
 
 ``` php

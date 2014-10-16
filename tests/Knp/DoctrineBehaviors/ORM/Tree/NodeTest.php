@@ -5,6 +5,9 @@ namespace Tests\Knp\DoctrineBehaviors\ORM\Tree;
 use Knp\DoctrineBehaviors\Model\Tree\NodeInterface;
 use Tests\Knp\DoctrineBehaviors\ORM\EntityManagerProvider;
 use BehaviorFixtures\ORM\TreeNodeEntity;
+use Knp\DoctrineBehaviors\ORM\Tree\TreeSubscriber;
+use Knp\DoctrineBehaviors\Reflection\ClassAnalyzer;
+use Doctrine\Common\EventManager;
 
 require_once __DIR__.'/../EntityManagerProvider.php';
 
@@ -17,6 +20,21 @@ class NodeTest extends \PHPUnit_Framework_TestCase
         return array(
             'BehaviorFixtures\\ORM\\TreeNodeEntity'
         );
+    }
+
+    protected function getEventManager()
+    {
+        $em = new EventManager;
+
+        $em->addEventSubscriber(
+            new TreeSubscriber(
+                new ClassAnalyzer(),
+                false,
+                'Knp\DoctrineBehaviors\Model\Tree\Node'
+            )
+        );
+
+        return $em;
     }
 
     protected function buildNode(array $values = array())

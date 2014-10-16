@@ -21,6 +21,10 @@ parameters:
     knp.doctrine_behaviors.geocodable_subscriber.geocodable_trait: Knp\DoctrineBehaviors\Model\Geocodable\Geocodable
     knp.doctrine_behaviors.sluggable_subscriber.class: Knp\DoctrineBehaviors\ORM\Sluggable\SluggableSubscriber
     knp.doctrine_behaviors.sluggable_subscriber.sluggable_trait: Knp\DoctrineBehaviors\Model\Sluggable\Sluggable
+    knp.doctrine_behaviors.tree_subscriber.class: Knp\DoctrineBehaviors\ORM\Tree\TreeSubscriber
+    knp.doctrine_behaviors.tree_subscriber.tree_trait: Knp\DoctrineBehaviors\ORM\Tree\Tree
+    knp.doctrine_behaviors.sortable_subscriber.class: Knp\DoctrineBehaviors\ORM\Sortable\SortableSubscriber
+    knp.doctrine_behaviors.sortable_subscriber.sortable_trait: Knp\DoctrineBehaviors\ORM\Sortable\Sortable
 
 services:
     knp.doctrine_behaviors.reflection.class_analyzer:
@@ -64,6 +68,26 @@ services:
             - "@knp.doctrine_behaviors.reflection.class_analyzer"
             - "%knp.doctrine_behaviors.reflection.is_recursive%"
             - "%knp.doctrine_behaviors.timestampable_subscriber.timestampable_trait%"
+        tags:
+            - { name: doctrine.event_subscriber }
+
+    knp.doctrine_behaviors.tree_subscriber:
+        class:   "%knp.doctrine_behaviors.tree_subscriber.class%"
+        public:  false
+        arguments:
+            - "@knp.doctrine_behaviors.reflection.class_analyzer"
+            - "%knp.doctrine_behaviors.reflection.is_recursive%"
+            - "%knp.doctrine_behaviors.tree_subscriber.tree_trait%"
+        tags:
+            - { name: doctrine.event_subscriber }
+
+    knp.doctrine_behaviors.sortable_subscriber:
+        class:   "%knp.doctrine_behaviors.sortable_subscriber.class%"
+        public:  false
+        arguments:
+            - "@knp.doctrine_behaviors.reflection.class_analyzer"
+            - "%knp.doctrine_behaviors.reflection.is_recursive%"
+            - "%knp.doctrine_behaviors.sortable_subscriber.sortable_trait%"
         tags:
             - { name: doctrine.event_subscriber }
 

@@ -18,16 +18,7 @@ namespace Knp\DoctrineBehaviors\Model\Translatable;
  */
 trait TranslationProperties
 {
-    /**
-     * @ORM\Id
-     * @ORM\Column(type="integer")
-     * @ORM\GeneratedValue(strategy="AUTO")
-     */
-    protected $id;
 
-    /**
-     * @ORM\Column(type="string")
-     */
     protected $locale;
 
     /**
