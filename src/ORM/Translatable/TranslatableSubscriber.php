@@ -160,7 +160,7 @@ class TranslatableSubscriber extends AbstractSubscriber
                 }
 
                 $sequenceGenerator = new \Doctrine\ORM\Id\SequenceGenerator(
-                    $this->em->getConfiguration()->getQuoteStrategy()->getSequenceName($definition, $class, $platform),
+                    $em->getConfiguration()->getQuoteStrategy()->getSequenceName($definition, $class, $platform),
                     $definition['allocationSize']
                 );
                 $class->setIdGenerator($sequenceGenerator);
