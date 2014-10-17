@@ -15,17 +15,17 @@ use Knp\DoctrineBehaviors\Reflection\ClassAnalyzer;
 
 use Knp\DoctrineBehaviors\ORM\AbstractSubscriber;
 use Doctrine\ORM\ORMException;
-use Doctrine\DBAL\Platforms\AbstractPlatform;
 use Doctrine\ORM\Mapping\Builder\ClassMetadataBuilder;
 use Doctrine\ORM\Id\BigIntegerIdentityGenerator;
 use Doctrine\ORM\Id\IdentityGenerator;
 
-use Doctrine\Common\EventSubscriber,
-    Doctrine\ORM\Mapping\ClassMetadata,
-    Doctrine\ORM\Mapping\ClassMetadataInfo,
-    Doctrine\ORM\Event\LoadClassMetadataEventArgs,
-    Doctrine\ORM\Event\LifecycleEventArgs,
-    Doctrine\ORM\Events;
+use Doctrine\ORM\Mapping\ClassMetadata;
+use Doctrine\ORM\Mapping\ClassMetadataInfo;
+use Doctrine\ORM\EntityManager;
+use Doctrine\ORM\Event\LoadClassMetadataEventArgs;
+use Doctrine\ORM\Event\LifecycleEventArgs;
+use Doctrine\ORM\Events;
+use Doctrine\DBAL\Platforms;
 
 /**
  * Translatable Doctrine2 subscriber.
@@ -74,8 +74,6 @@ class TranslatableSubscriber extends AbstractSubscriber
             $this->mapId(
                 $classMetadata,
                 $eventArgs->getEntityManager()
-                    ->getConnection()
-                    ->getDatabasePlatform()
             );
         }
     }
@@ -89,8 +87,9 @@ class TranslatableSubscriber extends AbstractSubscriber
      *
      * @see https://github.com/doctrine/doctrine2/blob/0bff6aadbc9f3fd8167a320d9f4f6cf269382da0/lib/Doctrine/ORM/Mapping/ClassMetadataFactory.php#L508
      */
-    private function mapId(ClassMetadata $class, AbstractPlatform $platform)
+    private function mapId(ClassMetadata $class, EntityManager $em)
     {
+        $platform = $em->getConnection()->getDatabasePlatform();
         if (!$class->hasField('id')) {
             $builder = new ClassMetadataBuilder($class);
             $builder->createField('id', 'integer')->isPrimaryKey()->generatedValue()->build();
@@ -127,7 +126,7 @@ class TranslatableSubscriber extends AbstractSubscriber
                         $definition['quoted'] = true;
                     }
 
-                    $sequenceName = $this->em->getConfiguration()->getQuoteStrategy()->getSequenceName($definition, $class, $platform);
+                    $sequenceName = $em->getConfiguration()->getQuoteStrategy()->getSequenceName($definition, $class, $platform);
                 }
 
                 $generator = ($fieldName && $class->fieldMappings[$fieldName]['type'] === 'bigint')
