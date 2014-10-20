@@ -40,13 +40,18 @@ class LoggableTest extends \PHPUnit_Framework_TestCase
 
     /**
      * @test
+     *
+     * @dataProvider dataProviderValues
      */
-    public function should_log_changeset_message_when_created()
+    public function should_log_changeset_message_when_created($field, $value, $expected)
     {
         $em = $this->getEntityManager($this->getEventManager());
 
         $entity = new \BehaviorFixtures\ORM\LoggableEntity();
-        $entity->setTitle('test');
+
+        $set = "set" . ucfirst($field);
+
+        $entity->$set($value);
 
         $em->persist($entity);
         $em->flush();
@@ -56,16 +61,19 @@ class LoggableTest extends \PHPUnit_Framework_TestCase
             $this->logs[0],
             'BehaviorFixtures\ORM\LoggableEntity #1 created'
         );
+
         $this->assertEquals(
             $this->logs[1],
-            'BehaviorFixtures\ORM\LoggableEntity #1 : property "title" changed from "" to "test"'
+            'BehaviorFixtures\ORM\LoggableEntity #1 : property "' . $field . '" changed from "" to "' . $expected . '"'
         );
     }
 
     /**
      * @test
+     *
+     * @dataProvider dataProviderValues
      */
-    public function should_log_changeset_message_when_updated()
+    public function should_log_changeset_message_when_updated($field, $value, $expected)
     {
         $em = $this->getEntityManager($this->getEventManager());
 
@@ -74,13 +82,15 @@ class LoggableTest extends \PHPUnit_Framework_TestCase
         $em->persist($entity);
         $em->flush();
 
-        $entity->setTitle('test2');
+        $set = "set" . ucfirst($field);
+
+        $entity->$set($value);
         $em->flush();
 
         $this->assertCount(3, $this->logs);
         $this->assertEquals(
             $this->logs[2],
-            'BehaviorFixtures\ORM\LoggableEntity #1 : property "title" changed from "" to "test2"'
+            'BehaviorFixtures\ORM\LoggableEntity #1 : property "' . $field . '" changed from "" to "' . $expected . '"'
         );
     }
 
@@ -122,6 +132,20 @@ class LoggableTest extends \PHPUnit_Framework_TestCase
         $this->assertEquals(
             $this->logs[2],
             'BehaviorFixtures\ORM\LoggableEntity #1 removed'
+        );
+    }
+
+    public function dataProviderValues() {
+        return array(
+            array(
+                "title", "test", "test"
+            ),
+            array(
+                "roles", array("x" => "y"), "an array"
+            ),
+            array(
+                "date", new \DateTime("2014-02-02 12:20:30"), "2014-02-02 12:20:30"
+            )
         );
     }
 }

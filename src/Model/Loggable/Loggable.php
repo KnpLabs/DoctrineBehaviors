@@ -25,20 +25,22 @@ trait Loggable
     {
         $message = [];
         foreach ($changeSets as $property => $changeSet) {
-            for($i = 0 , $s = sizeof($changeSet); $i < $s ; $i++) {
+            for ($i = 0, $s = sizeof($changeSet); $i < $s; $i++) {
                 if ($changeSet[$i] instanceof \DateTime) {
-                    $changeSet[$i] = $changeSet[$i]->format("Y-m-d H:M:S");
+                    $changeSet[$i] = $changeSet[$i]->format("Y-m-d H:i:s");
                 }
             }
-            
-            $message[] = sprintf(
-                '%s #%d : property "%s" changed from "%s" to "%s"',
-                __CLASS__,
-                $this->getId(),
-                $property,
-                $changeSet[0],
-                $changeSet[1]
-            );
+
+            if ($changeSet[0] != $changeSet[1]) {
+                $message[] = sprintf(
+                    '%s #%d : property "%s" changed from "%s" to "%s"',
+                    __CLASS__,
+                    $this->getId(),
+                    $property,
+                    !is_array($changeSet[0]) ? $changeSet[0] : "an array",
+                    !is_array($changeSet[1]) ? $changeSet[1] : "an array"
+                );
+            }
         }
 
         return implode("\n", $message);
