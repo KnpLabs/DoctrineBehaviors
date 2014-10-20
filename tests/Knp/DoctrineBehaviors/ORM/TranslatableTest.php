@@ -112,7 +112,7 @@ class TranslatableTest extends \PHPUnit_Framework_TestCase
         );
 
         $entity->translate('en')->setTitle('great');
-        $entity->translate('fr')->setTitle('fabuleux');
+        $entity->translate('fr', false)->setTitle('fabuleux');
         $entity->mergeNewTranslations();
 
         $em->persist($entity);
