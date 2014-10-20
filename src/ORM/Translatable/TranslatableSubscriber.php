@@ -227,12 +227,9 @@ class TranslatableSubscriber extends AbstractSubscriber
 
         $name = $classMetadata->getTableName().'_unique_translation';
         if (!$this->hasUniqueTranslationConstraint($classMetadata, $name)) {
-            $classMetadata->setPrimaryTable([
-                'uniqueConstraints' => [[
-                    'name'    => $name,
-                    'columns' => ['translatable_id', 'locale' ]
-                ]],
-            ]);
+            $classMetadata->table['uniqueConstraints'][$name] = [
+                'columns' => ['translatable_id', 'locale' ]
+            ];
         }
 
         if (!$classMetadata->hasField('locale')) {
