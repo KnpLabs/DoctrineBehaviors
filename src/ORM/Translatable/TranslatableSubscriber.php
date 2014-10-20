@@ -272,11 +272,7 @@ class TranslatableSubscriber extends AbstractSubscriber
             return;
         }
 
-        $constraints = array_filter($classMetadata->table['uniqueConstraints'], function($constraint) use ($name) {
-            return $name === $constraint['name'];
-        });
-
-        return 0 !== count($constraints);
+        return isset($classMetadata->table['uniqueConstraints'][$name]);
     }
 
     /**
