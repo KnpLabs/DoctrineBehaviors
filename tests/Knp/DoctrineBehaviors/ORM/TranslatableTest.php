@@ -82,6 +82,67 @@ class TranslatableTest extends \PHPUnit_Framework_TestCase
     /**
      * @test
      */
+    public function should_update_and_add_new_translations()
+    {
+        $em = $this->getEntityManager();
+
+        $entity = new \BehaviorFixtures\ORM\TranslatableEntity();
+        $entity->translate('en')->setTitle('awesome');
+        $entity->translate('ru')->setTitle('удивительный');
+        $entity->mergeNewTranslations();
+
+        $em->persist($entity);
+        $em->flush();
+        $id = $entity->getId();
+        $em->clear();
+
+        $entity = $em
+            ->getRepository('BehaviorFixtures\ORM\TranslatableEntity')
+            ->find($id)
+        ;
+
+        $this->assertEquals(
+            'awesome',
+            $entity->translate('en')->getTitle()
+        );
+
+        $this->assertEquals(
+            'удивительный',
+            $entity->translate('ru')->getTitle()
+        );
+
+        $entity->translate('en')->setTitle('great');
+        $entity->translate('fr')->setTitle('fabuleux');
+        $entity->mergeNewTranslations();
+
+        $em->persist($entity);
+        $em->flush();
+        $em->clear();
+
+        $entity = $em
+            ->getRepository('BehaviorFixtures\ORM\TranslatableEntity')
+            ->find($id)
+        ;
+
+        $this->assertEquals(
+            'great',
+            $entity->translate('en')->getTitle()
+        );
+
+        $this->assertEquals(
+            'fabuleux',
+            $entity->translate('fr')->getTitle()
+        );
+
+        $this->assertEquals(
+            'удивительный',
+            $entity->translate('ru')->getTitle()
+        );
+    }
+
+    /**
+     * @test
+     */
     public function translate_method_should_always_return_translation_object()
     {
         $em = $this->getEntityManager();
