@@ -18,6 +18,10 @@ namespace Knp\DoctrineBehaviors\Model\Translatable;
  */
 trait TranslationProperties
 {
+    /**
+     * Restored to resolve BC-break in #75e1187
+     */
+    protected $id;
 
     protected $locale;
 

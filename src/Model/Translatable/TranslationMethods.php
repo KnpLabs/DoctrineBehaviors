@@ -20,6 +20,14 @@ trait TranslationMethods
 {
 
     /**
+     * Restored to resolve BC-break in #75e1187
+     */
+    public function getId()
+    {
+        return $this->id;
+    }
+
+    /**
      * Sets entity, that this translation should be mapped to.
      *
      * @param Translatable $translatable The translatable
