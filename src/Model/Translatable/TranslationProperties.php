@@ -18,7 +18,14 @@ namespace Knp\DoctrineBehaviors\Model\Translatable;
  */
 trait TranslationProperties
 {
+    /**
+     * @var int
+     */
+    protected $id;
 
+    /**
+     * @var string
+     */
     protected $locale;
 
     /**
