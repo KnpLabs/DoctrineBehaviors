@@ -81,7 +81,9 @@ trait SoftDeletableMethods
      * Set the delete date to given date.
      *
      * @param DateTime|null $date
-     * @param Object
+     * @param               Object
+     *
+     * @return $this
      */
     public function setDeletedAt(\DateTime $date)
     {

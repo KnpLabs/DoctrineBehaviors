@@ -34,9 +34,13 @@ trait GeocodableMethods
      * Set location.
      *
      * @param location the value to set.
+     *
+     * @return $this
      */
     public function setLocation(Point $location)
     {
         $this->location = $location;
+
+        return $this;
     }
 }
