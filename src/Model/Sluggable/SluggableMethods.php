@@ -74,9 +74,17 @@ trait SluggableMethods
             $usableValues = [];
 
             foreach ($fields as $field) {
-                // Too bad empty is a language construct...otherwise we could use the return value in a write context :)
-                $methodName = 'get' . ucfirst($field);
-                $val = $this->{$methodName}();
+                if (property_exists($this, $field)) {
+                    $val = $this->{$field};
+                } else {
+                    $methodName = 'get' . ucfirst($field);
+                    if (method_exists($this, $methodName)) {
+                        $val = $this->{$methodName}();
+                    } else {
+                        $val = null;
+                    }
+                }
+
                 if ( !empty( $val ) ) {
                     $usableValues[] = $val;
                 }
