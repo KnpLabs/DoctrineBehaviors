@@ -87,7 +87,11 @@ trait SluggableMethods
 
             // generate the slug itself
             $sluggableText = implode($usableValues, ' ');
-            $urlized = strtolower( trim( preg_replace("/[^a-zA-Z0-9\/_|+ -]/", '', iconv('UTF-8', 'ASCII//TRANSLIT', $sluggableText) ), $this->getSlugDelimiter() ) );
+
+            $transliterator = new Transliterator;
+            $sluggableText = $transliterator->transliterate($sluggableText, $this->getSlugDelimiter());
+
+            $urlized = strtolower( trim( preg_replace("/[^a-zA-Z0-9\/_|+ -]/", '', $sluggableText ), $this->getSlugDelimiter() ) );
             $urlized = preg_replace("/[\/_|+ -]+/", $this->getSlugDelimiter(), $urlized);
 
             $this->slug = $urlized;

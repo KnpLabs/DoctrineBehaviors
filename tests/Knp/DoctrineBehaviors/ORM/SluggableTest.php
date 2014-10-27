@@ -13,9 +13,9 @@ class SluggableTest extends \PHPUnit_Framework_TestCase
 
     protected function getUsedEntityFixtures()
     {
-        return array(
+        return [
             'BehaviorFixtures\\ORM\\SluggableEntity'
-        );
+        ];
     }
 
     protected function getEventManager()
@@ -59,21 +59,36 @@ class SluggableTest extends \PHPUnit_Framework_TestCase
     {
         $em = $this->getEntityManager();
 
-        $entity = new \BehaviorFixtures\ORM\SluggableEntity();
+        $data = [
+            [
+                'slug' => 'the-name',
+                'name' => 'The name',
+            ],
+            [
+                'slug' => 'loic-rene',
+                'name' => 'Löic & René',
+            ],
+            [
+                'slug' => 'ivan-ivanovich',
+                'name' => 'Иван Иванович',
+            ]
+        ];
 
-        $expected = 'the-name';
+        foreach ($data as $row) {
+            $entity = new \BehaviorFixtures\ORM\SluggableEntity();
 
-        $entity->setName('The name');
+            $entity->setName($row['name']);
 
-        $em->persist($entity);
-        $em->flush();
+            $em->persist($entity);
+            $em->flush();
 
-        $entity->setDate(new \DateTime);
+            $entity->setDate(new \DateTime);
 
-        $em->persist($entity);
-        $em->flush();
+            $em->persist($entity);
+            $em->flush();
 
-        $this->assertEquals($entity->getSlug(), $expected);
+            $this->assertEquals($row['slug'], $entity->getSlug());
+        }
     }
 
     public function testUpdatedSlug()
