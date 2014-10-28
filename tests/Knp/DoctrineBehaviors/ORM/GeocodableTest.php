@@ -13,6 +13,11 @@ class GeocodableTest extends \PHPUnit_Framework_TestCase
 {
     use EntityManagerProvider;
 
+    /**
+     * @var callable $callable
+     */
+    private $callable;
+
     protected function getUsedEntityFixtures()
     {
         return array(
@@ -20,27 +25,36 @@ class GeocodableTest extends \PHPUnit_Framework_TestCase
         );
     }
 
+    /**
+     * @return \Doctrine\Common\EventManager
+     */
     protected function getEventManager()
     {
         $em = new EventManager;
+
+        if ($this->callable === false) {
+            $callable = function ($entity) {
+                if ($location = $entity->getLocation()) {
+                    return $location;
+                }
+
+                return Point::fromArray(
+                    [
+                        'longitude' => 47.7,
+                        'latitude' => 7.9
+                    ]
+                );
+            };
+        } else {
+            $callable = $this->callable;
+        }
 
         $em->addEventSubscriber(
             new \Knp\DoctrineBehaviors\ORM\Geocodable\GeocodableSubscriber(
                 new ClassAnalyzer(),
                 false,
                 'Knp\DoctrineBehaviors\Model\Geocodable\Geocodable',
-                function ($entity) {
-                    if ($location = $entity->getLocation()) {
-                        return $location;
-                    }
-
-                    return Point::fromArray(
-                        [
-                            'longitude' => 47.7,
-                            'latitude' => 7.9
-                        ]
-                    );
-                }
+                $callable
             )
         );
 
@@ -119,6 +133,16 @@ class GeocodableTest extends \PHPUnit_Framework_TestCase
         $em->flush();
 
         $this->assertLocation($location, $entity->getLocation());
+    }
+
+    /**
+     * @dataProvider dataSetCities
+     */
+    public function testUpdateWithoutEditWithGeocodableWatcher($city, array $location, array $newLocation)
+    {
+        $this->callable = null;
+
+        $this->testUpdateWithEditLocation($city, $location, $newLocation);
     }
 
     public function testGetLocation()

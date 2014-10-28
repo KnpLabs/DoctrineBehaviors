@@ -37,8 +37,6 @@ class DistanceFunction extends FunctionNode
         );
     }
 
-
-
     /**
      * Parses DQL function.
      *

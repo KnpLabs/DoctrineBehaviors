@@ -124,7 +124,11 @@ class GeocodableSubscriber extends AbstractSubscriber
 
             $oldValue = $entity->getLocation();
             if (!$oldValue instanceof Point || $override) {
-                $entity->setLocation($this->getLocation($entity));
+                $newLocation = $this->getLocation($entity);
+
+                if ($newLocation !== false) {
+                    $entity->setLocation($newLocation);
+                }
 
                 $uow->propertyChanged($entity, 'location', $oldValue, $entity->getLocation());
                 $uow->scheduleExtraUpdate(
@@ -153,7 +157,7 @@ class GeocodableSubscriber extends AbstractSubscriber
     public function getLocation($entity)
     {
         if (null === $this->geolocationCallable) {
-            return;
+            return false;
         }
 
         $callable = $this->geolocationCallable;
