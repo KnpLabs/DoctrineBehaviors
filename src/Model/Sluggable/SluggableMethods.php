@@ -65,36 +65,50 @@ trait SluggableMethods
     }
 
     /**
+     * @param $values
+     * @return mixed|string
+     */
+    private function generateSlugValue($values)
+    {
+        $usableValues = [];
+        foreach ($values as $fieldName => $fieldValue) {
+            if (!empty($fieldValue)) {
+                $usableValues[] = $fieldValue;
+            }
+        }
+
+        if (count($usableValues) < 1) {
+            throw new \UnexpectedValueException(
+                'Sluggable expects to have at least one usable (non-empty) field from the following: [ ' . implode(array_keys($values), ',') .' ]'
+            );
+        }
+
+        // generate the slug itself
+        $sluggableText = implode(' ', $usableValues);
+
+        $transliterator = new Transliterator;
+        $sluggableText = $transliterator->transliterate($sluggableText, $this->getSlugDelimiter());
+
+        $urlized = strtolower( trim( preg_replace("/[^a-zA-Z0-9\/_|+ -]/", '', $sluggableText ), $this->getSlugDelimiter() ) );
+        $urlized = preg_replace("/[\/_|+ -]+/", $this->getSlugDelimiter(), $urlized);
+
+        return $urlized;
+    }
+
+    /**
      * Generates and sets the entity's slug. Called prePersist and preUpdate
      */
     public function generateSlug()
     {
         if ( $this->getRegenerateSlugOnUpdate() || empty( $this->slug ) ) {
             $fields = $this->getSluggableFields();
-            $usableValues = [];
 
+            $values = [];
             foreach ($fields as $field) {
-                // Too bad empty is a language construct...otherwise we could use the return value in a write context :)
-                $val = $this->{$field};
-                if ( !empty( $val ) ) {
-                    $usableValues[] = $val;
-                }
+                $values[] = $this->{$field};
             }
 
-            if ( count($usableValues) < 1 ) {
-                throw new \UnexpectedValueException('Sluggable expects to have at least one usable (non-empty) field from the following: [ ' . implode($fields, ',') .' ]');
-            }
-
-            // generate the slug itself
-            $sluggableText = implode($usableValues, ' ');
-
-            $transliterator = new Transliterator;
-            $sluggableText = $transliterator->transliterate($sluggableText, $this->getSlugDelimiter());
-
-            $urlized = strtolower( trim( preg_replace("/[^a-zA-Z0-9\/_|+ -]/", '', $sluggableText ), $this->getSlugDelimiter() ) );
-            $urlized = preg_replace("/[\/_|+ -]+/", $this->getSlugDelimiter(), $urlized);
-
-            $this->slug = $urlized;
+            $this->slug = $this->generateSlugValue($values);
         }
     }
 }

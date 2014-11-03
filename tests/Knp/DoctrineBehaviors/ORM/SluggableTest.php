@@ -52,7 +52,7 @@ class SluggableTest extends \PHPUnit_Framework_TestCase
         $entity = $em->getRepository('BehaviorFixtures\ORM\SluggableEntity')->find($id);
 
         $this->assertNotNull($entity);
-        $this->assertEquals($entity->getSlug(), $expected);
+        $this->assertEquals($expected, $entity->getSlug());
     }
 
     public function testNotUpdatedSlug()
@@ -113,6 +113,6 @@ class SluggableTest extends \PHPUnit_Framework_TestCase
         $em->persist($entity);
         $em->flush();
 
-        $this->assertEquals($entity->getSlug(), $expected);
+        $this->assertEquals($expected, $entity->getSlug());
     }
 }
