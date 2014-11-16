@@ -3,6 +3,7 @@ language: php
 php:
   - 5.4
   - 5.5
+  - 5.6
 
 env:
   - DOCTRINE_COMMON_VERSION="~2.2.0"
@@ -17,6 +18,6 @@ before_script:
   - sudo -u postgres psql orm_behaviors_test -c "create extension cube"
   - sudo -u postgres psql orm_behaviors_test -c "create extension earthdistance"
   - composer require doctrine/common:${DOCTRINE_COMMON_VERSION}
+  - bin/parallel-lint -e php,phpt --exclude vendor .
 
 script: bin/phpunit --testdox
-
