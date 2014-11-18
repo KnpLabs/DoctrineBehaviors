@@ -31,10 +31,14 @@ trait TranslationMethods
      * Sets entity, that this translation should be mapped to.
      *
      * @param Translatable $translatable The translatable
+     *
+     * @return $this
      */
     public function setTranslatable($translatable)
     {
         $this->translatable = $translatable;
+
+        return $this;
     }
 
     /**
@@ -51,10 +55,14 @@ trait TranslationMethods
      * Sets locale name for this translation.
      *
      * @param string $locale The locale
+     *
+     * @return $this
      */
     public function setLocale($locale)
     {
         $this->locale = $locale;
+
+        return $this;
     }
 
     /**

@@ -22,11 +22,15 @@ trait Sortable
      * Set sort.
      *
      * @param sort the value to set.
+     *
+     * @return $this
      */
     public function setSort($sort)
     {
         $this->reordered = $this->sort !== $sort;
         $this->sort      = $sort;
+
+        return $this;
     }
 
     public function isReordered()
@@ -34,8 +38,13 @@ trait Sortable
         return $this->reordered;
     }
 
+    /**
+     * @return $this
+     */
     public function setReordered()
     {
         $this->reordered = true;
+
+        return $this;
     }
 }
