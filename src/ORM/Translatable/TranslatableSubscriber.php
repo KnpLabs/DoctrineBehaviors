@@ -52,6 +52,7 @@ class TranslatableSubscriber extends AbstractSubscriber
         $this->translationTrait = $translationTrait;
         $this->translatableFetchMode = $this->convertFetchString($translatableFetchMode);
         $this->translationFetchMode = $this->convertFetchString($translationFetchMode);
+        $this->annotationReader = $annotationReader;
     }
 
     /**
