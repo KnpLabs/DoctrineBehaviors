@@ -12,6 +12,9 @@
 namespace Knp\DoctrineBehaviors\Model\Translatable;
 
 use Doctrine\Common\Collections\ArrayCollection;
+use Doctrine\Common\Annotations\AnnotationReader;
+use Doctrine\Common\Annotations\CachedReader;
+use Doctrine\Common\Cache\ArrayCache;
 
 /**
  * Translatable trait.
@@ -151,7 +154,15 @@ trait TranslatableMethods
      */
     public static function getTranslationEntityClass()
     {
-        return __CLASS__.'Translation';
+        $reflectionClass = new \ReflectionClass(__CLASS__);
+        $reader = new CachedReader(new AnnotationReader(), new ArrayCache());
+        $translationReference = $reader->getClassAnnotations($reflectionClass, 'Knp\DoctrineBehaviours\Annotations\TranslationReference');
+        if ($translationReference) {
+            return $translationReference->className;
+        }
+        else {
+            return __CLASS__.'Translation';
+        }
     }
 
     /**
