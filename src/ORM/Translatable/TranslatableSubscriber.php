@@ -26,7 +26,7 @@ use Doctrine\ORM\Event\LoadClassMetadataEventArgs;
 use Doctrine\ORM\Event\LifecycleEventArgs;
 use Doctrine\ORM\Events;
 use Doctrine\DBAL\Platforms;
-use Doctrine\Common\Annotations;
+use Doctrine\Common\Annotations\Reader;
 
 /**
  * Translatable Doctrine2 subscriber.
