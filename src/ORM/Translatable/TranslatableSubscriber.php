@@ -200,13 +200,15 @@ class TranslatableSubscriber extends AbstractSubscriber
     private function mapTranslatable(ClassMetadata $classMetadata)
     {
         if (!$classMetadata->hasAssociation('translations')) {
+            $translationReference = $this->annotationReader->getClassAnnotation($classMetadata->reflClass, 'Knp\DoctrineBehaviors\Annotations\TranslateReference');
+            $targetEntity = $translationReference ? $translationReference->translationClass : $classMetadata->name.'Translation';
             $classMetadata->mapOneToMany([
                 'fieldName'     => 'translations',
                 'mappedBy'      => 'translatable',
                 'indexBy'       => 'locale',
                 'cascade'       => ['persist', 'merge', 'remove'],
                 'fetch'         => $this->translatableFetchMode,
-                'targetEntity'  => $classMetadata->name.'Translation',
+                'targetEntity'  => $targetEntity,
                 'orphanRemoval' => true
             ]);
         }
