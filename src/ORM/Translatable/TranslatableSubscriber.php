@@ -26,6 +26,7 @@ use Doctrine\ORM\Event\LoadClassMetadataEventArgs;
 use Doctrine\ORM\Event\LifecycleEventArgs;
 use Doctrine\ORM\Events;
 use Doctrine\DBAL\Platforms;
+use Doctrine\Common\Annotations;
 
 /**
  * Translatable Doctrine2 subscriber.
@@ -39,9 +40,10 @@ class TranslatableSubscriber extends AbstractSubscriber
     private $translationTrait;
     private $translatableFetchMode;
     private $translationFetchMode;
+    private $annotationReader;
 
     public function __construct(ClassAnalyzer $classAnalyzer, $isRecursive, callable $currentLocaleCallable = null,
-                                $translatableTrait, $translationTrait, $translatableFetchMode, $translationFetchMode)
+                                $translatableTrait, $translationTrait, $translatableFetchMode, $translationFetchMode, Reader $annotationReader)
     {
         parent::__construct($classAnalyzer, $isRecursive);
 
