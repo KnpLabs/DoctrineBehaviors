@@ -42,6 +42,7 @@ services:
             - "%knp.doctrine_behaviors.translatable_subscriber.translation_trait%"
             - "%knp.doctrine_behaviors.translatable_subscriber.translatable_fetch_method%"
             - "%knp.doctrine_behaviors.translatable_subscriber.translation_fetch_method%"
+            - "@annotation_reader"
         tags:
             - { name: doctrine.event_subscriber }
 

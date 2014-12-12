@@ -156,9 +156,9 @@ trait TranslatableMethods
     {
         $reflectionClass = new \ReflectionClass(__CLASS__);
         $reader = new CachedReader(new AnnotationReader(), new ArrayCache());
-        $translationReference = $reader->getClassAnnotations($reflectionClass, 'Knp\DoctrineBehaviours\Annotations\TranslationReference');
+        $translationReference = $reader->getClassAnnotation($reflectionClass, 'Knp\DoctrineBehaviors\Annotations\TranslateReference');
         if ($translationReference) {
-            return $translationReference->className;
+            return $translationReference->translationClass;
         }
         else {
             return __CLASS__.'Translation';

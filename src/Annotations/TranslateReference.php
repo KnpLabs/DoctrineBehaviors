@@ -9,12 +9,13 @@
  * file that was distributed with this source code.
  */
 
-namespace Knp\DoctrineBehaviours\Annotations;
-
+namespace Knp\DoctrineBehaviors\Annotations;
 /**
- * TranslationReference annotation
+ * TranslateReference annotation
  * @Annotation
+ * @Target("CLASS")
  */
-class TranslationReference {
-    public $className;
-} 
+class TranslateReference {
+    public $translatableClass;
+    public $translationClass;
+}
