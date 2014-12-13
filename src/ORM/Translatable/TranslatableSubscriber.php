@@ -232,7 +232,7 @@ class TranslatableSubscriber extends AbstractSubscriber
             ];
         }
 
-        if (!$classMetadata->hasField('locale')) {
+        if (!($classMetadata->hasField('locale') || $classMetadata->hasAssociation('locale'))) {
             $classMetadata->mapField(array(
                 'fieldName' => 'locale',
                 'type'      => 'string'

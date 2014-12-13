@@ -49,7 +49,7 @@ trait TranslatableMethods
      */
     public function addTranslation($translation)
     {
-        $this->getTranslations()->set($translation->getLocale(), $translation);
+        $this->getTranslations()->set((string)$translation->getLocale(), $translation);
         $translation->setTranslatable($this);
 
         return $this;
@@ -99,7 +99,7 @@ trait TranslatableMethods
         $translation = new $class();
         $translation->setLocale($locale);
 
-        $this->getNewTranslations()->set($translation->getLocale(), $translation);
+        $this->getNewTranslations()->set((string)$translation->getLocale(), $translation);
         $translation->setTranslatable($this);
 
         return $translation;
