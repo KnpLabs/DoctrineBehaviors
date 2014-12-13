@@ -2,6 +2,7 @@
 
 namespace Tests\Knp\DoctrineBehaviors\ORM;
 
+use Doctrine\Common\Annotations\AnnotationReader;
 use Knp\DoctrineBehaviors\Reflection\ClassAnalyzer;
 use Doctrine\Common\EventManager;
 use Doctrine\ORM\Mapping\ClassMetadataInfo;
@@ -23,7 +24,6 @@ class TranslatableTest extends \PHPUnit_Framework_TestCase
     protected function getEventManager()
     {
         $em = new EventManager;
-
         $em->addEventSubscriber(new \Knp\DoctrineBehaviors\ORM\Translatable\TranslatableSubscriber(
             new ClassAnalyzer(),
             false,
@@ -34,7 +34,8 @@ class TranslatableTest extends \PHPUnit_Framework_TestCase
             'Knp\DoctrineBehaviors\Model\Translatable\Translatable',
             'Knp\DoctrineBehaviors\Model\Translatable\Translation',
             'LAZY',
-            'LAZY'
+            'LAZY',
+            new AnnotationReader()
         ));
 
         return $em;
