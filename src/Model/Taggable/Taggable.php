@@ -22,7 +22,7 @@ trait Taggable
      */
     public function getTags()
     {
-        if(!isset($this->tags)) {
+        if (!isset($this->tags)) {
             $this->tags = new ArrayCollection;
         }
 

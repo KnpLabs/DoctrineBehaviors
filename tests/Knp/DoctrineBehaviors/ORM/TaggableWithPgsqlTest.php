@@ -66,7 +66,7 @@ class TaggableWithPgsqlTest extends PHPUnit_Framework_TestCase
         $this->assertEquals(1, $savedEntity->getTags()->count());
     }
 
-    public function testCanonizationTag()
+    public function testRemoveTagByCanonicName()
     {
         /**
          * @var \BehaviorFixtures\ORM\TaggableEntityTag $tag
@@ -83,7 +83,7 @@ class TaggableWithPgsqlTest extends PHPUnit_Framework_TestCase
         $this->assertNotEmpty($tag);
     }
 
-    public function testRemovePersistedTag()
+    public function testRemoveTag()
     {
         /**
          * @var \BehaviorFixtures\ORM\TaggableEntity $savedEntity
@@ -107,7 +107,7 @@ class TaggableWithPgsqlTest extends PHPUnit_Framework_TestCase
         $this->assertEquals(1, $savedAgainEntity->getTags()->count());
     }
 
-    public function testClearPersistedTag()
+    public function testClearTags()
     {
         /**
          * @var \BehaviorFixtures\ORM\TaggableEntity $savedEntity
