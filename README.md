@@ -17,6 +17,7 @@ It currently handles:
  * [geocodable](#geocodable)
  * [filterable](#filterable)
  * [sluggable](#sluggable)
+ * [taggable](#taggable)
 
 ## Notice:
 
@@ -586,4 +587,132 @@ For example, the blameable callable can be any symfony2 service that implements 
 For an example of DI service that is invoked, look at the `Knp\DoctrineBehaviors\ORM\Blameable\UserCallable` class.
 
 In the case of geocodable, you can set it as any service that implements `__invoke` or anonymous function that returns a `Knp\DoctrineBehaviors\ORM\Geocodable\Type\Point` object.
+
+<a name="taggable" id="taggable"></a>
+### taggable
+
+Taggable behaviour allows to add tags on your doctrine entities easily 
+
+```php
+<?php
+
+use Doctrine\ORM\Mapping as ORM;
+use Knp\DoctrineBehaviors\Model as ORMBehaviors;
+
+/**
+ * @ORM\Entity
+ */
+class BlogPost
+{
+    use ORMBehaviors\Taggable\Taggable;
+
+    /**
+     * @ORM\Column(type="string")
+     */
+    protected $title;
+}
+```
+
+If you want to override getters/setters you need to implement method(s) from TaggableInterface
+```
+\Knp\DoctrineBehaviors\Model\Taggable\TaggableInterface
+```
+
+```php
+<?php
+
+use Doctrine\ORM\Mapping as ORM;
+use Knp\DoctrineBehaviors\Model as ORMBehaviors;
+
+/**
+ * @ORM\Entity
+ */
+class BlogPost implements ORMBehaviors\Taggable\Taggable
+{
+    use ORMBehaviors\Taggable\Taggable;
+
+    /**
+     * @ORM\Column(type="string")
+     */
+    protected $title;
+    
+    /**
+     * @param string $tags
+     */
+    public function removeTags($tags)
+    {
+        $tags = $this->validateTags($tags);
+        $oldTags = $this->getTags()->filter(function($entry) use ($tags) {
+            return in_array($entry->getName(), $tags);
+        });
+        foreach($oldTags as $tag) {
+            $this->getTags()->removeElement($tag);
+        }
+    }
+}
+```
+
+<a name="taggable" id="taggable"></a>
+### taggable
+
+Taggable behaviour allows to add tags on your doctrine entities easily
+
+```php
+<?php
+
+use Doctrine\ORM\Mapping as ORM;
+use Knp\DoctrineBehaviors\Model as ORMBehaviors;
+
+/**
+ * @ORM\Entity
+ */
+class BlogPost
+{
+    use ORMBehaviors\Taggable\Taggable;
+
+    /**
+     * @ORM\Column(type="string")
+     */
+    protected $title;
+}
+```
+
+If you want to override getters/setters you need to implement method(s) from TaggableInterface
+```
+\Knp\DoctrineBehaviors\Model\Taggable\TaggableInterface
+```
+
+```php
+<?php
+
+use Doctrine\ORM\Mapping as ORM;
+use Knp\DoctrineBehaviors\Model as ORMBehaviors;
+
+/**
+ * @ORM\Entity
+ */
+class BlogPost implements ORMBehaviors\Taggable\Taggable
+{
+    use ORMBehaviors\Taggable\Taggable;
+
+    /**
+     * @ORM\Column(type="string")
+     */
+    protected $title;
+
+    /**
+     * @param string $tags
+     */
+    public function removeTags($tags)
+    {
+        $tags = $this->validateTags($tags);
+        $oldTags = $this->getTags()->filter(function($entry) use ($tags) {
+            return in_array($entry->getName(), $tags);
+        });
+        foreach($oldTags as $tag) {
+            $this->getTags()->removeElement($tag);
+        }
+    }
+}
+```
 
