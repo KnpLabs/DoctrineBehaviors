@@ -7,6 +7,12 @@ parameters:
     knp.doctrine_behaviors.translatable_subscriber.translation_trait: Knp\DoctrineBehaviors\Model\Translatable\Translation
     knp.doctrine_behaviors.translatable_subscriber.translatable_fetch_method: LAZY
     knp.doctrine_behaviors.translatable_subscriber.translation_fetch_method: LAZY
+    knp.doctrine_behaviors.taggable_subscriber.class: 'Knp\DoctrineBehaviors\ORM\Taggable\TaggableSubscriber'
+    knp.doctrine_behaviors.taggable_subscriber.taggable_trait: 'Knp\DoctrineBehaviors\Model\Taggable\Taggable'
+    knp.doctrine_behaviors.taggable_subscriber.tag_trait: 'Knp\DoctrineBehaviors\Model\Taggable\Tag'
+    knp.doctrine_behaviors.taggable_subscriber.taggable_fetch_method: 'LAZY'
+    knp.doctrine_behaviors.taggable_subscriber.tag_fetch_method: '%knp.doctrine_behaviors.taggable_subscriber.taggable_fetch_method%'
+    knp.doctrine_behaviors.taggable_subscriber.tag_postfix: 'Tag'
     knp.doctrine_behaviors.softdeletable_subscriber.class: Knp\DoctrineBehaviors\ORM\SoftDeletable\SoftDeletableSubscriber
     knp.doctrine_behaviors.softdeletable_subscriber.softdeletable_trait: Knp\DoctrineBehaviors\Model\SoftDeletable\SoftDeletable
     knp.doctrine_behaviors.timestampable_subscriber.class: Knp\DoctrineBehaviors\ORM\Timestampable\TimestampableSubscriber
@@ -42,6 +48,20 @@ services:
             - "%knp.doctrine_behaviors.translatable_subscriber.translation_trait%"
             - "%knp.doctrine_behaviors.translatable_subscriber.translatable_fetch_method%"
             - "%knp.doctrine_behaviors.translatable_subscriber.translation_fetch_method%"
+        tags:
+            - { name: doctrine.event_subscriber }
+
+    knp.doctrine_behaviors.taggable_subscriber:
+        class:   "%knp.doctrine_behaviors.taggable_subscriber.class%"
+        public:  false
+        arguments:
+            - '@knp.doctrine_behaviors.reflection.class_analyzer'
+            - '%knp.doctrine_behaviors.reflection.is_recursive%'
+            - '%knp.doctrine_behaviors.taggable_subscriber.taggable_trait%'
+            - '%knp.doctrine_behaviors.taggable_subscriber.tag_trait%'
+            - '%knp.doctrine_behaviors.taggable_subscriber.taggable_fetch_method%'
+            - '%knp.doctrine_behaviors.taggable_subscriber.taggable_fetch_method%'
+            - '%knp.doctrine_behaviors.taggable_subscriber.tag_postfix%'
         tags:
             - { name: doctrine.event_subscriber }
 
