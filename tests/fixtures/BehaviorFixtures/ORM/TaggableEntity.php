@@ -4,12 +4,13 @@ namespace BehaviorFixtures\ORM;
 
 use Doctrine\ORM\Mapping as ORM;
 use Knp\DoctrineBehaviors\Model\Taggable\Taggable;
+use Knp\DoctrineBehaviors\Model\Taggable\TaggableInterface;
 
 /**
  * @ORM\Entity
  * @ORM\Table(name="taggable")
  */
-class TaggableEntity
+class TaggableEntity implements TaggableInterface
 {
 
     use Taggable;

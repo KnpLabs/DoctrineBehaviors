@@ -17,7 +17,7 @@ trait Tag
     protected $nameCanonical;
 
     /**
-     * @var \Knp\DoctrineBehaviors\Model\Taggable\Taggable
+     * @var \Knp\DoctrineBehaviors\Model\Taggable\TaggableInterface
      */
     protected $taggable;
 
@@ -51,5 +51,21 @@ trait Tag
     public function setNameCanonical($nameCanonical)
     {
         $this->nameCanonical = $nameCanonical;
+    }
+
+    /**
+     * @return \Knp\DoctrineBehaviors\Model\Taggable\TaggableInterface
+     */
+    public function getTaggable()
+    {
+        return $this->taggable;
+    }
+
+    /**
+     * @param \Knp\DoctrineBehaviors\Model\Taggable\TaggableInterface $taggable
+     */
+    public function setTaggable(TaggableInterface $taggable)
+    {
+        $this->taggable = $taggable;
     }
 }
