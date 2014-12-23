@@ -2,7 +2,6 @@
 
 namespace tests\Knp\DoctrineBehaviors\ORM;
 
-
 use Doctrine\Common\EventManager;
 use Knp\DoctrineBehaviors\Reflection\ClassAnalyzer;
 use PHPUnit_Framework_TestCase;
@@ -30,8 +29,8 @@ class TaggableWithMysqlTest extends PHPUnit_Framework_TestCase
             new TaggableSubscriber(
                 new ClassAnalyzer(),
                 false,
-                'Knp\DoctrineBehaviors\Model\Taggable\Taggable',
-                'Knp\DoctrineBehaviors\Model\Taggable\Tag',
+                'Knp\\DoctrineBehaviors\\Model\\Taggable\\Taggable',
+                'Knp\\DoctrineBehaviors\\Model\\Taggable\\Tag',
                 'LAZY',
                 'LAZY',
                 'Tag'

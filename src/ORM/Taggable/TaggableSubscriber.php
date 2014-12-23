@@ -39,6 +39,15 @@ class TaggableSubscriber extends AbstractSubscriber
      */
     protected $tagPostfix;
 
+    /**
+     * @param ClassAnalyzer $classAnalyser
+     * @param boolean $isRecursive
+     * @param string $taggableTrait
+     * @param string $tagTrait
+     * @param string $taggableFetchMode
+     * @param string $tagFetchMode
+     * @param string $tagPostfix
+     */
     public function __construct(ClassAnalyzer $classAnalyser, $isRecursive, $taggableTrait, $tagTrait, $taggableFetchMode, $tagFetchMode, $tagPostfix)
     {
         parent::__construct($classAnalyser, $isRecursive);
@@ -255,18 +264,19 @@ class TaggableSubscriber extends AbstractSubscriber
      * Convert string FETCH mode to required string
      *
      * @param $fetchMode
-     *
      * @return int
      */
-    private function convertFetchString($fetchMode){
-        if (is_int($fetchMode)) return $fetchMode;
-
-        switch($fetchMode){
-            case "LAZY":
+    private function convertFetchString($fetchMode)
+    {
+        if (is_int($fetchMode)) {
+            return $fetchMode;
+        }
+        switch ($fetchMode) {
+            case 'LAZY':
                 return ClassMetadataInfo::FETCH_LAZY;
-            case "EAGER":
+            case 'EAGER':
                 return ClassMetadataInfo::FETCH_EAGER;
-            case "EXTRA_LAZY":
+            case 'EXTRA_LAZY':
                 return ClassMetadataInfo::FETCH_EXTRA_LAZY;
             default:
                 return ClassMetadataInfo::FETCH_LAZY;
