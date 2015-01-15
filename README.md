@@ -139,7 +139,11 @@ You now have a working `Category` that behaves like:
 ### translatable:
 
 If you're working on a `Category` entity, the `Translatable` behavior expects a
-**CategoryTranslation** entity.  This naming convention avoids you to handle manually entity associations.
+**CategoryTranslation** entity by default. If you prefer to use a different class name for the translation entity,
+you should override the trait method `getTranslationEntityClass` in the translatable entity and `getTranslatableEntityClass`
+in the translation entity. If you override one, you also need to override the other to return the inverse class.
+
+The default naming convention (or its customization via trait methods) avoids you to handle manually entity associations.
 It is handled automatically by the TranslationSubscriber.
 
 In order to use the Translatable trait, you will have to create this `CategoryTranslation` entity.

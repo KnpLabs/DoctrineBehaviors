@@ -19,6 +19,17 @@ namespace Knp\DoctrineBehaviors\Model\Translatable;
 trait TranslationMethods
 {
     /**
+     * Returns the translatable entity class name.
+     *
+     * @return string
+     */
+    public static function getTranslatableEntityClass()
+    {
+        // By default, the translatable class has the same name but without the "Translation" suffix
+        return substr(__CLASS__, 0, -11);
+    }
+
+    /**
      * Returns object id.
      *
      * @return mixed

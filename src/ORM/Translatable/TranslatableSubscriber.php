@@ -203,7 +203,7 @@ class TranslatableSubscriber extends AbstractSubscriber
                 'indexBy'       => 'locale',
                 'cascade'       => ['persist', 'merge', 'remove'],
                 'fetch'         => $this->translatableFetchMode,
-                'targetEntity'  => $classMetadata->name.'Translation',
+                'targetEntity'  => $classMetadata->getReflectionClass()->getMethod('getTranslationEntityClass')->invoke(null),
                 'orphanRemoval' => true
             ]);
         }
@@ -221,7 +221,7 @@ class TranslatableSubscriber extends AbstractSubscriber
                     'referencedColumnName' => 'id',
                     'onDelete'             => 'CASCADE'
                 ]],
-                'targetEntity' => substr($classMetadata->name, 0, -11)
+                'targetEntity' => $classMetadata->getReflectionClass()->getMethod('getTranslatableEntityClass')->invoke(null),
             ]);
         }
 
