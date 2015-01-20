@@ -19,6 +19,10 @@ if (!class_exists('PHPUnit_Framework_MockObject_MockBuilder')) {
     die('PHPUnit MockObject plugin is required, at least 1.0.8 version');
 }
 
+define("DB_ENGINE", getenv("DB") ?: "pgsql");
+define("DB_USER", getenv("DB_USER") ?: null);
+define("DB_PASSWD", getenv("DB_PASSWD") ?: null);
+
 define('TESTS_PATH', __DIR__);
 define('TESTS_TEMP_DIR', __DIR__.'/temp');
 define('VENDOR_PATH', realpath(__DIR__ . '/../vendor'));
