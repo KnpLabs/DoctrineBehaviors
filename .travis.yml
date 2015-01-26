@@ -25,6 +25,8 @@ before_script:
   - sh -c "if [ '$DB' = 'mysql' ]; then mysql -e 'create database IF NOT EXISTS orm_behaviors_test' -u$DB_USER; fi"
 
   - composer require doctrine/common:${DOCTRINE_COMMON_VERSION}
-  - bin/parallel-lint -e php,phpt --exclude vendor .
 
-script: bin/phpunit --testdox
+script:
+  - bin/parallel-lint -e php,phpt --exclude vendor .
+  - bin/yaml-lint config/*
+  - bin/phpunit --testdox

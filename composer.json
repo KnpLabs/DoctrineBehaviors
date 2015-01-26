@@ -30,7 +30,8 @@
         "ext-pdo_pgsql":                    "*",
         "doctrine/orm":                     ">=2.2",
         "phpunit/phpunit":                  "~3.7",
-        "jakub-onderka/php-parallel-lint":  "~0.8"
+        "jakub-onderka/php-parallel-lint":  "~0.8",
+        "hexmedia/yaml-linter":             "~0.1"
     },
     "autoload": {
         "psr-4": { "Knp\\DoctrineBehaviors\\": "src/" }
