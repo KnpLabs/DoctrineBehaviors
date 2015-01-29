@@ -10,6 +10,7 @@
         "filterable",
         "blameable",
         "softdeletable",
+        "taggable",
         "tree"
     ],
     "homepage": "http://knplabs.com",
