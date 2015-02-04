@@ -587,3 +587,6 @@ For an example of DI service that is invoked, look at the `Knp\DoctrineBehaviors
 
 In the case of geocodable, you can set it as any service that implements `__invoke` or anonymous function that returns a `Knp\DoctrineBehaviors\ORM\Geocodable\Type\Point` object.
 
+## Testing
+
+[Read the documentation for testing ](doc/test.md)

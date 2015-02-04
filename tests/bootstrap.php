@@ -20,6 +20,8 @@ if (!class_exists('PHPUnit_Framework_MockObject_MockBuilder')) {
 }
 
 define("DB_ENGINE", getenv("DB") ?: "pgsql");
+define('DB_HOST', getenv("DB_HOST") ?: 'localhost');
+define('DB_NAME', getenv("DB_NAME") ?: 'orm_behaviors_test');
 define("DB_USER", getenv("DB_USER") ?: null);
 define("DB_PASSWD", getenv("DB_PASSWD") ?: null);
 
