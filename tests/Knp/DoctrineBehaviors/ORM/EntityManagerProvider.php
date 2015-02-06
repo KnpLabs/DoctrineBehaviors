@@ -65,7 +65,8 @@ trait EntityManagerProvider
                 null,
                 [
                     'driver' => 'pdo_pgsql',
-                    'dbname' => 'orm_behaviors_test',
+                    'host' => DB_HOST,
+                    'dbname' => DB_NAME,
                     'user' => DB_USER,
                     'password' => DB_PASSWD
                 ]
@@ -76,7 +77,8 @@ trait EntityManagerProvider
                 null,
                 [
                     'driver' => 'pdo_mysql',
-                    'dbname' => 'orm_behaviors_test',
+                    'host' => DB_HOST,
+                    'dbname' => DB_NAME,
                     'user' => DB_USER,
                     'password' => DB_PASSWD
                 ]
