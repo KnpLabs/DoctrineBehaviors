@@ -364,8 +364,8 @@ Then, you can use it like that:
     $em->persist($category);
 
     // instances of %knp.doctrine_behaviors.blameable_subscriber.user_entity%
-    $creator = $em->getCreatedBy();
-    $updater = $em->getUpdatedBy();
+    $creator = $category->getCreatedBy();
+    $updater = $category->getUpdatedBy();
 
 ```
 
