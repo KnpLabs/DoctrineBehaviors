@@ -68,7 +68,7 @@ class SluggableMultiEntity
         return $this;
     }
 
-    protected function getSluggableFields()
+    public function getSluggableFields()
     {
         return [ 'name', 'title' ];
     }
@@ -76,5 +76,16 @@ class SluggableMultiEntity
     public function getTitle()
     {
         return 'title';
+    }
+
+    /**
+     * @param $values
+     * @return mixed|string
+     */
+    public function generateSlugValue($values)
+    {
+        $sluggableText = implode(' ', $values);
+
+        return strtolower(str_replace(' ', '+', $sluggableText));
     }
 }

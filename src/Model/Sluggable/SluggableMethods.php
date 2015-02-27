@@ -102,7 +102,7 @@ trait SluggableMethods
     {
         if ( $this->getRegenerateSlugOnUpdate() || empty( $this->slug ) ) {
             $fields = $this->getSluggableFields();
-            $usableValues = [];
+            $values = [];
 
             foreach ($fields as $field) {
                 if (property_exists($this, $field)) {
@@ -116,12 +116,10 @@ trait SluggableMethods
                     }
                 }
 
-                if ( !empty( $val ) ) {
-                    $usableValues[] = $val;
-                }
+                $values[] = $val;
             }
 
-            $this->slug = $this->generateSlugValue($usableValues);
+            $this->slug = $this->generateSlugValue($values);
         }
     }
 }
