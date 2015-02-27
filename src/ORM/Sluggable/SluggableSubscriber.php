@@ -6,6 +6,7 @@
 
 namespace Knp\DoctrineBehaviors\ORM\Sluggable;
 
+use Doctrine\ORM\Event\LifecycleEventArgs;
 use Knp\DoctrineBehaviors\Reflection\ClassAnalyzer;
 
 use Knp\DoctrineBehaviors\ORM\AbstractSubscriber;
@@ -40,13 +41,6 @@ class SluggableSubscriber extends AbstractSubscriber
         }
 
         if ($this->isSluggable($classMetadata)) {
-            if ($classMetadata->reflClass->hasMethod('generateSlug')) {
-                // Call the generateSlug function when the entity is persisted initially and when its updated
-
-                $classMetadata->addLifecycleCallback('generateSlug', Events::prePersist);
-                $classMetadata->addLifecycleCallback('generateSlug', Events::preUpdate);
-            }
-
             if (!$classMetadata->hasField('slug')) {
                 $classMetadata->mapField(array(
                     'fieldName' => 'slug',
@@ -57,9 +51,31 @@ class SluggableSubscriber extends AbstractSubscriber
         }
     }
 
+    public function prePersist(LifecycleEventArgs $eventArgs)
+    {
+        $entity = $eventArgs->getEntity();
+        $em = $eventArgs->getEntityManager();
+        $classMetadata = $em->getClassMetadata(get_class($entity));
+
+        if ($this->isSluggable($classMetadata)) {
+            $entity->generateSlug();
+        }
+    }
+
+    public function preUpdate(LifecycleEventArgs $eventArgs)
+    {
+        $entity = $eventArgs->getEntity();
+        $em = $eventArgs->getEntityManager();
+        $classMetadata = $em->getClassMetadata(get_class($entity));
+
+        if ($this->isSluggable($classMetadata)) {
+            $entity->generateSlug();
+        }
+    }
+
     public function getSubscribedEvents()
     {
-        return [ Events::loadClassMetadata ];
+        return [ Events::loadClassMetadata, Events::prePersist, Events::preUpdate ];
     }
 
     /**
