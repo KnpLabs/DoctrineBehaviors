@@ -50,6 +50,43 @@ trait EntityManagerProvider
     }
 
     /**
+     * EntityManager mock object together with
+     * annotation mapping driver and engine given
+     * by DB_ENGINE (pdo_mysql or pdo_pgsql)
+     * database in memory
+     *
+     * @return \Doctrine\ORM\EntityManager
+     */
+    protected function getDBEngineEntityManager()
+    {
+        if (DB_ENGINE == "pgsql") {
+            return $this->getEntityManager(
+                null,
+                null,
+                [
+                    'driver' => 'pdo_pgsql',
+                    'host' => DB_HOST,
+                    'dbname' => DB_NAME,
+                    'user' => DB_USER,
+                    'password' => DB_PASSWD
+                ]
+            );
+        } else {
+            return $this->getEntityManager(
+                null,
+                null,
+                [
+                    'driver' => 'pdo_mysql',
+                    'host' => DB_HOST,
+                    'dbname' => DB_NAME,
+                    'user' => DB_USER,
+                    'password' => DB_PASSWD
+                ]
+            );
+        }
+    }
+
+    /**
      * Get annotation mapping configuration
      *
      * @return \Doctrine\ORM\Configuration

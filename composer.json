@@ -21,15 +21,18 @@
         }
     ],
     "require": {
-        "php":              ">=5.4.0",
+        "php":              ">=5.4",
         "doctrine/common":  ">=2.2",
         "behat/transliterator": "~1.0"
     },
     "require-dev": {
-        "ext-pdo_sqlite":       "*",
-        "ext-pdo_pgsql":        "*",
-        "doctrine/orm":         ">=2.2",
-        "phpunit/phpunit":      "~3.7"
+        "ext-pdo_sqlite":                   "*",
+        "ext-pdo_mysql":                    "*",
+        "ext-pdo_pgsql":                    "*",
+        "doctrine/orm":                     ">=2.2",
+        "phpunit/phpunit":                  "~3.7",
+        "jakub-onderka/php-parallel-lint":  "~0.8",
+        "hexmedia/yaml-linter":             "~0.1"
     },
     "autoload": {
         "psr-4": { "Knp\\DoctrineBehaviors\\": "src/" }

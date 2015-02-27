@@ -18,15 +18,27 @@ namespace Knp\DoctrineBehaviors\Model\Translatable;
  */
 trait TranslationMethods
 {
+    /**
+     * Returns object id.
+     *
+     * @return mixed
+     */
+    public function getId() {
+        return $this->id;
+    }
 
     /**
      * Sets entity, that this translation should be mapped to.
      *
      * @param Translatable $translatable The translatable
+     *
+     * @return $this
      */
     public function setTranslatable($translatable)
     {
         $this->translatable = $translatable;
+
+        return $this;
     }
 
     /**
@@ -43,10 +55,14 @@ trait TranslationMethods
      * Sets locale name for this translation.
      *
      * @param string $locale The locale
+     *
+     * @return $this
      */
     public function setLocale($locale)
     {
         $this->locale = $locale;
+
+        return $this;
     }
 
     /**

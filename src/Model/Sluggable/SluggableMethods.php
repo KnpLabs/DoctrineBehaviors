@@ -102,13 +102,26 @@ trait SluggableMethods
     {
         if ( $this->getRegenerateSlugOnUpdate() || empty( $this->slug ) ) {
             $fields = $this->getSluggableFields();
+            $usableValues = [];
 
-            $values = [];
             foreach ($fields as $field) {
-                $values[] = $this->{$field};
+                if (property_exists($this, $field)) {
+                    $val = $this->{$field};
+                } else {
+                    $methodName = 'get' . ucfirst($field);
+                    if (method_exists($this, $methodName)) {
+                        $val = $this->{$methodName}();
+                    } else {
+                        $val = null;
+                    }
+                }
+
+                if ( !empty( $val ) ) {
+                    $usableValues[] = $val;
+                }
             }
 
-            $this->slug = $this->generateSlugValue($values);
+            $this->slug = $this->generateSlugValue($usableValues);
         }
     }
 }
