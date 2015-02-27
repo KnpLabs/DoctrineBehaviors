@@ -71,6 +71,14 @@ class SluggableTest extends \PHPUnit_Framework_TestCase
             [
                 'slug' => 'ivan-ivanovich',
                 'name' => 'Иван Иванович',
+            ],
+            [
+                'slug' => 'chateauneuf-du-pape',
+                'name' => 'Châteauneuf du Pape'
+            ],
+            [
+                'slug' => 'zlutoucky-kun',
+                'name' => 'Žluťoučký kůň'
             ]
         ];
 
