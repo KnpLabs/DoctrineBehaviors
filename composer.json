@@ -21,8 +21,9 @@
         }
     ],
     "require": {
-        "php":              ">=5.4",
-        "doctrine/common":  ">=2.2"
+        "php":                     ">=5.4",
+        "doctrine/common":         ">=2.2",
+        "symfony/property-access": ">=2.3"
     },
     "require-dev": {
         "ext-pdo_sqlite":                   "*",

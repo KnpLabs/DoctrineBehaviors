@@ -5,6 +5,7 @@
  */
 
 namespace Knp\DoctrineBehaviors\Model\Sluggable;
+use Symfony\Component\PropertyAccess\PropertyAccess;
 
 /**
  * Sluggable trait.
@@ -73,17 +74,10 @@ trait SluggableMethods
             $fields = $this->getSluggableFields();
             $usableValues = [];
 
+            $accessor = PropertyAccess::createPropertyAccessor();
+
             foreach ($fields as $field) {
-                if (property_exists($this, $field)) {
-                    $val = $this->{$field};
-                } else {
-                    $methodName = 'get' . ucfirst($field);
-                    if (method_exists($this, $methodName)) {
-                        $val = $this->{$methodName}();
-                    } else {
-                        $val = null;
-                    }
-                }
+                $val = $accessor->getValue($this, $field);
 
                 if ( !empty( $val ) ) {
                     $usableValues[] = $val;
