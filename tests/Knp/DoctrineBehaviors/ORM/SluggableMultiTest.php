@@ -38,7 +38,7 @@ class SluggableMultiTest extends \PHPUnit_Framework_TestCase
 
         $entity = new \BehaviorFixtures\ORM\SluggableMultiEntity();
 
-        $expected = 'the-name-title';
+        $expected = 'the+name+title';
 
         $entity->setName('The name');
 
@@ -61,7 +61,7 @@ class SluggableMultiTest extends \PHPUnit_Framework_TestCase
 
         $entity = new \BehaviorFixtures\ORM\SluggableMultiEntity();
 
-        $expected = 'the-name-title';
+        $expected = 'the+name+title';
 
         $entity->setName('The name');
 
@@ -82,7 +82,7 @@ class SluggableMultiTest extends \PHPUnit_Framework_TestCase
 
         $entity = new \BehaviorFixtures\ORM\SluggableMultiEntity();
 
-        $expected = 'the-name-title';
+        $expected = 'the+name+title';
 
         $entity->setName('The name');
 
@@ -91,7 +91,7 @@ class SluggableMultiTest extends \PHPUnit_Framework_TestCase
 
         $this->assertEquals($entity->getSlug(), $expected);
 
-        $expected = 'the-name-2-title';
+        $expected = 'the+name+2+title';
 
         $entity->setName('The name 2');
 

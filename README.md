@@ -468,6 +468,7 @@ It also provides an easy entry point to use 3rd party libraries like the exellen
 Sluggable generates slugs (uniqueness is not guaranteed) for an entity.
 Will automatically generate on update/persist (you can disable the on update generation by overriding `getRegenerateSlugOnUpdate` to return false.
 You can also override the slug delimiter from the default hyphen by overriding `getSlugDelimiter`.
+Slug generation algo can be changed by overriding `generateSlugValue`.
 Use cases include SEO (i.e. URLs like http://mysite.com/post/3/introduction-to-php)
 ```php
 <?php
@@ -486,10 +487,15 @@ class BlogPost
      * @ORM\Column(type="string")
      */
     protected $title;
-
+    
     public function getSluggableFields()
     {
         return [ 'title' ];
+    }
+    
+    public function generateSlugValue($values) 
+    {
+        return implode('-', $values);
     }
 }
 ```
