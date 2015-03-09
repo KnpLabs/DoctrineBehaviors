@@ -180,26 +180,22 @@ class TranslatableTest extends \PHPUnit_Framework_TestCase
     /**
      * @test
      */
-    public function should_have_ontToMany_relation()
+    public function should_have_oneToMany_relation()
     {
-        $em = $this->getEntityManager();
-
-        $meta = $em->getClassMetadata('BehaviorFixtures\ORM\TranslatableEntityTranslation');
-        $this->assertEquals(
+        $this->assertTranslationsOneToManyMapped(
             'BehaviorFixtures\ORM\TranslatableEntity',
-            $meta->getAssociationTargetClass('translatable')
+            'BehaviorFixtures\ORM\TranslatableEntityTranslation'
         );
+    }
 
-        $meta = $em->getClassMetadata('BehaviorFixtures\ORM\TranslatableEntity');
-        $this->assertEquals(
-            'BehaviorFixtures\ORM\TranslatableEntityTranslation',
-            $meta->getAssociationTargetClass('translations')
-        );
-        $this->assertTrue($meta->isAssociationInverseSide('translations'));
-
-        $this->assertEquals(
-            ClassMetadataInfo::ONE_TO_MANY,
-            $meta->getAssociationMapping('translations')['type']
+    /**
+     * @test
+     */
+    public function should_have_oneToMany_relation_when_translation_class_name_is_custom()
+    {
+        $this->assertTranslationsOneToManyMapped(
+            'BehaviorFixtures\ORM\TranslatableCustomizedEntity',
+            'BehaviorFixtures\ORM\Translation\TranslatableCustomizedEntityTranslation'
         );
     }
 
@@ -240,5 +236,29 @@ class TranslatableTest extends \PHPUnit_Framework_TestCase
 
         $em->refresh($entity);
         $this->assertNotEquals('Hallo', $entity->translate('nl')->getTitle());
+    }
+
+    /**
+     * Asserts that the one to many relationship between translatable and translations is mapped correctly.
+     *
+     * @param string $translatableClass The class name of the translatable entity
+     * @param string $translationClass  The class name of the translation entity
+     */
+    private function assertTranslationsOneToManyMapped($translatableClass, $translationClass)
+    {
+        $em = $this->getEntityManager();
+
+        $meta = $em->getClassMetadata($translationClass);
+        $this->assertEquals($translatableClass, $meta->getAssociationTargetClass('translatable'));
+
+        $meta = $em->getClassMetadata($translatableClass);
+        $this->assertEquals($translationClass, $meta->getAssociationTargetClass('translations'));
+
+        $this->assertTrue($meta->isAssociationInverseSide('translations'));
+
+        $this->assertEquals(
+            ClassMetadataInfo::ONE_TO_MANY,
+            $meta->getAssociationMapping('translations')['type']
+        );
     }
 }
