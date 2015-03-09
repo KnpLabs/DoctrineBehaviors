@@ -13,9 +13,9 @@ use Doctrine\Common\Collections\Collection;
 interface NodeInterface
 {
     /**
-     * @return string the id that will represent the node in the path
+     * @return string the field that will represent the node in the path
      **/
-    public function getId();
+    public function getTreeNodeField();
 
     /**
      * @return string the materialized path,
@@ -110,4 +110,3 @@ interface NodeInterface
      **/
     public function buildTree(array $nodes);
 }
-
