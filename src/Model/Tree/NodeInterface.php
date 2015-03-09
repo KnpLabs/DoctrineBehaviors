@@ -15,7 +15,7 @@ interface NodeInterface
     /**
      * @return string the field that will represent the node in the path
      **/
-    public function getTreeNodeField();
+    public function getNodeId();
 
     /**
      * @return string the materialized path,

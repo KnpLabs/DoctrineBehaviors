@@ -33,7 +33,7 @@ trait Node
 
     protected $materializedPath = '';
 
-    public function getTreeNodeField()
+    public function getNodeId()
     {
         return $this->getId();
     }
@@ -53,7 +53,7 @@ trait Node
      **/
     public function getRealMaterializedPath()
     {
-        return $this->getMaterializedPath() . self::getMaterializedPathSeparator() . $this->getTreeNodeField();
+        return $this->getMaterializedPath() . self::getMaterializedPathSeparator() . $this->getNodeId();
     }
 
     public function getMaterializedPath()
@@ -159,7 +159,7 @@ trait Node
      **/
     public function setChildNodeOf(NodeInterface $node)
     {
-        $id = $this->getTreeNodeField();
+        $id = $this->getNodeId();
         if (empty($id)) {
             throw new \LogicException('You must provide an id for this node if you want it to be part of a tree.');
         }
@@ -253,12 +253,12 @@ trait Node
             };
         }
         if (null === $tree) {
-            $tree = array($this->getTreeNodeField() => array('node' => $prepare($this), 'children' => array()));
+            $tree = array($this->getNodeId() => array('node' => $prepare($this), 'children' => array()));
         }
 
         foreach ($this->getChildNodes() as $node) {
-            $tree[$this->getTreeNodeField()]['children'][$node->getTreeNodeField()] = array('node' => $prepare($node), 'children' => array());
-            $node->toArray($prepare, $tree[$this->getTreeNodeField()]['children']);
+            $tree[$this->getNodeId()]['children'][$node->getNodeId()] = array('node' => $prepare($node), 'children' => array());
+            $node->toArray($prepare, $tree[$this->getNodeId()]['children']);
         }
 
         return $tree;
@@ -280,11 +280,11 @@ trait Node
             };
         }
         if (null === $tree) {
-            $tree = array($this->getTreeNodeField() => $prepare($this));
+            $tree = array($this->getNodeId() => $prepare($this));
         }
 
         foreach ($this->getChildNodes() as $node) {
-            $tree[$node->getTreeNodeField()] = $prepare($node);
+            $tree[$node->getNodeId()] = $prepare($node);
             $node->toFlatArray($prepare, $tree);
         }
 

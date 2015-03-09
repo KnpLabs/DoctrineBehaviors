@@ -135,7 +135,7 @@ You now have a working `Category` that behaves like:
 
 ```
 
-> it is possible to use another identifier than `id`, simply override `getTreeNodeField` and return your custom identifier (works great in combination with `Sluggable`)
+> it is possible to use another identifier than `id`, simply override `getNodeId` and return your custom identifier (works great in combination with `Sluggable`)
 
 <a name="translatable" id="translatable"></a>
 ### translatable:
