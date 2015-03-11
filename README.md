@@ -135,6 +135,8 @@ You now have a working `Category` that behaves like:
 
 ```
 
+> it is possible to use another identifier than `id`, simply override `getNodeId` and return your custom identifier (works great in combination with `Sluggable`)
+
 <a name="translatable" id="translatable"></a>
 ### translatable:
 
@@ -491,13 +493,13 @@ class BlogPost
      * @ORM\Column(type="string")
      */
     protected $title;
-    
+
     public function getSluggableFields()
     {
         return [ 'title' ];
     }
-    
-    public function generateSlugValue($values) 
+
+    public function generateSlugValue($values)
     {
         return implode('-', $values);
     }
