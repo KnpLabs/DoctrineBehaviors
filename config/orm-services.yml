@@ -56,7 +56,7 @@ services:
     knp.doctrine_behaviors.translatable_subscriber.default_locale_callable:
         class:           "%knp.doctrine_behaviors.translatable_subscriber.default_locale_callable.class%"
         arguments:
-            - "@service_container" # lazy request resolution
+            - %locale%
         public:  false
 
     knp.doctrine_behaviors.softdeletable_subscriber:
