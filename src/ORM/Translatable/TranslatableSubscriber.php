@@ -35,17 +35,20 @@ use Doctrine\DBAL\Platforms;
 class TranslatableSubscriber extends AbstractSubscriber
 {
     private $currentLocaleCallable;
+    private $defaultLocaleCallable;
     private $translatableTrait;
     private $translationTrait;
     private $translatableFetchMode;
     private $translationFetchMode;
 
     public function __construct(ClassAnalyzer $classAnalyzer, $isRecursive, callable $currentLocaleCallable = null,
-                                $translatableTrait, $translationTrait, $translatableFetchMode, $translationFetchMode)
+                                callable $defaultLocaleCallable = null,$translatableTrait, $translationTrait,
+                                $translatableFetchMode, $translationFetchMode)
     {
         parent::__construct($classAnalyzer, $isRecursive);
 
         $this->currentLocaleCallable = $currentLocaleCallable;
+        $this->defaultLocaleCallable = $defaultLocaleCallable;
         $this->translatableTrait = $translatableTrait;
         $this->translationTrait = $translationTrait;
         $this->translatableFetchMode = $this->convertFetchString($translatableFetchMode);
@@ -307,12 +310,23 @@ class TranslatableSubscriber extends AbstractSubscriber
         if ($locale = $this->getCurrentLocale()) {
             $entity->setCurrentLocale($locale);
         }
+
+        if ($locale = $this->getDefaultLocale()) {
+            $entity->setDefaultLocale($locale);
+        }
     }
 
     private function getCurrentLocale()
     {
         if ($currentLocaleCallable = $this->currentLocaleCallable) {
             return $currentLocaleCallable();
+        }
+    }
+
+    private function getDefaultLocale()
+    {
+        if ($defaultLocaleCallable = $this->defaultLocaleCallable) {
+            return $defaultLocaleCallable();
         }
     }
 
