@@ -88,6 +88,11 @@ interface NodeInterface
      * @return bool if the node is a root (i.e has no parent)
      **/
     public function isRootNode();
+    
+    /**
+     * @return NodeInterface
+     **/
+    public function getRootNode();
 
     /**
      * Tells if this node is a child of another node
