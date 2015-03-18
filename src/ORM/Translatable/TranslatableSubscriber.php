@@ -59,9 +59,10 @@ class TranslatableSubscriber extends AbstractSubscriber
      */
     public function loadClassMetadata(LoadClassMetadataEventArgs $eventArgs)
     {
+        /** @var ClassMetadata $classMetadata */
         $classMetadata = $eventArgs->getClassMetadata();
 
-        if (null === $classMetadata->reflClass) {
+        if (null === $classMetadata->reflClass || $classMetadata->isMappedSuperclass) {
             return;
         }
 
