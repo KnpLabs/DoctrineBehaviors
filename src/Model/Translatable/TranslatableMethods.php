@@ -131,9 +131,19 @@ trait TranslatableMethods
         return $this->currentLocale ?: $this->getDefaultLocale();
     }
 
+
+    /**
+     * @param mixed $locale the default locale
+     */
+    public function setDefaultLocale($locale)
+    {
+        $this->defaultLocale = $locale;
+    }
+
+
     public function getDefaultLocale()
     {
-        return 'en';
+        return $this->defaultLocale;
     }
 
     protected function proxyCurrentLocaleTranslation($method, array $arguments = [])

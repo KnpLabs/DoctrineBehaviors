@@ -35,4 +35,6 @@ trait TranslatableProperties
      * currentLocale is a non persisted field configured during postLoad event
      */
     protected $currentLocale;
+
+    protected $defaultLocale = 'en';
 }

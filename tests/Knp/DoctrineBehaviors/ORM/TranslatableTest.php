@@ -31,6 +31,10 @@ class TranslatableTest extends \PHPUnit_Framework_TestCase
             {
                 return 'en';
             },
+            function()
+            {
+                return 'en';
+            },
             'Knp\DoctrineBehaviors\Model\Translatable\Translatable',
             'Knp\DoctrineBehaviors\Model\Translatable\Translation',
             'LAZY',
@@ -175,6 +179,29 @@ class TranslatableTest extends \PHPUnit_Framework_TestCase
         $this->assertEquals('en', $entity->getCurrentLocale());
         $this->assertEquals('test', $entity->getTitle());
         $this->assertEquals('test', $entity->translate($entity->getCurrentLocale())->getTitle());
+    }
+
+    /**
+     * @test
+     */
+    public function subscriber_should_configure_entity_with_default_locale()
+    {
+        $em = $this->getEntityManager();
+
+        $entity = new \BehaviorFixtures\ORM\TranslatableEntity();
+        $entity->setTitle('test'); // magic method
+        $entity->mergeNewTranslations();
+        $em->persist($entity);
+        $em->flush();
+        $id = $entity->getId();
+        $em->clear();
+
+        $entity = $em->getRepository('BehaviorFixtures\ORM\TranslatableEntity')->find($id);
+
+        $this->assertEquals('en', $entity->getDefaultLocale());
+        $this->assertEquals('test', $entity->getTitle());
+        $this->assertEquals('test', $entity->translate($entity->getDefaultLocale())->getTitle());
+        $this->assertEquals('test', $entity->translate('fr')->getTitle());
     }
 
     /**

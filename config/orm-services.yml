@@ -3,6 +3,7 @@ parameters:
     knp.doctrine_behaviors.reflection.is_recursive: true
     knp.doctrine_behaviors.translatable_subscriber.class: Knp\DoctrineBehaviors\ORM\Translatable\TranslatableSubscriber
     knp.doctrine_behaviors.translatable_subscriber.current_locale_callable.class: Knp\DoctrineBehaviors\ORM\Translatable\CurrentLocaleCallable
+    knp.doctrine_behaviors.translatable_subscriber.default_locale_callable.class: Knp\DoctrineBehaviors\ORM\Translatable\DefaultLocaleCallable
     knp.doctrine_behaviors.translatable_subscriber.translatable_trait: Knp\DoctrineBehaviors\Model\Translatable\Translatable
     knp.doctrine_behaviors.translatable_subscriber.translation_trait: Knp\DoctrineBehaviors\Model\Translatable\Translation
     knp.doctrine_behaviors.translatable_subscriber.translatable_fetch_method: LAZY
@@ -38,6 +39,7 @@ services:
             - "@knp.doctrine_behaviors.reflection.class_analyzer"
             - "%knp.doctrine_behaviors.reflection.is_recursive%"
             - "@knp.doctrine_behaviors.translatable_subscriber.current_locale_callable"
+            - "@knp.doctrine_behaviors.translatable_subscriber.default_locale_callable"
             - "%knp.doctrine_behaviors.translatable_subscriber.translatable_trait%"
             - "%knp.doctrine_behaviors.translatable_subscriber.translation_trait%"
             - "%knp.doctrine_behaviors.translatable_subscriber.translatable_fetch_method%"
@@ -49,6 +51,12 @@ services:
         class:           "%knp.doctrine_behaviors.translatable_subscriber.current_locale_callable.class%"
         arguments:
             - "@service_container" # lazy request resolution
+        public:  false
+
+    knp.doctrine_behaviors.translatable_subscriber.default_locale_callable:
+        class:           "%knp.doctrine_behaviors.translatable_subscriber.default_locale_callable.class%"
+        arguments:
+            - %locale%
         public:  false
 
     knp.doctrine_behaviors.softdeletable_subscriber:
