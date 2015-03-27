@@ -6,14 +6,22 @@ php:
   - 5.6
 
 env:
-  - DOCTRINE_COMMON_VERSION="~2.2.0" DB=mysql DB_USER=root
-  - DOCTRINE_COMMON_VERSION="~2.3.0" DB=mysql DB_USER=root
-  - DOCTRINE_COMMON_VERSION="~2.4.0" DB=mysql DB_USER=root
-  - DOCTRINE_COMMON_VERSION="dev-master" DB=mysql DB_USER=root
-  - DOCTRINE_COMMON_VERSION="~2.2.0" DB=pgsql
-  - DOCTRINE_COMMON_VERSION="~2.3.0" DB=pgsql
-  - DOCTRINE_COMMON_VERSION="~2.4.0" DB=pgsql
-  - DOCTRINE_COMMON_VERSION="dev-master" DB=pgsql
+  - DOCTRINE_COMMON_VERSION="~2.2.0" DB=mysql DB_USER=root PREFER=latest
+  - DOCTRINE_COMMON_VERSION="~2.3.0" DB=mysql DB_USER=root PREFER=latest
+  - DOCTRINE_COMMON_VERSION="~2.4.0" DB=mysql DB_USER=root PREFER=latest
+  - DOCTRINE_COMMON_VERSION="dev-master" DB=mysql DB_USER=root PREFER=latest
+  - DOCTRINE_COMMON_VERSION="~2.2.0" DB=pgsql PREFER=latest
+  - DOCTRINE_COMMON_VERSION="~2.3.0" DB=pgsql PREFER=latest
+  - DOCTRINE_COMMON_VERSION="~2.4.0" DB=pgsql PREFER=latest
+  - DOCTRINE_COMMON_VERSION="dev-master" DB=pgsql PREFER=latest
+  - DOCTRINE_COMMON_VERSION="~2.2.0" DB=mysql DB_USER=root PREFER=lowest
+  - DOCTRINE_COMMON_VERSION="~2.3.0" DB=mysql DB_USER=root PREFER=lowest
+  - DOCTRINE_COMMON_VERSION="~2.4.0" DB=mysql DB_USER=root PREFER=lowest
+  - DOCTRINE_COMMON_VERSION="dev-master" DB=mysql DB_USER=root PREFER=lowest
+  - DOCTRINE_COMMON_VERSION="~2.2.0" DB=pgsql PREFER=lowest
+  - DOCTRINE_COMMON_VERSION="~2.3.0" DB=pgsql PREFER=lowest
+  - DOCTRINE_COMMON_VERSION="~2.4.0" DB=pgsql PREFER=lowest
+  - DOCTRINE_COMMON_VERSION="dev-master" DB=pgsql PREFER=lowest
 
 before_script:
   - sh -c "if [ '$DB' = 'pgsql' ]; then sudo apt-get install -y postgresql-contrib; fi"
@@ -25,6 +33,7 @@ before_script:
   - sh -c "if [ '$DB' = 'mysql' ]; then mysql -e 'create database IF NOT EXISTS orm_behaviors_test' -u$DB_USER; fi"
 
   - composer require doctrine/common:${DOCTRINE_COMMON_VERSION}
+  - sh -c "if [ '$PREFER' = 'lowest' ]; then composer update --prefer-lowest; fi"
 
 script:
   - bin/parallel-lint -e php,phpt --exclude vendor .
