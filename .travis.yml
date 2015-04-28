@@ -4,6 +4,12 @@ php:
   - 5.4
   - 5.5
   - 5.6
+  - 7.0
+
+matrix:
+  fast_finish: true
+  allowed_failures:
+    - php: 7.0
 
 env:
   - DOCTRINE_COMMON_VERSION="~2.2.0" DB=mysql DB_USER=root PREFER=latest
