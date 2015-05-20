@@ -26,6 +26,8 @@ parameters:
     knp.doctrine_behaviors.tree_subscriber.tree_trait: Knp\DoctrineBehaviors\Model\Tree\Node
     knp.doctrine_behaviors.sortable_subscriber.class: Knp\DoctrineBehaviors\ORM\Sortable\SortableSubscriber
     knp.doctrine_behaviors.sortable_subscriber.sortable_trait: Knp\DoctrineBehaviors\Model\Sortable\Sortable
+    knp.doctrine_behaviors.activatable_subscriber.class: Knp\DoctrineBehaviors\ORM\State\ActivatableSubscriber
+    knp.doctrine_behaviors.activatable_subscriber.activatable_trait: Knp\DoctrineBehaviors\Model\State\Activatable
 
 services:
     knp.doctrine_behaviors.reflection.class_analyzer:
@@ -154,3 +156,12 @@ services:
         tags:
             - { name: doctrine.event_subscriber }
 
+    knp.doctrine_behaviors.activatable_subscriber:
+            class:   "%knp.doctrine_behaviors.activatable_subscriber.class%"
+            public:  false
+            arguments:
+                - "@knp.doctrine_behaviors.reflection.class_analyzer"
+                - "%knp.doctrine_behaviors.reflection.is_recursive%"
+                - "%knp.doctrine_behaviors.activatable_subscriber.activatable_trait%"
+            tags:
+                - { name: doctrine.event_subscriber }
