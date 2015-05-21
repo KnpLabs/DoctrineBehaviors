@@ -85,7 +85,7 @@ trait SoftDeletableMethods
      *
      * @return $this
      */
-    public function setDeletedAt(\DateTime $date)
+    public function setDeletedAt(\DateTime $date = null)
     {
         $this->deletedAt = $date;
 
