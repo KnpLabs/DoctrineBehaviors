@@ -2,32 +2,32 @@ language: php
 
 php:
   - 5.4
-  - 5.5
-  - 5.6
-  - 7.0
+#  - 5.5
+#  - 5.6
+#  - 7.0
 
-matrix:
-  fast_finish: true
-  allow_failures:
-    - php: 7.0
+#matrix:
+#  fast_finish: true
+#  allow_failures:
+#    - php: 7.0
 
 env:
-  - DOCTRINE_COMMON_VERSION="~2.2.0" DB=mysql DB_USER=root PREFER=latest
-  - DOCTRINE_COMMON_VERSION="~2.3.0" DB=mysql DB_USER=root PREFER=latest
-  - DOCTRINE_COMMON_VERSION="~2.4.0" DB=mysql DB_USER=root PREFER=latest
-  - DOCTRINE_COMMON_VERSION="dev-master" DB=mysql DB_USER=root PREFER=latest
-  - DOCTRINE_COMMON_VERSION="~2.2.0" DB=pgsql PREFER=latest
-  - DOCTRINE_COMMON_VERSION="~2.3.0" DB=pgsql PREFER=latest
-  - DOCTRINE_COMMON_VERSION="~2.4.0" DB=pgsql PREFER=latest
-  - DOCTRINE_COMMON_VERSION="dev-master" DB=pgsql PREFER=latest
-  - DOCTRINE_COMMON_VERSION="~2.2.0" DB=mysql DB_USER=root PREFER=lowest
-  - DOCTRINE_COMMON_VERSION="~2.3.0" DB=mysql DB_USER=root PREFER=lowest
-  - DOCTRINE_COMMON_VERSION="~2.4.0" DB=mysql DB_USER=root PREFER=lowest
-  - DOCTRINE_COMMON_VERSION="dev-master" DB=mysql DB_USER=root PREFER=lowest
-  - DOCTRINE_COMMON_VERSION="~2.2.0" DB=pgsql PREFER=lowest
-  - DOCTRINE_COMMON_VERSION="~2.3.0" DB=pgsql PREFER=lowest
+#  - DOCTRINE_COMMON_VERSION="~2.2.0" DB=mysql DB_USER=root PREFER=latest
+#  - DOCTRINE_COMMON_VERSION="~2.3.0" DB=mysql DB_USER=root PREFER=latest
+#  - DOCTRINE_COMMON_VERSION="~2.4.0" DB=mysql DB_USER=root PREFER=latest
+#  - DOCTRINE_COMMON_VERSION="dev-master" DB=mysql DB_USER=root PREFER=latest
+#  - DOCTRINE_COMMON_VERSION="~2.2.0" DB=pgsql PREFER=latest
+#  - DOCTRINE_COMMON_VERSION="~2.3.0" DB=pgsql PREFER=latest
+#  - DOCTRINE_COMMON_VERSION="~2.4.0" DB=pgsql PREFER=latest
+#  - DOCTRINE_COMMON_VERSION="dev-master" DB=pgsql PREFER=latest
+#  - DOCTRINE_COMMON_VERSION="~2.2.0" DB=mysql DB_USER=root PREFER=lowest
+#  - DOCTRINE_COMMON_VERSION="~2.3.0" DB=mysql DB_USER=root PREFER=lowest
+#  - DOCTRINE_COMMON_VERSION="~2.4.0" DB=mysql DB_USER=root PREFER=lowest
+#  - DOCTRINE_COMMON_VERSION="dev-master" DB=mysql DB_USER=root PREFER=lowest
+#  - DOCTRINE_COMMON_VERSION="~2.2.0" DB=pgsql PREFER=lowest
+#  - DOCTRINE_COMMON_VERSION="~2.3.0" DB=pgsql PREFER=lowest
   - DOCTRINE_COMMON_VERSION="~2.4.0" DB=pgsql PREFER=lowest
-  - DOCTRINE_COMMON_VERSION="dev-master" DB=pgsql PREFER=lowest
+#  - DOCTRINE_COMMON_VERSION="dev-master" DB=pgsql PREFER=lowest
 
 cache:
     apt: true
