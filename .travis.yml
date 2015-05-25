@@ -1,5 +1,7 @@
 language: php
 
+sudo: false
+
 php:
   - 5.4
 #  - 5.5
@@ -30,7 +32,6 @@ env:
 #  - DOCTRINE_COMMON_VERSION="dev-master" DB=pgsql PREFER=lowest
 
 cache:
-    apt: true
     directories:
         - vendor
 
