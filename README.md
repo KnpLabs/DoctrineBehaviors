@@ -30,7 +30,6 @@ Make sure to activate them by reading the [Subscribers](#subscribers) section.
 If you use symfony2, you can easily register them by importing a service definition file:
 
 ``` yaml
-
     # app/config/config.yml
     imports:
         - { resource: ../../vendor/knplabs/doctrine-behaviors/config/orm-services.yml }
@@ -41,7 +40,6 @@ You can also register them using doctrine2 api:
 
 
 ``` php
-
 <?php
 
 $em->getEventManager()->addEventSubscriber(new \Knp\DoctrineBehaviors\ORM\Translatable\TranslatableSubscriber);
@@ -55,7 +53,6 @@ $em->getEventManager()->addEventSubscriber(new \Knp\DoctrineBehaviors\ORM\Transl
 All you have to do is to define a Doctrine2 entity and use traits:
 
 ``` php
-
 <?php
 
 use Doctrine\ORM\Mapping as ORM;
@@ -90,7 +87,6 @@ class Category implements ORMBehaviors\Tree\NodeInterface, \ArrayAccess
 For some behaviors like tree, you can use repository traits:
 
 ``` php
-
 <?php
 
 use Doctrine\ORM\EntityRepository;
@@ -111,7 +107,6 @@ You now have a working `Category` that behaves like:
 ### tree:
 
 ``` php
-
 <?php
 
     $category = new Category;
@@ -152,7 +147,6 @@ In order to use the Translatable trait, you will have to create this `CategoryTr
 
 
 ``` php
-
 <?php
 
 use Doctrine\ORM\Mapping as ORM;
@@ -215,6 +209,7 @@ and should only contain fields that you do not need to translate.
 
 ```
 <?php
+
 use Doctrine\ORM\Mapping as ORM;
 use Knp\DoctrineBehaviors\Model as ORMBehaviors;
 
@@ -236,7 +231,6 @@ class Category
 After updating the database, ie. with `./console doctrine:schema:update --force`, you can now work on translations using `translate` or `getTranslations` methods.
 
 ``` php
-
 <?php
 
     $category = new Category;
@@ -265,7 +259,6 @@ You can use it in the magic `__call` method of you translatable entity
 so that when you try to call `getName` (for example) it will return you the translated value of the name for current locale:
 
 ``` php
-
 <?php
 
     public function __call($method, $arguments)
@@ -280,7 +273,6 @@ so that when you try to call `getName` (for example) it will return you the tran
 ### soft-deletable
 
 ``` php
-
 <?php
 
     $category = new Category;
@@ -302,7 +294,6 @@ so that when you try to call `getName` (for example) it will return you the tran
 ```
 
 ``` php
-
 <?php
 
     $category = new Category;
@@ -327,7 +318,6 @@ so that when you try to call `getName` (for example) it will return you the tran
 ### timestampable
 
 ``` php
-
 <?php
 
     $category = new Category;
@@ -356,14 +346,12 @@ Using symfony2, all you have to do is to configure the DI parameter named `%knp.
 for example:
 
     # app/config/config.yml
-
     parameters:
         knp.doctrine_behaviors.blameable_subscriber.user_entity: AppBundle\Entity\User
 
 Then, you can use it like that:
 
 ``` php
-
 <?php
 
     $category = new Category;
@@ -382,7 +370,6 @@ Loggable is able to track lifecycle modifications and log them using any third p
 A loggable [callable](#callables) is used to get the logger from anywhere you want.
 
 ``` php
-
 <?php
 
 /**
@@ -411,7 +398,6 @@ You can define your own, by passing another callable to the LoggableSubscriber:
 
 
 ``` php
-
 <?php
 
 $em->getEventManager()->addEventSubscriber(
@@ -443,7 +429,6 @@ It also provides an easy entry point to use 3rd party libraries like the excelle
 
 
 ``` php
-
 <?php
 
     $geocoder = new \Geocoder\Geocoder;
