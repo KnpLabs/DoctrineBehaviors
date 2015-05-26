@@ -291,6 +291,12 @@ so that when you try to call `getName` (for example) it will return you the tran
 
     // but I'm "deleted"
     $category->isDeleted(); // === true
+    
+    // restore me
+    $category->restore();
+
+    //look ma, I am back
+    $category->isDeleted(); // === false
 ```
 
 ``` php
