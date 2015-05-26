@@ -294,10 +294,10 @@ so that when you try to call `getName` (for example) it will return you the tran
     $em->remove($category);
     $em->flush();
 
-    // hey, i'm still here:
+    // hey, I'm still here:
     $category = $em->getRepository('Category')->findOneById($id);
 
-    // but i'm "deleted"
+    // but I'm "deleted"
     $category->isDeleted(); // === true
 ```
 
@@ -309,17 +309,17 @@ so that when you try to call `getName` (for example) it will return you the tran
     $em->persist($category);
     $em->flush();
 
-    // I'll delete you tomorow
+    // I'll delete you tomorrow
     $category->setDeletedAt((new \DateTime())->modify('+1 day'));
 
-    // Ok, I'm here
+    // OK, I'm here
     $category->isDeleted(); // === false
 
     /*
      *  24 hours later...
      */
 
-    // Ok I'm deleted
+    // OK, I'm deleted
     $category->isDeleted(); // === true
 ```
 
@@ -439,7 +439,7 @@ If you're using symfony, you can also configure which callable to use:
 Geocodable Provides extensions to PostgreSQL platform in order to work with cube and earthdistance extensions.
 
 It allows you to query entities based on geographical coordinates.
-It also provides an easy entry point to use 3rd party libraries like the exellent [geocoder](https://github.com/willdurand/Geocoder) to transform addresses into latitude and longitude.
+It also provides an easy entry point to use 3rd party libraries like the excellent [geocoder](https://github.com/willdurand/Geocoder) to transform addresses into latitude and longitude.
 
 
 ``` php
@@ -463,7 +463,7 @@ It also provides an easy entry point to use 3rd party libraries like the exellen
 
     $location = $category->getLocation(); // instanceof Point
 
-    // find cities in a cricle of 500 km around point 47 lon., 7 lat.
+    // find cities in a circle of 500 km around point 47 lon., 7 lat.
     $nearCities = $repository->findByDistance(new Point(47, 7), 500);
 
 ```
