@@ -30,7 +30,6 @@ Make sure to activate them by reading the [Subscribers](#subscribers) section.
 If you use symfony2, you can easily register them by importing a service definition file:
 
 ``` yaml
-
     # app/config/config.yml
     imports:
         - { resource: ../../vendor/knplabs/doctrine-behaviors/config/orm-services.yml }
@@ -41,7 +40,6 @@ You can also register them using doctrine2 api:
 
 
 ``` php
-
 <?php
 
 $em->getEventManager()->addEventSubscriber(new \Knp\DoctrineBehaviors\ORM\Translatable\TranslatableSubscriber);
@@ -55,7 +53,6 @@ $em->getEventManager()->addEventSubscriber(new \Knp\DoctrineBehaviors\ORM\Transl
 All you have to do is to define a Doctrine2 entity and use traits:
 
 ``` php
-
 <?php
 
 use Doctrine\ORM\Mapping as ORM;
@@ -90,7 +87,6 @@ class Category implements ORMBehaviors\Tree\NodeInterface, \ArrayAccess
 For some behaviors like tree, you can use repository traits:
 
 ``` php
-
 <?php
 
 use Doctrine\ORM\EntityRepository;
@@ -111,7 +107,6 @@ You now have a working `Category` that behaves like:
 ### tree:
 
 ``` php
-
 <?php
 
     $category = new Category;
@@ -152,7 +147,6 @@ In order to use the Translatable trait, you will have to create this `CategoryTr
 
 
 ``` php
-
 <?php
 
 use Doctrine\ORM\Mapping as ORM;
@@ -215,6 +209,7 @@ and should only contain fields that you do not need to translate.
 
 ```
 <?php
+
 use Doctrine\ORM\Mapping as ORM;
 use Knp\DoctrineBehaviors\Model as ORMBehaviors;
 
@@ -236,7 +231,6 @@ class Category
 After updating the database, ie. with `./console doctrine:schema:update --force`, you can now work on translations using `translate` or `getTranslations` methods.
 
 ``` php
-
 <?php
 
     $category = new Category;
@@ -265,7 +259,6 @@ You can use it in the magic `__call` method of you translatable entity
 so that when you try to call `getName` (for example) it will return you the translated value of the name for current locale:
 
 ``` php
-
 <?php
 
     public function __call($method, $arguments)
@@ -280,7 +273,6 @@ so that when you try to call `getName` (for example) it will return you the tran
 ### soft-deletable
 
 ``` php
-
 <?php
 
     $category = new Category;
@@ -294,32 +286,40 @@ so that when you try to call `getName` (for example) it will return you the tran
     $em->remove($category);
     $em->flush();
 
-    // hey, i'm still here:
+    // hey, I'm still here:
     $category = $em->getRepository('Category')->findOneById($id);
 
-    // but i'm "deleted"
+    // but I'm "deleted"
     $category->isDeleted(); // === true
+
+    // restore me
+    $category->restore();
+
+    //look ma, I am back
+    $category->isDeleted(); // === false
+
+    //do not forget to call flush method to apply the change
+    $em->flush();
 ```
 
 ``` php
-
 <?php
 
     $category = new Category;
     $em->persist($category);
     $em->flush();
 
-    // I'll delete you tomorow
+    // I'll delete you tomorrow
     $category->setDeletedAt((new \DateTime())->modify('+1 day'));
 
-    // Ok, I'm here
+    // OK, I'm here
     $category->isDeleted(); // === false
 
     /*
      *  24 hours later...
      */
 
-    // Ok I'm deleted
+    // OK, I'm deleted
     $category->isDeleted(); // === true
 ```
 
@@ -327,7 +327,6 @@ so that when you try to call `getName` (for example) it will return you the tran
 ### timestampable
 
 ``` php
-
 <?php
 
     $category = new Category;
@@ -356,14 +355,12 @@ Using symfony2, all you have to do is to configure the DI parameter named `%knp.
 for example:
 
     # app/config/config.yml
-
     parameters:
         knp.doctrine_behaviors.blameable_subscriber.user_entity: AppBundle\Entity\User
 
 Then, you can use it like that:
 
 ``` php
-
 <?php
 
     $category = new Category;
@@ -382,7 +379,6 @@ Loggable is able to track lifecycle modifications and log them using any third p
 A loggable [callable](#callables) is used to get the logger from anywhere you want.
 
 ``` php
-
 <?php
 
 /**
@@ -411,7 +407,6 @@ You can define your own, by passing another callable to the LoggableSubscriber:
 
 
 ``` php
-
 <?php
 
 $em->getEventManager()->addEventSubscriber(
@@ -439,11 +434,10 @@ If you're using symfony, you can also configure which callable to use:
 Geocodable Provides extensions to PostgreSQL platform in order to work with cube and earthdistance extensions.
 
 It allows you to query entities based on geographical coordinates.
-It also provides an easy entry point to use 3rd party libraries like the exellent [geocoder](https://github.com/willdurand/Geocoder) to transform addresses into latitude and longitude.
+It also provides an easy entry point to use 3rd party libraries like the excellent [geocoder](https://github.com/willdurand/Geocoder) to transform addresses into latitude and longitude.
 
 
 ``` php
-
 <?php
 
     $geocoder = new \Geocoder\Geocoder;
@@ -463,7 +457,7 @@ It also provides an easy entry point to use 3rd party libraries like the exellen
 
     $location = $category->getLocation(); // instanceof Point
 
-    // find cities in a cricle of 500 km around point 47 lon., 7 lat.
+    // find cities in a circle of 500 km around point 47 lon., 7 lat.
     $nearCities = $repository->findByDistance(new Point(47, 7), 500);
 
 ```

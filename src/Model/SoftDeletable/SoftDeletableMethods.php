@@ -80,7 +80,7 @@ trait SoftDeletableMethods
     /**
      * Set the delete date to given date.
      *
-     * @param DateTime|null $date
+     * @param DateTime $date
      * @param               Object
      *
      * @return $this
