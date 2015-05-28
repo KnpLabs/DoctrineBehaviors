@@ -8,6 +8,7 @@ namespace Knp\DoctrineBehaviors\ORM\Sluggable;
 
 use Doctrine\ORM\Event\LifecycleEventArgs;
 use Knp\DoctrineBehaviors\Reflection\ClassAnalyzer;
+use Knp\DoctrineBehaviors\Model\Sluggable\TransliteratorInterface;
 
 use Knp\DoctrineBehaviors\ORM\AbstractSubscriber;
 
@@ -25,11 +26,17 @@ class SluggableSubscriber extends AbstractSubscriber
 {
     private $sluggableTrait;
 
-    public function __construct(ClassAnalyzer $classAnalyzer, $isRecursive, $sluggableTrait)
+    public function __construct(
+		ClassAnalyzer $classAnalyzer, 
+		$isRecursive, 
+		$sluggableTrait, 
+		TransliteratorInterface $transliterator
+	)
     {
         parent::__construct($classAnalyzer, $isRecursive);
 
         $this->sluggableTrait = $sluggableTrait;
+		$this->transliterator = $transliterator;
     }
 
     public function loadClassMetadata(LoadClassMetadataEventArgs $eventArgs)
@@ -58,7 +65,7 @@ class SluggableSubscriber extends AbstractSubscriber
         $classMetadata = $em->getClassMetadata(get_class($entity));
 
         if ($this->isSluggable($classMetadata)) {
-            $entity->generateSlug();
+            $entity->generateSlug($this->transliterator);
         }
     }
 
@@ -69,7 +76,7 @@ class SluggableSubscriber extends AbstractSubscriber
         $classMetadata = $em->getClassMetadata(get_class($entity));
 
         if ($this->isSluggable($classMetadata)) {
-            $entity->generateSlug();
+            $entity->generateSlug($this->transliterator);
         }
     }
 
