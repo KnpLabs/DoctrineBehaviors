@@ -27,16 +27,16 @@ class SluggableSubscriber extends AbstractSubscriber
     private $sluggableTrait;
 
     public function __construct(
-		ClassAnalyzer $classAnalyzer, 
-		$isRecursive, 
-		$sluggableTrait, 
-		TransliteratorInterface $transliterator
-	)
+        ClassAnalyzer $classAnalyzer, 
+        $isRecursive, 
+        $sluggableTrait, 
+        TransliteratorInterface $transliterator
+    )
     {
         parent::__construct($classAnalyzer, $isRecursive);
 
         $this->sluggableTrait = $sluggableTrait;
-		$this->transliterator = $transliterator;
+        $this->transliterator = $transliterator;
     }
 
     public function loadClassMetadata(LoadClassMetadataEventArgs $eventArgs)

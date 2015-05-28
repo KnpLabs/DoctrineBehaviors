@@ -96,7 +96,7 @@ trait SluggableMethods
     /**
      * Generates and sets the entity's slug. Called prePersist and preUpdate
      */
-    public function generateSlug(TransliteratorInterface $transliterator)
+    public function generateSlug(TransliteratorInterface $transliterator = null)
     {
         if ( $this->getRegenerateSlugOnUpdate() || empty( $this->slug ) ) {
             $fields = $this->getSluggableFields();
@@ -115,6 +115,10 @@ trait SluggableMethods
                 }
 
                 $values[] = $val;
+            }
+
+            if (null === $transliterator) {
+                $transliterator = new Transliterator();
             }
 
             $this->slug = $this->generateSlugValue($values, $transliterator);

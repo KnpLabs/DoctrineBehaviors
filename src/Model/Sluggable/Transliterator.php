@@ -11,8 +11,8 @@ namespace Knp\DoctrineBehaviors\Model\Sluggable;
 */
 class Transliterator implements TransliteratorInterface
 {
-	public function transliterate($text, $separator = '-')
-	{
-		return \Behat\Transliterator\Transliterator::transliterate($text, $separator);
-	}
+    public function transliterate($text, $separator = '-')
+    {
+        return \Behat\Transliterator\Transliterator::transliterate($text, $separator);
+    }
 }
