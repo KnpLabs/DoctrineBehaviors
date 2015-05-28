@@ -25,12 +25,13 @@ use Doctrine\ORM\Event\LoadClassMetadataEventArgs,
 class SluggableSubscriber extends AbstractSubscriber
 {
     private $sluggableTrait;
+    private $transliterator;
 
     public function __construct(
         ClassAnalyzer $classAnalyzer, 
         $isRecursive, 
         $sluggableTrait, 
-        TransliteratorInterface $transliterator
+        TransliteratorInterface $transliterator = null
     )
     {
         parent::__construct($classAnalyzer, $isRecursive);
