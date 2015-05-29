@@ -1,5 +1,5 @@
 <?php
-namespace Knp\DoctrineBehaviors\Model\Sluggable;
+namespace Knp\DoctrineBehaviors\Model\Tree;
 
 trait NodeProperties
 {
