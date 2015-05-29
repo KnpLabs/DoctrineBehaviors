@@ -4,7 +4,7 @@
  * Freely released with no restrictions, re-license however you'd like!
  */
 
-namespace Knp\DoctrineBehaviors\Model\Sluggable;
+namespace Knp\DoctrineBehaviors\Model\Tree;
 
 /**
  * Sluggable trait.
