@@ -21,6 +21,8 @@ use Doctrine\Common\Collections\ArrayCollection;
  */
 trait Node
 {
+    use NodeProperties;
+
     /**
      * @var ArrayCollection $childNodes the children in the tree
      */
@@ -30,8 +32,6 @@ trait Node
      * @var NodeInterface $parentNode the parent in the tree
      */
     private $parentNode;
-
-    protected $materializedPath = '';
 
     public function getNodeId()
     {
