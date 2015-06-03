@@ -31,17 +31,7 @@ Make sure to activate them by reading the [Subscribers](#subscribers) section.
 
 If you use symfony2, you can easily register them in:
 
-1. *Deprecated way:*
-Importing a service definition file:
-
-``` yaml
-    # app/config/config.yml
-    imports:
-        - { resource: ../../vendor/knplabs/doctrine-behaviors/config/orm-services.yml }
-
-```
-
-2. *Recommended way:*
+- *Recommended way:*
 
 Add to AppKernel
 
@@ -61,6 +51,16 @@ class AppKernel
         return $bundles;
     }
 }
+
+```
+
+- *Deprecated way:*
+Importing a service definition file:
+
+``` yaml
+    # app/config/config.yml
+    imports:
+        - { resource: ../../vendor/knplabs/doctrine-behaviors/config/orm-services.yml }
 
 ```
 
