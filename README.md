@@ -27,12 +27,38 @@ Make sure to activate them by reading the [Subscribers](#subscribers) section.
 <a name="subscribers" id="subscribers"></a>
 ## Subscribers
 
-If you use symfony2, you can easily register them by importing a service definition file:
+If you use symfony2, you can easily register them in:
+
+1. *Deprecated way:*
+Importing a service definition file:
 
 ``` yaml
     # app/config/config.yml
     imports:
         - { resource: ../../vendor/knplabs/doctrine-behaviors/config/orm-services.yml }
+
+```
+
+2. *Recommended way:*
+
+Add to AppKernel
+
+```php
+class AppKernel
+{
+    function registerBundles()
+    {
+        $bundles = array(
+            //...
+            new Knp\DoctrineBehaviors\Bundle\DoctrineBehaviorsBundle(),
+            //...
+        );
+
+        //...
+
+        return $bundles;
+    }
+}
 
 ```
 
