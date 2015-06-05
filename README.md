@@ -23,11 +23,39 @@ It currently handles:
 Some behaviors (translatable, timestampable, softDeletable, blameable, geocodable) need Doctrine subscribers in order to work.
 Make sure to activate them by reading the [Subscribers](#subscribers) section.
 
+##Installation
+```composer require knplabs/doctrine-behaviors:~1.1```
 
 <a name="subscribers" id="subscribers"></a>
 ## Subscribers
 
-If you use symfony2, you can easily register them by importing a service definition file:
+If you use symfony2, you can easily register them in:
+
+- *Recommended way:*
+
+Add to AppKernel
+
+```php
+class AppKernel
+{
+    function registerBundles()
+    {
+        $bundles = array(
+            //...
+            new Knp\DoctrineBehaviors\Bundle\DoctrineBehaviorsBundle(),
+            //...
+        );
+
+        //...
+
+        return $bundles;
+    }
+}
+
+```
+
+- *Deprecated way:*
+Importing a service definition file:
 
 ``` yaml
     # app/config/config.yml
