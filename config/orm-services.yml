@@ -22,6 +22,7 @@ parameters:
     knp.doctrine_behaviors.geocodable_subscriber.geocodable_trait: Knp\DoctrineBehaviors\Model\Geocodable\Geocodable
     knp.doctrine_behaviors.sluggable_subscriber.class: Knp\DoctrineBehaviors\ORM\Sluggable\SluggableSubscriber
     knp.doctrine_behaviors.sluggable_subscriber.sluggable_trait: Knp\DoctrineBehaviors\Model\Sluggable\Sluggable
+    knp.doctrine_behaviors.sluggable_subscriber.transliterator.class: Knp\DoctrineBehaviors\Model\Sluggable\Transliterator
     knp.doctrine_behaviors.tree_subscriber.class: Knp\DoctrineBehaviors\ORM\Tree\TreeSubscriber
     knp.doctrine_behaviors.tree_subscriber.tree_trait: Knp\DoctrineBehaviors\Model\Tree\Node
     knp.doctrine_behaviors.sortable_subscriber.class: Knp\DoctrineBehaviors\ORM\Sortable\SortableSubscriber
@@ -144,6 +145,10 @@ services:
         tags:
             - { name: doctrine.event_subscriber }
 
+    knp.doctrine_behaviors.sluggable_subscriber.transliterator:
+        class:   "%knp.doctrine_behaviors.sluggable_subscriber.transliterator.class%"
+        public:  false
+                
     knp.doctrine_behaviors.sluggable_subscriber:
         class: "%knp.doctrine_behaviors.sluggable_subscriber.class%"
         public: false
@@ -151,6 +156,7 @@ services:
             - "@knp.doctrine_behaviors.reflection.class_analyzer"
             - "%knp.doctrine_behaviors.reflection.is_recursive%"
             - "%knp.doctrine_behaviors.sluggable_subscriber.sluggable_trait%"
+            - "@knp.doctrine_behaviors.sluggable_subscriber.transliterator"
         tags:
             - { name: doctrine.event_subscriber }
 

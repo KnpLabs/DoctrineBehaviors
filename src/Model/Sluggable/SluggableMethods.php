@@ -68,7 +68,7 @@ trait SluggableMethods
      * @param $values
      * @return mixed|string
      */
-    private function generateSlugValue($values)
+    private function generateSlugValue($values, TransliteratorInterface $transliterator)
     {
         $usableValues = [];
         foreach ($values as $fieldName => $fieldValue) {
@@ -86,7 +86,6 @@ trait SluggableMethods
         // generate the slug itself
         $sluggableText = implode(' ', $usableValues);
 
-        $transliterator = new Transliterator;
         $sluggableText = $transliterator->transliterate($sluggableText, $this->getSlugDelimiter());
 
         $urlized = strtolower( trim( preg_replace("/[^a-zA-Z0-9\/_|+ -]/", '', $sluggableText ), $this->getSlugDelimiter() ) );
@@ -98,7 +97,7 @@ trait SluggableMethods
     /**
      * Generates and sets the entity's slug. Called prePersist and preUpdate
      */
-    public function generateSlug()
+    public function generateSlug(TransliteratorInterface $transliterator = null)
     {
         if ( $this->getRegenerateSlugOnUpdate() || empty( $this->slug ) ) {
             $fields = $this->getSluggableFields();
@@ -119,7 +118,11 @@ trait SluggableMethods
                 $values[] = $val;
             }
 
-            $this->slug = $this->generateSlugValue($values);
+            if (null === $transliterator) {
+                $transliterator = new Transliterator();
+            }
+
+            $this->slug = $this->generateSlugValue($values, $transliterator);
         }
     }
 }
