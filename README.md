@@ -293,9 +293,14 @@ so that when you try to call `getName` (for example) it will return you the tran
     {
         return $this->proxyCurrentLocaleTranslation($method, $arguments);
     }
-
+    
+    // or do it with PropertyAccessor that ships with Symfony SE
+    // if your methods don't take any required arguments
+    public function __call($method, $arguments)
+    {
+        return \Symfony\Component\PropertyAccess\PropertyAccess::createPropertyAccessor()->getValue($this->translate(), $method);
+    }
 ```
-
 
 <a name="softDeletable" id="softDeletable"></a>
 ### soft-deletable
