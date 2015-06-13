@@ -235,7 +235,7 @@ class CategoryTranslation
 The corresponding Category entity needs to `use ORMBehaviors\Translatable\Translatable;`
 and should only contain fields that you do not need to translate.
 
-```
+``` php
 <?php
 
 use Doctrine\ORM\Mapping as ORM;
