@@ -502,7 +502,7 @@ Sluggable generates slugs (uniqueness is not guaranteed) for an entity.
 Will automatically generate on update/persist (you can disable the on update generation by overriding `getRegenerateSlugOnUpdate` to return false.
 You can also override the slug delimiter from the default hyphen by overriding `getSlugDelimiter`.
 Slug generation algo can be changed by overriding `generateSlugValue`.
-Use cases include SEO (i.e. URLs like http://mysite.com/post/3/introduction-to-php)
+Use cases include SEO (i.e. URLs like http://example.com/post/3/introduction-to-php)
 ```php
 <?php
 
