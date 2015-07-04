@@ -152,12 +152,12 @@ class BlameableSubscriber extends AbstractSubscriber
      */
     public function prePersist(LifecycleEventArgs $eventArgs)
     {
-        $em =$eventArgs->getEntityManager();
+        $em = $eventArgs->getEntityManager();
         $uow = $em->getUnitOfWork();
         $entity = $eventArgs->getEntity();
 
         $classMetadata = $em->getClassMetadata(get_class($entity));
-        if ($this->isBlameable($classMetadata, true)) {
+        if ($this->isBlameable($classMetadata)) {
             if (!$entity->getCreatedBy()) {
                 $user = $this->getUser();
                 if ($this->isValidUser($user)) {
@@ -206,12 +206,12 @@ class BlameableSubscriber extends AbstractSubscriber
      */
     public function preUpdate(LifecycleEventArgs $eventArgs)
     {
-        $em =$eventArgs->getEntityManager();
+        $em = $eventArgs->getEntityManager();
         $uow = $em->getUnitOfWork();
         $entity = $eventArgs->getEntity();
 
         $classMetadata = $em->getClassMetadata(get_class($entity));
-        if ($this->isBlameable($classMetadata, true)) {
+        if ($this->isBlameable($classMetadata)) {
             if (!$entity->isBlameable()) {
                 return;
             }
@@ -235,12 +235,12 @@ class BlameableSubscriber extends AbstractSubscriber
      */
     public function preRemove(LifecycleEventArgs $eventArgs)
     {
-        $em =$eventArgs->getEntityManager();
+        $em = $eventArgs->getEntityManager();
         $uow = $em->getUnitOfWork();
         $entity = $eventArgs->getEntity();
 
         $classMetadata = $em->getClassMetadata(get_class($entity));
-        if ($this->isBlameable($classMetadata, true)) {
+        if ($this->isBlameable($classMetadata)) {
             if (!$entity->isBlameable()) {
                 return;
             }
@@ -307,12 +307,11 @@ class BlameableSubscriber extends AbstractSubscriber
      * Checks if entity is blameable
      *
      * @param ClassMetadata $classMetadata The metadata
-     * @param bool          $isRecursive   true to check for parent classes until trait is found
      *
      * @return Boolean
      */
-    private function isBlameable(ClassMetadata $classMetadata, $isRecursive = false)
+    private function isBlameable(ClassMetadata $classMetadata)
     {
-        return $this->getClassAnalyzer()->hasTrait($classMetadata->reflClass, $this->blameableTrait, $isRecursive);
+        return $this->getClassAnalyzer()->hasTrait($classMetadata->reflClass, $this->blameableTrait, $this->isRecursive);
     }
 }
