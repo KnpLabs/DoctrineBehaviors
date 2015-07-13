@@ -26,6 +26,8 @@ parameters:
     knp.doctrine_behaviors.tree_subscriber.tree_trait: Knp\DoctrineBehaviors\Model\Tree\Node
     knp.doctrine_behaviors.sortable_subscriber.class: Knp\DoctrineBehaviors\ORM\Sortable\SortableSubscriber
     knp.doctrine_behaviors.sortable_subscriber.sortable_trait: Knp\DoctrineBehaviors\Model\Sortable\Sortable
+    knp.doctrine_behaviors.trackable_subscriber.class: Knp\DoctrineBehaviors\ORM\Trackable\TrackableSubscriber
+    knp.doctrine_behaviors.trackable_subscriber.trackable_trait: Knp\DoctrineBehaviors\Model\Trackable\Trackable
 
 services:
     knp.doctrine_behaviors.reflection.class_analyzer:
@@ -154,3 +156,11 @@ services:
         tags:
             - { name: doctrine.event_subscriber }
 
+    knp.doctrine_behaviors.trackable_subscriber:
+        class:   "%knp.doctrine_behaviors.trackable_subscriber.class%"
+        arguments:
+            - "@knp.doctrine_behaviors.reflection.class_analyzer"
+            - "%knp.doctrine_behaviors.reflection.is_recursive%"
+            - "%knp.doctrine_behaviors.trackable_subscriber.trackable_trait%"
+        tags:
+            - { name: doctrine.event_subscriber }

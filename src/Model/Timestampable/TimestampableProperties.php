@@ -21,4 +21,6 @@ trait TimestampableProperties
     protected $createdAt;
 
     protected $updatedAt;
+
+    protected $deletedAt;
 }

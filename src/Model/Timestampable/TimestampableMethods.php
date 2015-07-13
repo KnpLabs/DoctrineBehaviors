@@ -11,6 +11,8 @@
 
 namespace Knp\DoctrineBehaviors\Model\Timestampable;
 
+use Knp\DoctrineBehaviors\ORM\Trackable\TrackedEventArgs;
+
 /**
  * Timestampable trait.
  *
@@ -39,6 +41,16 @@ trait TimestampableMethods
     }
 
     /**
+     * Returns deletedAt value.
+     *
+     * @return \DateTime
+     */
+    public function getDeletedAt()
+    {
+        return $this->deletedAt;
+    }
+
+    /**
      * @param \DateTime $createdAt
      * @return $this
      */
@@ -61,14 +73,28 @@ trait TimestampableMethods
     }
 
     /**
-     * Updates createdAt and updatedAt timestamps.
+     * @param \DateTime deletedAt
+     * @return $this
      */
-    public function updateTimestamps()
+    public function setDeletedAt(\DateTime $deletedAt)
     {
-        if (null === $this->createdAt) {
-            $this->createdAt = new \DateTime('now');
-        }
+        $this->deletedAt = $deletedAt;
 
-        $this->updatedAt = new \DateTime('now');
+        return $this;
+    }
+
+    public function trackTimestampableCreation(TrackedEventArgs $eventArgs)
+    {
+        $this->createdAt = $eventArgs->getMetadata()->get('timestamp');
+    }
+
+    public function trackTimestampableChange(TrackedEventArgs $eventArgs)
+    {
+        $this->updatedAt = $eventArgs->getMetadata()->get('timestamp');
+    }
+
+    public function trackTimestampableDeletion(TrackedEventArgs $eventArgs)
+    {
+        $this->deletedAt = $eventArgs->getMetadata()->get('timestamp');
     }
 }

@@ -80,4 +80,19 @@ trait BlameableMethods
     {
         return true;
     }
+
+    public function trackBlameableCreation(TrackedEventArgs $eventArgs)
+    {
+        $this->createdBy = $eventArgs->getMetadata()->get('user');
+    }
+
+    public function trackBlameableChange(TrackedEventArgs $eventArgs)
+    {
+        $this->updatedBy = $eventArgs->getMetadata()->get('user');
+    }
+
+    public function trackBlameableDeletion(TrackedEventArgs $eventArgs)
+    {
+        $this->deletedBy = $eventArgs->getMetadata()->get('user');
+    }
 }

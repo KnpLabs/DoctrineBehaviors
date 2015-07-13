@@ -15,9 +15,12 @@ use Knp\DoctrineBehaviors\Reflection\ClassAnalyzer;
 
 use Knp\DoctrineBehaviors\ORM\AbstractSubscriber;
 
+use Knp\DoctrineBehaviors\ORM\Trackable\TrackerInterface;
+
 use Doctrine\ORM\Event\LoadClassMetadataEventArgs,
     Doctrine\ORM\Events,
-    Doctrine\ORM\Mapping\ClassMetadata;
+    Doctrine\ORM\Mapping\ClassMetadata,
+    Doctrine\ORM\Event\LifecycleEventArgs;
 
 /**
  * Timestampable subscriber.
@@ -32,7 +35,7 @@ class TimestampableSubscriber extends AbstractSubscriber
     {
         parent::__construct($classAnalyzer, $isRecursive);
 
-        $this->timestampableTrait = $timestampableTrait;
+        $this->timestampableTrait  = $timestampableTrait;
     }
 
     public function loadClassMetadata(LoadClassMetadataEventArgs $eventArgs)
@@ -43,19 +46,14 @@ class TimestampableSubscriber extends AbstractSubscriber
             return;
         }
 
-        if ($this->isTimestampable($classMetadata)) {
-            if ($this->getClassAnalyzer()->hasMethod($classMetadata->reflClass, 'updateTimestamps')) {
-                $classMetadata->addLifecycleCallback('updateTimestamps', Events::prePersist);
-                $classMetadata->addLifecycleCallback('updateTimestamps', Events::preUpdate);
-            }
-
-            foreach (array('createdAt', 'updatedAt') as $field) {
+        if ($this->isTimestampable($classMetadata->reflClass->name)) {
+            foreach (['createdAt', 'updatedAt', 'deletedAt'] as $field) {
                 if (!$classMetadata->hasField($field)) {
-                    $classMetadata->mapField(array(
-                        'fieldName' => $field,
+                    $classMetadata->mapField([
+                       'fieldName' => $field,
                         'type'      => 'datetime',
-                        'nullable'  => true
-                    ));
+                        'nullable'  => true,
+                    ]);
                 }
             }
         }
@@ -66,19 +64,30 @@ class TimestampableSubscriber extends AbstractSubscriber
         return [Events::loadClassMetadata];
     }
 
+    private function isTimestampable($class)
+    {
+        return $this->getClassAnalyzer()->hasTrait(new \ReflectionClass($class), $this->timestampableTrait, $this->isRecursive);
+    }
+
     /**
      * Checks if entity is timestampable
      *
-     * @param ClassMetadata $classMetadata The metadata
+     * @param LifecycleEventArgs $classMetadata The event args
      *
      * @return Boolean
      */
-    private function isTimestampable(ClassMetadata $classMetadata)
+    public function isEntitySupported(LifecycleEventArgs $eventArgs)
     {
-        return $this->getClassAnalyzer()->hasTrait(
-            $classMetadata->reflClass,
-            $this->timestampableTrait,
-            $this->isRecursive
-        );
+        return $this->isTimestampable(get_class($eventArgs->getEntity()));
+    }
+
+    public function getMetadata()
+    {
+        return new \DateTime;
+    }
+
+    public function getName()
+    {
+        return 'timestamp';
     }
 }
