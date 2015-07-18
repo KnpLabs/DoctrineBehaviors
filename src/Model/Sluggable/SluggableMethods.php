@@ -42,6 +42,16 @@ trait SluggableMethods
     }
 
     /**
+     * Returns whether or not the unique slug gets regenerated.
+     *
+     * @return bool
+     */
+    public function getRegenerateUniqueSlug()
+    {
+        return false;
+    }
+
+    /**
      * Sets the entity's slug.
      *
      * @param $slug

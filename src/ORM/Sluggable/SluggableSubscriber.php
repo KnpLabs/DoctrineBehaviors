@@ -6,13 +6,14 @@
 
 namespace Knp\DoctrineBehaviors\ORM\Sluggable;
 
+use Doctrine\Common\Collections\Criteria;
+use Doctrine\ORM\EntityManager;
 use Doctrine\ORM\Event\LifecycleEventArgs;
 use Knp\DoctrineBehaviors\Reflection\ClassAnalyzer;
 
 use Knp\DoctrineBehaviors\ORM\AbstractSubscriber;
 
 use Doctrine\ORM\Event\LoadClassMetadataEventArgs,
-    Doctrine\Common\EventSubscriber,
     Doctrine\ORM\Events,
     Doctrine\ORM\Mapping\ClassMetadata;
 
@@ -59,6 +60,10 @@ class SluggableSubscriber extends AbstractSubscriber
 
         if ($this->isSluggable($classMetadata)) {
             $entity->generateSlug();
+
+            if ($entity->getRegenerateUniqueSlug()) {
+                $this->generateUniqueSlugFor($entity, $em);
+            }
         }
     }
 
@@ -70,6 +75,10 @@ class SluggableSubscriber extends AbstractSubscriber
 
         if ($this->isSluggable($classMetadata)) {
             $entity->generateSlug();
+
+            if ($entity->getRegenerateUniqueSlug()) {
+                $this->generateUniqueSlugFor($entity, $em);
+            }
         }
     }
 
@@ -92,5 +101,27 @@ class SluggableSubscriber extends AbstractSubscriber
             $this->sluggableTrait,
             $this->isRecursive
         );
+    }
+
+    /**
+     * @param $entity
+     * @param EntityManager $em
+     */
+    private function generateUniqueSlugFor($entity, EntityManager $em)
+    {
+        $classMetadata = $em->getClassMetadata(get_class($entity));
+        $slug = $entity->getSlug();
+        $uniqueSlug = $slug;
+
+        $i = 0;
+        while ($em->getRepository($classMetadata->getName())->matching(
+            Criteria::create()
+                ->andWhere(Criteria::expr()->neq('id', $entity->getId()))
+                ->andWhere(Criteria::expr()->eq('slug', $uniqueSlug))
+        )->count()) {
+            $uniqueSlug = $slug . '-' . ++$i;
+        }
+
+        $entity->setSlug($uniqueSlug);
     }
 }
