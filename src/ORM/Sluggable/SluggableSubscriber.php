@@ -7,6 +7,7 @@
 namespace Knp\DoctrineBehaviors\ORM\Sluggable;
 
 use Doctrine\ORM\Event\LifecycleEventArgs;
+use Knp\DoctrineBehaviors\Model\Sluggable\SluggableInterface;
 use Knp\DoctrineBehaviors\Reflection\ClassAnalyzer;
 
 use Knp\DoctrineBehaviors\ORM\AbstractSubscriber;
@@ -34,13 +35,14 @@ class SluggableSubscriber extends AbstractSubscriber
 
     public function loadClassMetadata(LoadClassMetadataEventArgs $eventArgs)
     {
+        $entity = $eventArgs->getEntity();
         $classMetadata = $eventArgs->getClassMetadata();
 
         if (null === $classMetadata->reflClass) {
             return;
         }
 
-        if ($this->isSluggable($classMetadata)) {
+        if ($entity instanceof SluggableInterface) {
             if (!$classMetadata->hasField('slug')) {
                 $classMetadata->mapField(array(
                     'fieldName' => 'slug',
@@ -54,10 +56,8 @@ class SluggableSubscriber extends AbstractSubscriber
     public function prePersist(LifecycleEventArgs $eventArgs)
     {
         $entity = $eventArgs->getEntity();
-        $em = $eventArgs->getEntityManager();
-        $classMetadata = $em->getClassMetadata(get_class($entity));
 
-        if ($this->isSluggable($classMetadata)) {
+        if ($entity instanceof SluggableInterface) {
             $entity->generateSlug();
         }
     }
@@ -65,10 +65,8 @@ class SluggableSubscriber extends AbstractSubscriber
     public function preUpdate(LifecycleEventArgs $eventArgs)
     {
         $entity = $eventArgs->getEntity();
-        $em = $eventArgs->getEntityManager();
-        $classMetadata = $em->getClassMetadata(get_class($entity));
 
-        if ($this->isSluggable($classMetadata)) {
+        if ($entity instanceof SluggableInterface) {
             $entity->generateSlug();
         }
     }
