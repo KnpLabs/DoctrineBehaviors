@@ -109,12 +109,11 @@ class SluggableSubscriber extends AbstractSubscriber
      */
     private function generateUniqueSlugFor($entity, EntityManager $em)
     {
-        $classMetadata = $em->getClassMetadata(get_class($entity));
         $slug = $entity->getSlug();
         $uniqueSlug = $slug;
 
         $i = 0;
-        while ($em->getRepository($classMetadata->getName())->matching(
+        while ($em->getRepository(get_class($entity))->matching(
             Criteria::create()
                 ->andWhere(Criteria::expr()->neq('id', $entity->getId()))
                 ->andWhere(Criteria::expr()->eq('slug', $uniqueSlug))
