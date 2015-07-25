@@ -61,7 +61,7 @@ class SluggableSubscriber extends AbstractSubscriber
         if ($this->isSluggable($classMetadata)) {
             $entity->generateSlug();
 
-            if ($entity->getRegenerateUniqueSlug()) {
+            if ($entity->shouldGenerateUniqueSlugs()) {
                 $this->generateUniqueSlugFor($entity, $em);
             }
         }
@@ -76,7 +76,7 @@ class SluggableSubscriber extends AbstractSubscriber
         if ($this->isSluggable($classMetadata)) {
             $entity->generateSlug();
 
-            if ($entity->getRegenerateUniqueSlug()) {
+            if ($entity->shouldGenerateUniqueSlugs()) {
                 $this->generateUniqueSlugFor($entity, $em);
             }
         }
