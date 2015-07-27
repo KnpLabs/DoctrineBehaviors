@@ -7,6 +7,7 @@
 namespace Knp\DoctrineBehaviors\ORM\Sluggable;
 
 use Doctrine\Common\Collections\Criteria;
+use Doctrine\ORM\AbstractQuery;
 use Doctrine\ORM\EntityManager;
 use Doctrine\ORM\Event\LifecycleEventArgs;
 use Knp\DoctrineBehaviors\Reflection\ClassAnalyzer;
@@ -113,11 +114,17 @@ class SluggableSubscriber extends AbstractSubscriber
         $uniqueSlug = $slug;
 
         $i = 0;
-        while ($em->getRepository(get_class($entity))->matching(
-            Criteria::create()
-                ->andWhere(Criteria::expr()->neq('id', $entity->getId()))
-                ->andWhere(Criteria::expr()->eq('slug', $uniqueSlug))
-        )->count()) {
+        $qb = $em->getRepository(get_class($entity))->createQueryBuilder('e');
+        $qb
+            ->select('COUNT(e)')
+            ->andWhere('e.id != :id')
+            ->andWhere('e.slug = :slug')
+        ;
+        $query = $qb->getQuery();
+        while ((bool)$query->execute([
+            'id' => $entity->getId(),
+            'slug' => $uniqueSlug,
+        ], AbstractQuery::HYDRATE_SINGLE_SCALAR)) {
             $uniqueSlug = $slug . '-' . ++$i;
         }
 
