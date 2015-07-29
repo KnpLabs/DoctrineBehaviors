@@ -6,7 +6,6 @@
 
 namespace Knp\DoctrineBehaviors\ORM\Sluggable;
 
-use Doctrine\Common\Collections\Criteria;
 use Doctrine\ORM\AbstractQuery;
 use Doctrine\ORM\EntityManager;
 use Doctrine\ORM\Event\LifecycleEventArgs;
@@ -17,6 +16,7 @@ use Knp\DoctrineBehaviors\ORM\AbstractSubscriber;
 use Doctrine\ORM\Event\LoadClassMetadataEventArgs,
     Doctrine\ORM\Events,
     Doctrine\ORM\Mapping\ClassMetadata;
+use Knp\DoctrineBehaviors\Repository\SluggableRepository;
 
 /**
  * Sluggable subscriber.
@@ -78,7 +78,7 @@ class SluggableSubscriber extends AbstractSubscriber
             $entity->generateSlug();
 
             if ($entity->shouldGenerateUniqueSlugs()) {
-                $this->generateUniqueSlugFor($entity, $em);
+                $this->generateUniqueSlugFor($entity, $em, $classMetadata);
             }
         }
     }
@@ -107,24 +107,20 @@ class SluggableSubscriber extends AbstractSubscriber
     /**
      * @param $entity
      * @param EntityManager $em
+     * @param ClassMetadata $classMetadata
      */
-    private function generateUniqueSlugFor($entity, EntityManager $em)
+    private function generateUniqueSlugFor($entity, EntityManager $em, ClassMetadata $classMetadata)
     {
-        $slug = $entity->getSlug();
-        $uniqueSlug = $slug;
+        $repo = $em->getRepository($classMetadata->name);
+        if (!$repo instanceof SluggableRepository) {
+            // Create default repository if entity one do not extends it
+            $repo = new SluggableRepository($em, $classMetadata);
+        }
 
         $i = 0;
-        $qb = $em->getRepository(get_class($entity))->createQueryBuilder('e');
-        $qb
-            ->select('COUNT(e)')
-            ->andWhere('e.id != :id')
-            ->andWhere('e.slug = :slug')
-        ;
-        $query = $qb->getQuery();
-        while ((bool)$query->execute([
-            'id' => $entity->getId(),
-            'slug' => $uniqueSlug,
-        ], AbstractQuery::HYDRATE_SINGLE_SCALAR)) {
+        $slug = $entity->getSlug();
+        $uniqueSlug = $slug;
+        while ((bool)$repo->isSlugUniqueFor($entity, $uniqueSlug)) {
             $uniqueSlug = $slug . '-' . ++$i;
         }
 

@@ -154,4 +154,3 @@ services:
             - "%knp.doctrine_behaviors.sluggable_subscriber.sluggable_trait%"
         tags:
             - { name: doctrine.event_subscriber }
-
