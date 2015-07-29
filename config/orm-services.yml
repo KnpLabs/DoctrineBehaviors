@@ -148,10 +148,6 @@ services:
     knp.doctrine_behaviors.sluggable_subscriber:
         class: "%knp.doctrine_behaviors.sluggable_subscriber.class%"
         public: false
-        arguments:
-            - "@knp.doctrine_behaviors.reflection.class_analyzer"
-            - "%knp.doctrine_behaviors.reflection.is_recursive%"
-            - "%knp.doctrine_behaviors.sluggable_subscriber.sluggable_trait%"
         tags:
             - { name: doctrine.event_subscriber }
 
