@@ -46,7 +46,7 @@ trait SluggableMethods
      *
      * @return bool
      */
-    public function shouldGenerateUniqueSlugs()
+    public static function shouldGenerateUniqueSlugs()
     {
         return false;
     }
