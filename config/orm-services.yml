@@ -73,9 +73,6 @@ services:
         class:   "%knp.doctrine_behaviors.timestampable_subscriber.class%"
         public:  false
         arguments:
-            - "@knp.doctrine_behaviors.reflection.class_analyzer"
-            - "%knp.doctrine_behaviors.reflection.is_recursive%"
-            - "%knp.doctrine_behaviors.timestampable_subscriber.timestampable_trait%"
             - "%knp.doctrine_behaviors.timestampable_subscriber.db_field_type%"
         tags:
             - { name: doctrine.event_subscriber }
