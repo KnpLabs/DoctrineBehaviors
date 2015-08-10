@@ -11,30 +11,18 @@
 
 namespace Knp\DoctrineBehaviors\ORM\Tree;
 
-use Knp\DoctrineBehaviors\Reflection\ClassAnalyzer;
-
-use Knp\DoctrineBehaviors\ORM\AbstractSubscriber;
-
-use Doctrine\ORM\Event\LoadClassMetadataEventArgs,
-    Doctrine\ORM\Events,
-    Doctrine\ORM\Mapping\ClassMetadata;
+use Doctrine\Common\EventSubscriber;
+use Doctrine\ORM\Event\LoadClassMetadataEventArg;
+use Doctrine\ORM\Event\LoadClassMetadataEventArgs;
+use Doctrine\ORM\Events;
 
 /**
  * Tree subscriber.
  *
  * Adds mapping to the tree entities.
  */
-class TreeSubscriber extends AbstractSubscriber
+class TreeSubscriber implements EventSubscriber
 {
-    private $nodeTrait;
-
-    public function __construct(ClassAnalyzer $classAnalyzer, $isRecursive, $nodeTrait)
-    {
-        parent::__construct($classAnalyzer, $isRecursive);
-
-        $this->nodeTrait = $nodeTrait;
-    }
-
     public function loadClassMetadata(LoadClassMetadataEventArgs $eventArgs)
     {
         $classMetadata = $eventArgs->getClassMetadata();
@@ -43,13 +31,26 @@ class TreeSubscriber extends AbstractSubscriber
             return;
         }
 
-        if ($this->isTreeNode($classMetadata)) {
-
+        if (is_subclass_of($classMetadata->getName(), 'Knp\DoctrineBehaviors\Model\Tree\NodeInterface')) {
+            if (!$classMetadata->hasField('childNodes')) {
+                $classMetadata->mapOneToMany(array(
+                    'targetEntity' => $classMetadata->getName(),
+                    'fieldName'    => 'childNodes',
+                    'mappedBy'     => 'parentNode',
+                ));
+            }
+            if (!$classMetadata->hasField('parentNode')) {
+                $classMetadata->mapManyToOne(array(
+                    'targetEntity' => $classMetadata->getName(),
+                    'fieldName'    => 'parentNode',
+                    'inversedBy'   => 'childNodes',
+                ));
+            }
             if (!$classMetadata->hasField('materializedPath')) {
                 $classMetadata->mapField(array(
                     'fieldName' => 'materializedPath',
                     'type'      => 'string',
-                    'length'    => 255
+                    'length'    => 255,
                 ));
             }
         }
@@ -58,21 +59,5 @@ class TreeSubscriber extends AbstractSubscriber
     public function getSubscribedEvents()
     {
         return [Events::loadClassMetadata];
-    }
-
-    /**
-     * Checks if entity is a tree
-     *
-     * @param ClassMetadata $classMetadata The metadata
-     *
-     * @return Boolean
-     */
-    private function isTreeNode(ClassMetadata $classMetadata)
-    {
-        return $this->getClassAnalyzer()->hasTrait(
-            $classMetadata->reflClass,
-            $this->nodeTrait,
-            $this->isRecursive
-        );
     }
 }
