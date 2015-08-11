@@ -5,7 +5,7 @@ namespace Knp\DoctrineBehaviors\ORM\Tree;
 use Knp\DoctrineBehaviors\Model\Tree\NodeInterface;
 use Doctrine\ORM\QueryBuilder;
 
-trait Tree
+trait TreeRepository
 {
     /**
      * Constructs a query builder to get all root nodes
