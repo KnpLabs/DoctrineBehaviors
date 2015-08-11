@@ -11,15 +11,11 @@
 
 namespace Knp\DoctrineBehaviors\ORM\SoftDeletable;
 
-use Knp\DoctrineBehaviors\Reflection\ClassAnalyzer;
-
-use Knp\DoctrineBehaviors\ORM\AbstractSubscriber;
-
-use Doctrine\ORM\Event\LoadClassMetadataEventArgs,
-    Doctrine\Common\Persistence\Mapping\ClassMetadata,
-    Doctrine\Common\EventSubscriber,
-    Doctrine\ORM\Event\OnFlushEventArgs,
-    Doctrine\ORM\Events;
+use Doctrine\Common\EventSubscriber;
+use Doctrine\ORM\Event\LoadClassMetadataEventArgs;
+use Doctrine\ORM\Event\OnFlushEventArgs;
+use Doctrine\ORM\Events;
+use Knp\DoctrineBehaviors\Model\SoftDeletable\SoftDeletableInterface;
 
 /**
  * SoftDeletable Doctrine2 subscriber.
@@ -27,17 +23,8 @@ use Doctrine\ORM\Event\LoadClassMetadataEventArgs,
  * Listens to onFlush event and marks SoftDeletable entities
  * as deleted instead of really removing them.
  */
-class SoftDeletableSubscriber extends AbstractSubscriber
+class SoftDeletableSubscriber implements EventSubscriber
 {
-    private $softDeletableTrait;
-
-    public function __construct(ClassAnalyzer $classAnalyzer, $isRecursive, $softDeletableTrait)
-    {
-        parent::__construct($classAnalyzer, $isRecursive);
-
-        $this->softDeletableTrait = $softDeletableTrait;
-    }
-
     /**
      * Listens to onFlush event.
      *
@@ -48,9 +35,10 @@ class SoftDeletableSubscriber extends AbstractSubscriber
         $em  = $args->getEntityManager();
         $uow = $em->getUnitOfWork();
 
+        /** @var SoftDeletableInterface $entity */
         foreach ($uow->getScheduledEntityDeletions() as $entity) {
             $classMetadata = $em->getClassMetadata(get_class($entity));
-            if ($this->isSoftDeletable($classMetadata)) {
+            if (is_subclass_of($classMetadata->getName(), 'Knp\DoctrineBehaviors\Model\SoftDeletable\SoftDeletableInterface')) {
                 $oldValue = $entity->getDeletedAt();
 
                 $entity->delete();
@@ -62,18 +50,6 @@ class SoftDeletableSubscriber extends AbstractSubscriber
                 ]);
             }
         }
-    }
-
-    /**
-     * Checks if entity is softDeletable
-     *
-     * @param ClassMetadata $classMetadata The metadata
-     *
-     * @return Boolean
-     */
-    private function isSoftDeletable(ClassMetadata $classMetadata)
-    {
-        return $this->getClassAnalyzer()->hasTrait($classMetadata->reflClass, $this->softDeletableTrait, $this->isRecursive);
     }
 
     /**
@@ -94,13 +70,12 @@ class SoftDeletableSubscriber extends AbstractSubscriber
             return;
         }
 
-        if ($this->isSoftDeletable($classMetadata)) {
-
+        if (is_subclass_of($classMetadata->getName(), 'Knp\DoctrineBehaviors\Model\SoftDeletable\SoftDeletableInterface')) {
             if (!$classMetadata->hasField('deletedAt')) {
                 $classMetadata->mapField(array(
                     'fieldName' => 'deletedAt',
                     'type'      => 'datetime',
-                    'nullable'  => true
+                    'nullable'  => true,
                 ));
             }
         }
