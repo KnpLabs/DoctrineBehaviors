@@ -1,5 +1,14 @@
 <?php
 
+/**
+ * This file is part of the KnpDoctrineBehaviors package.
+ *
+ * (c) KnpLabs <http://knplabs.com/>
+ *
+ * For the full copyright and license information, please view the LICENSE
+ * file that was distributed with this source code.
+ */
+
 namespace Knp\DoctrineBehaviors\Model\Tree;
 
 use Doctrine\Common\Collections\Collection;
@@ -8,30 +17,31 @@ use Doctrine\Common\Collections\Collection;
  * Tree\Node defines a set of needed methods
  * to work with materialized path tree nodes
  *
- * @author     Florian Klein <florian.klein@free.fr>
+ * @author Florian Klein <florian.klein@free.fr>
  */
 interface NodeInterface
 {
     /**
      * @return string the field that will represent the node in the path
-     **/
+     */
     public function getNodeId();
 
     /**
      * @return string the materialized path,
      * eg the representation of path from all ancestors
-     **/
+     */
     public function getMaterializedPath();
 
     /**
      * @return string the real materialized path,
      * eg the representation of path from all ancestors + current node
-     **/
+     */
     public function getRealMaterializedPath();
 
     /**
-     * @return string the materialized path from the parent, eg: the representation of path from all parent ancestors
-     **/
+     * @return string the materialized path from the parent,
+     * eg: the representation of path from all parent ancestors
+     */
     public function getParentMaterializedPath();
 
     /**
@@ -43,14 +53,14 @@ interface NodeInterface
 
     /**
      * @return NodeInterface the parent node
-     **/
+     */
     public function getParentNode();
 
     /**
      * @param string $path the materialized path, eg: the the materialized path to its parent
      *
      * @return NodeInterface $this Fluent interface
-     **/
+     */
     public function setMaterializedPath($path);
 
     /**
@@ -64,54 +74,56 @@ interface NodeInterface
      * @param NodeInterface $node The node to use as a parent
      *
      * @return NodeInterface $this Fluent interface
-     **/
+     */
     public function setChildNodeOf(NodeInterface $node);
 
     /**
-     * @param NodeInterface $node the node to append to the children collection
+     * @param NodeInterface $node The node to append to the children collection
      *
      * @return NodeInterface $this Fluent interface
-     **/
+     */
     public function addChildNode(NodeInterface $node);
 
     /**
      * @return Collection the children collection
-     **/
+     */
     public function getChildNodes();
 
     /**
      * @return bool if the node is a leaf (i.e has no children)
-     **/
+     */
     public function isLeafNode();
 
     /**
      * @return bool if the node is a root (i.e has no parent)
-     **/
+     */
     public function isRootNode();
     
     /**
      * @return NodeInterface
-     **/
+     */
     public function getRootNode();
 
     /**
-     * Tells if this node is a child of another node
+     * Tells if this node is a child of another node.
+     *
      * @param NodeInterface $node the node to compare with
      *
      * @return boolean true if this node is a direct child of $node
-     **/
+     */
     public function isChildNodeOf(NodeInterface $node);
 
     /**
-     *
-     * @return integer the level of this node, eg: the depth compared to root node
-     **/
+     * @return integer the level of this node, eg: the depth compared to root node.
+     */
     public function getNodeLevel();
 
     /**
-     * Builds a hierarchical tree from a flat collection of NodeInterface elements
+     * Builds a hierarchical tree from a flat collection of NodeInterface elements.
+     *
+     * @param array $nodes
      *
      * @return void
-     **/
+     */
     public function buildTree(array $nodes);
 }
