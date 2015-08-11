@@ -3,20 +3,22 @@
 [![Build Status](https://secure.travis-ci.org/KnpLabs/DoctrineBehaviors.png)](http://travis-ci.org/KnpLabs/DoctrineBehaviors)
 
 
-This php 5.4+ library is a collection of traits
+This PHP `>=5.4` library is a collection of traits and interfaces
 that add behaviors to Doctrine2 entites and repositories.
 
 It currently handles:
 
- * [tree](#tree)
- * [translatable](#translatable)
- * [timestampable](#timestampable)
- * [softDeletable](#softDeletable)
  * [blameable](#blameable)
- * [loggable](#loggable)
- * [geocodable](#geocodable)
  * [filterable](#filterable)
+ * [geocodable](#geocodable)
+ * joinable
+ * [loggable](#loggable)
  * [sluggable](#sluggable)
+ * [softDeletable](#softDeletable)
+ * sortable
+ * [timestampable](#timestampable)
+ * [translatable](#translatable)
+ * [tree](#tree)
 
 ## Notice:
 
@@ -91,14 +93,15 @@ use Knp\DoctrineBehaviors\Model as ORMBehaviors;
  */
 class Category implements ORMBehaviors\Tree\NodeInterface, \ArrayAccess
 {
-    use ORMBehaviors\Tree\Node,
-        ORMBehaviors\Translatable\Translatable,
-        ORMBehaviors\Timestampable\Timestampable,
-        ORMBehaviors\SoftDeletable\SoftDeletable,
-        ORMBehaviors\Blameable\Blameable,
+    use ORMBehaviors\Blameable\Blameable,
         ORMBehaviors\Geocodable\Geocodable,
         ORMBehaviors\Loggable\Loggable,
-        ORMBehaviors\Sluggable\Sluggable
+        ORMBehaviors\Sluggable\Sluggable,
+        ORMBehaviors\SoftDeletable\SoftDeletable,
+        ORMBehaviors\Sortable\Sortable,
+        ORMBehaviors\Timestampable\Timestampable,
+        ORMBehaviors\Translatable\Translatable,
+        ORMBehaviors\Tree\Node
     ;
 
     /**
