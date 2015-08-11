@@ -11,30 +11,20 @@
 
 namespace Knp\DoctrineBehaviors\ORM\Sortable;
 
-use Knp\DoctrineBehaviors\Reflection\ClassAnalyzer;
-
-use Knp\DoctrineBehaviors\ORM\AbstractSubscriber;
-
-use Doctrine\ORM\Event\LoadClassMetadataEventArgs,
-    Doctrine\ORM\Events,
-    Doctrine\ORM\Mapping\ClassMetadata;
+use Doctrine\Common\EventSubscriber;
+use Doctrine\ORM\Event\LoadClassMetadataEventArgs;
+use Doctrine\ORM\Events;
 
 /**
  * Sortable subscriber.
  *
  * Adds mapping to the sortable entities.
  */
-class SortableSubscriber extends AbstractSubscriber
+class SortableSubscriber implements EventSubscriber
 {
-    private $sortableTrait;
-
-    public function __construct(ClassAnalyzer $classAnalyzer, $isRecursive, $sortableTrait)
-    {
-        parent::__construct($classAnalyzer, $isRecursive);
-
-        $this->sortableTrait = $sortableTrait;
-    }
-
+    /**
+     * @param LoadClassMetadataEventArgs $eventArgs
+     */
     public function loadClassMetadata(LoadClassMetadataEventArgs $eventArgs)
     {
         $classMetadata = $eventArgs->getClassMetadata();
@@ -43,35 +33,21 @@ class SortableSubscriber extends AbstractSubscriber
             return;
         }
 
-        if ($this->isSortable($classMetadata)) {
-
+        if (is_subclass_of($classMetadata->getName(), 'Knp\DoctrineBehaviors\Model\Sortable\SortableInterface')) {
             if (!$classMetadata->hasField('sort')) {
                 $classMetadata->mapField(array(
                     'fieldName' => 'sort',
-                    'type'      => 'integer'
+                    'type'      => 'integer',
                 ));
             }
         }
     }
 
+    /**
+     * @return array
+     */
     public function getSubscribedEvents()
     {
         return [Events::loadClassMetadata];
-    }
-
-    /**
-     * Checks if entity is a sortable
-     *
-     * @param ClassMetadata $classMetadata The metadata
-     *
-     * @return Boolean
-     */
-    private function isSortable(ClassMetadata $classMetadata)
-    {
-        return $this->getClassAnalyzer()->hasTrait(
-            $classMetadata->reflClass,
-            $this->sortableTrait,
-            $this->isRecursive
-        );
     }
 }

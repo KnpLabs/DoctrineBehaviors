@@ -93,10 +93,6 @@ services:
     knp.doctrine_behaviors.sortable_subscriber:
         class:   "%knp.doctrine_behaviors.sortable_subscriber.class%"
         public:  false
-        arguments:
-            - "@knp.doctrine_behaviors.reflection.class_analyzer"
-            - "%knp.doctrine_behaviors.reflection.is_recursive%"
-            - "%knp.doctrine_behaviors.sortable_subscriber.sortable_trait%"
         tags:
             - { name: doctrine.event_subscriber }
 
