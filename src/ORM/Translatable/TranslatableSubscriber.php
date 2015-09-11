@@ -299,6 +299,16 @@ class TranslatableSubscriber extends AbstractSubscriber
 
     public function postLoad(LifecycleEventArgs $eventArgs)
     {
+        $this->setLocales($eventArgs);
+    }
+
+    public function prePersist(LifecycleEventArgs $eventArgs)
+    {
+        $this->setLocales($eventArgs);
+    }
+
+    private function setLocales(LifecycleEventArgs $eventArgs)
+    {
         $em            = $eventArgs->getEntityManager();
         $entity        = $eventArgs->getEntity();
         $classMetadata = $em->getClassMetadata(get_class($entity));
@@ -340,6 +350,7 @@ class TranslatableSubscriber extends AbstractSubscriber
         return [
             Events::loadClassMetadata,
             Events::postLoad,
+            Events::prePersist,
         ];
     }
 }
