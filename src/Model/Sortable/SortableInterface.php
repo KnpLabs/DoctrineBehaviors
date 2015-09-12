@@ -10,16 +10,14 @@ interface SortableInterface
     /**
      * Get sort.
      *
-     * @return mixed
+     * @return int
      */
     public function getSort();
 
     /**
      * Set sort.
      *
-     * @param mixed $sort
-     *
-     * @return $this
+     * @param int $sort
      */
     public function setSort($sort);
 
@@ -32,8 +30,6 @@ interface SortableInterface
 
     /**
      * Set reordered.
-     *
-     * @return $this
      */
     public function setReordered();
 }
