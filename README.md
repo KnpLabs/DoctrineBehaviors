@@ -4,7 +4,7 @@
 
 
 This PHP `>=5.4` library is a collection of traits and interfaces
-that add behaviors to Doctrine2 entites and repositories.
+that add behaviors to Doctrine2 entities and repositories.
 
 It currently handles:
 
