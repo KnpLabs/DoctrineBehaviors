@@ -145,7 +145,7 @@ You now have a working `Category` that behaves like:
     $child = new Category;
     $child->setId(2);
 
-    $child->setChildOf($category);
+    $child->setChildNodeOf($category);
 
     $em->persist($child);
     $em->persist($category);
@@ -153,11 +153,11 @@ You now have a working `Category` that behaves like:
 
     $root = $em->getRepository('Category')->getTree();
 
-    $root->getParent(); // null
+    $root->getParentNode(); // null
     $root->getChildNodes(); // ArrayCollection
     $root[0][1]; // node or null
-    $root->isLeaf(); // boolean
-    $root->isRoot(); // boolean
+    $root->isLeafNode(); // boolean
+    $root->isRootNode(); // boolean
 
 ```
 
