@@ -26,7 +26,8 @@ class TimestampableTest extends \PHPUnit_Framework_TestCase
             new \Knp\DoctrineBehaviors\ORM\Timestampable\TimestampableSubscriber(
                 new ClassAnalyzer(),
                 false,
-                'Knp\DoctrineBehaviors\Model\Timestampable\Timestampable'
+                'Knp\DoctrineBehaviors\Model\Timestampable\Timestampable',
+                'datetime'
         ));
 
         return $em;

@@ -448,6 +448,19 @@ so that when you try to call `getName` (for example) it will return you the tran
 
 ```
 
+If you wish to change the doctrine type of the database fields that will be created for timestampable models you can
+set the following parameter like so:
+
+``` yaml
+parameters:
+    knp.doctrine_behaviors.timestampable_subscriber.db_field_type: datetimetz
+```
+
+`datetimetz` here is a useful one to use if you are working with a Postgres database, otherwise you may encounter some
+timezone issues. For more information on this see: 
+<a href="http://doctrine-dbal.readthedocs.org/en/latest/reference/known-vendor-issues.html#datetime-datetimetz-and-time-types">http://doctrine-dbal.readthedocs.org/en/latest/reference/known-vendor-issues.html#datetime-datetimetz-and-time-types</a>
+
+The default type is `datetime`.
 
 <a name="blameable" id="blameable"></a>
 ### blameable
