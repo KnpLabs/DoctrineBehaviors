@@ -28,6 +28,19 @@ Make sure to activate them by reading the [Subscribers](#subscribers) section.
 ##Installation
 ```composer require knplabs/doctrine-behaviors:~1.1```
 
+## Configuration
+By default, when integrated with Symfony, all subscribers are enabled (if you don't specify any configuration for the bundle).
+But you can enable behaviors you need in a whitelist manner:
+```yaml
+knp_doctrine_behaviors:
+    blameable:      false
+    geocodable:     ~     # Here null is converted to false
+    loggable:       ~
+    sluggable:      true
+    soft_deletable: true
+    # All others behaviors are disabled
+```
+
 <a name="subscribers" id="subscribers"></a>
 ## Subscribers
 
