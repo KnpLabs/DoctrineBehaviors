@@ -104,10 +104,9 @@ trait TranslatableMethods
         }
 
         if ($fallbackToDefault) {
-            if ($fallbackLocale = $this->computeFallbackLocale($locale)) {
-                if ($translation = $this->findTranslationByLocale($fallbackLocale)) {
-                    return $translation;
-                }
+            if (($fallbackLocale = $this->computeFallbackLocale($locale))
+                && ($translation = $this->findTranslationByLocale($fallbackLocale))) {
+                return $translation;
             }
 
             if ($defaultTranslation = $this->findTranslationByLocale($this->getDefaultLocale(), false)) {
