@@ -7,14 +7,19 @@ use Doctrine\Common\EventManager;
 
 require_once 'EntityManagerProvider.php';
 
+use Doctrine\ORM\Event\LifecycleEventArgs;
+use Doctrine\ORM\Events;
+
 class TimestampableTest extends \PHPUnit_Framework_TestCase
 {
+    private $subscriber;
+
     use EntityManagerProvider;
 
     protected function getUsedEntityFixtures()
     {
         return array(
-            'BehaviorFixtures\\ORM\\TimestampableEntity'
+            'BehaviorFixtures\\ORM\\TimestampableEntity',
         );
     }
 
@@ -22,155 +27,80 @@ class TimestampableTest extends \PHPUnit_Framework_TestCase
     {
         $em = new EventManager;
 
-        $em->addEventSubscriber(
-            new \Knp\DoctrineBehaviors\ORM\Timestampable\TimestampableSubscriber(
-                new ClassAnalyzer(),
-                false,
-                'Knp\DoctrineBehaviors\Model\Timestampable\Timestampable'
-        ));
+        $this->subscriber = new \Knp\DoctrineBehaviors\ORM\Timestampable\TimestampableSubscriber(
+            new ClassAnalyzer(),
+            false,
+            'Knp\DoctrineBehaviors\Model\Timestampable\Timestampable'
+        );
+        
+        $em->addEventSubscriber($this->subscriber);
 
         return $em;
     }
 
-    /**
-     * @test
-     */
-    public function it_should_initialize_create_and_update_datetime_when_created()
+    public function testEventSubscription()
     {
-        $this->markTestIncomplete('Must be reimplemented by ensuring we rely on Trackable.');
-        return;
+        $this->getEventManager();
 
-        $em = $this->getEntityManager();
+        $this->assertEquals([Events::loadClassMetadata], $this->subscriber->getSubscribedEvents());
+    }
 
-        $entity = new \BehaviorFixtures\ORM\TimestampableEntity();
-
-        $em->persist($entity);
-        $em->flush();
-
-        $this->assertInstanceOf('Datetime', $entity->getCreatedAt());
-        $this->assertInstanceOf('Datetime', $entity->getUpdatedAt());
-
-        $this->assertEquals(
-            $entity->getCreatedAt(),
-            $entity->getUpdatedAt(),
-            'On creation, createdAt and updatedAt are the same'
-        );
+    public function provideFields()
+    {
+        return [
+            ['createdAt'],
+            ['updatedAt'],
+            ['deletedAt'],
+        ];
     }
 
     /**
-     * @test
+     * @dataProvider provideFields
      */
-    public function it_should_modify_update_datetime_when_updated_but_not_the_creation_datetime()
+    public function testMapping($field)
     {
-        $this->markTestIncomplete('Must be reimplemented by ensuring we rely on Trackable.');
-        return;
+        // We should invoke TimestampableSubscriber::loadClassMetadata directly,
+        // However, this would require a rather complex setup.
 
-        $em = $this->getEntityManager();
+        $em = $this->getEntityManager($this->getEventManager());
 
-        $entity = new \BehaviorFixtures\ORM\TimestampableEntity();
+        $metadata = $em->getClassMetadata('BehaviorFixtures\\ORM\\TimestampableEntity');
 
-        $em->persist($entity);
-        $em->flush();
-        $id = $entity->getId();
-        $createdAt = $entity->getCreatedAt();
-        $em->clear();
-
-        // wait for a second:
-        sleep(1);
-
-        $entity = $em->getRepository('BehaviorFixtures\ORM\TimestampableEntity')->find($id);
-        $entity->setTitle('test');
-        $em->flush();
-        $em->clear();
-
-        $entity = $em->getRepository('BehaviorFixtures\ORM\TimestampableEntity')->find($id);
-        $this->assertEquals($createdAt, $entity->getCreatedAt(), 'createdAt is constant');
-
-        $this->assertNotEquals(
-            $entity->getCreatedAt(),
-            $entity->getUpdatedAt(),
-            'createat and updatedAt have diverged since new update'
-        );
+        $this->assertTrue($metadata->hasField($field), 'Failed asserting that '.$field.' was defined by the Subscriber');
+        $this->assertSame('datetime', $metadata->getTypeOfField($field));
     }
 
-    /**
-     * @test
-     */
-    public function it_should_return_the_same_datetime_when_not_updated()
+    public function testGetMetadata()
     {
-        $this->markTestIncomplete('Must be reimplemented by ensuring we rely on Trackable.');
-        return;
-
-        $em = $this->getEntityManager();
-
-        $entity = new \BehaviorFixtures\ORM\TimestampableEntity();
-
-        $em->persist($entity);
-        $em->flush();
-        $id = $entity->getId();
-        $createdAt = $entity->getCreatedAt();
-        $updatedAt = $entity->getUpdatedAt();
-        $em->clear();
-
-        sleep(1);
-
-        $entity = $em->getRepository('BehaviorFixtures\ORM\TimestampableEntity')->find($id);
-        $em->persist($entity);
-        $em->flush();
-        $em->clear();
-
-        $this->assertEquals(
-            $entity->getCreatedAt(),
-            $createdAt,
-            'Creation timestamp has changed'
-        );
-
-        $this->assertEquals(
-            $entity->getUpdatedAt(),
-            $updatedAt,
-            'Update timestamp has changed'
-        );
+        $this->getEventManager();
+        
+        $this->assertInstanceOf('\DateTime', $this->subscriber->getMetadata());
     }
 
-    /**
-     * @test
-     */
-    public function it_should_modify_update_datetime_only_once()
+    public function testGetMetadataNotCached()
     {
-        $this->markTestIncomplete('Must be reimplemented by ensuring we rely on Trackable.');
-        return;
+        $this->getEventManager();
 
-        $em = $this->getEntityManager();
+        $this->assertNotSame($this->subscriber->getMetadata(), $this->subscriber->getMetadata());
+    }
 
+    public function testTimestampableIsSupported()
+    {
+        $em = $this->getEntityManager($this->getEventManager());
         $entity = new \BehaviorFixtures\ORM\TimestampableEntity();
 
-        $em->persist($entity);
-        $em->flush();
-        $id = $entity->getId();
-        $createdAt = $entity->getCreatedAt();
-        $em->clear();
+        $eventArgs = new LifecycleEventArgs($entity, $em);
 
-        sleep(1);
+        $this->assertTrue($this->subscriber->isEntitySupported($eventArgs));
+    }
 
-        $entity = $em->getRepository('BehaviorFixtures\ORM\TimestampableEntity')->find($id);
-        $entity->setTitle('test');
-        $em->flush();
-        $updatedAt = $entity->getUpdatedAt();
+    public function testUntimestampableIsNotSupported()
+    {
+        $em = $this->getEntityManager($this->getEventManager());
+        $entity = new \BehaviorFixtures\ORM\UserEntity;
 
-        sleep(1);
+        $eventArgs = new LifecycleEventArgs($entity, $em);
 
-        $em->flush();
-
-        $this->assertEquals(
-            $entity->getCreatedAt(),
-            $createdAt,
-            'Creation timestamp has changed'
-        );
-
-        $this->assertEquals(
-            $entity->getUpdatedAt(),
-            $updatedAt,
-            'Update timestamp has changed'
-        );
+        $this->assertFalse($this->subscriber->isEntitySupported($eventArgs));
     }
 }

@@ -134,6 +134,53 @@ class TrackableTest extends \PHPUnit_Framework_TestCase
     /**
      * @dataProvider provideEvents
      */
+    public function testTrackerMetadataAreNotCached($event)
+    {
+        $em = $this->getEntityManager($this->getEventManager());
+        $entity = new \BehaviorFixtures\ORM\TrackableEntity();
+
+        // Persist/Flush required to test preUpdate
+        $em->persist($entity);
+        $em->flush();
+
+        $tracker = $this->getMock('Knp\\DoctrineBehaviors\\ORM\\Trackable\\TrackerInterface');
+
+        $tracker->expects($this->any())
+                ->method('getName')
+                ->will($this->returnValue('repeated'))
+                    ;
+
+        $tracker->expects($this->any())
+                ->method('isEntitySupported')
+                ->will($this->returnValue(true))
+                    ;
+
+        // Should be at least twice
+        $tracker->expects($this->exactly(2))
+                ->method('getMetadata')
+                ->will($this->returnCallback(function() { return new \DateTime; }))
+                    ;
+
+        $this->subscriber->addTracker($tracker);
+
+        // First event
+        $eventArgs = new LifecycleEventArgs($entity, $em);
+        call_user_func([$this->subscriber, $event], $eventArgs);
+
+        $first = $entity->trackedEventArgs->getMetadata()->get('repeated');
+
+        // Second event
+        $eventArgs = new LifecycleEventArgs($entity, $em);
+        call_user_func([$this->subscriber, $event], $eventArgs);
+
+        $second = $entity->trackedEventArgs->getMetadata()->get('repeated');
+
+        $this->assertNotSame($first, $second);
+    }
+
+    /**
+     * @dataProvider provideEvents
+     */
     public function testUniversalCallableTracker($event)
     {
         $em = $this->getEntityManager($this->getEventManager());
