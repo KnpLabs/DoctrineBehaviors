@@ -30,7 +30,7 @@ use Doctrine\ORM\Events,
  * Adds class metadata depending of user type (entity or string)
  * Listens to prePersist and PreUpdate lifecycle events
  */
-class BlameableSubscriber extends AbstractSubscriber
+class BlameableSubscriber extends AbstractSubscriber implements TrackerInterface
 {
     /**
      * @var callable
@@ -106,8 +106,8 @@ class BlameableSubscriber extends AbstractSubscriber
     private function mapManyToOneUser(classMetadata $classMetadata)
     {
         foreach(['createdBy', 'updatedBy', 'deletedBy'] as $field) {
-           if (!$classMetadata->hasField($field)) {
-               $classMetadata->mapField([
+           if (!$classMetadata->hasAssociation($field)) {
+               $classMetadata->mapOneToOne([
                    'fieldName'  => $field,
                    'targetEntity' => $this->userEntity,
                    'joinColumns'  => [['onDelete' => 'SET NULL']],

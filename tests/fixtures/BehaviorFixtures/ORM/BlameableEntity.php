@@ -24,6 +24,13 @@ class BlameableEntity
      */
     private $title;
 
+    protected $isBlameable;
+
+    public function __construct($isBlameable = true)
+    {
+        $this->isBlameable = $isBlameable;
+    }
+    
     /**
      * Returns object id.
      *
@@ -52,5 +59,10 @@ class BlameableEntity
     public function setTitle($title)
     {
         $this->title = $title;
+    }
+
+    public function isBlameable()
+    {
+        return $this->isBlameable;
     }
 }

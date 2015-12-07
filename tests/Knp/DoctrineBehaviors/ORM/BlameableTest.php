@@ -7,6 +7,10 @@ use Doctrine\Common\EventManager;
 
 require_once 'EntityManagerProvider.php';
 
+use Doctrine\ORM\Event\LifecycleEventArgs;
+
+use Doctrine\ORM\Events;
+
 class BlameableTest extends \PHPUnit_Framework_TestCase
 {
     private $subscriber;
@@ -39,170 +43,139 @@ class BlameableTest extends \PHPUnit_Framework_TestCase
         return $em;
     }
 
-    public function testCreate()
+    public function testEventSubscription()
     {
-        $this->markTestIncomplete('Must be reimplemented by ensuring we rely on Trackable.');
-        return;
+        $this->getEventManager();
+
+        $this->assertEquals([Events::loadClassMetadata], $this->subscriber->getSubscribedEvents());
+    }
+
+    public function provideFields()
+    {
+        return [
+            ['createdBy'],
+            ['updatedBy'],
+            ['deletedBy'],
+        ];
+    }
+
+    /**
+     * @dataProvider provideFields
+     */
+    public function testMappingStringUser($field)
+    {
+        // We should invoke BlameableSubscriber::loadClassMetadata directly,
+        // However, this would require a rather complex setup.
 
         $em = $this->getEntityManager($this->getEventManager('user'));
 
-        $entity = new \BehaviorFixtures\ORM\BlameableEntity();
+        $metadata = $em->getClassMetadata('BehaviorFixtures\\ORM\\BlameableEntity');
 
-        $em->persist($entity);
-        $em->flush();
-
-        $this->assertEquals('user', $entity->getCreatedBy());
-        $this->assertEquals('user', $entity->getUpdatedBy());
-        $this->assertNull($entity->getDeletedBy());
+        $this->assertTrue($metadata->hasField($field), 'Failed asserting that '.$field.' was defined by the Subscriber');
+        $this->assertSame('string', $metadata->getTypeOfField($field));
     }
 
-    public function testUpdate()
+    /**
+     * @dataProvider provideFields
+     */
+    public function testMappingUserEntity($field)
     {
-        $this->markTestIncomplete('Must be reimplemented by ensuring we rely on Trackable.');
-        return;
+        // We should invoke BlameableSubscriber::loadClassMetadata directly,
+        // However, this would require a rather complex setup.
 
-        $em = $this->getEntityManager($this->getEventManager('user'));
+        $em = $this->getEntityManager($this->getEventManager('user', function() { }, 'BehaviorFixtures\\ORM\\UserEntity'));
 
-        $entity = new \BehaviorFixtures\ORM\BlameableEntity();
+        $metadata = $em->getClassMetadata('BehaviorFixtures\\ORM\\BlameableEntity');
 
-        $em->persist($entity);
-        $em->flush();
-        $id = $entity->getId();
-        $createdBy = $entity->getCreatedBy();
-        $em->clear();
-
-        $subscribers = $em->getEventManager()->getListeners()['preUpdate'];
-        $subscriber = array_pop($subscribers);
-        $subscriber->setUser('user2');
-
-        $entity = $em->getRepository('BehaviorFixtures\ORM\BlameableEntity')->find($id);
-        $entity->setTitle('test'); // need to modify at least one column to trigger onUpdate
-        $em->flush();
-        $em->clear();
-
-        //$entity = $em->getRepository('BehaviorFixtures\ORM\BlameableEntity')->find($id);
-        $this->assertEquals($createdBy, $entity->getCreatedBy(), 'createdBy is constant');
-        $this->assertEquals('user2', $entity->getUpdatedBy());
-
-        $this->assertNotEquals(
-            $entity->getCreatedBy(),
-            $entity->getUpdatedBy(),
-            'createBy and updatedBy have diverged since new update'
-        );
+        $this->assertTrue($metadata->hasAssociation($field), 'Failed asserting that '.$field.' was defined as an association by the Subscriber');
+        $this->assertSame('BehaviorFixtures\\ORM\\UserEntity', $metadata->getAssociationTargetClass($field));
     }
 
-    public function testRemove()
+    public function testGetUserSetUser()
     {
-        $this->markTestIncomplete('Must be reimplemented by ensuring we rely on Trackable.');
-        return;
-
-        $em = $this->getEntityManager($this->getEventManager('user'));
-
-        $entity = new \BehaviorFixtures\ORM\BlameableEntity();
-
-        $em->persist($entity);
-        $em->flush();
-        $id = $entity->getId();
-        $em->clear();
-
-        $subscribers = $em->getEventManager()->getListeners()['preRemove'];
-        $subscriber = array_pop($subscribers);
-        $subscriber->setUser('user3');
-
-        $entity = $em->getRepository('BehaviorFixtures\ORM\BlameableEntity')->find($id);
-        $em->remove($entity);
-        $em->flush();
-        $em->clear();
-
-        $this->assertEquals('user3', $entity->getDeletedBy());
-    }
-
-    public function testSubscriberWithUserCallback()
-    {
-        $this->markTestIncomplete('Must be reimplemented by ensuring we rely on Trackable.');
-        return;
-
         $user = new \BehaviorFixtures\ORM\UserEntity();
-        $user->setUsername('user');
+        $this->getEventManager($user);
 
+        $this->assertSame($user, $this->subscriber->getUser());
+    }
+
+    public function testGetUserCallback()
+    {
+        $user = new \BehaviorFixtures\ORM\UserEntity();
+        $this->getEventManager(null, function() use ($user) { return $user; });
+
+        $this->assertSame($user, $this->subscriber->getUser());
+    }
+
+    public function testGetUserSetUserOverrideCallback()
+    {
+        $user = new \BehaviorFixtures\ORM\UserEntity();
         $user2 = new \BehaviorFixtures\ORM\UserEntity();
-        $user2->setUsername('user2');
+        $this->getEventManager($user, function() use ($user2) { return $user2; });
 
-        $userCallback = function() use($user) {
-            return $user;
-        };
-
-        $em = $this->getEntityManager($this->getEventManager(null, $userCallback, get_class($user)));
-        $em->persist($user);
-        $em->persist($user2);
-        $em->flush();
-
-        $entity = new \BehaviorFixtures\ORM\BlameableEntity();
-
-        $em->persist($entity);
-        $em->flush();
-        $id = $entity->getId();
-        $createdBy = $entity->getCreatedBy();
-        $this->subscriber->setUser($user2); // switch user for update
-
-        $entity = $em->getRepository('BehaviorFixtures\ORM\BlameableEntity')->find($id);
-        $entity->setTitle('test'); // need to modify at least one column to trigger onUpdate
-        $em->flush();
-        $em->clear();
-
-        $this->assertInstanceOf('BehaviorFixtures\\ORM\\UserEntity', $entity->getCreatedBy(), 'createdBy is a user object');
-        $this->assertEquals($createdBy->getUsername(), $entity->getCreatedBy()->getUsername(), 'createdBy is constant');
-        $this->assertEquals($user2->getUsername(), $entity->getUpdatedBy()->getUsername());
-
-        $this->assertNotEquals(
-            $entity->getCreatedBy(),
-            $entity->getUpdatedBy(),
-            'createBy and updatedBy have diverged since new update'
-        );
+        $this->assertSame($user, $this->subscriber->getUser());
     }
 
-    /**
-     * @test
-     */
-    public function should_only_persist_user_entity()
+    public function testGetMetadataValidUserString()
     {
-        $this->markTestIncomplete('Must be reimplemented by ensuring we rely on Trackable.');
-        return;
-
+        $this->getEventManager('user');
+        $this->assertSame('user', $this->subscriber->getMetadata());
+    }
+    
+    public function testGetMetadataInvalidUserString()
+    {
+        $this->getEventManager('user', null, 'BehaviorFixtures\\ORM\\UserEntity');
+        $this->assertNull($this->subscriber->getMetadata());
+    }
+    
+    public function testGetMetadataValidUserEntity()
+    {
         $user = new \BehaviorFixtures\ORM\UserEntity();
-        $user->setUsername('user');
-
-        $userCallback = function() use($user) {
-            return $user;
-        };
-
-        $em = $this->getEntityManager($this->getEventManager('anon.', $userCallback, get_class($user)));
-        $em->persist($user);
-        $em->flush();
-
-        $entity = new \BehaviorFixtures\ORM\BlameableEntity();
-
-        $em->persist($entity);
-        $em->flush();
-
-        $this->assertNull($entity->getCreatedBy(), 'createdBy is a not updated because not a user entity object');
-        $this->assertNull($entity->getUpdatedBy(), 'updatedBy is a not updated because not a user entity object');
+        $this->getEventManager($user, null, get_class($user));
+        $this->assertSame($user, $this->subscriber->getMetadata());
+    }
+    
+    public function testGetMetadataInvalidUserEntity()
+    {
+        $user = new \BehaviorFixtures\ORM\UserEntity();
+        $this->getEventManager($user);
+        $this->assertNull($this->subscriber->getMetadata());
     }
 
-    /**
-     * @test
-     */
-    public function should_only_persist_user_string()
+    public function testGetMetadataInvalidUserEntityClass()
     {
         $user = new \BehaviorFixtures\ORM\UserEntity();
-        $em   = $this->getEntityManager($this->getEventManager($user));
+        $this->getEventManager($user, null, get_class($user).'2');
+        $this->assertNull($this->subscriber->getMetadata());
+    }
 
+    public function testBlameableIsSupported()
+    {
+        $em = $this->getEntityManager($this->getEventManager());
         $entity = new \BehaviorFixtures\ORM\BlameableEntity();
 
-        $em->persist($entity);
-        $em->flush();
+        $eventArgs = new LifecycleEventArgs($entity, $em);
 
-        $this->assertNull($entity->getCreatedBy(), 'createdBy is a not updated because not a user entity object');
-        $this->assertNull($entity->getUpdatedBy(), 'updatedBy is a not updated because not a user entity object');
+        $this->assertTrue($this->subscriber->isEntitySupported($eventArgs));
+    }
+
+    public function testDisabledBlameableIsNotSupported()
+    {
+        $em = $this->getEntityManager($this->getEventManager());
+        $entity = new \BehaviorFixtures\ORM\BlameableEntity(false);
+
+        $eventArgs = new LifecycleEventArgs($entity, $em);
+
+        $this->assertFalse($this->subscriber->isEntitySupported($eventArgs));
+    }
+
+    public function testUnblameableIsNotSupported()
+    {
+        $em = $this->getEntityManager($this->getEventManager());
+        $entity = new \BehaviorFixtures\ORM\UserEntity;
+
+        $eventArgs = new LifecycleEventArgs($entity, $em);
+
+        $this->assertFalse($this->subscriber->isEntitySupported($eventArgs));
     }
 }

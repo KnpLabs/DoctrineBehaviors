@@ -48,7 +48,6 @@ class TrackableTest extends \PHPUnit_Framework_TestCase
         $this->assertContains(Events::preRemove,  $this->subscriber->getSubscribedEvents());
     }
 
-
     public function provideEvents()
     {
         return [
