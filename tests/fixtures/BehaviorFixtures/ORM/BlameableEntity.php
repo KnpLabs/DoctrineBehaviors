@@ -10,6 +10,7 @@ use Knp\DoctrineBehaviors\Model;
  */
 class BlameableEntity
 {
+    use Model\Trackable\Trackable;
     use Model\Blameable\Blameable;
 
     /**

@@ -11,6 +11,8 @@
 
 namespace Knp\DoctrineBehaviors\Model\Blameable;
 
+use Knp\DoctrineBehaviors\ORM\Trackable\TrackedEventArgs;
+
 /**
  * Blameable trait.
  *
