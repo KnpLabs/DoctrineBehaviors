@@ -10,6 +10,7 @@ use Knp\DoctrineBehaviors\Model;
  */
 class TimestampableEntity
 {
+    use Model\Trackable\Trackable;
     use Model\Timestampable\Timestampable;
 
     /**
