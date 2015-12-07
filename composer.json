@@ -32,7 +32,8 @@
         "doctrine/orm":                     ">=2.2",
         "phpunit/phpunit":                  "~4.8",
         "jakub-onderka/php-parallel-lint":  "~0.8",
-        "hexmedia/yaml-linter":             "~0.1"
+        "hexmedia/yaml-linter":             "~0.1",
+        "symfony/property-access":          "~2.8"
     },
     "suggest": {
         "symfony/framework-bundle": "To be able to use it as a bundle"
