@@ -3,7 +3,9 @@
 namespace Knp\DoctrineBehaviors\Model\Sortable;
 
 /**
- * Interface SortableInterface
+ * SortableInterface interface.
+ *
+ * Should be implemented by an entity that needs to be sorted.
  */
 interface SortableInterface
 {

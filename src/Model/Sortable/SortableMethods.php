@@ -3,7 +3,10 @@
 namespace Knp\DoctrineBehaviors\Model\Sortable;
 
 /**
- * Trait SortableMethods
+ * SortableMethods trait.
+ *
+ * Contains public methods for nonpublic properties in SortableProperties trait,
+ * that should be implemented in SortableInterface interface.
  */
 trait SortableMethods
 {

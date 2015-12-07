@@ -3,7 +3,10 @@
 namespace Knp\DoctrineBehaviors\Model\Sortable;
 
 /**
- * Trait Sortable
+ * Sortable trait.
+ *
+ * Should be used inside an entity, that implements SortableInterface interface
+ * and needs to be sorted.
  */
 trait Sortable
 {

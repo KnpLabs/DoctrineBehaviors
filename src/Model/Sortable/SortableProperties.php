@@ -3,7 +3,9 @@
 namespace Knp\DoctrineBehaviors\Model\Sortable;
 
 /**
- * Trait SortableProperties
+ * SortableProperties trait
+ *
+ * Contains properties to holds data for an entity that implements SortableInterface interface
  */
 trait SortableProperties
 {
