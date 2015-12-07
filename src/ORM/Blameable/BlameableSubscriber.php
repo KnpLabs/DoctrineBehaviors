@@ -179,7 +179,7 @@ class BlameableSubscriber extends AbstractSubscriber implements TrackerInterface
      *
      * @return Boolean
      */
-    public function isEntitySupported(LifecycleEventArgs $eventArgs)
+    public function isEventSupported(LifecycleEventArgs $eventArgs)
     {
         return $this->isBlameableClass(get_class($eventArgs->getEntity()))
            && $eventArgs->getEntity()->isBlameable();

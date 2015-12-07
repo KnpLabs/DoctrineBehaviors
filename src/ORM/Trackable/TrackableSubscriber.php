@@ -90,13 +90,13 @@ class TrackableSubscriber extends AbstractSubscriber
     public function addTracker(TrackerInterface $tracker)
     {
        $this->addCallableTracker($tracker->getName(),
-                                 [$tracker, 'isEntitySupported'],
+                                 [$tracker, 'isEventSupported'],
                                  [$tracker, 'getMetaData']);
     }
 
-   public function addCallableTracker($name, callable $isEntitySupported, callable $tracker)
+   public function addCallableTracker($name, callable $isEventSupported, callable $tracker)
    {
-       $this->trackers[$name] = [$isEntitySupported, $tracker];
+       $this->trackers[$name] = [$isEventSupported, $tracker];
    }
 
    public function removeTracker($name)

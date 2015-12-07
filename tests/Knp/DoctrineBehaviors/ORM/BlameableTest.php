@@ -156,7 +156,7 @@ class BlameableTest extends \PHPUnit_Framework_TestCase
 
         $eventArgs = new LifecycleEventArgs($entity, $em);
 
-        $this->assertTrue($this->subscriber->isEntitySupported($eventArgs));
+        $this->assertTrue($this->subscriber->isEventSupported($eventArgs));
     }
 
     public function testDisabledBlameableIsNotSupported()
@@ -166,7 +166,7 @@ class BlameableTest extends \PHPUnit_Framework_TestCase
 
         $eventArgs = new LifecycleEventArgs($entity, $em);
 
-        $this->assertFalse($this->subscriber->isEntitySupported($eventArgs));
+        $this->assertFalse($this->subscriber->isEventSupported($eventArgs));
     }
 
     public function testUnblameableIsNotSupported()
@@ -176,6 +176,6 @@ class BlameableTest extends \PHPUnit_Framework_TestCase
 
         $eventArgs = new LifecycleEventArgs($entity, $em);
 
-        $this->assertFalse($this->subscriber->isEntitySupported($eventArgs));
+        $this->assertFalse($this->subscriber->isEventSupported($eventArgs));
     }
 }

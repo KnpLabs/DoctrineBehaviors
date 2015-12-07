@@ -76,7 +76,7 @@ class TimestampableSubscriber extends AbstractSubscriber
      *
      * @return Boolean
      */
-    public function isEntitySupported(LifecycleEventArgs $eventArgs)
+    public function isEventSupported(LifecycleEventArgs $eventArgs)
     {
         return $this->isTimestampable(get_class($eventArgs->getEntity()));
     }

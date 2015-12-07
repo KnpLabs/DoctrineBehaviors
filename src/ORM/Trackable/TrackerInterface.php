@@ -33,7 +33,7 @@ interface TrackerInterface
     *
     * @return boolean
     */
-   public function isEntitySupported(LifecycleEventArgs $eventArgs);
+   public function isEventSupported(LifecycleEventArgs $eventArgs);
 
    /**
     * Generate or fetch the metadata.

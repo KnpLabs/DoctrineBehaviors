@@ -114,7 +114,7 @@ class TrackableTest extends \PHPUnit_Framework_TestCase
                     ;
 
         $tracker->expects($this->any())
-                ->method('isEntitySupported')
+                ->method('isEventSupported')
                 ->will($this->returnValue(true))
                     ;
 
@@ -151,7 +151,7 @@ class TrackableTest extends \PHPUnit_Framework_TestCase
                     ;
 
         $tracker->expects($this->any())
-                ->method('isEntitySupported')
+                ->method('isEventSupported')
                 ->will($this->returnValue(true))
                     ;
 
@@ -218,7 +218,7 @@ class TrackableTest extends \PHPUnit_Framework_TestCase
                     ;
 
         $tracker->expects($this->atLeastOnce())
-                ->method('isEntitySupported')
+                ->method('isEventSupported')
                 ->will($this->returnValue(false))
                     ;
 
@@ -250,11 +250,11 @@ class TrackableTest extends \PHPUnit_Framework_TestCase
         $tracker = $this->getMock('Knp\\DoctrineBehaviors\\ORM\\Trackable\\TrackerInterface');
 
         $tracker->expects($this->atLeastOnce())
-                ->method('isEntitySupported')
+                ->method('isEventSupported')
                 ->will($this->returnValue(false))
                     ;
 
-        $this->subscriber->addCallableTracker('skipped', [$tracker, 'isEntitySupported'], function() { return $this->subscriber; });
+        $this->subscriber->addCallableTracker('skipped', [$tracker, 'isEventSupported'], function() { return $this->subscriber; });
         
         $eventArgs = new LifecycleEventArgs($entity, $em);
         call_user_func([$this->subscriber, $event], $eventArgs);
@@ -282,7 +282,7 @@ class TrackableTest extends \PHPUnit_Framework_TestCase
                     ;
 
         $tracker->expects($this->any())
-                ->method('isEntitySupported')
+                ->method('isEventSupported')
                 ->will($this->returnValue(true))
                     ;
 
@@ -346,7 +346,7 @@ class TrackableTest extends \PHPUnit_Framework_TestCase
                     ;
 
         $tracker->expects($this->never())
-                ->method('isEntitySupported')
+                ->method('isEventSupported')
                 ->will($this->returnValue(true))
                     ;
 
@@ -379,7 +379,7 @@ class TrackableTest extends \PHPUnit_Framework_TestCase
         $tracker = $this->getMock('Knp\\DoctrineBehaviors\\ORM\\Trackable\\TrackerInterface');
 
         $tracker->expects($this->never())
-                ->method('isEntitySupported')
+                ->method('isEventSupported')
                 ->will($this->returnValue(true))
                     ;
 
@@ -388,7 +388,7 @@ class TrackableTest extends \PHPUnit_Framework_TestCase
                 ->will($this->returnValue(null))
                     ;
 
-        $this->subscriber->addCallableTracker('removed', [$tracker, 'isEntitySupported'], [$tracker, 'getMetadata']);
+        $this->subscriber->addCallableTracker('removed', [$tracker, 'isEventSupported'], [$tracker, 'getMetadata']);
         $this->subscriber->removeTracker('removed');
         
         $eventArgs = new LifecycleEventArgs($entity, $em);
