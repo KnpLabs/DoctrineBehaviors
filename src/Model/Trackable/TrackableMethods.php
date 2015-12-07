@@ -2,6 +2,8 @@
 
 namespace Knp\DoctrineBehaviors\Model\Trackable;
 
+use Knp\DoctrineBehaviors\ORM\Trackable\TrackedEventArgs;
+
 trait TrackableMethods
 {
     public function trackCreation(TrackedEventArgs $eventArgs)

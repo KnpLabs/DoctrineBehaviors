@@ -3,7 +3,9 @@
 namespace Knp\DoctrineBehaviors\ORM\Trackable;
 
 use Doctrine\Common\Collections\Collection,
-    Doctrine\Common\Collections\ArrayCollection;
+    Doctrine\Common\Collections\ArrayCollection,
+    Doctrine\Common\EventArgs;
+;
 
 class TrackedEventArgs
 {

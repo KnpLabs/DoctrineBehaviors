@@ -15,8 +15,6 @@ use Knp\DoctrineBehaviors\Reflection\ClassAnalyzer;
 
 use Knp\DoctrineBehaviors\ORM\AbstractSubscriber;
 
-use Knp\DoctrineBehaviors\Model\Trackable\TrackerInterface;
-
 use Doctrine\ORM\Event\LifecycleEventArgs;
 
 use Doctrine\Common\EventSubscriber,
@@ -51,8 +49,7 @@ class TrackableSubscriber extends AbstractSubscriber
         $classMetadata = $em->getClassMetadata(get_class($entity));
 
         if ($this->isEntitySupported($classMetadata->reflClass)) {
-            $this->trackCreation($this->generateTrackedEventArgs($eventArgs));
-            $em->getUnitOfWork()->recomputeSingleEntityChangeSet($entity);
+            $entity->trackCreation($this->generateTrackedEventArgs($eventArgs));
          }
     }
 
@@ -63,8 +60,8 @@ class TrackableSubscriber extends AbstractSubscriber
         $classMetadata = $em->getClassMetadata(get_class($entity));
 
         if ($this->isEntitySupported($classMetadata->reflClass)) {
-            $this->trackChange($this->generateTrackedEventArgs($eventArgs));
-            $em->getUnitOfWork()->recomputeSingleEntityChangeSet($entity);
+            $entity->trackChange($this->generateTrackedEventArgs($eventArgs));
+            $em->getUnitOfWork()->recomputeSingleEntityChangeSet($classMetadata, $entity);
         }
     }
 
@@ -75,20 +72,19 @@ class TrackableSubscriber extends AbstractSubscriber
         $classMetadata = $em->getClassMetadata(get_class($entity));
 
         if ($this->isEntitySupported($classMetadata->reflClass)) {
-            $this->trackDeletion($this->generateTrackedEventArgs($eventArgs));
-            $em->getUnitOfWork()->recomputeSingleEntityChangeSet($entity);
+            $entity->trackDeletion($this->generateTrackedEventArgs($eventArgs));
         }
     }
 
     protected function generateTrackedEventArgs(LifecycleEventArgs $eventArgs)
     {
-        $metada = $this->trackers
-                       ->filter(function($tracker) use ($eventArgs) { return call_user_func($tracker[0], $eventArgs); })
-                       ->map(function($tracker) { return call_user_func($tracker[1]); })
-                       ->filter(function($metadata) { return !!$metadata; })
-                          ;
+        $metadata = $this->trackers
+                         ->filter(function($tracker) use ($eventArgs) { return call_user_func($tracker[0], $eventArgs); })
+                         ->map(function($tracker) { return call_user_func($tracker[1]); })
+                         ->filter(function($metadata) { return !!$metadata; })
+                             ;
 
-        return new TrackedEventArgs($args, $metadata);
+        return new TrackedEventArgs($eventArgs, $metadata);
     }
 
     public function addTracker(TrackerInterface $tracker)
