@@ -8,6 +8,7 @@ that add behaviors to Doctrine2 entites and repositories.
 
 It currently handles:
 
+ * [trackable](#trackable)
  * [blameable](#blameable)
  * [filterable](#filterable)
  * [geocodable](#geocodable)
@@ -22,7 +23,7 @@ It currently handles:
 
 ## Notice:
 
-Some behaviors (translatable, timestampable, softDeletable, blameable, geocodable) need Doctrine subscribers in order to work.
+Some behaviors (translatable, trackable, timestampable, softDeletable, blameable, geocodable) need Doctrine subscribers in order to work.
 Make sure to activate them by reading the [Subscribers](#subscribers) section.
 
 ##Installation
@@ -33,6 +34,7 @@ By default, when integrated with Symfony, all subscribers are enabled (if you do
 But you can enable behaviors you need in a whitelist manner:
 ```yaml
 knp_doctrine_behaviors:
+    trackable:      true
     blameable:      false
     geocodable:     ~     # Here null is converted to false
     loggable:       ~
@@ -106,7 +108,8 @@ use Knp\DoctrineBehaviors\Model as ORMBehaviors;
  */
 class Category implements ORMBehaviors\Tree\NodeInterface, \ArrayAccess
 {
-    use ORMBehaviors\Blameable\Blameable,
+    use ORMBehaviors\Trackable\Trackable,
+        ORMBehaviors\Blameable\Blameable,
         ORMBehaviors\Geocodable\Geocodable,
         ORMBehaviors\Loggable\Loggable,
         ORMBehaviors\Sluggable\Sluggable,
@@ -443,8 +446,68 @@ so that when you try to call `getName` (for example) it will return you the tran
     $category->isDeleted(); // === true
 ```
 
+<a name="trackable" id="trackable"></a>
+### trackable
+
+Trackable is a basic extendable behavior akin to dependecy injection for
+entities. Let's say some of your entities need to track meta-data related to
+their lifecycle. The point of Trackable is to gather all these meta-data and
+provide them easily to the entity at the appropriate time.
+
+In itself, the behavior doesn't do anything. However, you can easily provide and
+process meta-data for your entity to store or process. The two following
+behaviors ([blameable](#blameable) and [timestampable](#timestampable)), rely on
+trackable to track the time and author of any creation, update or deletion of
+such entities.
+
+#### tracked entities
+
+Any entity using the `Knp\DoctrineBehaviors\Model\Trackable\Trackable` trait
+will be listened on for persist, update and remove operations. At the right
+time, every registred tracker will be offered the chance to provide meta-data
+for each tracked entity.
+
+These will be gathered in a new
+`Knp\DoctrineBehaviors\ORM\Trackable\TrackedEventArgs` which will then be
+provided to the entity tracking listeners (`trackCreation`, `trackChange`,
+`trackDeletion`).
+
+The `TrackedEventArgs` can be accessed exactly like the appropriate Doctrine's
+`LifecycleEventArgs`, plus the `getMetadata` methods which returns the meta-data
+indexed by each tracker name.
+
+#### custom trackers
+
+The service responsible for holding the list of trackers is
+`knp.doctrine_behaviors.trackable_subscriber`.
+
+The custom trackers are composed of three elements:
+
+1. Its name, which will be used to index the provided meta-data.
+2. A predicate (callable returning a boolean), checking whether the tracker is
+able to provide meta-data for a given event.
+3. A meta-data generator, providing any metadata the tracker chooses to.
+
+These elements can simply be provided separately by using the `addCallableTracker`
+method on the subscriber service.
+
+However, it is recommended to create a new service or class for each tracker,
+implementing the `Knp\DoctrineBehaviors\ORM\Trackable\TrackerInterface`.
+
+This new tracker can then be added directly by using the
+`knp.doctrine_behaviors.tracker` tag (for a service) or the subscriber's
+`addTracker` method.
+
+Even if a tracker's predicate answers positively for an event, any tracker
+failing to provide any meta-data (by returning `null` or any other `empty`
+value), will be ignored.
+
 <a name="timestampable" id="timestampable"></a>
 ### timestampable
+
+**Timestampable is dependent on the [trackable](#trackable) behavior, you must
+use both the timestampable and the trackable traits and subscribers to enable
+the timestampable behavior.**
 
 ``` php
 <?php
@@ -461,9 +524,12 @@ so that when you try to call `getName` (for example) it will return you the tran
 
 ```
 
-
 <a name="blameable" id="blameable"></a>
 ### blameable
+
+**Blameable is dependent on the [trackable](#trackable) behavior, you must use
+both the blameable and the trackable traits and subscribers to enable the
+blameable behavior.**
 
 Blameable is able to track creators and updators of a given entity.
 A blameable [callable](#callables) is used to get the current user from your application.
