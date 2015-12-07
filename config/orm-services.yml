@@ -80,6 +80,7 @@ services:
             - "%knp.doctrine_behaviors.timestampable_subscriber.timestampable_trait%"
         tags:
             - { name: doctrine.event_subscriber }
+            - { name: knp.doctrine_behaviors.tracker }
 
     knp.doctrine_behaviors.tree_subscriber:
         class:   "%knp.doctrine_behaviors.tree_subscriber.class%"
@@ -112,6 +113,7 @@ services:
         public:  false
         tags:
             - { name: doctrine.event_subscriber }
+            - { name: knp.doctrine_behaviors.tracker }
 
     knp.doctrine_behaviors.blameable_subscriber.user_callable:
         class:           "%knp.doctrine_behaviors.blameable_subscriber.user_callable.class%"
