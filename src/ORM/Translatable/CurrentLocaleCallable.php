@@ -19,13 +19,18 @@ class CurrentLocaleCallable
 
     public function __invoke()
     {
-        if (!$this->container->isScopeActive('request')) {
-            return;
+        if (!$this->container->has('request_stack')) {
+            if(!$this->container->isScopeActive('request')) {
+                return NULL;
+            }
+            $request = $this->container->get('request');
+
+            return $request->getLocale();
+        } else if ($request = $this->container->get('request_stack')->getCurrentRequest()) {
+            return $request->getLocale();
         }
 
-        $request = $this->container->get('request');
-
-        return $request->getLocale();
+        return NULL;
     }
 }
 
