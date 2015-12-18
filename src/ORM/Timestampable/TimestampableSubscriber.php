@@ -27,12 +27,14 @@ use Doctrine\ORM\Event\LoadClassMetadataEventArgs,
 class TimestampableSubscriber extends AbstractSubscriber
 {
     private $timestampableTrait;
+    private $dbFieldType;
 
-    public function __construct(ClassAnalyzer $classAnalyzer, $isRecursive, $timestampableTrait)
+    public function __construct(ClassAnalyzer $classAnalyzer, $isRecursive, $timestampableTrait, $dbFieldType)
     {
         parent::__construct($classAnalyzer, $isRecursive);
 
         $this->timestampableTrait = $timestampableTrait;
+        $this->dbFieldType = $dbFieldType;
     }
 
     public function loadClassMetadata(LoadClassMetadataEventArgs $eventArgs)
@@ -53,7 +55,7 @@ class TimestampableSubscriber extends AbstractSubscriber
                 if (!$classMetadata->hasField($field)) {
                     $classMetadata->mapField(array(
                         'fieldName' => $field,
-                        'type'      => 'datetime',
+                        'type'      => $this->dbFieldType,
                         'nullable'  => true
                     ));
                 }
