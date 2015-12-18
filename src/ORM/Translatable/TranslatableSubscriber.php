@@ -218,7 +218,8 @@ class TranslatableSubscriber extends AbstractSubscriber
             $classMetadata->mapManyToOne([
                 'fieldName'    => 'translatable',
                 'inversedBy'   => 'translations',
-                'fetch'         => $this->translationFetchMode,
+                'cascade'      => ['persist', 'merge'],
+                'fetch'        => $this->translationFetchMode,
                 'joinColumns'  => [[
                     'name'                 => 'translatable_id',
                     'referencedColumnName' => 'id',
