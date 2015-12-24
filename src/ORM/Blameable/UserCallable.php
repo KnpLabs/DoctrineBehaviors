@@ -34,7 +34,7 @@ class UserCallable
 
     public function __invoke()
     {
-        $token = $this->container->get('security.context')->getToken();
+        $token = $this->container->get('security.token_storage')->getToken();
         if (null !== $token) {
             return $token->getUser();
         }
