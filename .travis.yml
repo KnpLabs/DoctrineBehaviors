@@ -12,7 +12,7 @@ matrix:
     - php: 7.0
   exclude:
     - php: 5.4
-        env: DOCTRINE_COMMON_VERSION="dev-master"
+      env: DOCTRINE_COMMON_VERSION="dev-master"
 
 env:
   matrix:
