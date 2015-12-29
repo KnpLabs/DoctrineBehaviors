@@ -10,6 +10,15 @@ matrix:
   fast_finish: true
   allow_failures:
     - php: 7.0
+  exclude:
+    - php: 5.4
+      env: DOCTRINE_COMMON_VERSION="dev-master" DB=mysql DB_USER=root PREFER=latest
+    - php: 5.4
+      env: DOCTRINE_COMMON_VERSION="dev-master" DB=pgsql PREFER=latest
+    - php: 5.4
+      env: DOCTRINE_COMMON_VERSION="dev-master" DB=mysql DB_USER=root PREFER=lowest
+    - php: 5.4
+      env: DOCTRINE_COMMON_VERSION="dev-master" DB=pgsql PREFER=lowest
 
 env:
   matrix:
