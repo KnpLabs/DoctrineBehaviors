@@ -114,7 +114,7 @@ trait TranslatableMethods
             }
         }
 
-        $class       = self::getTranslationEntityClass();
+        $class       = static::getTranslationEntityClass();
         $translation = new $class();
         $translation->setLocale($locale);
 
