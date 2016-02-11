@@ -1,17 +1,20 @@
 <?php
-
 /**
  * @author Lusitanian
  * Freely released with no restrictions, re-license however you'd like!
  */
+
 namespace Knp\DoctrineBehaviors\ORM\Sluggable;
 
-use Doctrine\ORM\Event\OnFlushEventArgs;
+use Doctrine\ORM\Event\LifecycleEventArgs;
 use Knp\DoctrineBehaviors\Reflection\ClassAnalyzer;
+
 use Knp\DoctrineBehaviors\ORM\AbstractSubscriber;
-use Doctrine\ORM\Event\LoadClassMetadataEventArgs;
-use Doctrine\ORM\Events;
-use Doctrine\ORM\Mapping\ClassMetadata;
+
+use Doctrine\ORM\Event\LoadClassMetadataEventArgs,
+    Doctrine\Common\EventSubscriber,
+    Doctrine\ORM\Events,
+    Doctrine\ORM\Mapping\ClassMetadata;
 
 /**
  * Sluggable subscriber.
@@ -41,8 +44,8 @@ class SluggableSubscriber extends AbstractSubscriber
             if (!$classMetadata->hasField('slug')) {
                 $classMetadata->mapField(array(
                     'fieldName' => 'slug',
-                    'type' => 'string',
-                    'nullable' => true,
+                    'type'      => 'string',
+                    'nullable'  => true
                 ));
             }
         }
@@ -74,11 +77,11 @@ class SluggableSubscriber extends AbstractSubscriber
     }
 
     /**
-     * Checks if entity is sluggable.
+     * Checks if entity is sluggable
      *
      * @param ClassMetadata $classMetadata The metadata
      *
-     * @return bool
+     * @return boolean
      */
     private function isSluggable(ClassMetadata $classMetadata)
     {
