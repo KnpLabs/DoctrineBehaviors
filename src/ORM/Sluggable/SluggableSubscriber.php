@@ -6,7 +6,7 @@
 
 namespace Knp\DoctrineBehaviors\ORM\Sluggable;
 
-use Doctrine\ORM\Event\LifecycleEventArgs;
+use Doctrine\ORM\Event\OnFlushEventArgs;
 use Knp\DoctrineBehaviors\Reflection\ClassAnalyzer;
 
 use Knp\DoctrineBehaviors\ORM\AbstractSubscriber;
@@ -51,31 +51,28 @@ class SluggableSubscriber extends AbstractSubscriber
         }
     }
 
-    public function prePersist(LifecycleEventArgs $eventArgs)
+    public function onFlush(OnFlushEventArgs $eventArgs)
     {
-        $entity = $eventArgs->getEntity();
-        $em = $eventArgs->getEntityManager();
-        $classMetadata = $em->getClassMetadata(get_class($entity));
+        $manager = $eventArgs->getEntityManager();
+        $unitOfWork = $manager->getUnitOfWork();
 
-        if ($this->isSluggable($classMetadata)) {
-            $entity->generateSlug();
-        }
-    }
+        $scheduledInsertions = $unitOfWork->getScheduledEntityInsertions();
+        $scheduledUpdates = $unitOfWork->getScheduledEntityUpdates();
 
-    public function preUpdate(LifecycleEventArgs $eventArgs)
-    {
-        $entity = $eventArgs->getEntity();
-        $em = $eventArgs->getEntityManager();
-        $classMetadata = $em->getClassMetadata(get_class($entity));
+        foreach (array_values(array_merge($scheduledInsertions, $scheduledUpdates)) as $entity) {
+            $classMetadata = $manager->getClassMetadata(get_class($entity));
 
-        if ($this->isSluggable($classMetadata)) {
-            $entity->generateSlug();
+            if ($this->isSluggable($classMetadata)) {
+                $entity->generateSlug();
+            }
+
+            $manager->persist($entity);
         }
     }
 
     public function getSubscribedEvents()
     {
-        return [ Events::loadClassMetadata, Events::prePersist, Events::preUpdate ];
+        return [Events::loadClassMetadata, Events::onFlush];
     }
 
     /**
