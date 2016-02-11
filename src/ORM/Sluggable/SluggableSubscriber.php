@@ -1,20 +1,17 @@
 <?php
+
 /**
  * @author Lusitanian
  * Freely released with no restrictions, re-license however you'd like!
  */
-
 namespace Knp\DoctrineBehaviors\ORM\Sluggable;
 
-use Doctrine\ORM\Event\LifecycleEventArgs;
+use Doctrine\ORM\Event\OnFlushEventArgs;
 use Knp\DoctrineBehaviors\Reflection\ClassAnalyzer;
-
 use Knp\DoctrineBehaviors\ORM\AbstractSubscriber;
-
-use Doctrine\ORM\Event\LoadClassMetadataEventArgs,
-    Doctrine\Common\EventSubscriber,
-    Doctrine\ORM\Events,
-    Doctrine\ORM\Mapping\ClassMetadata;
+use Doctrine\ORM\Event\LoadClassMetadataEventArgs;
+use Doctrine\ORM\Events;
+use Doctrine\ORM\Mapping\ClassMetadata;
 
 /**
  * Sluggable subscriber.
@@ -44,46 +41,44 @@ class SluggableSubscriber extends AbstractSubscriber
             if (!$classMetadata->hasField('slug')) {
                 $classMetadata->mapField(array(
                     'fieldName' => 'slug',
-                    'type'      => 'string',
-                    'nullable'  => true
+                    'type' => 'string',
+                    'nullable' => true,
                 ));
             }
         }
     }
 
-    public function prePersist(LifecycleEventArgs $eventArgs)
+    public function onFlush(OnFlushEventArgs $eventArgs)
     {
-        $entity = $eventArgs->getEntity();
-        $em = $eventArgs->getEntityManager();
-        $classMetadata = $em->getClassMetadata(get_class($entity));
+        $manager = $eventArgs->getEntityManager();
+        $unitOfWork = $manager->getUnitOfWork();
 
-        if ($this->isSluggable($classMetadata)) {
-            $entity->generateSlug();
-        }
-    }
+        $scheduledInsertions = $unitOfWork->getScheduledEntityInsertions();
+        $scheduledUpdates = $unitOfWork->getScheduledEntityUpdates();
 
-    public function preUpdate(LifecycleEventArgs $eventArgs)
-    {
-        $entity = $eventArgs->getEntity();
-        $em = $eventArgs->getEntityManager();
-        $classMetadata = $em->getClassMetadata(get_class($entity));
+        foreach (array_values(array_merge($scheduledInsertions, $scheduledUpdates)) as $entity) {
+            $classMetadata = $manager->getClassMetadata(get_class($entity));
 
-        if ($this->isSluggable($classMetadata)) {
-            $entity->generateSlug();
+            if ($this->isSluggable($classMetadata)) {
+                $entity->generateSlug();
+            }
+
+            $manager->persist($entity);
+            $unitOfWork->computeChangeSet($manager->getClassMetadata(get_class($entity)), $entity);
         }
     }
 
     public function getSubscribedEvents()
     {
-        return [ Events::loadClassMetadata, Events::prePersist, Events::preUpdate ];
+        return [Events::loadClassMetadata, Events::onFlush];
     }
 
     /**
-     * Checks if entity is sluggable
+     * Checks if entity is sluggable.
      *
      * @param ClassMetadata $classMetadata The metadata
      *
-     * @return boolean
+     * @return bool
      */
     private function isSluggable(ClassMetadata $classMetadata)
     {
