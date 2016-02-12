@@ -22,21 +22,21 @@ matrix:
 
 env:
   matrix:
-    - DOCTRINE_COMMON_VERSION="~2.2.0" DB=mysql DB_USER=root PREFER=latest
-    - DOCTRINE_COMMON_VERSION="~2.3.0" DB=mysql DB_USER=root PREFER=latest
     - DOCTRINE_COMMON_VERSION="~2.4.0" DB=mysql DB_USER=root PREFER=latest
+    - DOCTRINE_COMMON_VERSION="~2.5.0" DB=mysql DB_USER=root PREFER=latest
+    - DOCTRINE_COMMON_VERSION="~2.6.0" DB=mysql DB_USER=root PREFER=latest
     - DOCTRINE_COMMON_VERSION="dev-master" DB=mysql DB_USER=root PREFER=latest
-    - DOCTRINE_COMMON_VERSION="~2.2.0" DB=pgsql PREFER=latest
-    - DOCTRINE_COMMON_VERSION="~2.3.0" DB=pgsql PREFER=latest
     - DOCTRINE_COMMON_VERSION="~2.4.0" DB=pgsql PREFER=latest
+    - DOCTRINE_COMMON_VERSION="~2.5.0" DB=pgsql PREFER=latest
+    - DOCTRINE_COMMON_VERSION="~2.6.0" DB=pgsql PREFER=latest
     - DOCTRINE_COMMON_VERSION="dev-master" DB=pgsql PREFER=latest
-    - DOCTRINE_COMMON_VERSION="~2.2.0" DB=mysql DB_USER=root PREFER=lowest
-    - DOCTRINE_COMMON_VERSION="~2.3.0" DB=mysql DB_USER=root PREFER=lowest
     - DOCTRINE_COMMON_VERSION="~2.4.0" DB=mysql DB_USER=root PREFER=lowest
+    - DOCTRINE_COMMON_VERSION="~2.5.0" DB=mysql DB_USER=root PREFER=lowest
+    - DOCTRINE_COMMON_VERSION="~2.6.0" DB=mysql DB_USER=root PREFER=lowest
     - DOCTRINE_COMMON_VERSION="dev-master" DB=mysql DB_USER=root PREFER=lowest
-    - DOCTRINE_COMMON_VERSION="~2.2.0" DB=pgsql PREFER=lowest
-    - DOCTRINE_COMMON_VERSION="~2.3.0" DB=pgsql PREFER=lowest
     - DOCTRINE_COMMON_VERSION="~2.4.0" DB=pgsql PREFER=lowest
+    - DOCTRINE_COMMON_VERSION="~2.5.0" DB=pgsql PREFER=lowest
+    - DOCTRINE_COMMON_VERSION="~2.6.0" DB=pgsql PREFER=lowest
     - DOCTRINE_COMMON_VERSION="dev-master" DB=pgsql PREFER=lowest
   global:
     - secure: "VKbBEUu1CftMOWU+dKRmV3KWMB/2rtTYbQh3jR2cgtIZuELPc/QvCgUO2YsiG686vaOOJt9pwVW+CAmQBManRxJEGvJMD3LI3/gif8HH478DYobRO8QLgpICGZrpMx85i8y9ln69gigERdEkHo8ILtwYTRzV4nK9LqVXVTxcnjQ="
