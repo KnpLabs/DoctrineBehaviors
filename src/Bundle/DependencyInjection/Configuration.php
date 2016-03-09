@@ -12,17 +12,26 @@ class Configuration implements ConfigurationInterface
         $builder = new TreeBuilder();
         $builder
             ->root('knp_doctrine_behaviors')
-            ->treatNullLike([
-                'blameable'      => true,
-                'geocodable'     => true,
-                'loggable'       => true,
-                'sluggable'      => true,
-                'soft_deletable' => true,
-                'sortable'       => true,
-                'timestampable'  => true,
-                'translatable'   => true,
-                'tree'           => true,
-            ])->children()
+            ->beforeNormalization()
+                ->always(function (array $config) use ($default) {
+                    if (empty($config)) {
+                        return [
+                            'blameable'      => true,
+                            'geocodable'     => true,
+                            'loggable'       => true,
+                            'sluggable'      => true,
+                            'soft_deletable' => true,
+                            'sortable'       => true,
+                            'timestampable'  => true,
+                            'translatable'   => true,
+                            'tree'           => true,
+                        ];
+                    }
+
+                    return $config;
+                })
+            ->end()
+            ->children()
                 ->booleanNode('blameable')->defaultFalse()->treatNullLike(false)->end()
                 ->booleanNode('geocodable')->defaultFalse()->treatNullLike(false)->end()
                 ->booleanNode('loggable')->defaultFalse()->treatNullLike(false)->end()
