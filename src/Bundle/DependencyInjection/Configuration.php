@@ -13,7 +13,7 @@ class Configuration implements ConfigurationInterface
         $builder
             ->root('knp_doctrine_behaviors')
             ->beforeNormalization()
-                ->always(function (array $config) use ($default) {
+                ->always(function (array $config) {
                     if (empty($config)) {
                         return [
                             'blameable'      => true,
