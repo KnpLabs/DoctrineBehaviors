@@ -4,14 +4,20 @@ namespace Knp\DoctrineBehaviors\Model\Sortable;
 
 trait Sortable
 {
+    /**
+     * @var int
+     */
     protected $sort = 1;
 
+    /**
+     * @var bool
+     */
     private $reordered = false;
 
     /**
      * Get sort.
      *
-     * @return sort.
+     * @return int
      */
     public function getSort()
     {
@@ -21,18 +27,21 @@ trait Sortable
     /**
      * Set sort.
      *
-     * @param sort the value to set.
+     * @param int $sort Sort the value to set
      *
      * @return $this
      */
     public function setSort($sort)
     {
         $this->reordered = $this->sort !== $sort;
-        $this->sort      = $sort;
+        $this->sort = $sort;
 
         return $this;
     }
 
+    /**
+     * @return bool
+     */
     public function isReordered()
     {
         return $this->reordered;
