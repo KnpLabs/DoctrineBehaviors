@@ -39,12 +39,26 @@ trait Sortable
     }
 
     /**
+     * @param bool $reordered.
+     * 
      * @return $this
      */
-    public function setReordered()
+    public function setReordered($reordered = true)
+    {
+        $this->reordered = (bool)$reordered;
+
+        return $this;
+    }
+
+    /**
+     * Reorder items
+     * 
+     * @return $this
+     */
+    public function reorder()
     {
         $this->reordered = true;
-
+        
         return $this;
     }
 }
