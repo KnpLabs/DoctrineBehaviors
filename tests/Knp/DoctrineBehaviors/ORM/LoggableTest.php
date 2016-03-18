@@ -144,7 +144,7 @@ class LoggableTest extends \PHPUnit_Framework_TestCase
                 "roles", array("x" => "y"), "an array"
             ),
             array(
-                "date", new \DateTime("2014-02-02 12:20:30"), "2014-02-02 12:20:30"
+                "date", new \DateTime("2014-02-02 12:20:30.000010"), "2014-02-02 12:20:30.000010"
             )
         );
     }

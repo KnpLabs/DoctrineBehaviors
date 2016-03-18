@@ -23,7 +23,7 @@ trait SoftDeletableMethods
      */
     public function delete()
     {
-        $this->deletedAt = new \DateTime();
+        $this->deletedAt = $this->currentDateTime();
     }
 
     /**
@@ -42,7 +42,7 @@ trait SoftDeletableMethods
     public function isDeleted()
     {
         if (null !== $this->deletedAt) {
-            return $this->deletedAt <= (new \DateTime());
+            return $this->deletedAt <= $this->currentDateTime();
         }
 
         return false;
@@ -90,5 +90,18 @@ trait SoftDeletableMethods
         $this->deletedAt = $date;
 
         return $this;
+    }
+
+    /**
+     * Get a instance of \DateTime with the current data time including milliseconds.
+     *
+     * @return \DateTime
+     */
+    private function currentDateTime()
+    {
+        $dateTime = \DateTime::createFromFormat('U.u', sprintf('%.6F', microtime(true)));
+        $dateTime->setTimezone(new \DateTimeZone(date_default_timezone_get()));
+
+        return $dateTime;
     }
 }
