@@ -26,7 +26,7 @@ trait TranslationMethods
     public static function getTranslatableEntityClass()
     {
         // By default, the translatable class has the same name but without the "Translation" suffix
-        return substr(__CLASS__, 0, -11);
+        return substr(static::class, 0, -11);
     }
 
     /**

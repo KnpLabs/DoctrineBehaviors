@@ -68,6 +68,10 @@ class TranslatableSubscriber extends AbstractSubscriber
             return;
         }
 
+        if ($classMetadata->isMappedSuperclass) {
+            return;
+        }
+
         if ($this->isTranslatable($classMetadata)) {
             $this->mapTranslatable($classMetadata);
         }
@@ -285,7 +289,7 @@ class TranslatableSubscriber extends AbstractSubscriber
      */
     private function isTranslatable(ClassMetadata $classMetadata)
     {
-        return $this->getClassAnalyzer()->hasTrait($classMetadata->reflClass, $this->translatableTrait);
+        return $this->getClassAnalyzer()->hasTrait($classMetadata->reflClass, $this->translatableTrait, true);
     }
 
     /**
@@ -297,7 +301,7 @@ class TranslatableSubscriber extends AbstractSubscriber
      */
     private function isTranslation(ClassMetadata $classMetadata)
     {
-        return $this->getClassAnalyzer()->hasTrait($classMetadata->reflClass, $this->translationTrait);
+        return $this->getClassAnalyzer()->hasTrait($classMetadata->reflClass, $this->translationTrait, true);
     }
 
     public function postLoad(LifecycleEventArgs $eventArgs)
