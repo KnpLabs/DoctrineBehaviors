@@ -38,7 +38,6 @@ services:
         public:  false
         arguments:
             - "@knp.doctrine_behaviors.reflection.class_analyzer"
-            - "%knp.doctrine_behaviors.reflection.is_recursive%"
             - "@knp.doctrine_behaviors.translatable_subscriber.current_locale_callable"
             - "@knp.doctrine_behaviors.translatable_subscriber.default_locale_callable"
             - "%knp.doctrine_behaviors.translatable_subscriber.translatable_trait%"
