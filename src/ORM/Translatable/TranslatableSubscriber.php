@@ -352,6 +352,26 @@ class TranslatableSubscriber extends AbstractSubscriber
             Events::loadClassMetadata,
             Events::postLoad,
             Events::prePersist,
+            Events::preUpdate,
         ];
+    }
+    
+    /**
+     * Remove Translation Entity when empty
+     * 
+     * @param LifecycleEventArgs $eventArgs
+     */
+    public function preUpdate(LifecycleEventArgs $eventArgs)
+    {
+        $em            = $eventArgs->getObjectManager();
+        $entity        = $eventArgs->getObject();
+        $classMetadata = $em->getClassMetadata(get_class($entity));
+
+        if($classMetadata->getReflectionClass() && $this->isTranslation($classMetadata)) {
+            if($entity->isEmpty()) {
+                $entity->setTranslatable(null);
+                $em->getUnitOfWork()->recomputeSingleEntityChangeSet($classMetadata, $entity);
+            }
+        }
     }
 }
