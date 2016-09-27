@@ -4,8 +4,8 @@ parameters:
     knp.doctrine_behaviors.translatable_subscriber.class: Knp\DoctrineBehaviors\ORM\Translatable\TranslatableSubscriber
     knp.doctrine_behaviors.translatable_subscriber.current_locale_callable.class: Knp\DoctrineBehaviors\ORM\Translatable\CurrentLocaleCallable
     knp.doctrine_behaviors.translatable_subscriber.default_locale_callable.class: Knp\DoctrineBehaviors\ORM\Translatable\DefaultLocaleCallable
-    knp.doctrine_behaviors.translatable_subscriber.translatable_trait: Knp\DoctrineBehaviors\Model\Translatable\Translatable
-    knp.doctrine_behaviors.translatable_subscriber.translation_trait: Knp\DoctrineBehaviors\Model\Translatable\Translation
+    knp.doctrine_behaviors.translatable_subscriber.translatable_trait: [ Knp\DoctrineBehaviors\Model\Translatable\Translatable, Knp\DoctrineBehaviors\Model\Translatable\TranslatableProperties ]
+    knp.doctrine_behaviors.translatable_subscriber.translation_trait: [ Knp\DoctrineBehaviors\Model\Translatable\Translation, Knp\DoctrineBehaviors\Model\Translatable\TranslationProperties ]
     knp.doctrine_behaviors.translatable_subscriber.translatable_fetch_method: LAZY
     knp.doctrine_behaviors.translatable_subscriber.translation_fetch_method: LAZY
     knp.doctrine_behaviors.softdeletable_subscriber.class: Knp\DoctrineBehaviors\ORM\SoftDeletable\SoftDeletableSubscriber
@@ -38,7 +38,6 @@ services:
         public:  false
         arguments:
             - "@knp.doctrine_behaviors.reflection.class_analyzer"
-            - "%knp.doctrine_behaviors.reflection.is_recursive%"
             - "@knp.doctrine_behaviors.translatable_subscriber.current_locale_callable"
             - "@knp.doctrine_behaviors.translatable_subscriber.default_locale_callable"
             - "%knp.doctrine_behaviors.translatable_subscriber.translatable_trait%"

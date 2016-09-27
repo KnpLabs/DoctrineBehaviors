@@ -9,7 +9,7 @@ use Knp\DoctrineBehaviors\Model;
  * @ORM\Entity
  * Used to test translation classes which declare custom translatable classes.
  */
-class TranslatableCustomizedEntity
+class TranslatableCustomizedEntity implements Model\Translatable\TranslatableInterface
 {
     use Model\Translatable\Translatable;
 

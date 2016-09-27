@@ -185,7 +185,7 @@ same folder of Category entity by default.
 The default naming convention (or its customization via trait methods) avoids you to manually handle entity associations.
 It is handled automatically by the TranslationSubscriber.
 
-In order to use the Translatable trait, you will have to create this `CategoryTranslation` entity.
+In order to use the Translatable trait and interface, you will have to create this `CategoryTranslation` entity.
 
 ``` php
 <?php
@@ -196,7 +196,7 @@ use Knp\DoctrineBehaviors\Model as ORMBehaviors;
 /**
  * @ORM\Entity
  */
-class CategoryTranslation
+class CategoryTranslation implements ORMBehaviors\Translatable\TranslationInterface
 {
     use ORMBehaviors\Translatable\Translation;
 
@@ -245,8 +245,8 @@ class CategoryTranslation
     }
 }
 ```
-The corresponding Category entity needs to `use ORMBehaviors\Translatable\Translatable;`
-and should only contain fields that you do not need to translate.
+The corresponding Category entity needs to implements `ORMBehaviors\Translatable\TranslatableInterface`
+and `use ORMBehaviors\Translatable\Translatable;` and should only contain fields that you do not need to translate.
 
 ``` php
 <?php
@@ -257,7 +257,7 @@ use Knp\DoctrineBehaviors\Model as ORMBehaviors;
 /**
  * @ORM\Entity
  */
-class Category
+class Category implements ORMBehaviors\Translatable\TranslatableInterface
 {
     use ORMBehaviors\Translatable\Translatable;
 
@@ -286,6 +286,8 @@ you can now work on translations using `translate` or `getTranslations` methods.
     $category->translate('en')->getName();
 
 ```
+
+
 
 #### Override
 
@@ -347,18 +349,28 @@ trait TranslationTrait
 }
 ```
 
-If you use that way make sure you override trait parameters of DoctrineBehaviors :
+If you use that way make sure you add your new trait to the list of traits triggering the mapping:
 
 ``` yaml
 parameters:
-    knp.doctrine_behaviors.translatable_subscriber.translatable_trait: AppBundle\Entity\Translation\TranslatableTrait
-    knp.doctrine_behaviors.translatable_subscriber.translation_trait: AppBundle\Entity\Translation\TranslationTrait
+    knp.doctrine_behaviors.translatable_subscriber.translatable_traits: [ AppBundle\Entity\Translation\TranslatableTrait, Knp\DoctrineBehaviors\Model\Translatable\Translatable, Knp\DoctrineBehaviors\Model\Translatable\TranslatableProperties ]
+    knp.doctrine_behaviors.translatable_subscriber.translation_traits: [ AppBundle\Entity\Translation\TranslationTrait, Knp\DoctrineBehaviors\Model\Translatable\Translation, Knp\DoctrineBehaviors\Model\Translatable\TranslationProperties ]
 ```
 
 If you want to define a custom translation entity class name just for a single translatable class :  
 Override the trait method `getTranslationEntityClass` in the translatable entity and `getTranslatableEntityClass`
 in the translation entity. If you override one, you also need to override the other to return the inverse class.
 
+
+If you need a deeper customization, you can add as many traits as you need to the trait list. Any class using one of
+these traits (directly) will triggering the mapping of the fields defined in
+`Knp\DoctrineBehaviors\Model\Translatable\TranslatableProperties`. So make sure to always either use it in your own
+traits or provide equivalent properties.
+
+You can also handle the mapping yourself. As long as you implements the interfaces
+`Knp\DoctrineBehaviors\Model\Translatable\TranslatableInterface` and
+`Knp\DoctrineBehaviors\Model\Translatable\TranslationInterface` for the appropriate class, the subscriber will handle
+the translations properly.
 
 #### guess the current locale
 
