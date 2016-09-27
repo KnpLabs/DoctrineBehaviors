@@ -14,7 +14,7 @@ parameters:
     knp.doctrine_behaviors.timestampable_subscriber.timestampable_trait: Knp\DoctrineBehaviors\Model\Timestampable\Timestampable
     knp.doctrine_behaviors.timestampable_subscriber.db_field_type: datetime
     knp.doctrine_behaviors.blameable_subscriber.class: Knp\DoctrineBehaviors\ORM\Blameable\BlameableSubscriber
-    knp.doctrine_behaviors.blameable_subscriber.blameable_trait: Knp\DoctrineBehaviors\Model\Blameable\Blameable
+    knp.doctrine_behaviors.blameable_subscriber.blameable_traits: [Knp\DoctrineBehaviors\Model\Blameable\Blameable, Knp\DoctrineBehaviors\Model\Blameable\BlameableProperties]
     knp.doctrine_behaviors.blameable_subscriber.user_callable.class: Knp\DoctrineBehaviors\ORM\Blameable\UserCallable
     knp.doctrine_behaviors.blameable_subscriber.user_entity: ~
     knp.doctrine_behaviors.loggable_subscriber.class: Knp\DoctrineBehaviors\ORM\Loggable\LoggableSubscriber
@@ -105,8 +105,7 @@ services:
         class:   "%knp.doctrine_behaviors.blameable_subscriber.class%"
         arguments:
             - "@knp.doctrine_behaviors.reflection.class_analyzer"
-            - "%knp.doctrine_behaviors.reflection.is_recursive%"
-            - "%knp.doctrine_behaviors.blameable_subscriber.blameable_trait%"
+            - "%knp.doctrine_behaviors.blameable_subscriber.blameable_traits%"
             - "@knp.doctrine_behaviors.blameable_subscriber.user_callable"
             - "%knp.doctrine_behaviors.blameable_subscriber.user_entity%"
         public:  false

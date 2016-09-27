@@ -15,6 +15,8 @@ use Knp\DoctrineBehaviors\Reflection\ClassAnalyzer;
 
 use Knp\DoctrineBehaviors\ORM\AbstractSubscriber;
 
+use Knp\DoctrineBehaviors\Model\Blameable\BlameableInterface;
+
 use Doctrine\Common\Persistence\Mapping\ClassMetadata;
 use Doctrine\ORM\Event\LoadClassMetadataEventArgs;
 use Doctrine\ORM\Event\LifecycleEventArgs;
@@ -45,19 +47,19 @@ class BlameableSubscriber extends AbstractSubscriber
      */
     private $userEntity;
 
-    private $blameableTrait;
+    private $blameableTraits;
 
     /**
      * @param callable
      * @param string $userEntity
      */
-    public function __construct(ClassAnalyzer $classAnalyzer, $isRecursive, $blameableTrait, callable $userCallable = null, $userEntity = null)
+    public function __construct(ClassAnalyzer $classAnalyzer, $blameableTraits, callable $userCallable = null, $userEntity = null)
     {
-        parent::__construct($classAnalyzer, $isRecursive);
+        parent::__construct($classAnalyzer, false);
 
-        $this->blameableTrait = $blameableTrait;
-        $this->userCallable = $userCallable;
-        $this->userEntity = $userEntity;
+        $this->blameableTraits = is_array($blameableTraits) ? $blameableTraits : array($blameableTraits);
+        $this->userCallable    = $userCallable;
+        $this->userEntity      = $userEntity;
     }
 
     /**
@@ -72,8 +74,8 @@ class BlameableSubscriber extends AbstractSubscriber
         if (null === $classMetadata->reflClass) {
             return;
         }
-
-        if ($this->isBlameable($classMetadata)) {
+        
+        if ($this->requiresBlameableMapping($classMetadata)) {
             $this->mapEntity($classMetadata);
         }
     }
@@ -152,12 +154,10 @@ class BlameableSubscriber extends AbstractSubscriber
      */
     public function prePersist(LifecycleEventArgs $eventArgs)
     {
-        $em = $eventArgs->getEntityManager();
-        $uow = $em->getUnitOfWork();
+        $uow    = $eventArgs->getEntityManager()->getUnitOfWork();
         $entity = $eventArgs->getEntity();
 
-        $classMetadata = $em->getClassMetadata(get_class($entity));
-        if ($this->isBlameable($classMetadata)) {
+        if ($entity instanceof BlameableInterface && $entity->isBlameable()) {
             if (!$entity->getCreatedBy()) {
                 $user = $this->getUser();
                 if ($this->isValidUser($user)) {
@@ -206,15 +206,10 @@ class BlameableSubscriber extends AbstractSubscriber
      */
     public function preUpdate(LifecycleEventArgs $eventArgs)
     {
-        $em = $eventArgs->getEntityManager();
-        $uow = $em->getUnitOfWork();
+        $uow    = $eventArgs->getEntityManager()->getUnitOfWork();
         $entity = $eventArgs->getEntity();
 
-        $classMetadata = $em->getClassMetadata(get_class($entity));
-        if ($this->isBlameable($classMetadata)) {
-            if (!$entity->isBlameable()) {
-                return;
-            }
+        if ($entity instanceof BlameableInterface && $entity->isBlameable()) {
             $user = $this->getUser();
             if ($this->isValidUser($user)) {
                 $oldValue = $entity->getUpdatedBy();
@@ -235,12 +230,10 @@ class BlameableSubscriber extends AbstractSubscriber
      */
     public function preRemove(LifecycleEventArgs $eventArgs)
     {
-        $em = $eventArgs->getEntityManager();
-        $uow = $em->getUnitOfWork();
+        $uow    = $eventArgs->getEntityManager()->getUnitOfWork();
         $entity = $eventArgs->getEntity();
 
-        $classMetadata = $em->getClassMetadata(get_class($entity));
-        if ($this->isBlameable($classMetadata)) {
+        if ($entity instanceof BlameableInterface && $entity->isBlameable()) {
             if (!$entity->isBlameable()) {
                 return;
             }
@@ -304,14 +297,20 @@ class BlameableSubscriber extends AbstractSubscriber
     }
 
     /**
-     * Checks if entity is blameable
+     * Checks if entity requires the subscriber to load the Blameable Mapping
      *
      * @param ClassMetadata $classMetadata The metadata
      *
      * @return Boolean
      */
-    private function isBlameable(ClassMetadata $classMetadata)
+    private function requiresBlameableMapping(ClassMetadata $classMetadata)
     {
-        return $this->getClassAnalyzer()->hasTrait($classMetadata->reflClass, $this->blameableTrait, $this->isRecursive);
+        foreach ($this->blameableTraits as $trait) {
+            if ($this->getClassAnalyzer()->hasTrait($classMetadata->reflClass, $trait)) {
+                return true;
+            }
+        }
+
+        return false;
     }
 }

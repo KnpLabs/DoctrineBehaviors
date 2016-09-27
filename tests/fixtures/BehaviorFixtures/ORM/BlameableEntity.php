@@ -8,7 +8,7 @@ use Knp\DoctrineBehaviors\Model;
 /**
  * @ORM\Entity
  */
-class BlameableEntity
+class BlameableEntity implements Model\Blameable\BlameableInterface
 {
     use Model\Blameable\Blameable;
 

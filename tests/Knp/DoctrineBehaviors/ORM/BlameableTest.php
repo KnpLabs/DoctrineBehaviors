@@ -27,8 +27,7 @@ class BlameableTest extends \PHPUnit_Framework_TestCase
 
         $this->subscriber = new \Knp\DoctrineBehaviors\ORM\Blameable\BlameableSubscriber(
             new ClassAnalyzer(),
-            false,
-            'Knp\DoctrineBehaviors\Model\Blameable\Blameable',
+            array('Knp\DoctrineBehaviors\Model\Blameable\Blameable', 'Knp\DoctrineBehaviors\Model\Blameable\BlameableProperties'),
             $userCallback,
             $userEntity
         );
