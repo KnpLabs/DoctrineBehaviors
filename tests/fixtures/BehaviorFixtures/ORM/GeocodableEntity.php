@@ -9,7 +9,7 @@ use Knp\DoctrineBehaviors\ORM\Geocodable\Type\Point;
 /**
  * @ORM\Entity(repositoryClass="BehaviorFixtures\ORM\GeocodableEntityRepository")
  */
-class GeocodableEntity
+class GeocodableEntity implements Model\Geocodable\GeocodableInterface
 {
     use Model\Geocodable\Geocodable;
 

@@ -20,7 +20,7 @@ parameters:
     knp.doctrine_behaviors.loggable_subscriber.class: Knp\DoctrineBehaviors\ORM\Loggable\LoggableSubscriber
     knp.doctrine_behaviors.loggable_subscriber.logger_callable.class: Knp\DoctrineBehaviors\ORM\Loggable\LoggerCallable
     knp.doctrine_behaviors.geocodable_subscriber.class: Knp\DoctrineBehaviors\ORM\Geocodable\GeocodableSubscriber
-    knp.doctrine_behaviors.geocodable_subscriber.geocodable_trait: Knp\DoctrineBehaviors\Model\Geocodable\Geocodable
+    knp.doctrine_behaviors.geocodable_subscriber.geocodable_traits: [Knp\DoctrineBehaviors\Model\Geocodable\Geocodable, Knp\DoctrineBehaviors\Model\Geocodable\GeocodableProperties]
     knp.doctrine_behaviors.sluggable_subscriber.class: Knp\DoctrineBehaviors\ORM\Sluggable\SluggableSubscriber
     knp.doctrine_behaviors.sluggable_subscriber.sluggable_trait: Knp\DoctrineBehaviors\Model\Sluggable\Sluggable
     knp.doctrine_behaviors.tree_subscriber.class: Knp\DoctrineBehaviors\ORM\Tree\TreeSubscriber
@@ -140,8 +140,7 @@ services:
         public:  false
         arguments:
             - "@knp.doctrine_behaviors.reflection.class_analyzer"
-            - "%knp.doctrine_behaviors.reflection.is_recursive%"
-            - "%knp.doctrine_behaviors.geocodable_subscriber.geocodable_trait%"
+            - "%knp.doctrine_behaviors.geocodable_subscriber.geocodable_traits%"
             - "@?knp.doctrine_behaviors.geocodable_callable"
         tags:
             - { name: doctrine.event_subscriber }

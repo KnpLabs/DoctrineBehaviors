@@ -15,6 +15,8 @@ use Knp\DoctrineBehaviors\Reflection\ClassAnalyzer;
 
 use Knp\DoctrineBehaviors\ORM\AbstractSubscriber;
 
+use Knp\DoctrineBehaviors\Model\Geocodable\GeocodableInterface;
+
 use Knp\DoctrineBehaviors\ORM\Geocodable\Type\Point;
 
 use Doctrine\Common\Persistence\Mapping\ClassMetadata;
@@ -39,7 +41,7 @@ class GeocodableSubscriber extends AbstractSubscriber
      */
     private $geolocationCallable;
 
-    private $geocodableTrait;
+    private $geocodableTraits;
 
     /**
      * @param \Knp\DoctrineBehaviors\Reflection\ClassAnalyzer $classAnalyzer
@@ -48,14 +50,12 @@ class GeocodableSubscriber extends AbstractSubscriber
      * @param callable                                        $geolocationCallable
      */
     public function __construct(
-        ClassAnalyzer $classAnalyzer,
-        $isRecursive,
-        $geocodableTrait,
+        ClassAnalyzer $classAnalyzer, $geocodableTraits,
         callable $geolocationCallable = null
     ) {
-        parent::__construct($classAnalyzer, $isRecursive);
+        parent::__construct($classAnalyzer, false);
 
-        $this->geocodableTrait = $geocodableTrait;
+        $this->geocodableTraits    = is_array($geocodableTraits) ? $geocodableTraits : array($geocodableTraits);
         $this->geolocationCallable = $geolocationCallable;
     }
 
@@ -72,7 +72,7 @@ class GeocodableSubscriber extends AbstractSubscriber
             return;
         }
 
-        if ($this->isGeocodable($classMetadata)) {
+        if ($this->requiresGeocodableMapping($classMetadata)) {
             if (!Type::hasType('point')) {
                 Type::addType('point', 'Knp\DoctrineBehaviors\DBAL\Types\PointType');
             }
@@ -115,12 +115,10 @@ class GeocodableSubscriber extends AbstractSubscriber
      */
     private function updateLocation(LifecycleEventArgs $eventArgs, $override = false)
     {
-        $em = $eventArgs->getEntityManager();
-        $uow = $em->getUnitOfWork();
+        $uow = $eventArgs->getEntityManager()->getUnitOfWork();
         $entity = $eventArgs->getEntity();
 
-        $classMetadata = $em->getClassMetadata(get_class($entity));
-        if ($this->isGeocodable($classMetadata)) {
+        if ($entity instanceof GeocodableInterface) {
 
             $oldValue = $entity->getLocation();
             if (!$oldValue instanceof Point || $override) {
@@ -172,13 +170,15 @@ class GeocodableSubscriber extends AbstractSubscriber
      *
      * @return boolean
      */
-    private function isGeocodable(ClassMetadata $classMetadata)
+    private function requiresGeocodableMapping(ClassMetadata $classMetadata)
     {
-        return $this->getClassAnalyzer()->hasTrait(
-            $classMetadata->reflClass,
-            $this->geocodableTrait,
-            $this->isRecursive
-        );
+        foreach ($this->geocodableTraits as $trait) {
+            if ($this->getClassAnalyzer()->hasTrait($classMetadata->reflClass, $trait)) {
+                return true;
+            }
+        }
+
+        return false;
     }
 
     public function getSubscribedEvents()

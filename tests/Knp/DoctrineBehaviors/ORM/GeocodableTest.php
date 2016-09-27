@@ -52,8 +52,7 @@ class GeocodableTest extends \PHPUnit_Framework_TestCase
         $em->addEventSubscriber(
             new \Knp\DoctrineBehaviors\ORM\Geocodable\GeocodableSubscriber(
                 new ClassAnalyzer(),
-                false,
-                'Knp\DoctrineBehaviors\Model\Geocodable\Geocodable',
+                array('Knp\DoctrineBehaviors\Model\Geocodable\Geocodable','Knp\DoctrineBehaviors\Model\Geocodable\GeocodableProperties'),
                 $callable
             )
         );
