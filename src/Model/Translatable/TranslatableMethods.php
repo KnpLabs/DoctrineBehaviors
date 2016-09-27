@@ -43,11 +43,11 @@ trait TranslatableMethods
     /**
      * Adds new translation.
      *
-     * @param Translation $translation The translation
+     * @param TranslationInterface $translation The translation
      *
      * @return $this
      */
-    public function addTranslation($translation)
+    public function addTranslation(TranslationInterface $translation)
     {
         $this->getTranslations()->set((string)$translation->getLocale(), $translation);
         $translation->setTranslatable($this);
@@ -58,9 +58,9 @@ trait TranslatableMethods
     /**
      * Removes specific translation.
      *
-     * @param Translation $translation The translation
+     * @param TranslationInterface $translation The translation
      */
-    public function removeTranslation($translation)
+    public function removeTranslation(TranslationInterface $translation)
     {
         $this->getTranslations()->removeElement($translation);
     }
@@ -74,7 +74,7 @@ trait TranslatableMethods
      * @param string $locale The locale (en, ru, fr) | null If null, will try with current locale
      * @param bool $fallbackToDefault Whether fallback to default locale
      *
-     * @return Translation
+     * @return TranslationInterface
      */
     public function translate($locale = null, $fallbackToDefault = true)
     {
@@ -90,7 +90,7 @@ trait TranslatableMethods
      * @param string $locale The locale (en, ru, fr) | null If null, will try with current locale
      * @param bool $fallbackToDefault Whether fallback to default locale
      *
-     * @return Translation
+     * @return TranslationInterface
      */
     protected function doTranslate($locale = null, $fallbackToDefault = true)
     {
@@ -171,10 +171,10 @@ trait TranslatableMethods
 
     /**
      * An extra feature allows you to proxy translated fields of a translatable entity.
-     * 
+     *
      * @param string $method
      * @param array $arguments
-     * 
+     *
      * @return mixed The translated value of the field for current locale
      */
     protected function proxyCurrentLocaleTranslation($method, array $arguments = [])
@@ -201,7 +201,7 @@ trait TranslatableMethods
      * @param string $locale              The locale (en, ru, fr)
      * @param bool   $withNewTranslations searched in new translations too
      *
-     * @return Translation|null
+     * @return TranslationInterface|null
      */
     protected function findTranslationByLocale($locale, $withNewTranslations = true)
     {

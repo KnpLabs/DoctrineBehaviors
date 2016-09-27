@@ -34,18 +34,19 @@ trait TranslationMethods
      *
      * @return mixed
      */
-    public function getId() {
+    public function getId()
+    {
         return $this->id;
     }
 
     /**
      * Sets entity, that this translation should be mapped to.
      *
-     * @param Translatable $translatable The translatable
+     * @param TranslatableInterface $translatable The translatable
      *
      * @return $this
      */
-    public function setTranslatable($translatable)
+    public function setTranslatable(TranslatableInterface $translatable)
     {
         $this->translatable = $translatable;
 

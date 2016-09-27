@@ -36,23 +36,23 @@ class TranslatableSubscriber extends AbstractSubscriber
 {
     private $currentLocaleCallable;
     private $defaultLocaleCallable;
-    private $translatableTrait;
-    private $translationTrait;
+    private $translatableTraits;
+    private $translationTraits;
     private $translatableFetchMode;
     private $translationFetchMode;
 
     public function __construct(ClassAnalyzer $classAnalyzer, callable $currentLocaleCallable = null,
-                                callable $defaultLocaleCallable = null,$translatableTrait, $translationTrait,
-                                $translatableFetchMode, $translationFetchMode)
+                                callable $defaultLocaleCallable = null, $translatableTraits,
+                                $translationTraits, $translatableFetchMode, $translationFetchMode)
     {
         parent::__construct($classAnalyzer, false);
 
         $this->currentLocaleCallable = $currentLocaleCallable;
         $this->defaultLocaleCallable = $defaultLocaleCallable;
-        $this->translatableTrait = $translatableTrait;
-        $this->translationTrait = $translationTrait;
+        $this->translatableTraits    = is_array($translatableTraits) ? $translatableTraits : array($translatableTraits);
+        $this->translationTraits     = is_array($translationTraits) ? $translationTraits : array($translationTraits);
         $this->translatableFetchMode = $this->convertFetchString($translatableFetchMode);
-        $this->translationFetchMode = $this->convertFetchString($translationFetchMode);
+        $this->translationFetchMode  = $this->convertFetchString($translationFetchMode);
     }
 
     /**
@@ -68,11 +68,11 @@ class TranslatableSubscriber extends AbstractSubscriber
             return;
         }
 
-        if ($this->isTranslatable($classMetadata)) {
+        if ($this->requiresTranslatableMapping($classMetadata)) {
             $this->mapTranslatable($classMetadata);
         }
 
-        if ($this->isTranslation($classMetadata)) {
+        if ($this->requiresTranslationMapping($classMetadata)) {
             $this->mapTranslation($classMetadata);
             $this->mapId(
                 $classMetadata,
@@ -277,15 +277,21 @@ class TranslatableSubscriber extends AbstractSubscriber
     }
 
     /**
-     * Checks if entity is translatable
+     * Checks if entity is translatable and should be provided with ORM Mapping
      *
      * @param ClassMetadata $classMetadata
      *
      * @return boolean
      */
-    private function isTranslatable(ClassMetadata $classMetadata)
+    private function requiresTranslatableMapping(ClassMetadata $classMetadata)
     {
-        return $this->getClassAnalyzer()->hasTrait($classMetadata->reflClass, $this->translatableTrait);
+        foreach ($this->translatableTraits as $trait) {
+            if ($this->getClassAnalyzer()->hasTrait($classMetadata->reflClass, $trait)) {
+                return true;
+            }
+        }
+
+        return false;
     }
 
     /**
@@ -295,9 +301,15 @@ class TranslatableSubscriber extends AbstractSubscriber
      *
      * @return boolean
      */
-    private function isTranslation(ClassMetadata $classMetadata)
+    private function requiresTranslationMapping(ClassMetadata $classMetadata)
     {
-        return $this->getClassAnalyzer()->hasTrait($classMetadata->reflClass, $this->translationTrait);
+        foreach ($this->translationTraits as $trait) {
+            if ($this->getClassAnalyzer()->hasTrait($classMetadata->reflClass, $trait)) {
+                return true;
+            }
+        }
+
+        return false;
     }
 
     public function postLoad(LifecycleEventArgs $eventArgs)
@@ -312,11 +324,9 @@ class TranslatableSubscriber extends AbstractSubscriber
 
     private function setLocales(LifecycleEventArgs $eventArgs)
     {
-        $em            = $eventArgs->getEntityManager();
-        $entity        = $eventArgs->getEntity();
-        $classMetadata = $em->getClassMetadata(get_class($entity));
+        $entity = $eventArgs->getEntity();
 
-        if (!$this->getClassAnalyzer()->hasMethod($classMetadata->reflClass, 'setCurrentLocale')) {
+        if (!$entity instanceof TranslatableInterface) {
             return;
         }
 

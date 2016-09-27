@@ -187,13 +187,13 @@ You now have a working `Category` that behaves like:
 <a name="translatable" id="translatable"></a>
 ### translatable:
 
-If you're working on a `Category` entity, the `Translatable` behavior expects a **CategoryTranslation** entity in the 
+If you're working on a `Category` entity, the `Translatable` behavior expects a **CategoryTranslation** entity in the
 same folder of Category entity by default.
 
 The default naming convention (or its customization via trait methods) avoids you to manually handle entity associations.
 It is handled automatically by the TranslationSubscriber.
 
-In order to use the Translatable trait, you will have to create this `CategoryTranslation` entity.
+In order to use the Translatable trait and interface, you will have to create this `CategoryTranslation` entity.
 
 ``` php
 <?php
@@ -204,7 +204,7 @@ use Knp\DoctrineBehaviors\Model as ORMBehaviors;
 /**
  * @ORM\Entity
  */
-class CategoryTranslation
+class CategoryTranslation implements ORMBehaviors\Translatable\TranslationInterface
 {
     use ORMBehaviors\Translatable\Translation;
 
@@ -253,8 +253,8 @@ class CategoryTranslation
     }
 }
 ```
-The corresponding Category entity needs to `use ORMBehaviors\Translatable\Translatable;`
-and should only contain fields that you do not need to translate.
+The corresponding Category entity needs to implement `ORMBehaviors\Translatable\TranslatableInterface`
+and `use ORMBehaviors\Translatable\Translatable;` and should only contain fields that you do not need to translate.
 
 ``` php
 <?php
@@ -265,7 +265,7 @@ use Knp\DoctrineBehaviors\Model as ORMBehaviors;
 /**
  * @ORM\Entity
  */
-class Category
+class Category implements ORMBehaviors\Translatable\TranslatableInterface
 {
     use ORMBehaviors\Translatable\Translatable;
 
@@ -277,7 +277,7 @@ class Category
 ```
 
 
-After updating the database, ie. with `./console doctrine:schema:update --force`, 
+After updating the database, ie. with `./console doctrine:schema:update --force`,
 you can now work on translations using `translate` or `getTranslations` methods.
 
 ``` php
@@ -295,17 +295,19 @@ you can now work on translations using `translate` or `getTranslations` methods.
 
 ```
 
+
+
 #### Override
 
-In case you prefer to use a different class name for the translation entity, 
+In case you prefer to use a different class name for the translation entity,
 or want to use a separate namespace, you have 2 ways :
 
 If you want to define a custom translation entity class name globally :  
-Override the trait `Translatable` and his  method `getTranslationEntityClass` 
-and the trait `Translation` and his method `getTranslatableEntityClass` in the translation entity. 
+Override the trait `Translatable` and his  method `getTranslationEntityClass`
+and the trait `Translation` and his method `getTranslatableEntityClass` in the translation entity.
 If you override one, you also need to override the other to return the inverse class.
 
-Example: Let's say you want to create a sub namespace AppBundle\Entity\Translation to stock translations classes 
+Example: Let's say you want to create a sub namespace AppBundle\Entity\Translation to stock translations classes
 then put overrided traits in that folder.
 
 ``` php
@@ -355,18 +357,28 @@ trait TranslationTrait
 }
 ```
 
-If you use that way make sure you override trait parameters of DoctrineBehaviors :
+If you use that way make sure you add your new trait to the list of traits triggering the mapping:
 
 ``` yaml
 parameters:
-    knp.doctrine_behaviors.translatable_subscriber.translatable_trait: AppBundle\Entity\Translation\TranslatableTrait
-    knp.doctrine_behaviors.translatable_subscriber.translation_trait: AppBundle\Entity\Translation\TranslationTrait
+    knp.doctrine_behaviors.translatable_subscriber.translatable_traits: [ AppBundle\Entity\Translation\TranslatableTrait, Knp\DoctrineBehaviors\Model\Translatable\Translatable, Knp\DoctrineBehaviors\Model\Translatable\TranslatableProperties ]
+    knp.doctrine_behaviors.translatable_subscriber.translation_traits: [ AppBundle\Entity\Translation\TranslationTrait, Knp\DoctrineBehaviors\Model\Translatable\Translation, Knp\DoctrineBehaviors\Model\Translatable\TranslationProperties ]
 ```
 
 If you want to define a custom translation entity class name just for a single translatable class :  
 Override the trait method `getTranslationEntityClass` in the translatable entity and `getTranslatableEntityClass`
 in the translation entity. If you override one, you also need to override the other to return the inverse class.
 
+
+If you need a deeper customization, you can add as many traits as you need to the trait list. Any class using one of
+these traits (directly) will trigger the mapping of the fields defined in
+`Knp\DoctrineBehaviors\Model\Translatable\TranslatableProperties`. So make sure to always either use it in your own
+traits or provide equivalent properties.
+
+You can also handle the mapping yourself. As long as you implements the interfaces
+`Knp\DoctrineBehaviors\Model\Translatable\TranslatableInterface` and
+`Knp\DoctrineBehaviors\Model\Translatable\TranslationInterface` for the appropriate class, the subscriber will handle
+the translations properly.
 
 #### guess the current locale
 
@@ -388,7 +400,7 @@ so that when you try to call `getName` (for example) it will return you the tran
     {
         return $this->proxyCurrentLocaleTranslation($method, $arguments);
     }
-    
+
     // or do it with PropertyAccessor that ships with Symfony SE
     // if your methods don't take any required arguments
     public function __call($method, $arguments)
@@ -478,7 +490,7 @@ parameters:
 ```
 
 `datetimetz` here is a useful one to use if you are working with a Postgres database, otherwise you may encounter some
-timezone issues. For more information on this see: 
+timezone issues. For more information on this see:
 <a href="http://doctrine-dbal.readthedocs.org/en/latest/reference/known-vendor-issues.html#datetime-datetimetz-and-time-types">http://doctrine-dbal.readthedocs.org/en/latest/reference/known-vendor-issues.html#datetime-datetimetz-and-time-types</a>
 
 The default type is `datetime`.
