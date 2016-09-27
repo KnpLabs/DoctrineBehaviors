@@ -8,7 +8,7 @@ use Knp\DoctrineBehaviors\Model;
 /**
  * @ORM\Entity
  */
-class LoggableEntity
+class LoggableEntity implements Model\Loggable\LoggableInterface
 {
     use Model\Loggable\Loggable;
 

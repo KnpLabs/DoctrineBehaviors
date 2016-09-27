@@ -13,7 +13,7 @@ namespace Knp\DoctrineBehaviors\ORM\Loggable;
 
 use Knp\DoctrineBehaviors\Reflection\ClassAnalyzer;
 
-use Knp\DoctrineBehaviors\ORM\AbstractSubscriber;
+use Knp\DoctrineBehaviors\Model\Loggable\LoggableInterface;
 
 use Doctrine\ORM\Event\LifecycleEventArgs;
 
@@ -25,7 +25,7 @@ use Doctrine\Common\EventSubscriber,
  * LoggableSubscriber handle Loggable entites
  * Listens to lifecycle events
  */
-class LoggableSubscriber extends AbstractSubscriber
+class LoggableSubscriber implements EventSubscriber
 {
     /**
      * @var callable
@@ -35,19 +35,16 @@ class LoggableSubscriber extends AbstractSubscriber
     /**
      * @param callable
      */
-    public function __construct(ClassAnalyzer $classAnalyzer, $isRecursive, callable $loggerCallable)
+    public function __construct(callable $loggerCallable)
     {
-        parent::__construct($classAnalyzer, $isRecursive);
         $this->loggerCallable = $loggerCallable;
     }
 
     public function postPersist(LifecycleEventArgs $eventArgs)
     {
-        $em            = $eventArgs->getEntityManager();
-        $entity        = $eventArgs->getEntity();
-        $classMetadata = $em->getClassMetadata(get_class($entity));
+        $entity = $eventArgs->getEntity();
 
-        if ($this->isEntitySupported($classMetadata->reflClass)) {
+        if ($entity instanceof LoggableInterface) {
             $message = $entity->getCreateLogMessage();
             $loggerCallable = $this->loggerCallable;
             $loggerCallable($message);
@@ -73,7 +70,7 @@ class LoggableSubscriber extends AbstractSubscriber
         $entity        = $eventArgs->getEntity();
         $classMetadata = $em->getClassMetadata(get_class($entity));
 
-        if ($this->isEntitySupported($classMetadata->reflClass)) {
+        if ($entity instanceof LoggableInterface) {
             $uow->computeChangeSet($classMetadata, $entity);
             $changeSet = $uow->getEntityChangeSet($entity);
 
@@ -85,11 +82,9 @@ class LoggableSubscriber extends AbstractSubscriber
 
     public function preRemove(LifecycleEventArgs $eventArgs)
     {
-        $em            = $eventArgs->getEntityManager();
-        $entity        = $eventArgs->getEntity();
-        $classMetadata = $em->getClassMetadata(get_class($entity));
+        $entity = $eventArgs->getEntity();
 
-        if ($this->isEntitySupported($classMetadata->reflClass)) {
+        if ($entity instanceof LoggableInterface) {
             $message = $entity->getRemoveLogMessage();
             $loggerCallable = $this->loggerCallable;
             $loggerCallable($message);
@@ -99,17 +94,6 @@ class LoggableSubscriber extends AbstractSubscriber
     public function setLoggerCallable(callable $callable)
     {
         $this->loggerCallable = $callable;
-    }
-
-    /**
-     * Checks if entity supports Loggable
-     *
-     * @param  ReflectionClass $reflClass
-     * @return boolean
-     */
-    protected function isEntitySupported(\ReflectionClass $reflClass)
-    {
-        return $this->getClassAnalyzer()->hasTrait($reflClass, 'Knp\DoctrineBehaviors\Model\Loggable\Loggable', $this->isRecursive);
     }
 
     public function getSubscribedEvents()

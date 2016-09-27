@@ -517,7 +517,7 @@ A loggable [callable](#callables) is used to get the logger from anywhere you wa
 /**
  * @ORM\Entity
  */
-class Category
+class Category implements ORMBehaviors\Loggable\LoggableInterface
 {
     use ORMBehaviors\Loggable\Loggable;
 
@@ -534,6 +534,9 @@ class Category
 }
 
 ```
+
+The important part is actually the `LoggableInterface`. The `Loggable` trait is only here to provide a default
+implementation.
 
 These messages are then passed to the configured callable.
 You can define your own, by passing another callable to the LoggableSubscriber:
