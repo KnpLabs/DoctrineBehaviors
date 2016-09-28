@@ -55,6 +55,6 @@ before_script:
   - sh -c "if [ '$PREFER' = 'lowest' ]; then composer update --prefer-lowest; fi"
 
 script:
-- bin/parallel-lint -e php,phpt --exclude vendor .
-- bin/yaml-lint config/*
-- bin/phpunit --testdox
+  - bin/parallel-lint -e php,phpt --exclude vendor .
+  - bin/yaml-lint config/*
+  - bin/phpunit --testdox
