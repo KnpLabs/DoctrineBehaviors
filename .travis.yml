@@ -57,4 +57,4 @@ before_script:
 script:
   - bin/parallel-lint -e php,phpt --exclude vendor .
   - bin/yaml-lint config/*
-  - bin/phpunit --testdox
+  - bin/phpunit
