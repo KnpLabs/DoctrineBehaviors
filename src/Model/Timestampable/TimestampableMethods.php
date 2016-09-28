@@ -65,14 +65,10 @@ trait TimestampableMethods
      */
     public function updateTimestamps()
     {
-        // Create a datetime with microseconds
-        $dateTime = \DateTime::createFromFormat('U.u', sprintf('%.6F', microtime(true)));
-        $dateTime->setTimezone(new \DateTimeZone(date_default_timezone_get()));
-
         if (null === $this->createdAt) {
-            $this->createdAt = $dateTime;
+            $this->createdAt = new \DateTime('now');
         }
 
-        $this->updatedAt = $dateTime;
+        $this->updatedAt = new \DateTime('now');
     }
 }

@@ -34,6 +34,7 @@ use Doctrine\DBAL\Platforms;
  */
 class TranslatableSubscriber extends AbstractSubscriber
 {
+    private $uniqueIndexNameGenerator;
     private $currentLocaleCallable;
     private $defaultLocaleCallable;
     private $translatableTrait;
@@ -41,12 +42,13 @@ class TranslatableSubscriber extends AbstractSubscriber
     private $translatableFetchMode;
     private $translationFetchMode;
 
-    public function __construct(ClassAnalyzer $classAnalyzer, $isRecursive, callable $currentLocaleCallable = null,
+    public function __construct(ClassAnalyzer $classAnalyzer, UniqueIndexNameGeneratorInterface $uniqueIndexNameGenerator, $isRecursive, callable $currentLocaleCallable = null,
                                 callable $defaultLocaleCallable = null,$translatableTrait, $translationTrait,
                                 $translatableFetchMode, $translationFetchMode)
     {
         parent::__construct($classAnalyzer, $isRecursive);
 
+        $this->uniqueIndexNameGenerator = $uniqueIndexNameGenerator;
         $this->currentLocaleCallable = $currentLocaleCallable;
         $this->defaultLocaleCallable = $defaultLocaleCallable;
         $this->translatableTrait = $translatableTrait;
@@ -229,7 +231,7 @@ class TranslatableSubscriber extends AbstractSubscriber
             ]);
         }
 
-        $name = $classMetadata->getTableName().'_unique_translation';
+        $name = $this->uniqueIndexNameGenerator->generate($classMetadata);
         if (!$this->hasUniqueTranslationConstraint($classMetadata, $name)) {
             $classMetadata->table['uniqueConstraints'][$name] = [
                 'columns' => ['translatable_id', 'locale' ]
