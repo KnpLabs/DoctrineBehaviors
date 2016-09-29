@@ -66,6 +66,7 @@ class TimestampableTest extends \PHPUnit_Framework_TestCase
 
         $em->persist($entity);
         $em->flush();
+        $em->refresh($entity);
         $id = $entity->getId();
         $createdAt = $entity->getCreatedAt();
         $em->clear();
@@ -99,6 +100,7 @@ class TimestampableTest extends \PHPUnit_Framework_TestCase
 
         $em->persist($entity);
         $em->flush();
+        $em->refresh($entity);
         $id = $entity->getId();
         $createdAt = $entity->getCreatedAt();
         $updatedAt = $entity->getUpdatedAt();
@@ -135,6 +137,7 @@ class TimestampableTest extends \PHPUnit_Framework_TestCase
 
         $em->persist($entity);
         $em->flush();
+        $em->refresh($entity);
         $id = $entity->getId();
         $createdAt = $entity->getCreatedAt();
         $em->clear();
