@@ -1,6 +1,6 @@
 # Doctrine2 Behaviors
 
-[![Build Status](https://secure.travis-ci.org/KnpLabs/DoctrineBehaviors.png)](http://travis-ci.org/KnpLabs/DoctrineBehaviors)
+[![Build Status](https://travis-ci.org/KnpLabs/DoctrineBehaviors.svg?branch=master)](http://travis-ci.org/KnpLabs/DoctrineBehaviors)
 
 
 This PHP `>=5.4` library is a collection of traits and interfaces
