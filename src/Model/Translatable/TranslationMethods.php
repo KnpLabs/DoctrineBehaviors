@@ -96,7 +96,7 @@ trait TranslationMethods
         foreach (get_object_vars($this) as $var => $value) {
             if (in_array($var, array('id', 'translatable', 'locale')))
                 continue;
-            
+
             if (!empty($value))
                 return false;
         }
