@@ -97,12 +97,12 @@ trait TranslationMethods
             if (in_array($var, ['id', 'translatable', 'locale'])) {
                 continue;
             }
-            
+
             if (!empty($value)) {
                 return false;
             }
         }
-        
+
         return true;
     }
 }
