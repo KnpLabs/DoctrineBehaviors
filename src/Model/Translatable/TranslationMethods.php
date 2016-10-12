@@ -94,12 +94,15 @@ trait TranslationMethods
     public function isEmpty()
     {
         foreach (get_object_vars($this) as $var => $value) {
-            if (in_array($var, array('id', 'translatable', 'locale')))
+            if (in_array($var, ['id', 'translatable', 'locale'])) {
                 continue;
+            }
             
-            if (!empty($value))
+            if (!empty($value)) {
                 return false;
+            }
         }
+        
         return true;
     }
 }
