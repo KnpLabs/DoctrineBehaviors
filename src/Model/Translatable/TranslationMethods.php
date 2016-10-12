@@ -93,6 +93,16 @@ trait TranslationMethods
      */
     public function isEmpty()
     {
-        return false;
+        foreach (get_object_vars($this) as $var => $value) {
+            if (in_array($var, ['id', 'translatable', 'locale'])) {
+                continue;
+            }
+
+            if (!empty($value)) {
+                return false;
+            }
+        }
+
+        return true;
     }
 }
