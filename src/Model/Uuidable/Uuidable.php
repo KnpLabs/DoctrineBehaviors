@@ -1,6 +1,6 @@
 <?php
 
-namespace AppBundle\Reusable;
+namespace Knp\DoctrineBehaviors\ORM\Uuidable;
 
 use Ramsey\Uuid;
 
@@ -54,6 +54,6 @@ trait Uuidable
      */
     public function generateUuid()
     {
-        return Uuid::Uuid4();
+        $this->uuid = Uuid::Uuid4();
     }
 }
