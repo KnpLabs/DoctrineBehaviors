@@ -23,7 +23,8 @@
     "require": {
         "php":                              ">=5.4",
         "doctrine/common":                  ">=2.2",
-        "behat/transliterator":             "~1.0"
+        "behat/transliterator":             "~1.0",
+        "ramsey/uuid":                      "^3.5"
     },
     "require-dev": {
         "ext-pdo_sqlite":                   "*",
