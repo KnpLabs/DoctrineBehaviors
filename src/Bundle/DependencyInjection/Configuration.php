@@ -25,6 +25,7 @@ class Configuration implements ConfigurationInterface
                             'timestampable'  => true,
                             'translatable'   => true,
                             'tree'           => true,
+                            'uuidable'       => true,
                         ];
                     }
 
@@ -41,6 +42,7 @@ class Configuration implements ConfigurationInterface
                 ->booleanNode('timestampable')->defaultFalse()->treatNullLike(false)->end()
                 ->booleanNode('translatable')->defaultFalse()->treatNullLike(false)->end()
                 ->booleanNode('tree')->defaultFalse()->treatNullLike(false)->end()
+                ->booleanNode('uuidable')->defaultFalse()->treatNullLike(false)->end()
             ->end()
         ;
 

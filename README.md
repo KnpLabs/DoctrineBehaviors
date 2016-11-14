@@ -19,6 +19,7 @@ It currently handles:
  * [timestampable](#timestampable)
  * [translatable](#translatable)
  * [tree](#tree)
+ * [uuidable] (#uuidable)
 
 ## Notice:
 
@@ -114,7 +115,8 @@ class Category implements ORMBehaviors\Tree\NodeInterface, \ArrayAccess
         ORMBehaviors\Sortable\Sortable,
         ORMBehaviors\Timestampable\Timestampable,
         ORMBehaviors\Translatable\Translatable,
-        ORMBehaviors\Tree\Node
+        ORMBehaviors\Tree\Node,
+        ORMBehaviors\Uuidable\Uuidable
     ;
 
     /**
@@ -714,6 +716,27 @@ Now we can filtering using:
     $products = $em->getRepository('Product')->filterBy(['o:code' => '21']);
 ```
 
+
+
+<a name="uuidable" id="uuidable"></a>
+### uuidable
+
+Uuidable generates uuid4 (uniqueness is not guaranteed) for an entity.
+Will automatically generate on persist.
+```php
+<?php
+
+use Doctrine\ORM\Mapping as ORM;
+use Knp\DoctrineBehaviors\Model as ORMBehaviors;
+
+/**
+ * @ORM\Entity
+ */
+class BlogPost
+{
+    use ORMBehaviors\Uuidable\Uuidable;
+}
+```
 
 
 <a name="callables" id="callables"></a>
