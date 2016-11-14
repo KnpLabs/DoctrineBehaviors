@@ -1,6 +1,6 @@
 <?php
 
-namespace Knp\DoctrineBehaviors\ORM\Uuidable;
+namespace Knp\DoctrineBehaviors\Model\Uuidable;
 
 use Ramsey\Uuid;
 
