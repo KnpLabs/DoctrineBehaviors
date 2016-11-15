@@ -2,7 +2,7 @@
 
 namespace Knp\DoctrineBehaviors\Model\Uuidable;
 
-use Ramsey\Uuid;
+use Ramsey\Uuid\Uuid;
 
 /**
  * Uuidable trait.
