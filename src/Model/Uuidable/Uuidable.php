@@ -14,12 +14,12 @@ trait Uuidable
     /**
      * @var string
      */
-    private $uuid;
+    protected $uuid;
 
     /**
      * Initialize the Uuid
      */
-    private function initializeUuid()
+    protected function initializeUuid()
     {
         $this->uuid = Uuid::uuid4();
 

@@ -41,7 +41,7 @@ class UuidableSubscriber extends AbstractSubscriber
         }
 
         if ($this->isUuidable($classMetadata)) {
-            if (!$classMetadata->hasField('slug')) {
+            if (!$classMetadata->hasField('uuidsss')) {
                 $classMetadata->mapField(array(
                     'fieldName' => 'uuid',
                     'type'      => 'string',
