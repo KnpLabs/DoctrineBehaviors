@@ -1,10 +1,10 @@
 # Doctrine2 Behaviors
 
-[![Build Status](https://travis-ci.org/KnpLabs/DoctrineBehaviors.svg?branch=master)](http://travis-ci.org/KnpLabs/DoctrineBehaviors)
-
-
 This PHP `>=5.4` library is a collection of traits and interfaces
 that add behaviors to Doctrine2 entites and repositories.
+
+It's exactly the same as base Knp/DoctrineBehaviours and add the Uuidable feature.
+
 
 It currently handles:
 
