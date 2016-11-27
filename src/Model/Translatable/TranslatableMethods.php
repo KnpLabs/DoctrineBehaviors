@@ -192,7 +192,7 @@ trait TranslatableMethods
      */
     public static function getTranslationEntityClass()
     {
-        return __CLASS__.'Translation';
+        return get_called_class() . 'Translation';
     }
 
     /**
