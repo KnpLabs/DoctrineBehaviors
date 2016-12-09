@@ -56,6 +56,28 @@ trait TranslatableMethods
     }
 
     /**
+     * Setter for translations collection
+     * 
+     * @param ArrayCollection|Array $translations
+     *
+     * @return $this
+     */
+    public function setTranslations($translations)
+    {
+        if (!$translations instanceof \Traversable && !is_array($translations)) {
+            throw new \InvalidArgumentException('$translations parameter must be iterable');
+        }
+
+        $this->translations = new ArrayCollection();
+        
+        foreach ($translations as $translation) {
+            $this->addTranslation($translation);
+        }
+
+        return $this;
+    }
+
+    /**
      * Removes specific translation.
      *
      * @param Translation $translation The translation
