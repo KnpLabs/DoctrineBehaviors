@@ -27,8 +27,9 @@ trait Sortable
      */
     public function setSort($sort)
     {
+        $sort = (int)$sort;
         $this->reordered = $this->sort !== $sort;
-        $this->sort      = $sort;
+        $this->sort = $sort;
 
         return $this;
     }
