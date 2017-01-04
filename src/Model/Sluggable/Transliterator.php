@@ -9,7 +9,10 @@ namespace Knp\DoctrineBehaviors\Model\Sluggable;
 /**
 * Transliteration utility
 */
-class Transliterator extends \Behat\Transliterator\Transliterator
+class Transliterator implements TransliteratorInterface
 {
-
+    public function transliterate($text, $separator = '-')
+    {
+        return \Behat\Transliterator\Transliterator::transliterate($text, $separator);
+    }
 }
