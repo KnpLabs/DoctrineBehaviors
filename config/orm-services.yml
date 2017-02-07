@@ -1,5 +1,6 @@
 parameters:
     knp.doctrine_behaviors.reflection.class_analyzer.class: Knp\DoctrineBehaviors\Reflection\ClassAnalyzer
+    knp.doctrine_behaviors.unique_index_name_generator.class: Knp\DoctrineBehaviors\ORM\Translatable\BaseUniqueIndexNameGenerator
     knp.doctrine_behaviors.reflection.is_recursive: true
     knp.doctrine_behaviors.translatable_subscriber.class: Knp\DoctrineBehaviors\ORM\Translatable\TranslatableSubscriber
     knp.doctrine_behaviors.translatable_subscriber.current_locale_callable.class: Knp\DoctrineBehaviors\ORM\Translatable\CurrentLocaleCallable
@@ -33,11 +34,17 @@ services:
         class:   "%knp.doctrine_behaviors.reflection.class_analyzer.class%"
         public:  false
 
+    knp.doctrine_behaviors.unique_index_name_generator:
+        class:   "%knp.doctrine_behaviors.unique_index_name_generator.class%"
+        public:  false
+
     knp.doctrine_behaviors.translatable_subscriber:
         class:   "%knp.doctrine_behaviors.translatable_subscriber.class%"
         public:  false
         arguments:
             - "@knp.doctrine_behaviors.reflection.class_analyzer"
+            - "@knp.doctrine_behaviors.unique_index_name_generator"
+            - "%knp.doctrine_behaviors.reflection.is_recursive%"
             - "@knp.doctrine_behaviors.translatable_subscriber.current_locale_callable"
             - "@knp.doctrine_behaviors.translatable_subscriber.default_locale_callable"
             - "%knp.doctrine_behaviors.translatable_subscriber.translatable_trait%"
@@ -56,7 +63,7 @@ services:
     knp.doctrine_behaviors.translatable_subscriber.default_locale_callable:
         class:           "%knp.doctrine_behaviors.translatable_subscriber.default_locale_callable.class%"
         arguments:
-            - "%locale%"
+            - %locale%
         public:  false
 
     knp.doctrine_behaviors.softdeletable_subscriber:

@@ -11,6 +11,7 @@
 
 namespace Knp\DoctrineBehaviors\ORM\Translatable;
 
+use Doctrine\DBAL\Platforms\AbstractPlatform;
 use Knp\DoctrineBehaviors\Reflection\ClassAnalyzer;
 
 use Knp\DoctrineBehaviors\ORM\AbstractSubscriber;
@@ -34,6 +35,7 @@ use Doctrine\DBAL\Platforms;
  */
 class TranslatableSubscriber extends AbstractSubscriber
 {
+    private $uniqueIndexNameGenerator;
     private $currentLocaleCallable;
     private $defaultLocaleCallable;
     private $translatableTrait;
@@ -41,12 +43,13 @@ class TranslatableSubscriber extends AbstractSubscriber
     private $translatableFetchMode;
     private $translationFetchMode;
 
-    public function __construct(ClassAnalyzer $classAnalyzer, callable $currentLocaleCallable = null,
+    public function __construct(ClassAnalyzer $classAnalyzer, UniqueIndexNameGeneratorInterface $uniqueIndexNameGenerator, $isRecursive, callable $currentLocaleCallable = null,
                                 callable $defaultLocaleCallable = null,$translatableTrait, $translationTrait,
                                 $translatableFetchMode, $translationFetchMode)
     {
         parent::__construct($classAnalyzer, false);
 
+        $this->uniqueIndexNameGenerator = $uniqueIndexNameGenerator;
         $this->currentLocaleCallable = $currentLocaleCallable;
         $this->defaultLocaleCallable = $defaultLocaleCallable;
         $this->translatableTrait = $translatableTrait;
@@ -73,7 +76,9 @@ class TranslatableSubscriber extends AbstractSubscriber
         }
 
         if ($this->isTranslation($classMetadata)) {
-            $this->mapTranslation($classMetadata);
+
+
+            $this->mapTranslation($classMetadata,$eventArgs->getEntityManager()->getConnection()->getDatabasePlatform());
             $this->mapId(
                 $classMetadata,
                 $eventArgs->getEntityManager()
@@ -212,27 +217,63 @@ class TranslatableSubscriber extends AbstractSubscriber
         }
     }
 
-    private function mapTranslation(ClassMetadata $classMetadata)
+    private function mapTranslation(ClassMetadata $classMetadata, AbstractPlatform $platform)
     {
         if (!$classMetadata->hasAssociation('translatable')) {
+
+            $translatableColumnName = 'translatable_id';
+
+
             $classMetadata->mapManyToOne([
                 'fieldName'    => 'translatable',
                 'inversedBy'   => 'translations',
                 'cascade'      => ['persist', 'merge'],
                 'fetch'        => $this->translationFetchMode,
                 'joinColumns'  => [[
-                    'name'                 => 'translatable_id',
+                    'name'                 => $translatableColumnName,
                     'referencedColumnName' => 'id',
                     'onDelete'             => 'CASCADE'
                 ]],
                 'targetEntity' => $classMetadata->getReflectionClass()->getMethod('getTranslatableEntityClass')->invoke(null),
             ]);
+        }else{
+            // Support manual set association mapping, and translatableColumnName
+            $assocMapping = $classMetadata->getAssociationMapping('translatable');
+            //TODO: Think about composite keys
+            $translatableColumnName = $assocMapping['joinColumns'][0]['name'];
         }
 
+
+        $uniqueColumns = [$translatableColumnName, 'locale' ];
+
+
         $name = $classMetadata->getTableName().'_unique_translation';
+
+
+        // Generates an identifier from a list of column names obeying a certain string length.
+        // This is especially important for Oracle, since it does not allow identifiers larger than 30 chars,
+        // however building idents automatically for foreign keys, composite keys or such can easily create
+        // very long names.
+        $platformIndexName = $this->uniqueIndexNameGenerator->generate(array_merge(array($classMetadata->getTableName()), $uniqueColumns), 'idx', $platform->getMaxIdentifierLength());
+
+        //Check length of origin index name
+        if( strlen($name) > $platform->getMaxIdentifierLength() ) {
+
+            if ($this->hasUniqueTranslationConstraint($classMetadata, $name)) {
+
+                $classMetadata->table['uniqueConstraints'][$platformIndexName] = $classMetadata->table['uniqueConstraints'][$name];
+                unset($classMetadata->table['uniqueConstraints'][$name]);
+
+            }
+
+            $name = $platformIndexName;
+        }
+
+
+
         if (!$this->hasUniqueTranslationConstraint($classMetadata, $name)) {
             $classMetadata->table['uniqueConstraints'][$name] = [
-                'columns' => ['translatable_id', 'locale' ]
+                'columns' => $uniqueColumns
             ];
         }
 
