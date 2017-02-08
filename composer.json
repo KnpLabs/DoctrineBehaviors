@@ -1,5 +1,5 @@
 {
-    "name": "knplabs/doctrine-behaviors",
+    "name": "modeltech/doctrine-behaviors",
     "type": "library",
     "description": "Doctrine2 behavior traits",
     "keywords": [
@@ -18,6 +18,10 @@
         {
             "name":     "Knplabs",
             "homepage": "http://knplabs.com"
+        },
+        {
+            "name":     "Modeltech",
+            "homepage": "http://modeltech.ru"
         }
     ],
     "require": {
