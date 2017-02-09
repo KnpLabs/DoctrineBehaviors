@@ -43,7 +43,6 @@ class TranslatableSubscriber extends AbstractSubscriber
 
     public function __construct(ClassAnalyzer $classAnalyzer,
                                 UniqueIndexNameGeneratorInterface $uniqueIndexNameGenerator,
-                                $isRecursive,
                                 callable $currentLocaleCallable = null,
                                 callable $defaultLocaleCallable = null,
                                 $translatableTrait,

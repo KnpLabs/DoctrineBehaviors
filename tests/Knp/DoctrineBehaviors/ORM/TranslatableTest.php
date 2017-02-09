@@ -1,7 +1,8 @@
 <?php
 
-namespace Tests\Knp\DoctrineBehaviors\ORM;
+namespace tests\Knp\DoctrineBehaviors\ORM;
 
+use Knp\DoctrineBehaviors\ORM\Translatable\BaseUniqueIndexNameGenerator;
 use Knp\DoctrineBehaviors\Reflection\ClassAnalyzer;
 use Doctrine\Common\EventManager;
 use Doctrine\ORM\Mapping\ClassMetadataInfo;
@@ -16,21 +17,22 @@ class TranslatableTest extends \PHPUnit_Framework_TestCase
     {
         return [
             'BehaviorFixtures\\ORM\\TranslatableEntity',
-            'BehaviorFixtures\\ORM\\TranslatableEntityTranslation'
+            'BehaviorFixtures\\ORM\\TranslatableEntityTranslation',
         ];
     }
 
     protected function getEventManager()
     {
-        $em = new EventManager;
+        $em = new EventManager();
 
         $em->addEventSubscriber(new \Knp\DoctrineBehaviors\ORM\Translatable\TranslatableSubscriber(
             new ClassAnalyzer(),
-            function()
+            new BaseUniqueIndexNameGenerator(),
+            function ()
             {
                 return 'en';
             },
-            function()
+            function ()
             {
                 return 'en';
             },
