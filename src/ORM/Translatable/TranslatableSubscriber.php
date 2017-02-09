@@ -13,13 +13,11 @@ namespace Knp\DoctrineBehaviors\ORM\Translatable;
 
 use Doctrine\DBAL\Platforms\AbstractPlatform;
 use Knp\DoctrineBehaviors\Reflection\ClassAnalyzer;
-
 use Knp\DoctrineBehaviors\ORM\AbstractSubscriber;
 use Doctrine\ORM\ORMException;
 use Doctrine\ORM\Mapping\Builder\ClassMetadataBuilder;
 use Doctrine\ORM\Id\BigIntegerIdentityGenerator;
 use Doctrine\ORM\Id\IdentityGenerator;
-
 use Doctrine\ORM\Mapping\ClassMetadata;
 use Doctrine\ORM\Mapping\ClassMetadataInfo;
 use Doctrine\ORM\EntityManager;
@@ -43,9 +41,15 @@ class TranslatableSubscriber extends AbstractSubscriber
     private $translatableFetchMode;
     private $translationFetchMode;
 
-    public function __construct(ClassAnalyzer $classAnalyzer, UniqueIndexNameGeneratorInterface $uniqueIndexNameGenerator, $isRecursive, callable $currentLocaleCallable = null,
-                                callable $defaultLocaleCallable = null,$translatableTrait, $translationTrait,
-                                $translatableFetchMode, $translationFetchMode)
+    public function __construct(ClassAnalyzer $classAnalyzer,
+                                UniqueIndexNameGeneratorInterface $uniqueIndexNameGenerator,
+                                $isRecursive,
+                                callable $currentLocaleCallable = null,
+                                callable $defaultLocaleCallable = null,
+                                $translatableTrait,
+                                $translationTrait,
+                                $translatableFetchMode,
+                                $translationFetchMode)
     {
         parent::__construct($classAnalyzer, false);
 
@@ -76,9 +80,7 @@ class TranslatableSubscriber extends AbstractSubscriber
         }
 
         if ($this->isTranslation($classMetadata)) {
-
-
-            $this->mapTranslation($classMetadata,$eventArgs->getEntityManager()->getConnection()->getDatabasePlatform());
+            $this->mapTranslation($classMetadata, $eventArgs->getEntityManager()->getConnection()->getDatabasePlatform());
             $this->mapId(
                 $classMetadata,
                 $eventArgs->getEntityManager()
@@ -91,8 +93,7 @@ class TranslatableSubscriber extends AbstractSubscriber
      * translations.
      *
      * @deprecated It should be removed because it probably does not work with
-     *             every doctrine version.
-     *
+     *             every doctrine version
      * @see https://github.com/doctrine/doctrine2/blob/0bff6aadbc9f3fd8167a320d9f4f6cf269382da0/lib/Doctrine/ORM/Mapping/ClassMetadataFactory.php#L508
      */
     private function mapId(ClassMetadata $class, EntityManager $em)
@@ -106,7 +107,7 @@ class TranslatableSubscriber extends AbstractSubscriber
             if ($idGenType == ClassMetadata::GENERATOR_TYPE_AUTO) {
                 if ($platform->prefersSequences()) {
                     $class->setIdGeneratorType(ClassMetadata::GENERATOR_TYPE_SEQUENCE);
-                } else if ($platform->prefersIdentityColumns()) {
+                } elseif ($platform->prefersIdentityColumns()) {
                     $class->setIdGeneratorType(ClassMetadata::GENERATOR_TYPE_IDENTITY);
                 } else {
                     $class->setIdGeneratorType(ClassMetadata::GENERATOR_TYPE_TABLE);
@@ -120,14 +121,14 @@ class TranslatableSubscriber extends AbstractSubscriber
                 // <table>_<column>_seq in PostgreSQL for SERIAL columns.
                 // Not pretty but necessary and the simplest solution that currently works.
                 $sequenceName = null;
-                $fieldName    = $class->identifier ? $class->getSingleIdentifierFieldName() : null;
+                $fieldName = $class->identifier ? $class->getSingleIdentifierFieldName() : null;
 
                 if ($platform instanceof Platforms\PostgreSQLPlatform) {
-                    $columnName     = $class->getSingleIdentifierColumnName();
-                    $quoted         = isset($class->fieldMappings[$fieldName]['quoted']) || isset($class->table['quoted']);
-                    $sequenceName   = $class->getTableName() . '_' . $columnName . '_seq';
-                    $definition     = array(
-                        'sequenceName' => $platform->fixSchemaElementName($sequenceName)
+                    $columnName = $class->getSingleIdentifierColumnName();
+                    $quoted = isset($class->fieldMappings[$fieldName]['quoted']) || isset($class->table['quoted']);
+                    $sequenceName = $class->getTableName().'_'.$columnName.'_seq';
+                    $definition = array(
+                        'sequenceName' => $platform->fixSchemaElementName($sequenceName),
                     );
 
                     if ($quoted) {
@@ -149,15 +150,15 @@ class TranslatableSubscriber extends AbstractSubscriber
                 // If there is no sequence definition yet, create a default definition
                 $definition = $class->sequenceGeneratorDefinition;
 
-                if ( ! $definition) {
-                    $fieldName      = $class->getSingleIdentifierFieldName();
-                    $columnName     = $class->getSingleIdentifierColumnName();
-                    $quoted         = isset($class->fieldMappings[$fieldName]['quoted']) || isset($class->table['quoted']);
-                    $sequenceName   = $class->getTableName() . '_' . $columnName . '_seq';
-                    $definition     = array(
-                        'sequenceName'      => $platform->fixSchemaElementName($sequenceName),
-                        'allocationSize'    => 1,
-                        'initialValue'      => 1,
+                if (!$definition) {
+                    $fieldName = $class->getSingleIdentifierFieldName();
+                    $columnName = $class->getSingleIdentifierColumnName();
+                    $quoted = isset($class->fieldMappings[$fieldName]['quoted']) || isset($class->table['quoted']);
+                    $sequenceName = $class->getTableName().'_'.$columnName.'_seq';
+                    $definition = array(
+                        'sequenceName' => $platform->fixSchemaElementName($sequenceName),
+                        'allocationSize' => 1,
+                        'initialValue' => 1,
                     );
 
                     if ($quoted) {
@@ -183,20 +184,20 @@ class TranslatableSubscriber extends AbstractSubscriber
                 break;
 
             case ClassMetadata::GENERATOR_TYPE_TABLE:
-                throw new ORMException("TableGenerator not yet implemented.");
+                throw new ORMException('TableGenerator not yet implemented.');
                 break;
 
             case ClassMetadata::GENERATOR_TYPE_CUSTOM:
                 $definition = $class->customGeneratorDefinition;
-                if ( ! class_exists($definition['class'])) {
-                    throw new ORMException("Can't instantiate custom generator : " .
+                if (!class_exists($definition['class'])) {
+                    throw new ORMException("Can't instantiate custom generator : ".
                         $definition['class']);
                 }
-                $class->setIdGenerator(new $definition['class']);
+                $class->setIdGenerator(new $definition['class']());
                 break;
 
             default:
-                throw new ORMException("Unknown generator type: " . $class->generatorType);
+                throw new ORMException('Unknown generator type: '.$class->generatorType);
             }
             /// END DOCTRINE COPY / PASTED code
         }
@@ -206,13 +207,13 @@ class TranslatableSubscriber extends AbstractSubscriber
     {
         if (!$classMetadata->hasAssociation('translations')) {
             $classMetadata->mapOneToMany([
-                'fieldName'     => 'translations',
-                'mappedBy'      => 'translatable',
-                'indexBy'       => 'locale',
-                'cascade'       => ['persist', 'merge', 'remove'],
-                'fetch'         => $this->translatableFetchMode,
-                'targetEntity'  => $classMetadata->getReflectionClass()->getMethod('getTranslationEntityClass')->invoke(null),
-                'orphanRemoval' => true
+                'fieldName' => 'translations',
+                'mappedBy' => 'translatable',
+                'indexBy' => 'locale',
+                'cascade' => ['persist', 'merge', 'remove'],
+                'fetch' => $this->translatableFetchMode,
+                'targetEntity' => $classMetadata->getReflectionClass()->getMethod('getTranslationEntityClass')->invoke(null),
+                'orphanRemoval' => true,
             ]);
         }
     }
@@ -220,35 +221,30 @@ class TranslatableSubscriber extends AbstractSubscriber
     private function mapTranslation(ClassMetadata $classMetadata, AbstractPlatform $platform)
     {
         if (!$classMetadata->hasAssociation('translatable')) {
-
             $translatableColumnName = 'translatable_id';
 
-
             $classMetadata->mapManyToOne([
-                'fieldName'    => 'translatable',
-                'inversedBy'   => 'translations',
-                'cascade'      => ['persist', 'merge'],
-                'fetch'        => $this->translationFetchMode,
-                'joinColumns'  => [[
-                    'name'                 => $translatableColumnName,
+                'fieldName' => 'translatable',
+                'inversedBy' => 'translations',
+                'cascade' => ['persist', 'merge'],
+                'fetch' => $this->translationFetchMode,
+                'joinColumns' => [[
+                    'name' => $translatableColumnName,
                     'referencedColumnName' => 'id',
-                    'onDelete'             => 'CASCADE'
+                    'onDelete' => 'CASCADE',
                 ]],
                 'targetEntity' => $classMetadata->getReflectionClass()->getMethod('getTranslatableEntityClass')->invoke(null),
             ]);
-        }else{
+        } else {
             // Support manual set association mapping, and translatableColumnName
             $assocMapping = $classMetadata->getAssociationMapping('translatable');
             //TODO: Think about composite keys
             $translatableColumnName = $assocMapping['joinColumns'][0]['name'];
         }
 
-
-        $uniqueColumns = [$translatableColumnName, 'locale' ];
-
+        $uniqueColumns = [$translatableColumnName, 'locale'];
 
         $name = $classMetadata->getTableName().'_unique_translation';
-
 
         // Generates an identifier from a list of column names obeying a certain string length.
         // This is especially important for Oracle, since it does not allow identifiers larger than 30 chars,
@@ -257,51 +253,48 @@ class TranslatableSubscriber extends AbstractSubscriber
         $platformIndexName = $this->uniqueIndexNameGenerator->generate(array_merge(array($classMetadata->getTableName()), $uniqueColumns), 'idx', $platform->getMaxIdentifierLength());
 
         //Check length of origin index name
-        if( strlen($name) > $platform->getMaxIdentifierLength() ) {
-
+        if (strlen($name) > $platform->getMaxIdentifierLength()) {
             if ($this->hasUniqueTranslationConstraint($classMetadata, $name)) {
-
                 $classMetadata->table['uniqueConstraints'][$platformIndexName] = $classMetadata->table['uniqueConstraints'][$name];
                 unset($classMetadata->table['uniqueConstraints'][$name]);
-
             }
 
             $name = $platformIndexName;
         }
 
-
-
         if (!$this->hasUniqueTranslationConstraint($classMetadata, $name)) {
             $classMetadata->table['uniqueConstraints'][$name] = [
-                'columns' => $uniqueColumns
+                'columns' => $uniqueColumns,
             ];
         }
 
         if (!($classMetadata->hasField('locale') || $classMetadata->hasAssociation('locale'))) {
             $classMetadata->mapField(array(
                 'fieldName' => 'locale',
-                'type'      => 'string'
+                'type' => 'string',
             ));
         }
-
     }
 
     /**
-     * Convert string FETCH mode to required string
+     * Convert string FETCH mode to required string.
      *
      * @param $fetchMode
      *
      * @return int
      */
-    private function convertFetchString($fetchMode){
-        if (is_int($fetchMode)) return $fetchMode;
+    private function convertFetchString($fetchMode)
+    {
+        if (is_int($fetchMode)) {
+            return $fetchMode;
+        }
 
-        switch($fetchMode){
-            case "LAZY":
+        switch ($fetchMode) {
+            case 'LAZY':
                 return ClassMetadataInfo::FETCH_LAZY;
-            case "EAGER":
+            case 'EAGER':
                 return ClassMetadataInfo::FETCH_EAGER;
-            case "EXTRA_LAZY":
+            case 'EXTRA_LAZY':
                 return ClassMetadataInfo::FETCH_EXTRA_LAZY;
             default:
                 return ClassMetadataInfo::FETCH_LAZY;
@@ -318,11 +311,11 @@ class TranslatableSubscriber extends AbstractSubscriber
     }
 
     /**
-     * Checks if entity is translatable
+     * Checks if entity is translatable.
      *
      * @param ClassMetadata $classMetadata
      *
-     * @return boolean
+     * @return bool
      */
     private function isTranslatable(ClassMetadata $classMetadata)
     {
@@ -330,11 +323,11 @@ class TranslatableSubscriber extends AbstractSubscriber
     }
 
     /**
-     * Checks if entity is a translation
+     * Checks if entity is a translation.
      *
      * @param ClassMetadata $classMetadata
      *
-     * @return boolean
+     * @return bool
      */
     private function isTranslation(ClassMetadata $classMetadata)
     {
@@ -353,8 +346,8 @@ class TranslatableSubscriber extends AbstractSubscriber
 
     private function setLocales(LifecycleEventArgs $eventArgs)
     {
-        $em            = $eventArgs->getEntityManager();
-        $entity        = $eventArgs->getEntity();
+        $em = $eventArgs->getEntityManager();
+        $entity = $eventArgs->getEntity();
         $classMetadata = $em->getClassMetadata(get_class($entity));
 
         if (!$this->getClassAnalyzer()->hasMethod($classMetadata->reflClass, 'setCurrentLocale')) {

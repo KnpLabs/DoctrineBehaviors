@@ -2,9 +2,7 @@
 
 namespace Knp\DoctrineBehaviors\ORM\Translatable;
 
-
-interface UniqueIndexNameGeneratorInterface {
-
-    public function generate( $columnNames, $prefix='', $maxSize=30 );
-
+interface UniqueIndexNameGeneratorInterface
+{
+    public function generate($columnNames, $prefix = '', $maxSize = 30);
 }
