@@ -362,14 +362,14 @@ class TranslatableSubscriber extends AbstractSubscriber
         }
     }
 
-    private function getCurrentLocale()
+    public function getCurrentLocale()
     {
         if ($currentLocaleCallable = $this->currentLocaleCallable) {
             return $currentLocaleCallable();
         }
     }
 
-    private function getDefaultLocale()
+    public function getDefaultLocale()
     {
         if ($defaultLocaleCallable = $this->defaultLocaleCallable) {
             return $defaultLocaleCallable();
