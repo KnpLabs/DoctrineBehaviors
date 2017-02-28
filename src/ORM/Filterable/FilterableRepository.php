@@ -65,10 +65,6 @@ trait FilterableRepository
      */
     public function filterBy(array $filters, QueryBuilder $qb = null)
     {
-        $filters = array_filter($filters, function ($filter) {
-            return !empty($filter);
-        });
-
         if (null === $qb) {
             $qb = $this->createFilterQueryBuilder();
         }
