@@ -54,6 +54,8 @@ trait Uuidable
      */
     public function generateUuid()
     {
-        $this->uuid = Uuid::Uuid4();
+        if (!$this->uuid || !Uuid::isValid($this->uuid)) {
+            $this->uuid = Uuid::Uuid4();
+        }
     }
 }
