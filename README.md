@@ -25,8 +25,11 @@ It currently handles:
 Some behaviors (translatable, timestampable, softDeletable, blameable, geocodable) need Doctrine subscribers in order to work.
 Make sure to activate them by reading the [Subscribers](#subscribers) section.
 
-##Installation
-```composer require knplabs/doctrine-behaviors:~1.1```
+## Installation
+
+```
+composer require knplabs/doctrine-behaviors:~1.1
+```
 
 ## Configuration
 By default, when integrated with Symfony, all subscribers are enabled (if you don't specify any configuration for the bundle).
