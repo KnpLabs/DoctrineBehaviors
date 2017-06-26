@@ -21,6 +21,10 @@ class DoctrineBehaviorsExtension extends Extension
         $configuration = new Configuration();
         $config = $this->processConfiguration($configuration, $configs);
 
+        // Don't rename in Configuration for BC reasons
+        $config['softdeletable'] = $config['soft_deletable'];
+        unset($config['soft_deletable']);
+
         foreach ($config as $behavior => $enabled) {
             if (!$enabled) {
                 $container->removeDefinition(sprintf('knp.doctrine_behaviors.%s_subscriber', $behavior));
