@@ -20,6 +20,11 @@ It currently handles:
  * [translatable](#translatable)
  * [tree](#tree)
 
+## This project is looking for maintainers
+
+We realize we don't have so much time anymore to maintain this project as it should be maintained.
+Therefore we are looking for maintainers. Open an issue if you want to keep working on this.
+
 ## Notice:
 
 Some behaviors (translatable, timestampable, softDeletable, blameable, geocodable) need Doctrine subscribers in order to work.
