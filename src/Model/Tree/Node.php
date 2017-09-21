@@ -157,14 +157,17 @@ trait Node
     /**
      * {@inheritdoc}
      **/
-    public function setChildNodeOf(NodeInterface $node)
+    public function setChildNodeOf(NodeInterface $node = null)
     {
         $id = $this->getNodeId();
         if (empty($id)) {
             throw new \LogicException('You must provide an id for this node if you want it to be part of a tree.');
         }
 
-        $path = rtrim($node->getRealMaterializedPath(), static::getMaterializedPathSeparator());
+        $path = null !== $node
+            ? rtrim($node->getRealMaterializedPath(), static::getMaterializedPathSeparator())
+            : static::getMaterializedPathSeparator()
+        ;
         $this->setMaterializedPath($path);
 
         if (null !== $this->parentNode) {
@@ -172,7 +175,10 @@ trait Node
         }
 
         $this->parentNode = $node;
-        $this->parentNode->addChildNode($this);
+
+        if (null !== $node) {
+            $this->parentNode->addChildNode($this);
+        }
 
         foreach ($this->getChildNodes() as $child) {
             $child->setChildNodeOf($this);
