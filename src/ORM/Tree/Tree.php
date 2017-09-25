@@ -4,6 +4,7 @@ namespace Knp\DoctrineBehaviors\ORM\Tree;
 
 use Knp\DoctrineBehaviors\Model\Tree\NodeInterface;
 use Doctrine\ORM\QueryBuilder;
+use Knp\DoctrineBehaviors\Model\Tree\Node;
 
 trait Tree
 {
@@ -50,19 +51,34 @@ trait Tree
      *
      * @return NodeInterface a node
      */
-    public function getTree($path = '', $rootAlias = 't')
-    {
-        $results = $this->getFlatTree($path, $rootAlias);
+    public function getTree(
+        $path = '',
+        $rootAlias = 't',
+        $materializedPathSeparator = null
+    ) {
+        $materializedPathSeparator = $materializedPathSeparator
+            ?? self::getMaterializedPathSeparator()
+        ;
+
+        $results = $this->getFlatTree($path, $rootAlias, $materializedPathSeparator);
 
         return $this->buildTree($results);
     }
 
-    public function getTreeExceptNodeAndItsChildrenQB(NodeInterface $entity, $rootAlias = 't')
+    public function getTreeExceptNodeAndItsChildrenQB(NodeInterface $entity, $rootAlias = 't', $materializedPathSeparator = null)
     {
-        return $this->getFlatTreeQB('', $rootAlias)
-            ->andWhere($rootAlias.'.materializedPath NOT LIKE :except_path')
+        $materializedPathSeparator = $materializedPathSeparator
+            ?? self::getMaterializedPathSeparator()
+        ;
+
+        $qb = $this->getFlatTreeQB('', $rootAlias, $materializedPathSeparator);
+
+        return $qb
+            ->andWhere($rootAlias.'.materializedPath NOT LIKE :except_exact_path')
+            ->andWhere($rootAlias.'.materializedPath NOT LIKE :except_parent_path')
             ->andWhere($rootAlias.'.id != :id')
-            ->setParameter('except_path', $entity->getRealMaterializedPath().'%')
+            ->setParameter('except_exact_path', $entity->getRealMaterializedPath())
+            ->setParameter('except_parent_path', rtrim($entity->getRealMaterializedPath(), $materializedPath).$materializedPath.'%')
             ->setParameter('id', $entity->getId())
         ;
     }
@@ -94,12 +110,27 @@ trait Tree
      *
      * @return QueryBuilder
      */
-    public function getFlatTreeQB($path = '', $rootAlias = 't')
+    public function getFlatTreeQB($path = '', $rootAlias = 't', $materializedPathSeparator = null)
     {
-        $qb = $this->createQueryBuilder($rootAlias)
-            ->andWhere($rootAlias.'.materializedPath LIKE :path')
+        $materializedPathSeparator = $materializedPathSeparator
+            ?? self::getMaterializedPathSeparator()
+        ;
+
+        $qb = $this->createQueryBuilder($rootAlias);
+
+        $qb
+            ->andWhere(
+                $qb->expr()->orX(
+                    $rootAlias.'.materializedPath LIKE :exact_path',
+                    $rootAlias.'.materializedPath LIKE :parent_path'
+                )
+            )
             ->addOrderBy($rootAlias.'.materializedPath', 'ASC')
-            ->setParameter('path', $path.'%')
+            ->setParameter('exact_path', $path)
+            ->setParameter(
+                'parent_path',
+                rtrim($path, $materializedPathSeparator).$materializedPathSeparator.'%'
+            )
         ;
 
         $parentId = basename($path);
@@ -130,12 +161,26 @@ trait Tree
      *
      * @return array the flat resultset
      */
-    public function getFlatTree($path, $rootAlias = 't')
+    public function getFlatTree($path, $rootAlias = 't', $materializedPathSeparator = null)
     {
+        $materializedPathSeparator = $materializedPathSeparator
+            ?? self::getMaterializedPathSeparator()
+        ;
+
         return $this
-            ->getFlatTreeQB($path, $rootAlias)
+            ->getFlatTreeQB($path, $rootAlias, $materializedPathSeparator)
             ->getQuery()
             ->execute()
         ;
+    }
+
+    /**
+     * Returns default materialized path separator
+     *
+     * @return string "/" by default
+     */
+    protected static function getMaterializedPathSeparator()
+    {
+        return '/';
     }
 }
