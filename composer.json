@@ -21,7 +21,7 @@
         }
     ],
     "require": {
-        "php":                              ">=5.4",
+        "php":                              "~7.0",
         "doctrine/common":                  ">=2.2",
         "behat/transliterator":             "~1.0"
     },
@@ -47,7 +47,7 @@
     },
     "extra": {
         "branch-alias": {
-            "dev-master": "1.4.x-dev"
+            "dev-master": "1.5.x-dev"
         }
     }
 }
