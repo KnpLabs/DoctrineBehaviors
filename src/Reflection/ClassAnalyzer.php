@@ -26,6 +26,12 @@ class ClassAnalyzer
         if (in_array($traitName, $class->getTraitNames())) {
             return true;
         }
+        
+        foreach($class->getTraitNames() as $forTraitName){
+            if ($this->hasTrait(new \ReflectionClass($forTraitName), $traitName, true)){
+                return true;
+            }
+        }
 
         $parentClass = $class->getParentClass();
 
