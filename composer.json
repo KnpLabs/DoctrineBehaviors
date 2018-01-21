@@ -1,5 +1,5 @@
 {
-    "name": "petegore/doctrine-behaviors",
+    "name": "knplabs/doctrine-behaviors",
     "type": "library",
     "description": "Doctrine2 behavior traits",
     "keywords": [
@@ -17,7 +17,8 @@
     "license": "MIT",
     "authors": [
         {
-            "name":     "Pierre Gori"
+            "name":     "Knplabs",
+            "homepage": "http://knplabs.com"
         }
     ],
     "require": {
