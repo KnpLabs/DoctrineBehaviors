@@ -44,9 +44,16 @@ class SoftDeletableTest extends \PHPUnit_Framework_TestCase
         $this->assertNotNull($id = $entity->getId());
         $this->assertFalse($entity->isDeleted());
 
+        $logger = $this->getSqlLogger();
+        $logger->enabled = true;
+
         $em->remove($entity);
         $em->flush();
-        $em->clear();
+
+        $this->assertCount(3, $logger->queries);
+        $this->assertEquals('"START TRANSACTION"', $logger->queries[1]['sql']);
+        $this->assertEquals('UPDATE DeletableEntity SET deletedAt = ? WHERE id = ?', $logger->queries[2]['sql']);
+        $this->assertEquals('"COMMIT"', $logger->queries[3]['sql']);
 
         $entity = $em->getRepository('BehaviorFixtures\ORM\DeletableEntity')->find($id);
 

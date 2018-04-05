@@ -3,6 +3,7 @@
 namespace Tests\Knp\DoctrineBehaviors\ORM;
 
 use BehaviorFixtures\ORM\GeocodableEntity;
+use Doctrine\DBAL\Platforms\MySqlPlatform;
 use Knp\DoctrineBehaviors\Reflection\ClassAnalyzer;
 use Knp\DoctrineBehaviors\ORM\Geocodable\Type\Point;
 use Doctrine\Common\EventManager;
@@ -76,18 +77,31 @@ class GeocodableTest extends \PHPUnit_Framework_TestCase
         $em->flush();
     }
 
-    /**
-     * @dataProvider dataSetCities
-     */
-    public function testInsertLocation($city, array $location)
+    public function testInsertLocation()
     {
-        $em = $this->getDBEngineEntityManager();
+        $em = $this->getEntityManager();
 
-        $repository = $em->getRepository('BehaviorFixtures\ORM\GeocodableEntity');
+        $entity = new \BehaviorFixtures\ORM\GeocodableEntity();
 
-        $entity = $repository->findOneByTitle($city);
+        $logger = $this->getSqlLogger();
+        $logger->enabled = true;
 
-        $this->assertLocation($location, $entity->getLocation());
+        $em->persist($entity);
+        $em->flush();
+
+        if ($em->getConnection()->getDatabasePlatform() instanceof MySqlPlatform) {
+            $this->assertCount(3, $logger->queries);
+            $this->assertEquals('"START TRANSACTION"', $logger->queries[1]['sql']);
+            $this->assertEquals('INSERT INTO GeocodableEntity (title, location) VALUES (?, PointFromText(?))', $logger->queries[2]['sql']);
+            $this->assertEquals('"COMMIT"', $logger->queries[3]['sql']);
+        } else {
+            $this->assertCount(4, $logger->queries);
+            $this->assertEquals('"START TRANSACTION"', $logger->queries[2]['sql']);
+            $this->assertEquals('INSERT INTO GeocodableEntity (id, title, location) VALUES (?, ?, ?)', $logger->queries[3]['sql']);
+            $this->assertEquals('"COMMIT"', $logger->queries[4]['sql']);
+        }
+
+        $this->assertInstanceOf('Knp\DoctrineBehaviors\ORM\Geocodable\Type\Point', $entity->getLocation());
     }
 
     /**
@@ -108,7 +122,21 @@ class GeocodableTest extends \PHPUnit_Framework_TestCase
 
         $entity->setTitle($newTitle);
 
+        $logger = $this->getSqlLogger();
+        $logger->enabled = true;
+
         $em->flush();
+
+        $this->assertCount(3, $logger->queries);
+        $this->assertEquals('"START TRANSACTION"', $logger->queries[1]['sql']);
+
+        if ($em->getConnection()->getDatabasePlatform() instanceof MySqlPlatform) {
+            $this->assertEquals('UPDATE GeocodableEntity SET title = ?, location = PointFromText(?) WHERE id = ?', $logger->queries[2]['sql']);
+        } else {
+            $this->assertEquals('UPDATE GeocodableEntity SET title = ?, location = ? WHERE id = ?', $logger->queries[2]['sql']);
+        }
+
+        $this->assertEquals('"COMMIT"', $logger->queries[3]['sql']);
 
         /** @var GeocodableEntity $entity */
         $entity = $repository->findOneByTitle($newTitle);
@@ -145,16 +173,18 @@ class GeocodableTest extends \PHPUnit_Framework_TestCase
         $this->testUpdateWithEditLocation($city, $location, $newLocation);
     }
 
-    public function testGetLocation()
+    /**
+     * @dataProvider dataSetCities
+     */
+    public function testGetLocation($city, array $location)
     {
-        $em = $this->getEntityManager();
+        $em = $this->getDBEngineEntityManager();
 
-        $entity = new \BehaviorFixtures\ORM\GeocodableEntity();
+        $repository = $em->getRepository('BehaviorFixtures\ORM\GeocodableEntity');
 
-        $em->persist($entity);
-        $em->flush();
+        $entity = $repository->findOneByTitle($city);
 
-        $this->assertInstanceOf('Knp\DoctrineBehaviors\ORM\Geocodable\Type\Point', $entity->getLocation());
+        $this->assertLocation($location, $entity->getLocation());
     }
 
     /**

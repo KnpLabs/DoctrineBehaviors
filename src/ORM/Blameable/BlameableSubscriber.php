@@ -164,9 +164,6 @@ class BlameableSubscriber extends AbstractSubscriber
                     $entity->setCreatedBy($user);
 
                     $uow->propertyChanged($entity, 'createdBy', null, $user);
-                    $uow->scheduleExtraUpdate($entity, [
-                        'createdBy' => [null,  $user],
-                    ]);
                 }
             }
             if (!$entity->getUpdatedBy()) {
@@ -174,10 +171,6 @@ class BlameableSubscriber extends AbstractSubscriber
                 if ($this->isValidUser($user)) {
                     $entity->setUpdatedBy($user);
                     $uow->propertyChanged($entity, 'updatedBy', null, $user);
-
-                    $uow->scheduleExtraUpdate($entity, [
-                        'updatedBy' => [null, $user],
-                    ]);
                 }
             }
         }
@@ -220,10 +213,6 @@ class BlameableSubscriber extends AbstractSubscriber
                 $oldValue = $entity->getUpdatedBy();
                 $entity->setUpdatedBy($user);
                 $uow->propertyChanged($entity, 'updatedBy', $oldValue, $user);
-
-                $uow->scheduleExtraUpdate($entity, [
-                    'updatedBy' => [$oldValue, $user],
-                ]);
             }
         }
     }
@@ -249,10 +238,6 @@ class BlameableSubscriber extends AbstractSubscriber
                 $oldValue = $entity->getDeletedBy();
                 $entity->setDeletedBy($user);
                 $uow->propertyChanged($entity, 'deletedBy', $oldValue, $user);
-
-                $uow->scheduleExtraUpdate($entity, [
-                    'deletedBy' => [$oldValue, $user],
-                ]);
             }
         }
     }

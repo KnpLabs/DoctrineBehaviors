@@ -131,12 +131,6 @@ class GeocodableSubscriber extends AbstractSubscriber
                 }
 
                 $uow->propertyChanged($entity, 'location', $oldValue, $entity->getLocation());
-                $uow->scheduleExtraUpdate(
-                    $entity,
-                    [
-                        'location' => [$oldValue, $entity->getLocation()],
-                    ]
-                );
             }
         }
     }

@@ -2,6 +2,7 @@
 
 namespace tests\Knp\DoctrineBehaviors\ORM;
 
+use Doctrine\DBAL\Logging\DebugStack;
 use Doctrine\ORM\Configuration;
 use Doctrine\ORM\Mapping\Driver\AnnotationDriver;
 use Doctrine\ORM\EntityManager;
@@ -169,6 +170,15 @@ trait EntityManagerProvider
             ->will($this->returnValue([]))
         ;
 
+        $logger = new DebugStack();
+        $logger->enabled = false;
+
+        $config
+            ->expects($this->any())
+            ->method('getSQLLogger')
+            ->will($this->returnValue($logger))
+        ;
+
         return $config;
     }
 
@@ -190,5 +200,19 @@ trait EntityManagerProvider
     protected function getEventManager()
     {
         return new EventManager;
+    }
+
+    /**
+     * Get SQL logger
+     *
+     * @return DebugStack
+     */
+    protected function getSqlLogger()
+    {
+        return $this->em
+            ->getConnection()
+            ->getConfiguration()
+            ->getSQLLogger()
+        ;
     }
 }

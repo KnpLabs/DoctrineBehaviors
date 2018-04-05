@@ -45,8 +45,16 @@ class BlameableTest extends \PHPUnit_Framework_TestCase
 
         $entity = new \BehaviorFixtures\ORM\BlameableEntity();
 
+        $logger = $this->getSqlLogger();
+        $logger->enabled = true;
+
         $em->persist($entity);
         $em->flush();
+
+        $this->assertCount(3, $logger->queries);
+        $this->assertEquals('"START TRANSACTION"', $logger->queries[1]['sql']);
+        $this->assertEquals('INSERT INTO BlameableEntity (title, createdBy, updatedBy, deletedBy) VALUES (?, ?, ?, ?)', $logger->queries[2]['sql']);
+        $this->assertEquals('"COMMIT"', $logger->queries[3]['sql']);
 
         $this->assertEquals('user', $entity->getCreatedBy());
         $this->assertEquals('user', $entity->getUpdatedBy());
@@ -69,10 +77,18 @@ class BlameableTest extends \PHPUnit_Framework_TestCase
         $subscriber = array_pop($subscribers);
         $subscriber->setUser('user2');
 
+        $logger = $this->getSqlLogger();
+        $logger->enabled = true;
+
         $entity = $em->getRepository('BehaviorFixtures\ORM\BlameableEntity')->find($id);
         $entity->setTitle('test'); // need to modify at least one column to trigger onUpdate
         $em->flush();
         $em->clear();
+
+        $this->assertCount(4, $logger->queries);
+        $this->assertEquals('"START TRANSACTION"', $logger->queries[2]['sql']);
+        $this->assertEquals('UPDATE BlameableEntity SET title = ?, updatedBy = ? WHERE id = ?', $logger->queries[3]['sql']);
+        $this->assertEquals('"COMMIT"', $logger->queries[4]['sql']);
 
         //$entity = $em->getRepository('BehaviorFixtures\ORM\BlameableEntity')->find($id);
         $this->assertEquals($createdBy, $entity->getCreatedBy(), 'createdBy is constant');
