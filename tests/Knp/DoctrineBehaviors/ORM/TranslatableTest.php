@@ -26,16 +26,8 @@ class TranslatableTest extends \PHPUnit_Framework_TestCase
 
         $em->addEventSubscriber(new \Knp\DoctrineBehaviors\ORM\Translatable\TranslatableSubscriber(
             new ClassAnalyzer(),
-            function()
-            {
-                return 'en';
-            },
-            function()
-            {
-                return 'en';
-            },
-            array('Knp\DoctrineBehaviors\Model\Translatable\Translatable', 'Knp\DoctrineBehaviors\Model\Translatable\TranslatableProperties'),
-            array('Knp\DoctrineBehaviors\Model\Translatable\Translation','Knp\DoctrineBehaviors\Model\Translatable\TranslationProperties',),
+            function() { return 'en'; },
+            function() { return 'en'; },
             'LAZY',
             'LAZY'
         ));

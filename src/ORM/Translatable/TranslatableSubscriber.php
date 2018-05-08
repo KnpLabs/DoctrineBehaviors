@@ -11,6 +11,8 @@
 
 namespace Knp\DoctrineBehaviors\ORM\Translatable;
 
+use Knp\DoctrineBehaviors\Model\Translatable\TranslatableInterface;
+use Knp\DoctrineBehaviors\Model\Translatable\TranslationInterface;
 use Knp\DoctrineBehaviors\Reflection\ClassAnalyzer;
 
 use Knp\DoctrineBehaviors\ORM\AbstractSubscriber;
@@ -36,21 +38,15 @@ class TranslatableSubscriber extends AbstractSubscriber
 {
     private $currentLocaleCallable;
     private $defaultLocaleCallable;
-    private $translatableTraits;
-    private $translationTraits;
     private $translatableFetchMode;
     private $translationFetchMode;
 
-    public function __construct(ClassAnalyzer $classAnalyzer, callable $currentLocaleCallable = null,
-                                callable $defaultLocaleCallable = null, $translatableTraits,
-                                $translationTraits, $translatableFetchMode, $translationFetchMode)
+    public function __construct(ClassAnalyzer $classAnalyzer, callable $currentLocaleCallable = null, callable $defaultLocaleCallable = null, $translatableFetchMode, $translationFetchMode)
     {
         parent::__construct($classAnalyzer, false);
 
         $this->currentLocaleCallable = $currentLocaleCallable;
         $this->defaultLocaleCallable = $defaultLocaleCallable;
-        $this->translatableTraits    = is_array($translatableTraits) ? $translatableTraits : array($translatableTraits);
-        $this->translationTraits     = is_array($translationTraits) ? $translationTraits : array($translationTraits);
         $this->translatableFetchMode = $this->convertFetchString($translatableFetchMode);
         $this->translationFetchMode  = $this->convertFetchString($translationFetchMode);
     }
@@ -68,11 +64,11 @@ class TranslatableSubscriber extends AbstractSubscriber
             return;
         }
 
-        if ($this->requiresTranslatableMapping($classMetadata)) {
+        if ($this->isTranslatable($classMetadata)) {
             $this->mapTranslatable($classMetadata);
         }
 
-        if ($this->requiresTranslationMapping($classMetadata)) {
+        if ($this->isTranslation($classMetadata)) {
             $this->mapTranslation($classMetadata);
             $this->mapId(
                 $classMetadata,
@@ -279,37 +275,25 @@ class TranslatableSubscriber extends AbstractSubscriber
     /**
      * Checks if entity is translatable and should be provided with ORM Mapping
      *
-     * @param ClassMetadata $classMetadata
+     * @param ClassMetadata $metadata
      *
      * @return boolean
      */
-    private function requiresTranslatableMapping(ClassMetadata $classMetadata)
+    private function isTranslatable(ClassMetadata $metadata)
     {
-        foreach ($this->translatableTraits as $trait) {
-            if ($this->getClassAnalyzer()->hasTrait($classMetadata->reflClass, $trait)) {
-                return true;
-            }
-        }
-
-        return false;
+        return is_subclass_of($metadata->getName(), TranslatableInterface::class);
     }
 
     /**
      * Checks if entity is a translation
      *
-     * @param ClassMetadata $classMetadata
+     * @param ClassMetadata $metadata
      *
      * @return boolean
      */
-    private function requiresTranslationMapping(ClassMetadata $classMetadata)
+    private function isTranslation(ClassMetadata $metadata)
     {
-        foreach ($this->translationTraits as $trait) {
-            if ($this->getClassAnalyzer()->hasTrait($classMetadata->reflClass, $trait)) {
-                return true;
-            }
-        }
-
-        return false;
+        return is_subclass_of($metadata->getName(), TranslationInterface::class);
     }
 
     public function postLoad(LifecycleEventArgs $eventArgs)
