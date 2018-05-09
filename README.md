@@ -2,8 +2,10 @@
 
 [![Build Status](https://travis-ci.org/KnpLabs/DoctrineBehaviors.svg?branch=master)](http://travis-ci.org/KnpLabs/DoctrineBehaviors)
 
+* Branch `master` contains the next v2.0
+* Branch `v1` contains the current v1.x
 
-This PHP `>=5.4` library is a collection of traits and interfaces
+This PHP `>=7.0` library is a collection of traits and interfaces
 that add behaviors to Doctrine2 entities and repositories.
 
 It currently handles:
