@@ -21,7 +21,7 @@
         }
     ],
     "require": {
-        "php":                              ">=5.4",
+        "php":                              "~7.0",
         "doctrine/common":                  ">=2.2",
         "behat/transliterator":             "~1.0"
     },
@@ -29,7 +29,7 @@
         "ext-pdo_sqlite":                   "*",
         "ext-pdo_mysql":                    "*",
         "ext-pdo_pgsql":                    "*",
-        "doctrine/orm":                     ">=2.2",
+        "doctrine/orm":                     ">=2.4.5",
         "phpunit/phpunit":                  "~4.8",
         "jakub-onderka/php-parallel-lint":  "~0.8",
         "hexmedia/yaml-linter":             "~0.1"
@@ -47,7 +47,7 @@
     },
     "extra": {
         "branch-alias": {
-            "dev-master": "1.1.x-dev"
+            "dev-master": "1.5.x-dev"
         }
     }
 }

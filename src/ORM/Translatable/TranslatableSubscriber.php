@@ -41,11 +41,11 @@ class TranslatableSubscriber extends AbstractSubscriber
     private $translatableFetchMode;
     private $translationFetchMode;
 
-    public function __construct(ClassAnalyzer $classAnalyzer, $isRecursive, callable $currentLocaleCallable = null,
+    public function __construct(ClassAnalyzer $classAnalyzer, callable $currentLocaleCallable = null,
                                 callable $defaultLocaleCallable = null,$translatableTrait, $translationTrait,
                                 $translatableFetchMode, $translationFetchMode)
     {
-        parent::__construct($classAnalyzer, $isRecursive);
+        parent::__construct($classAnalyzer, false);
 
         $this->currentLocaleCallable = $currentLocaleCallable;
         $this->defaultLocaleCallable = $defaultLocaleCallable;
@@ -65,6 +65,10 @@ class TranslatableSubscriber extends AbstractSubscriber
         $classMetadata = $eventArgs->getClassMetadata();
 
         if (null === $classMetadata->reflClass) {
+            return;
+        }
+
+        if ($classMetadata->isMappedSuperclass) {
             return;
         }
 
@@ -280,22 +284,24 @@ class TranslatableSubscriber extends AbstractSubscriber
      * Checks if entity is translatable
      *
      * @param ClassMetadata $classMetadata
-     * @param bool          $isRecursive   true to check for parent classes until found
      *
      * @return boolean
      */
-    private function isTranslatable(ClassMetadata $classMetadata, $isRecursive = false)
+    private function isTranslatable(ClassMetadata $classMetadata)
     {
-        return $this->getClassAnalyzer()->hasTrait($classMetadata->reflClass, $this->translatableTrait, $this->isRecursive);
+        return $this->getClassAnalyzer()->hasTrait($classMetadata->reflClass, $this->translatableTrait, true);
     }
 
     /**
-     * @param  ClassMetadata $classMetadata
+     * Checks if entity is a translation
+     *
+     * @param ClassMetadata $classMetadata
+     *
      * @return boolean
      */
     private function isTranslation(ClassMetadata $classMetadata)
     {
-        return $this->getClassAnalyzer()->hasTrait($classMetadata->reflClass, $this->translationTrait, $this->isRecursive);
+        return $this->getClassAnalyzer()->hasTrait($classMetadata->reflClass, $this->translationTrait, true);
     }
 
     public function postLoad(LifecycleEventArgs $eventArgs)
@@ -314,7 +320,7 @@ class TranslatableSubscriber extends AbstractSubscriber
         $entity        = $eventArgs->getEntity();
         $classMetadata = $em->getClassMetadata(get_class($entity));
 
-        if (!$this->getClassAnalyzer()->hasMethod($classMetadata->reflClass, 'setCurrentLocale')) {
+        if (!$this->isTranslatable($classMetadata)) {
             return;
         }
 

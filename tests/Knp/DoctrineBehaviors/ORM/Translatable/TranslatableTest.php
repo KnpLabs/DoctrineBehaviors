@@ -1,12 +1,15 @@
 <?php
 
-namespace Tests\Knp\DoctrineBehaviors\ORM;
+namespace Tests\Knp\DoctrineBehaviors\ORM\Translatable;
 
+use Doctrine\ORM\EntityManager;
+use Doctrine\ORM\Tools\SchemaTool;
 use Knp\DoctrineBehaviors\Reflection\ClassAnalyzer;
 use Doctrine\Common\EventManager;
 use Doctrine\ORM\Mapping\ClassMetadataInfo;
+use tests\Knp\DoctrineBehaviors\ORM\EntityManagerProvider;
 
-require_once 'EntityManagerProvider.php';
+require_once __DIR__.'/../EntityManagerProvider.php';
 
 class TranslatableTest extends \PHPUnit_Framework_TestCase
 {
@@ -16,7 +19,7 @@ class TranslatableTest extends \PHPUnit_Framework_TestCase
     {
         return [
             'BehaviorFixtures\\ORM\\TranslatableEntity',
-            'BehaviorFixtures\\ORM\\TranslatableEntityTranslation'
+            'BehaviorFixtures\\ORM\\TranslatableEntityTranslation',
         ];
     }
 
@@ -26,7 +29,6 @@ class TranslatableTest extends \PHPUnit_Framework_TestCase
 
         $em->addEventSubscriber(new \Knp\DoctrineBehaviors\ORM\Translatable\TranslatableSubscriber(
             new ClassAnalyzer(),
-            false,
             function()
             {
                 return 'en';
@@ -302,6 +304,36 @@ class TranslatableTest extends \PHPUnit_Framework_TestCase
 
         $em->refresh($entity);
         $this->assertNotEquals('Hallo', $entity->translate('nl')->getTitle());
+    }
+
+    /**
+     * @test
+     */
+    public function should_works_with_inheritance()
+    {
+        $evm = $this->getEventManager();
+
+        $conn = array(
+            'driver' => 'pdo_sqlite',
+            'memory' => true,
+        );
+
+        $config = $this->getAnnotatedConfig();
+        $em = EntityManager::create($conn, $config, $evm);
+
+        $schema = array_map(
+            function ($class) use ($em) {
+                return $em->getClassMetadata($class);
+            },
+            array(
+                'BehaviorFixtures\\ORM\\ExtendedTranslatableEntity',
+                'BehaviorFixtures\\ORM\\ExtendedTranslatableEntityTranslation',
+            )
+        );
+
+        $schemaTool = new SchemaTool($em);
+        $schemaTool->dropSchema($schema);
+        $schemaTool->createSchema($schema);
     }
 
     /**

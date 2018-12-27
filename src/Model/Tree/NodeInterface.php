@@ -61,11 +61,11 @@ interface NodeInterface
      *    - Remove the this node from the children of the old parent
      *    - Modify the materialized path of this node and all its children, recursively
      *
-     * @param NodeInterface $node The node to use as a parent
+     * @param NodeInterface | null $node The node to use as a parent
      *
      * @return NodeInterface $this Fluent interface
      **/
-    public function setChildNodeOf(NodeInterface $node);
+    public function setChildNodeOf(NodeInterface $node = null);
 
     /**
      * @param NodeInterface $node the node to append to the children collection

@@ -1,10 +1,12 @@
 # Doctrine2 Behaviors
 
-[![Build Status](https://secure.travis-ci.org/KnpLabs/DoctrineBehaviors.png)](http://travis-ci.org/KnpLabs/DoctrineBehaviors)
+[![Build Status](https://travis-ci.org/KnpLabs/DoctrineBehaviors.svg?branch=master)](http://travis-ci.org/KnpLabs/DoctrineBehaviors)
 
+* Branch `master` contains the next v2.0
+* Branch `v1` contains the current v1.x
 
-This PHP `>=5.4` library is a collection of traits and interfaces
-that add behaviors to Doctrine2 entites and repositories.
+This PHP `>=7.0` library is a collection of traits and interfaces
+that add behaviors to Doctrine2 entities and repositories.
 
 It currently handles:
 
@@ -20,13 +22,21 @@ It currently handles:
  * [translatable](#translatable)
  * [tree](#tree)
 
+## This project is looking for maintainers
+
+We realize we don't have so much time anymore to maintain this project as it should be maintained.
+Therefore we are looking for maintainers. Open an issue if you want to keep working on this.
+
 ## Notice:
 
 Some behaviors (translatable, timestampable, softDeletable, blameable, geocodable) need Doctrine subscribers in order to work.
 Make sure to activate them by reading the [Subscribers](#subscribers) section.
 
-##Installation
-```composer require knplabs/doctrine-behaviors:~1.1```
+## Installation
+
+```
+composer require knplabs/doctrine-behaviors:~1.1
+```
 
 ## Configuration
 By default, when integrated with Symfony, all subscribers are enabled (if you don't specify any configuration for the bundle).

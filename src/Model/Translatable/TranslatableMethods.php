@@ -152,7 +152,7 @@ trait TranslatableMethods
     public function mergeNewTranslations()
     {
         foreach ($this->getNewTranslations() as $newTranslation) {
-            if (!$this->getTranslations()->contains($newTranslation)) {
+            if (!$this->getTranslations()->contains($newTranslation) && !$newTranslation->isEmpty()) {
                 $this->addTranslation($newTranslation);
                 $this->getNewTranslations()->removeElement($newTranslation);
             }
@@ -193,10 +193,10 @@ trait TranslatableMethods
 
     /**
      * An extra feature allows you to proxy translated fields of a translatable entity.
-     * 
+     *
      * @param string $method
      * @param array $arguments
-     * 
+     *
      * @return mixed The translated value of the field for current locale
      */
     protected function proxyCurrentLocaleTranslation($method, array $arguments = [])
@@ -214,7 +214,7 @@ trait TranslatableMethods
      */
     public static function getTranslationEntityClass()
     {
-        return __CLASS__.'Translation';
+        return static::class.'Translation';
     }
 
     /**

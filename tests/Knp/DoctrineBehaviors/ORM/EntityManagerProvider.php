@@ -21,8 +21,14 @@ trait EntityManagerProvider
      * annotation mapping driver and pdo_sqlite
      * database in memory
      *
-     * @param  EventManager  $evm
+     * @param  EventManager         $evm
+     * @param  Configuration|null   $config
+     * @param  array $conn
+     *
      * @return EntityManager
+     *
+     * @throws \Doctrine\ORM\ORMException
+     * @throws \Doctrine\ORM\Tools\ToolsException
      */
     protected function getEntityManager(EventManager $evm = null, Configuration $config = null, array $conn = [])
     {
@@ -102,7 +108,7 @@ trait EntityManagerProvider
         $mockMethods = array();
 
         foreach ($methods as $method) {
-            if (!in_array($method->name, ['addFilter', 'getFilterClassName', 'addCustomNumericFunction', 'getCustomNumericFunction'])) {
+            if (!in_array($method->name, ['addFilter', 'getFilterClassName', 'addCustomNumericFunction', 'getCustomNumericFunction', 'setSchemaAssetsFilter', 'getSchemaAssetsFilter'])) {
                 $mockMethods[] = $method->name;
             }
         }
