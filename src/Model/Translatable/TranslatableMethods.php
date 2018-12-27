@@ -12,6 +12,7 @@
 namespace Knp\DoctrineBehaviors\Model\Translatable;
 
 use Doctrine\Common\Collections\ArrayCollection;
+use Doctrine\Common\Util\ClassUtils;
 
 /**
  * Translatable trait.
@@ -114,7 +115,7 @@ trait TranslatableMethods
             }
         }
 
-        $class       = static::getTranslationEntityClass();
+        $class       = ClassUtils::getRealClass(static::getTranslationEntityClass());
         $translation = new $class();
         $translation->setLocale($locale);
 
@@ -133,6 +134,12 @@ trait TranslatableMethods
             if (!$this->getTranslations()->contains($newTranslation) && !$newTranslation->isEmpty()) {
                 $this->addTranslation($newTranslation);
                 $this->getNewTranslations()->removeElement($newTranslation);
+            }
+        }
+
+        foreach ($this->getTranslations() as $translation){
+            if($translation->isEmpty()){
+                $this->removeTranslation($translation);
             }
         }
     }
