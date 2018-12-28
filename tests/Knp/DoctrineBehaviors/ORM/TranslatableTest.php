@@ -80,6 +80,83 @@ class TranslatableTest extends \PHPUnit_Framework_TestCase
             'удивительный',
             $entity->translate('ru')->getTitle()
         );
+
+        return $entity;
+    }
+
+    /**
+     * @test
+     */
+    public function should_not_persist_new_empty_translations()
+    {
+        $em = $this->getEntityManager();
+
+        $entity = new \BehaviorFixtures\ORM\TranslatableEntity();
+        $entity->translate('fr')->setTitle('fabuleux');
+        $entity->translate('en')->setTitle('');
+        $entity->translate('ru')->setTitle('удивительный');
+        $entity->mergeNewTranslations();
+
+        $em->persist($entity);
+        $em->flush();
+        $id = $entity->getId();
+        $em->clear();
+
+        $entity = $em
+            ->getRepository('BehaviorFixtures\ORM\TranslatableEntity')
+            ->find($id)
+        ;
+
+        $this->assertEquals(
+            'fabuleux',
+            $entity->translate('fr')->getTitle()
+        );
+
+        $this->assertNull(
+            $entity->translate('en')->getTitle()
+        );
+
+        $this->assertEquals(
+            'удивительный',
+            $entity->translate('ru')->getTitle()
+        );
+    }
+
+    /**
+     * @test
+     */
+    public function should_remove_translations_which_become_empty()
+    {
+        $entity = $this->should_persist_translations();
+
+        $em = $this->getEntityManager();
+
+        $entity->translate('en')->setTitle('');
+        $entity->mergeNewTranslations();
+
+        $em->persist($entity);
+        $em->flush();
+        $id = $entity->getId();
+        $em->clear();
+
+        $entity = $em
+            ->getRepository('BehaviorFixtures\ORM\TranslatableEntity')
+            ->find($id)
+        ;
+
+        $this->assertEquals(
+            'fabuleux',
+            $entity->translate('fr')->getTitle()
+        );
+
+        $this->assertNull(
+            $entity->translate('en')->getTitle()
+        );
+
+        $this->assertEquals(
+            'удивительный',
+            $entity->translate('ru')->getTitle()
+        );
     }
 
     /**

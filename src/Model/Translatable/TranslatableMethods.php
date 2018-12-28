@@ -135,6 +135,12 @@ trait TranslatableMethods
                 $this->getNewTranslations()->removeElement($newTranslation);
             }
         }
+
+        foreach ($this->getTranslations() as $translation){
+            if($translation->isEmpty()){
+                $this->removeTranslation($translation);
+            }
+        }
     }
 
     /**

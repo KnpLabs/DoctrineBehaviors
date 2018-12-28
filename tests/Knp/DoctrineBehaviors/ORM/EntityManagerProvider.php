@@ -102,7 +102,7 @@ trait EntityManagerProvider
         $mockMethods = array();
 
         foreach ($methods as $method) {
-            if (!in_array($method->name, ['addFilter', 'getFilterClassName', 'addCustomNumericFunction', 'getCustomNumericFunction'])) {
+            if (!in_array($method->name, ['addFilter', 'getFilterClassName', 'addCustomNumericFunction', 'getCustomNumericFunction', 'setSchemaAssetsFilter', 'getSchemaAssetsFilter'])) {
                 $mockMethods[] = $method->name;
             }
         }
