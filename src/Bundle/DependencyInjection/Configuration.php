@@ -10,8 +10,15 @@ class Configuration implements ConfigurationInterface
     public function getConfigTreeBuilder()
     {
         $builder = new TreeBuilder('knp_doctrine_behaviors');
-        $builder
-            ->getRootNode()
+
+        if (method_exists($builder, 'getRootNode')) {
+            $rootNode = $builder->getRootNode();
+        } else {
+            // for symfony/config 4.1 and older
+            $rootNode = $builder->root('knp_doctrine_behaviors');
+        }
+
+        $rootNode
             ->beforeNormalization()
                 ->always(function (array $config) {
                     if (empty($config)) {
