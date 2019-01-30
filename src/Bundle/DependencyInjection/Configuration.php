@@ -9,9 +9,9 @@ class Configuration implements ConfigurationInterface
 {
     public function getConfigTreeBuilder()
     {
-        $builder = new TreeBuilder();
+        $builder = new TreeBuilder('knp_doctrine_behaviors');
         $builder
-            ->root('knp_doctrine_behaviors')
+            ->getRootNode()
             ->beforeNormalization()
                 ->always(function (array $config) {
                     if (empty($config)) {
