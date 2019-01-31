@@ -8,6 +8,7 @@ parameters:
     knp.doctrine_behaviors.translatable_subscriber.translation_trait: Knp\DoctrineBehaviors\Model\Translatable\Translation
     knp.doctrine_behaviors.translatable_subscriber.translatable_fetch_method: LAZY
     knp.doctrine_behaviors.translatable_subscriber.translation_fetch_method: LAZY
+    knp.doctrine_behaviors.translatable_subscriber.is_recursive: false
     knp.doctrine_behaviors.softdeletable_subscriber.class: Knp\DoctrineBehaviors\ORM\SoftDeletable\SoftDeletableSubscriber
     knp.doctrine_behaviors.softdeletable_subscriber.softdeletable_trait: Knp\DoctrineBehaviors\Model\SoftDeletable\SoftDeletable
     knp.doctrine_behaviors.timestampable_subscriber.class: Knp\DoctrineBehaviors\ORM\Timestampable\TimestampableSubscriber
@@ -44,6 +45,7 @@ services:
             - "%knp.doctrine_behaviors.translatable_subscriber.translation_trait%"
             - "%knp.doctrine_behaviors.translatable_subscriber.translatable_fetch_method%"
             - "%knp.doctrine_behaviors.translatable_subscriber.translation_fetch_method%"
+            - "%knp.doctrine_behaviors.translatable_subscriber.is_recursive%"
         tags:
             - { name: doctrine.event_subscriber }
 
