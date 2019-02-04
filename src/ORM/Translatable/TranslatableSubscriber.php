@@ -43,9 +43,9 @@ class TranslatableSubscriber extends AbstractSubscriber
 
     public function __construct(ClassAnalyzer $classAnalyzer, callable $currentLocaleCallable = null,
                                 callable $defaultLocaleCallable = null,$translatableTrait, $translationTrait,
-                                $translatableFetchMode, $translationFetchMode)
+                                $translatableFetchMode, $translationFetchMode, $isRecursive = false)
     {
-        parent::__construct($classAnalyzer, false);
+        parent::__construct($classAnalyzer, $isRecursive);
 
         $this->currentLocaleCallable = $currentLocaleCallable;
         $this->defaultLocaleCallable = $defaultLocaleCallable;
@@ -285,7 +285,7 @@ class TranslatableSubscriber extends AbstractSubscriber
      */
     private function isTranslatable(ClassMetadata $classMetadata)
     {
-        return $this->getClassAnalyzer()->hasTrait($classMetadata->reflClass, $this->translatableTrait);
+        return $this->getClassAnalyzer()->hasTrait($classMetadata->reflClass, $this->translatableTrait, $this->isRecursive);
     }
 
     /**
@@ -297,7 +297,7 @@ class TranslatableSubscriber extends AbstractSubscriber
      */
     private function isTranslation(ClassMetadata $classMetadata)
     {
-        return $this->getClassAnalyzer()->hasTrait($classMetadata->reflClass, $this->translationTrait);
+        return $this->getClassAnalyzer()->hasTrait($classMetadata->reflClass, $this->translationTrait, $this->isRecursive);
     }
 
     public function postLoad(LifecycleEventArgs $eventArgs)
