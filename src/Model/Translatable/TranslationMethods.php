@@ -30,15 +30,6 @@ trait TranslationMethods
     }
 
     /**
-     * Returns object id.
-     *
-     * @return mixed
-     */
-    public function getId() {
-        return $this->id;
-    }
-
-    /**
      * Sets entity, that this translation should be mapped to.
      *
      * @param Translatable $translatable The translatable
