@@ -189,7 +189,7 @@ You now have a working `Category` that behaves like:
 <a name="translatable" id="translatable"></a>
 ### translatable:
 
-If you're working on a `Category` entity, the `Translatable` behavior expects a **CategoryTranslation** entity in the 
+If you're working on a `Category` entity, the `Translatable` behavior expects a **CategoryTranslation** entity in the
 same folder of Category entity by default.
 
 The default naming convention (or its customization via trait methods) avoids you to manually handle entity associations.
@@ -279,7 +279,7 @@ class Category
 ```
 
 
-After updating the database, ie. with `./console doctrine:schema:update --force`, 
+After updating the database, ie. with `./console doctrine:schema:update --force`,
 you can now work on translations using `translate` or `getTranslations` methods.
 
 ``` php
@@ -299,15 +299,15 @@ you can now work on translations using `translate` or `getTranslations` methods.
 
 #### Override
 
-In case you prefer to use a different class name for the translation entity, 
+In case you prefer to use a different class name for the translation entity,
 or want to use a separate namespace, you have 2 ways :
 
-If you want to define a custom translation entity class name globally :  
-Override the trait `Translatable` and his  method `getTranslationEntityClass` 
-and the trait `Translation` and his method `getTranslatableEntityClass` in the translation entity. 
+If you want to define a custom translation entity class name globally :
+Override the trait `Translatable` and his  method `getTranslationEntityClass`
+and the trait `Translation` and his method `getTranslatableEntityClass` in the translation entity.
 If you override one, you also need to override the other to return the inverse class.
 
-Example: Let's say you want to create a sub namespace AppBundle\Entity\Translation to stock translations classes 
+Example: Let's say you want to create a sub namespace AppBundle\Entity\Translation to stock translations classes
 then put overrided traits in that folder.
 
 ``` php
@@ -365,7 +365,7 @@ parameters:
     knp.doctrine_behaviors.translatable_subscriber.translation_trait: AppBundle\Entity\Translation\TranslationTrait
 ```
 
-If you want to define a custom translation entity class name just for a single translatable class :  
+If you want to define a custom translation entity class name just for a single translatable class :
 Override the trait method `getTranslationEntityClass` in the translatable entity and `getTranslatableEntityClass`
 in the translation entity. If you override one, you also need to override the other to return the inverse class.
 
@@ -390,7 +390,7 @@ so that when you try to call `getName` (for example) it will return you the tran
     {
         return $this->proxyCurrentLocaleTranslation($method, $arguments);
     }
-    
+
     // or do it with PropertyAccessor that ships with Symfony SE
     // if your methods don't take any required arguments
     public function __call($method, $arguments)
@@ -480,7 +480,7 @@ parameters:
 ```
 
 `datetimetz` here is a useful one to use if you are working with a Postgres database, otherwise you may encounter some
-timezone issues. For more information on this see: 
+timezone issues. For more information on this see:
 <a href="http://doctrine-dbal.readthedocs.org/en/latest/reference/known-vendor-issues.html#datetime-datetimetz-and-time-types">http://doctrine-dbal.readthedocs.org/en/latest/reference/known-vendor-issues.html#datetime-datetimetz-and-time-types</a>
 
 The default type is `datetime`.
@@ -739,3 +739,11 @@ In the case of geocodable, you can set it as any service that implements `__invo
 ## Testing
 
 [Read the documentation for testing ](doc/test.md)
+
+## Maintainers
+
+KNPLabs is looking for maintainers ([see why](https://knplabs.com/en/blog/news-for-our-foss-projects-maintenance)).
+
+If you are interested, feel free to open a PR to ask to be added as a maintainer.
+
+We’ll be glad to hear from you :)
