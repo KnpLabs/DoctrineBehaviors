@@ -31,7 +31,7 @@ class SluggableMultiEntity
 
     public function __construct()
     {
-        $this->date = (new \DateTime)->modify('-1 year');
+        $this->date = (new \DateTime())->modify('-1 year');
     }
 
     /**

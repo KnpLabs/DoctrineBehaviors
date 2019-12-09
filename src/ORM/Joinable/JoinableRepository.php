@@ -40,7 +40,6 @@ trait JoinableRepository
     private function addJoinsToQueryBuilder($alias, QueryBuilder $qb, $className, $recursive = true)
     {
         foreach ($this->getEntityManager()->getClassMetadata($className)->getAssociationMappings() as $assoc) {
-
             if (in_array($assoc['targetEntity'], $qb->getRootEntities()) || $className === $assoc['targetEntity']) {
                 continue;
             }
@@ -71,7 +70,7 @@ trait JoinableRepository
         $i = 1;
         $firstAlias = $alias;
         while ($this->aliasExists($alias, $qb)) {
-            $alias = $firstAlias.$i;
+            $alias = $firstAlias . $i;
             $i++;
         }
 

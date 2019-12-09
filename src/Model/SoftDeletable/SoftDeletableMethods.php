@@ -56,11 +56,9 @@ trait SoftDeletableMethods
     public function willBeDeleted(\DateTime $at = null)
     {
         if ($this->deletedAt === null) {
-
             return false;
         }
         if ($at === null) {
-
             return true;
         }
 

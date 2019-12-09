@@ -11,5 +11,4 @@ namespace Knp\DoctrineBehaviors\Model\Sluggable;
 */
 class Transliterator extends \Behat\Transliterator\Transliterator
 {
-
 }

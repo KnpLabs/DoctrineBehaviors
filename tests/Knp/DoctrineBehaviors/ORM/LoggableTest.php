@@ -2,8 +2,8 @@
 
 namespace Tests\Knp\DoctrineBehaviors\ORM;
 
-use Knp\DoctrineBehaviors\Reflection\ClassAnalyzer;
 use Doctrine\Common\EventManager;
+use Knp\DoctrineBehaviors\Reflection\ClassAnalyzer;
 
 require_once 'EntityManagerProvider.php';
 
@@ -23,8 +23,8 @@ class LoggableTest extends \PHPUnit_Framework_TestCase
 
     protected function getEventManager()
     {
-        $em = new EventManager;
-        $loggerCallback = function($message) {
+        $em = new EventManager();
+        $loggerCallback = function ($message) {
             $this->logs[] = $message;
         };
         $this->subscriber = new \Knp\DoctrineBehaviors\ORM\Loggable\LoggableSubscriber(
@@ -135,7 +135,8 @@ class LoggableTest extends \PHPUnit_Framework_TestCase
         );
     }
 
-    public function dataProviderValues() {
+    public function dataProviderValues()
+    {
         return array(
             array(
                 "title", "test", "test"

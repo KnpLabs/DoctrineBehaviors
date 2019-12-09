@@ -9,7 +9,6 @@ use Doctrine\ORM\Mapping as ORM;
  */
 class DeletableEntityInherit extends DeletableEntity
 {
-
     /**
      * @ORM\Column(type="string")
      */

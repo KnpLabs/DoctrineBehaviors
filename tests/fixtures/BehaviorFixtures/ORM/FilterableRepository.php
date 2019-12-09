@@ -2,8 +2,8 @@
 
 namespace BehaviorFixtures\ORM;
 
-use Knp\DoctrineBehaviors\ORM\Filterable;
 use Doctrine\ORM\EntityRepository;
+use Knp\DoctrineBehaviors\ORM\Filterable;
 
 /**
  * @author     Leszek Prabucki <leszek.prabucki@gmail.com>
@@ -32,4 +32,3 @@ class FilterableRepository extends EntityRepository
         return [];
     }
 }
-

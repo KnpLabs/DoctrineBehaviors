@@ -3,9 +3,9 @@
 namespace Tests\Knp\DoctrineBehaviors\ORM;
 
 use BehaviorFixtures\ORM\GeocodableEntity;
-use Knp\DoctrineBehaviors\Reflection\ClassAnalyzer;
-use Knp\DoctrineBehaviors\ORM\Geocodable\Type\Point;
 use Doctrine\Common\EventManager;
+use Knp\DoctrineBehaviors\ORM\Geocodable\Type\Point;
+use Knp\DoctrineBehaviors\Reflection\ClassAnalyzer;
 
 require_once 'EntityManagerProvider.php';
 
@@ -30,7 +30,7 @@ class GeocodableTest extends \PHPUnit_Framework_TestCase
      */
     protected function getEventManager()
     {
-        $em = new EventManager;
+        $em = new EventManager();
 
         if ($this->callable === false) {
             $callable = function ($entity) {

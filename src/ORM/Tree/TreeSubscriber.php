@@ -11,13 +11,13 @@
 
 namespace Knp\DoctrineBehaviors\ORM\Tree;
 
-use Knp\DoctrineBehaviors\Reflection\ClassAnalyzer;
+use Doctrine\ORM\Event\LoadClassMetadataEventArgs;
 
-use Knp\DoctrineBehaviors\ORM\AbstractSubscriber;
+use Doctrine\ORM\Events;
 
-use Doctrine\ORM\Event\LoadClassMetadataEventArgs,
-    Doctrine\ORM\Events,
-    Doctrine\ORM\Mapping\ClassMetadata;
+use Doctrine\ORM\Mapping\ClassMetadata,
+    Knp\DoctrineBehaviors\ORM\AbstractSubscriber,
+    Knp\DoctrineBehaviors\Reflection\ClassAnalyzer;
 
 /**
  * Tree subscriber.
@@ -44,12 +44,11 @@ class TreeSubscriber extends AbstractSubscriber
         }
 
         if ($this->isTreeNode($classMetadata)) {
-
             if (!$classMetadata->hasField('materializedPath')) {
                 $classMetadata->mapField(array(
                     'fieldName' => 'materializedPath',
-                    'type'      => 'string',
-                    'length'    => 255
+                    'type' => 'string',
+                    'length' => 255
                 ));
             }
         }

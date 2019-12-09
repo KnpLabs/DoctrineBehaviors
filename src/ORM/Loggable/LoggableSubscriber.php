@@ -11,15 +11,15 @@
 
 namespace Knp\DoctrineBehaviors\ORM\Loggable;
 
-use Knp\DoctrineBehaviors\Reflection\ClassAnalyzer;
-
-use Knp\DoctrineBehaviors\ORM\AbstractSubscriber;
+use Doctrine\Common\EventSubscriber;
 
 use Doctrine\ORM\Event\LifecycleEventArgs;
 
-use Doctrine\Common\EventSubscriber,
-    Doctrine\ORM\Event\OnFlushEventArgs,
-    Doctrine\ORM\Events;
+use Doctrine\ORM\Event\OnFlushEventArgs;
+
+use Doctrine\ORM\Events,
+    Knp\DoctrineBehaviors\ORM\AbstractSubscriber,
+    Knp\DoctrineBehaviors\Reflection\ClassAnalyzer;
 
 /**
  * LoggableSubscriber handle Loggable entites
@@ -43,8 +43,8 @@ class LoggableSubscriber extends AbstractSubscriber
 
     public function postPersist(LifecycleEventArgs $eventArgs)
     {
-        $em            = $eventArgs->getEntityManager();
-        $entity        = $eventArgs->getEntity();
+        $em = $eventArgs->getEntityManager();
+        $entity = $eventArgs->getEntity();
         $classMetadata = $em->getClassMetadata(get_class($entity));
 
         if ($this->isEntitySupported($classMetadata->reflClass)) {
@@ -68,9 +68,9 @@ class LoggableSubscriber extends AbstractSubscriber
      */
     public function logChangeSet(LifecycleEventArgs $eventArgs)
     {
-        $em            = $eventArgs->getEntityManager();
-        $uow           = $em->getUnitOfWork();
-        $entity        = $eventArgs->getEntity();
+        $em = $eventArgs->getEntityManager();
+        $uow = $em->getUnitOfWork();
+        $entity = $eventArgs->getEntity();
         $classMetadata = $em->getClassMetadata(get_class($entity));
 
         if ($this->isEntitySupported($classMetadata->reflClass)) {
@@ -85,8 +85,8 @@ class LoggableSubscriber extends AbstractSubscriber
 
     public function preRemove(LifecycleEventArgs $eventArgs)
     {
-        $em            = $eventArgs->getEntityManager();
-        $entity        = $eventArgs->getEntity();
+        $em = $eventArgs->getEntityManager();
+        $entity = $eventArgs->getEntity();
         $classMetadata = $em->getClassMetadata(get_class($entity));
 
         if ($this->isEntitySupported($classMetadata->reflClass)) {

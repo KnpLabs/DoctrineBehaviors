@@ -2,8 +2,8 @@
 
 namespace Tests\Knp\DoctrineBehaviors\ORM;
 
-use Knp\DoctrineBehaviors\Reflection\ClassAnalyzer;
 use Doctrine\Common\EventManager;
+use Knp\DoctrineBehaviors\Reflection\ClassAnalyzer;
 
 require_once 'EntityManagerProvider.php';
 
@@ -23,7 +23,7 @@ class BlameableTest extends \PHPUnit_Framework_TestCase
 
     protected function getEventManager($user = null, $userCallback = null, $userEntity = null)
     {
-        $em = new EventManager;
+        $em = new EventManager();
 
         $this->subscriber = new \Knp\DoctrineBehaviors\ORM\Blameable\BlameableSubscriber(
             new ClassAnalyzer(),
@@ -116,7 +116,7 @@ class BlameableTest extends \PHPUnit_Framework_TestCase
         $user2 = new \BehaviorFixtures\ORM\UserEntity();
         $user2->setUsername('user2');
 
-        $userCallback = function() use($user) {
+        $userCallback = function () use ($user) {
             return $user;
         };
 
@@ -157,7 +157,7 @@ class BlameableTest extends \PHPUnit_Framework_TestCase
         $user = new \BehaviorFixtures\ORM\UserEntity();
         $user->setUsername('user');
 
-        $userCallback = function() use($user) {
+        $userCallback = function () use ($user) {
             return $user;
         };
 
@@ -180,7 +180,7 @@ class BlameableTest extends \PHPUnit_Framework_TestCase
     public function should_only_persist_user_string()
     {
         $user = new \BehaviorFixtures\ORM\UserEntity();
-        $em   = $this->getEntityManager($this->getEventManager($user));
+        $em = $this->getEntityManager($this->getEventManager($user));
 
         $entity = new \BehaviorFixtures\ORM\BlameableEntity();
 

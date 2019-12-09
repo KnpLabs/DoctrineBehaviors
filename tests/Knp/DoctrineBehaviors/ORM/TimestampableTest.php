@@ -2,8 +2,8 @@
 
 namespace Tests\Knp\DoctrineBehaviors\ORM;
 
-use Knp\DoctrineBehaviors\Reflection\ClassAnalyzer;
 use Doctrine\Common\EventManager;
+use Knp\DoctrineBehaviors\Reflection\ClassAnalyzer;
 
 require_once 'EntityManagerProvider.php';
 
@@ -20,7 +20,7 @@ class TimestampableTest extends \PHPUnit_Framework_TestCase
 
     protected function getEventManager()
     {
-        $em = new EventManager;
+        $em = new EventManager();
 
         $em->addEventSubscriber(
             new \Knp\DoctrineBehaviors\ORM\Timestampable\TimestampableSubscriber(
@@ -28,7 +28,8 @@ class TimestampableTest extends \PHPUnit_Framework_TestCase
                 false,
                 'Knp\DoctrineBehaviors\Model\Timestampable\Timestampable',
                 'datetime'
-        ));
+            )
+        );
 
         return $em;
     }

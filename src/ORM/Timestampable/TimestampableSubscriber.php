@@ -11,13 +11,13 @@
 
 namespace Knp\DoctrineBehaviors\ORM\Timestampable;
 
-use Knp\DoctrineBehaviors\Reflection\ClassAnalyzer;
+use Doctrine\ORM\Event\LoadClassMetadataEventArgs;
 
-use Knp\DoctrineBehaviors\ORM\AbstractSubscriber;
+use Doctrine\ORM\Events;
 
-use Doctrine\ORM\Event\LoadClassMetadataEventArgs,
-    Doctrine\ORM\Events,
-    Doctrine\ORM\Mapping\ClassMetadata;
+use Doctrine\ORM\Mapping\ClassMetadata,
+    Knp\DoctrineBehaviors\ORM\AbstractSubscriber,
+    Knp\DoctrineBehaviors\Reflection\ClassAnalyzer;
 
 /**
  * Timestampable subscriber.
@@ -55,8 +55,8 @@ class TimestampableSubscriber extends AbstractSubscriber
                 if (!$classMetadata->hasField($field)) {
                     $classMetadata->mapField(array(
                         'fieldName' => $field,
-                        'type'      => $this->dbFieldType,
-                        'nullable'  => true
+                        'type' => $this->dbFieldType,
+                        'nullable' => true
                     ));
                 }
             }

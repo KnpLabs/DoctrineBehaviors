@@ -11,15 +11,15 @@
 
 namespace Knp\DoctrineBehaviors\ORM\SoftDeletable;
 
-use Knp\DoctrineBehaviors\Reflection\ClassAnalyzer;
+use Doctrine\Common\EventSubscriber;
 
-use Knp\DoctrineBehaviors\ORM\AbstractSubscriber;
+use Doctrine\Common\Persistence\Mapping\ClassMetadata;
 
 use Doctrine\ORM\Event\LoadClassMetadataEventArgs,
-    Doctrine\Common\Persistence\Mapping\ClassMetadata,
-    Doctrine\Common\EventSubscriber,
     Doctrine\ORM\Event\OnFlushEventArgs,
-    Doctrine\ORM\Events;
+    Doctrine\ORM\Events,
+    Knp\DoctrineBehaviors\ORM\AbstractSubscriber,
+    Knp\DoctrineBehaviors\Reflection\ClassAnalyzer;
 
 /**
  * SoftDeletable Doctrine2 subscriber.
@@ -45,7 +45,7 @@ class SoftDeletableSubscriber extends AbstractSubscriber
      */
     public function onFlush(OnFlushEventArgs $args)
     {
-        $em  = $args->getEntityManager();
+        $em = $args->getEntityManager();
         $uow = $em->getUnitOfWork();
 
         foreach ($uow->getScheduledEntityDeletions() as $entity) {
@@ -95,12 +95,11 @@ class SoftDeletableSubscriber extends AbstractSubscriber
         }
 
         if ($this->isSoftDeletable($classMetadata)) {
-
             if (!$classMetadata->hasField('deletedAt')) {
                 $classMetadata->mapField(array(
                     'fieldName' => 'deletedAt',
-                    'type'      => 'datetime',
-                    'nullable'  => true
+                    'type' => 'datetime',
+                    'nullable' => true
                 ));
             }
         }

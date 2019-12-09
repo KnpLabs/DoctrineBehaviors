@@ -32,4 +32,3 @@ trait SortableRepository
     {
     }
 }
-

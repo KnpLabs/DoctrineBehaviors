@@ -2,8 +2,8 @@
 
 namespace Tests\Knp\DoctrineBehaviors\ORM;
 
-use Knp\DoctrineBehaviors\Reflection\ClassAnalyzer;
 use Doctrine\Common\EventManager;
+use Knp\DoctrineBehaviors\Reflection\ClassAnalyzer;
 
 require_once 'EntityManagerProvider.php';
 
@@ -20,14 +20,15 @@ class SoftDeletableTest extends \PHPUnit_Framework_TestCase
 
     protected function getEventManager()
     {
-        $em = new EventManager;
+        $em = new EventManager();
 
         $em->addEventSubscriber(
             new \Knp\DoctrineBehaviors\ORM\SoftDeletable\SoftDeletableSubscriber(
                 new ClassAnalyzer(),
                 true,
                 'Knp\DoctrineBehaviors\Model\SoftDeletable\SoftDeletable'
-        ));
+            )
+        );
 
         return $em;
     }

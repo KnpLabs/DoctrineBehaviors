@@ -2,8 +2,8 @@
 
 namespace BehaviorFixtures\ORM;
 
-use Doctrine\ORM\Mapping as ORM;
 use Doctrine\Common\Collections\ArrayCollection;
+use Doctrine\ORM\Mapping as ORM;
 
 use Knp\DoctrineBehaviors\Model\Tree;
 
@@ -12,7 +12,7 @@ use Knp\DoctrineBehaviors\Model\Tree;
  */
 class TreeNodeEntity implements Tree\NodeInterface, \ArrayAccess
 {
-    const PATH_SEPARATOR = '/';
+    public const PATH_SEPARATOR = '/';
 
     use Tree\Node;
 
@@ -30,7 +30,7 @@ class TreeNodeEntity implements Tree\NodeInterface, \ArrayAccess
 
     public function __construct($id = null)
     {
-        $this->children = new ArrayCollection;
+        $this->children = new ArrayCollection();
         $this->id = $id;
     }
 
@@ -73,4 +73,3 @@ class TreeNodeEntity implements Tree\NodeInterface, \ArrayAccess
         $this->name = $name;
     }
 }
-

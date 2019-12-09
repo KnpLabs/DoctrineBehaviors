@@ -11,22 +11,22 @@
 
 namespace Knp\DoctrineBehaviors\ORM\Geocodable;
 
-use Knp\DoctrineBehaviors\Reflection\ClassAnalyzer;
-
-use Knp\DoctrineBehaviors\ORM\AbstractSubscriber;
-
-use Knp\DoctrineBehaviors\ORM\Geocodable\Type\Point;
+use Doctrine\Common\EventSubscriber;
 
 use Doctrine\Common\Persistence\Mapping\ClassMetadata;
-use Doctrine\ORM\Event\LoadClassMetadataEventArgs;
-use Doctrine\ORM\Event\LifecycleEventArgs;
-use Doctrine\DBAL\Platforms\PostgreSqlPlatform;
-use Doctrine\DBAL\Platforms\MySqlPlatform;
-use Doctrine\DBAL\Types\Type;
 
-use Doctrine\Common\EventSubscriber,
-    Doctrine\ORM\Event\OnFlushEventArgs,
-    Doctrine\ORM\Events;
+use Doctrine\DBAL\Platforms\MySqlPlatform;
+
+use Doctrine\DBAL\Platforms\PostgreSqlPlatform;
+use Doctrine\DBAL\Types\Type;
+use Doctrine\ORM\Event\LifecycleEventArgs;
+use Doctrine\ORM\Event\LoadClassMetadataEventArgs;
+use Doctrine\ORM\Event\OnFlushEventArgs;
+use Doctrine\ORM\Events;
+
+use Knp\DoctrineBehaviors\ORM\AbstractSubscriber,
+    Knp\DoctrineBehaviors\ORM\Geocodable\Type\Point,
+    Knp\DoctrineBehaviors\Reflection\ClassAnalyzer;
 
 /**
  * GeocodableSubscriber handle Geocodable entites
@@ -89,7 +89,6 @@ class GeocodableSubscriber extends AbstractSubscriber
 
             // skip platforms with registerd stuff
             if (!$con->getDatabasePlatform()->hasDoctrineTypeMappingFor('point')) {
-
                 $con->getDatabasePlatform()->registerDoctrineTypeMapping('point', 'point');
 
                 if ($con->getDatabasePlatform() instanceof PostgreSqlPlatform) {
@@ -103,8 +102,8 @@ class GeocodableSubscriber extends AbstractSubscriber
             $classMetadata->mapField(
                 [
                     'fieldName' => 'location',
-                    'type'      => 'point',
-                    'nullable'  => true
+                    'type' => 'point',
+                    'nullable' => true
                 ]
             );
         }
@@ -121,7 +120,6 @@ class GeocodableSubscriber extends AbstractSubscriber
 
         $classMetadata = $em->getClassMetadata(get_class($entity));
         if ($this->isGeocodable($classMetadata)) {
-
             $oldValue = $entity->getLocation();
             if (!$oldValue instanceof Point || $override) {
                 $newLocation = $this->getLocation($entity);

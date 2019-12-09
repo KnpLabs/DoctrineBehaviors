@@ -11,13 +11,13 @@
 
 namespace Knp\DoctrineBehaviors\ORM\Sortable;
 
-use Knp\DoctrineBehaviors\Reflection\ClassAnalyzer;
+use Doctrine\ORM\Event\LoadClassMetadataEventArgs;
 
-use Knp\DoctrineBehaviors\ORM\AbstractSubscriber;
+use Doctrine\ORM\Events;
 
-use Doctrine\ORM\Event\LoadClassMetadataEventArgs,
-    Doctrine\ORM\Events,
-    Doctrine\ORM\Mapping\ClassMetadata;
+use Doctrine\ORM\Mapping\ClassMetadata,
+    Knp\DoctrineBehaviors\ORM\AbstractSubscriber,
+    Knp\DoctrineBehaviors\Reflection\ClassAnalyzer;
 
 /**
  * Sortable subscriber.
@@ -44,11 +44,10 @@ class SortableSubscriber extends AbstractSubscriber
         }
 
         if ($this->isSortable($classMetadata)) {
-
             if (!$classMetadata->hasField('sort')) {
                 $classMetadata->mapField(array(
                     'fieldName' => 'sort',
-                    'type'      => 'integer'
+                    'type' => 'integer'
                 ));
             }
         }

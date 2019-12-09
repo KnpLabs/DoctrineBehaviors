@@ -2,14 +2,14 @@
 
 namespace Tests\Knp\DoctrineBehaviors\ORM\Tree;
 
-use Knp\DoctrineBehaviors\Model\Tree\NodeInterface;
-use Tests\Knp\DoctrineBehaviors\ORM\EntityManagerProvider;
 use BehaviorFixtures\ORM\TreeNodeEntity;
+use Doctrine\Common\EventManager;
+use Knp\DoctrineBehaviors\Model\Tree\NodeInterface;
 use Knp\DoctrineBehaviors\ORM\Tree\TreeSubscriber;
 use Knp\DoctrineBehaviors\Reflection\ClassAnalyzer;
-use Doctrine\Common\EventManager;
+use Tests\Knp\DoctrineBehaviors\ORM\EntityManagerProvider;
 
-require_once __DIR__.'/../EntityManagerProvider.php';
+require_once __DIR__ . '/../EntityManagerProvider.php';
 
 class NodeTest extends \PHPUnit_Framework_TestCase
 {
@@ -24,7 +24,7 @@ class NodeTest extends \PHPUnit_Framework_TestCase
 
     protected function getEventManager()
     {
-        $em = new EventManager;
+        $em = new EventManager();
 
         $em->addEventSubscriber(
             new TreeSubscriber(
@@ -39,7 +39,7 @@ class NodeTest extends \PHPUnit_Framework_TestCase
 
     protected function buildNode(array $values = array())
     {
-        $node = new TreeNodeEntity;
+        $node = new TreeNodeEntity();
         foreach ($values as $method => $value) {
             $node->$method($value);
         }
@@ -78,13 +78,13 @@ class NodeTest extends \PHPUnit_Framework_TestCase
 
     public function testBuildTree()
     {
-        $root = $this->buildNode(array('setMaterializedPath' => ''     , 'setName' => 'root'        , 'setId' => 1));
+        $root = $this->buildNode(array('setMaterializedPath' => '', 'setName' => 'root', 'setId' => 1));
         $flatTree = array(
-            $this->buildNode(array('setMaterializedPath' => '/1'       , 'setName' => 'Villes'      , 'setId' => 2)),
-            $this->buildNode(array('setMaterializedPath' => '/1/2'     , 'setName' => 'Nantes'      , 'setId' => 3)),
-            $this->buildNode(array('setMaterializedPath' => '/1/2/3'   , 'setName' => 'Nantes Est'  , 'setId' => 4)),
-            $this->buildNode(array('setMaterializedPath' => '/1/2/3'   , 'setName' => 'Nantes Nord' , 'setId' => 5)),
-            $this->buildNode(array('setMaterializedPath' => '/1/2/3/5' , 'setName' => 'St-Mihiel'   , 'setId' => 6)),
+            $this->buildNode(array('setMaterializedPath' => '/1', 'setName' => 'Villes', 'setId' => 2)),
+            $this->buildNode(array('setMaterializedPath' => '/1/2', 'setName' => 'Nantes', 'setId' => 3)),
+            $this->buildNode(array('setMaterializedPath' => '/1/2/3', 'setName' => 'Nantes Est', 'setId' => 4)),
+            $this->buildNode(array('setMaterializedPath' => '/1/2/3', 'setName' => 'Nantes Nord', 'setId' => 5)),
+            $this->buildNode(array('setMaterializedPath' => '/1/2/3/5', 'setName' => 'St-Mihiel', 'setId' => 6)),
         );
 
         $root->buildTree($flatTree);
@@ -126,11 +126,11 @@ class NodeTest extends \PHPUnit_Framework_TestCase
     public function provideRootPaths()
     {
         return array(
-            array($this->buildNode(array('setMaterializedPath' => '/0/1'))            , '/0'),
-            array($this->buildNode(array('setMaterializedPath' => '/'))               , '/'),
-            array($this->buildNode(array('setMaterializedPath' => ''))                , '/'),
-            array($this->buildNode(array('setMaterializedPath' => '/test'))           , '/test'),
-            array($this->buildNode(array('setMaterializedPath' => '/0/1/2/3/4/5/6/')) , '/0'),
+            array($this->buildNode(array('setMaterializedPath' => '/0/1')), '/0'),
+            array($this->buildNode(array('setMaterializedPath' => '/')), '/'),
+            array($this->buildNode(array('setMaterializedPath' => '')), '/'),
+            array($this->buildNode(array('setMaterializedPath' => '/test')), '/test'),
+            array($this->buildNode(array('setMaterializedPath' => '/0/1/2/3/4/5/6/')), '/0'),
         );
     }
 
@@ -147,36 +147,36 @@ class NodeTest extends \PHPUnit_Framework_TestCase
         $tree = $this->buildTree();
 
         return array(
-            array($tree[0][0]    ,  $tree[0]          ,  true),
-            array($tree[0][0][0] ,  $tree[0][0]       ,  true),
-            array($tree[0][0][0] ,  $tree[0]          ,  false),
-            array($tree[0][0][0] ,  $tree[0][0][0]    ,  false),
+            array($tree[0][0],  $tree[0],  true),
+            array($tree[0][0][0],  $tree[0][0],  true),
+            array($tree[0][0][0],  $tree[0],  false),
+            array($tree[0][0][0],  $tree[0][0][0],  false),
         );
     }
 
     public function provideToArray()
     {
-        $expected = array (
+        $expected = array(
             1 =>
-            array (
+            array(
                 'node' => '',
                 'children' =>
-                array (
+                array(
                     2 =>
-                    array (
+                    array(
                         'node' => '',
                         'children' =>
-                        array (
+                        array(
                             4 =>
-                            array (
+                            array(
                                 'node' => '',
                                 'children' =>
-                                array (
+                                array(
                                     5 =>
-                                    array (
+                                    array(
                                         'node' => '',
                                         'children' =>
-                                        array (
+                                        array(
                                         ),
                                     ),
                                 ),
@@ -184,10 +184,10 @@ class NodeTest extends \PHPUnit_Framework_TestCase
                         ),
                     ),
                     3 =>
-                    array (
+                    array(
                         'node' => '',
                         'children' =>
-                        array (
+                        array(
                         ),
                     ),
                 ),
@@ -314,4 +314,3 @@ class NodeTest extends \PHPUnit_Framework_TestCase
         $this->assertEquals($root[0][0], $entity[0][0]);
     }
 }
-

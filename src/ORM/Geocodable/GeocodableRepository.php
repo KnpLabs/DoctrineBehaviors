@@ -24,4 +24,3 @@ trait GeocodableRepository
         ;
     }
 }
-

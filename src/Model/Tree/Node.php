@@ -11,10 +11,10 @@
 
 namespace Knp\DoctrineBehaviors\Model\Tree;
 
-use Knp\DoctrineBehaviors\Model\Tree\NodeInterface;
+use Doctrine\Common\Collections\ArrayCollection;
 
 use Doctrine\Common\Collections\Collection;
-use Doctrine\Common\Collections\ArrayCollection;
+use Knp\DoctrineBehaviors\Model\Tree\NodeInterface;
 
 /*
  * @author     Florian Klein <florian.klein@free.fr>
@@ -80,7 +80,7 @@ trait Node
         $path = $this->getExplodedPath();
         array_pop($path);
 
-        $parentPath = static::getMaterializedPathSeparator().implode(static::getMaterializedPathSeparator(), $path);
+        $parentPath = static::getMaterializedPathSeparator() . implode(static::getMaterializedPathSeparator(), $path);
 
         return $parentPath;
     }
@@ -126,7 +126,7 @@ trait Node
      **/
     public function getChildNodes()
     {
-        return $this->childNodes = $this->childNodes ?: new ArrayCollection;
+        return $this->childNodes = $this->childNodes ?: new ArrayCollection();
     }
 
     /**
@@ -254,7 +254,7 @@ trait Node
     public function toArray(\Closure $prepare = null, array &$tree = null)
     {
         if (null === $prepare) {
-            $prepare = function(NodeInterface $node) {
+            $prepare = function (NodeInterface $node) {
                 return (string) $node;
             };
         }
@@ -279,10 +279,10 @@ trait Node
     public function toFlatArray(\Closure $prepare = null, array &$tree = null)
     {
         if (null === $prepare) {
-            $prepare = function(NodeInterface $node) {
+            $prepare = function (NodeInterface $node) {
                 $pre = $node->getNodeLevel() > 1 ? implode('', array_fill(0, $node->getNodeLevel(), '--')) : '';
 
-                return $pre.(string) $node;
+                return $pre . (string) $node;
             };
         }
         if (null === $tree) {
@@ -326,7 +326,7 @@ trait Node
     {
         $path = explode(static::getMaterializedPathSeparator(), $this->getRealMaterializedPath());
 
-        return array_filter($path, function($item) {
+        return array_filter($path, function ($item) {
             return '' !== $item;
         });
     }

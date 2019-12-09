@@ -2,13 +2,13 @@
 
 namespace tests\Knp\DoctrineBehaviors\ORM;
 
+use Doctrine\Common\EventManager;
 use Doctrine\ORM\Configuration;
-use Doctrine\ORM\Mapping\Driver\AnnotationDriver;
 use Doctrine\ORM\EntityManager;
+use Doctrine\ORM\Mapping\DefaultQuoteStrategy;
+use Doctrine\ORM\Mapping\Driver\AnnotationDriver;
 use Doctrine\ORM\Repository\DefaultRepositoryFactory;
 use Doctrine\ORM\Tools\SchemaTool;
-use Doctrine\Common\EventManager;
-use Doctrine\ORM\Mapping\DefaultQuoteStrategy;
 
 trait EntityManagerProvider
 {
@@ -151,7 +151,7 @@ trait EntityManagerProvider
             $config
                 ->expects($this->any())
                 ->method('getQuoteStrategy')
-                ->will($this->returnValue(new DefaultQuoteStrategy))
+                ->will($this->returnValue(new DefaultQuoteStrategy()))
             ;
         }
 
@@ -189,6 +189,6 @@ trait EntityManagerProvider
      */
     protected function getEventManager()
     {
-        return new EventManager;
+        return new EventManager();
     }
 }
