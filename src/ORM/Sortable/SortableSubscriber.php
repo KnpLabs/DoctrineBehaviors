@@ -37,7 +37,7 @@ class SortableSubscriber extends AbstractSubscriber
         $this->sortableTrait = $sortableTrait;
     }
 
-    public function loadClassMetadata(LoadClassMetadataEventArgs $eventArgs)
+    public function loadClassMetadata(LoadClassMetadataEventArgs $eventArgs): void
     {
         $classMetadata = $eventArgs->getClassMetadata();
 

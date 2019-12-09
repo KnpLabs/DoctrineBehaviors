@@ -53,7 +53,7 @@ class GeocodableSubscriber extends AbstractSubscriber
         ClassAnalyzer $classAnalyzer,
         $isRecursive,
         $geocodableTrait,
-        callable $geolocationCallable = null
+        ?callable $geolocationCallable = null
     ) {
         parent::__construct($classAnalyzer, $isRecursive);
 
@@ -66,7 +66,7 @@ class GeocodableSubscriber extends AbstractSubscriber
      *
      * @param LoadClassMetadataEventArgs $eventArgs
      */
-    public function loadClassMetadata(LoadClassMetadataEventArgs $eventArgs)
+    public function loadClassMetadata(LoadClassMetadataEventArgs $eventArgs): void
     {
         $classMetadata = $eventArgs->getClassMetadata();
 
@@ -114,7 +114,7 @@ class GeocodableSubscriber extends AbstractSubscriber
     /**
      * @param LifecycleEventArgs $eventArgs
      */
-    private function updateLocation(LifecycleEventArgs $eventArgs, $override = false)
+    private function updateLocation(LifecycleEventArgs $eventArgs, $override = false): void
     {
         $em = $eventArgs->getEntityManager();
         $uow = $em->getUnitOfWork();
@@ -141,12 +141,12 @@ class GeocodableSubscriber extends AbstractSubscriber
         }
     }
 
-    public function prePersist(LifecycleEventArgs $eventArgs)
+    public function prePersist(LifecycleEventArgs $eventArgs): void
     {
         $this->updateLocation($eventArgs, false);
     }
 
-    public function preUpdate(LifecycleEventArgs $eventArgs)
+    public function preUpdate(LifecycleEventArgs $eventArgs): void
     {
         $this->updateLocation($eventArgs, true);
     }
@@ -190,7 +190,7 @@ class GeocodableSubscriber extends AbstractSubscriber
         ];
     }
 
-    public function setGeolocationCallable(callable $callable)
+    public function setGeolocationCallable(callable $callable): void
     {
         $this->geolocationCallable = $callable;
     }

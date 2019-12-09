@@ -51,7 +51,7 @@ class TimestampableEntity
      *
      * @param title the value to set.
      */
-    public function setTitle($title)
+    public function setTitle($title): void
     {
         $this->title = $title;
     }

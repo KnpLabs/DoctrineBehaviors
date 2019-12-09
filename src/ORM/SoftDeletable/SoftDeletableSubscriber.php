@@ -45,7 +45,7 @@ class SoftDeletableSubscriber extends AbstractSubscriber
      *
      * @param OnFlushEventArgs $args The event arguments
      */
-    public function onFlush(OnFlushEventArgs $args)
+    public function onFlush(OnFlushEventArgs $args): void
     {
         $em = $args->getEntityManager();
         $uow = $em->getUnitOfWork();
@@ -88,7 +88,7 @@ class SoftDeletableSubscriber extends AbstractSubscriber
         return [Events::onFlush, Events::loadClassMetadata];
     }
 
-    public function loadClassMetadata(LoadClassMetadataEventArgs $eventArgs)
+    public function loadClassMetadata(LoadClassMetadataEventArgs $eventArgs): void
     {
         $classMetadata = $eventArgs->getClassMetadata();
 

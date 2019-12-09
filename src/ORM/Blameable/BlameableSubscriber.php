@@ -53,7 +53,7 @@ class BlameableSubscriber extends AbstractSubscriber
      * @param callable
      * @param string $userEntity
      */
-    public function __construct(ClassAnalyzer $classAnalyzer, $isRecursive, $blameableTrait, callable $userCallable = null, $userEntity = null)
+    public function __construct(ClassAnalyzer $classAnalyzer, $isRecursive, $blameableTrait, ?callable $userCallable = null, $userEntity = null)
     {
         parent::__construct($classAnalyzer, $isRecursive);
 
@@ -67,7 +67,7 @@ class BlameableSubscriber extends AbstractSubscriber
      *
      * @param LoadClassMetadataEventArgs $eventArgs
      */
-    public function loadClassMetadata(LoadClassMetadataEventArgs $eventArgs)
+    public function loadClassMetadata(LoadClassMetadataEventArgs $eventArgs): void
     {
         $classMetadata = $eventArgs->getClassMetadata();
 
@@ -80,7 +80,7 @@ class BlameableSubscriber extends AbstractSubscriber
         }
     }
 
-    private function mapEntity(ClassMetadata $classMetadata)
+    private function mapEntity(ClassMetadata $classMetadata): void
     {
         if ($this->userEntity) {
             $this->mapManyToOneUser($classMetadata);
@@ -89,7 +89,7 @@ class BlameableSubscriber extends AbstractSubscriber
         }
     }
 
-    private function mapStringUser(ClassMetadata $classMetadata)
+    private function mapStringUser(ClassMetadata $classMetadata): void
     {
         if (!$classMetadata->hasField('createdBy')) {
             $classMetadata->mapField([
@@ -116,7 +116,7 @@ class BlameableSubscriber extends AbstractSubscriber
         }
     }
 
-    private function mapManyToOneUser(classMetadata $classMetadata)
+    private function mapManyToOneUser(classMetadata $classMetadata): void
     {
         if (!$classMetadata->hasAssociation('createdBy')) {
             $classMetadata->mapManyToOne([
@@ -152,7 +152,7 @@ class BlameableSubscriber extends AbstractSubscriber
      *
      * @param LifecycleEventArgs $eventArgs
      */
-    public function prePersist(LifecycleEventArgs $eventArgs)
+    public function prePersist(LifecycleEventArgs $eventArgs): void
     {
         $em = $eventArgs->getEntityManager();
         $uow = $em->getUnitOfWork();
@@ -206,7 +206,7 @@ class BlameableSubscriber extends AbstractSubscriber
      *
      * @param LifecycleEventArgs $eventArgs
      */
-    public function preUpdate(LifecycleEventArgs $eventArgs)
+    public function preUpdate(LifecycleEventArgs $eventArgs): void
     {
         $em = $eventArgs->getEntityManager();
         $uow = $em->getUnitOfWork();
@@ -235,7 +235,7 @@ class BlameableSubscriber extends AbstractSubscriber
      *
      * @param LifecycleEventArgs $eventArgs
      */
-    public function preRemove(LifecycleEventArgs $eventArgs)
+    public function preRemove(LifecycleEventArgs $eventArgs): void
     {
         $em = $eventArgs->getEntityManager();
         $uow = $em->getUnitOfWork();
@@ -264,7 +264,7 @@ class BlameableSubscriber extends AbstractSubscriber
      *
      * @param mixed $user
      */
-    public function setUser($user)
+    public function setUser($user): void
     {
         $this->user = $user;
     }
@@ -300,7 +300,7 @@ class BlameableSubscriber extends AbstractSubscriber
         return $events;
     }
 
-    public function setUserCallable(callable $callable)
+    public function setUserCallable(callable $callable): void
     {
         $this->userCallable = $callable;
     }

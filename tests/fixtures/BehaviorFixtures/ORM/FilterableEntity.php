@@ -53,7 +53,7 @@ class FilterableEntity
      *
      * @param name the value to set.
      */
-    public function setName($name)
+    public function setName($name): void
     {
         $this->name = $name;
     }
@@ -73,7 +73,7 @@ class FilterableEntity
      *
      * @param integer code the value to set.
      */
-    public function setCode($code)
+    public function setCode($code): void
     {
         $this->code = $code;
     }

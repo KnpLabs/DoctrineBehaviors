@@ -78,7 +78,7 @@ class NodeTest extends \PHPUnit_Framework_TestCase
         return $item;
     }
 
-    public function testBuildTree()
+    public function testBuildTree(): void
     {
         $root = $this->buildNode(['setMaterializedPath' => '', 'setName' => 'root', 'setId' => 1]);
         $flatTree = [
@@ -99,7 +99,7 @@ class NodeTest extends \PHPUnit_Framework_TestCase
         $this->assertEquals(4, $root->getChildNodes()->first()->getChildNodes()->first()->getChildNodes()->first()->getNodeLevel());
     }
 
-    public function testIsRoot()
+    public function testIsRoot(): void
     {
         $tree = $this->buildTree();
 
@@ -107,7 +107,7 @@ class NodeTest extends \PHPUnit_Framework_TestCase
         $this->assertTrue($tree->isRootNode());
     }
 
-    public function testIsLeaf()
+    public function testIsLeaf(): void
     {
         $tree = $this->buildTree();
 
@@ -115,7 +115,7 @@ class NodeTest extends \PHPUnit_Framework_TestCase
         $this->assertTrue($tree[1]->isLeafNode());
     }
 
-    public function testGetRoot()
+    public function testGetRoot(): void
     {
         $tree = $this->buildTree();
 
@@ -139,7 +139,7 @@ class NodeTest extends \PHPUnit_Framework_TestCase
     /**
      * @dataProvider provideisChildNodeOf
      **/
-    public function testisChildNodeOf(NodeInterface $child, NodeInterface $parent, $expected)
+    public function testisChildNodeOf(NodeInterface $child, NodeInterface $parent, $expected): void
     {
         $this->assertEquals($expected, $child->isChildNodeOf($parent));
     }
@@ -199,21 +199,21 @@ class NodeTest extends \PHPUnit_Framework_TestCase
         return $expected;
     }
 
-    public function testToArray()
+    public function testToArray(): void
     {
         $expected = $this->provideToArray();
         $tree = $this->buildTree();
         $this->assertEquals($expected, $tree->toArray());
     }
 
-    public function testToJson()
+    public function testToJson(): void
     {
         $expected = $this->provideToArray();
         $tree = $this->buildTree();
         $this->assertEquals(json_encode($expected), $tree->toJson());
     }
 
-    public function testToFlatArray()
+    public function testToFlatArray(): void
     {
         $tree = $this->buildTree();
 
@@ -228,7 +228,7 @@ class NodeTest extends \PHPUnit_Framework_TestCase
         $this->assertEquals($expected, $tree->toFlatArray());
     }
 
-    public function testArrayAccess()
+    public function testArrayAccess(): void
     {
         $tree = $this->buildTree();
 
@@ -251,12 +251,12 @@ class NodeTest extends \PHPUnit_Framework_TestCase
      * @expectedException \LogicException
      * @expectedExceptionMessage You must provide an id for this node if you want it to be part of a tree.
      **/
-    public function testsetChildNodeOfWithoutId()
+    public function testsetChildNodeOfWithoutId(): void
     {
         $this->buildNode(['setMaterializedPath' => '/0/1'])->setChildNodeOf($this->buildNode(['setMaterializedPath' => '/0']));
     }
 
-    public function testChildrenCount()
+    public function testChildrenCount(): void
     {
         $tree = $this->buildTree();
 
@@ -264,7 +264,7 @@ class NodeTest extends \PHPUnit_Framework_TestCase
         $this->assertEquals(1, $tree->getChildNodes()->get(0)->getChildNodes()->count());
     }
 
-    public function testGetPath()
+    public function testGetPath(): void
     {
         $tree = $this->buildTree();
 
@@ -281,7 +281,7 @@ class NodeTest extends \PHPUnit_Framework_TestCase
         $this->assertTrue($tree->getChildNodes()->contains($childChildItem), 'The children collection has been updated to reference the moved node');
     }
 
-    public function testMoveChildren()
+    public function testMoveChildren(): void
     {
         $tree = $this->buildTree();
 
@@ -297,7 +297,7 @@ class NodeTest extends \PHPUnit_Framework_TestCase
         $this->assertEquals(3, $childChildChildItem->getNodeLevel(), 'The level has been updated');
     }
 
-    public function testGetTree()
+    public function testGetTree(): void
     {
         $em = $this->getEntityManager();
         $repo = $em->getRepository('BehaviorFixtures\ORM\TreeNodeEntity');

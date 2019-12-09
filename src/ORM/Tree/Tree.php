@@ -126,7 +126,7 @@ trait Tree
      * @param QueryBuilder $qb
      * @param array        $extraParams
      */
-    protected function addFlatTreeConditions(QueryBuilder $qb, $extraParams)
+    protected function addFlatTreeConditions(QueryBuilder $qb, $extraParams): void
     {
     }
 

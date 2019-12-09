@@ -22,7 +22,7 @@ use Doctrine\ORM\QueryBuilder;
  */
 trait JoinableRepository
 {
-    public function getJoinAllQueryBuilder($alias = null, QueryBuilder $qb = null)
+    public function getJoinAllQueryBuilder($alias = null, ?QueryBuilder $qb = null)
     {
         if (null === $alias) {
             $alias = $this->getAlias($this->getClassName());
@@ -39,7 +39,7 @@ trait JoinableRepository
         return $qb;
     }
 
-    private function addJoinsToQueryBuilder($alias, QueryBuilder $qb, $className, $recursive = true)
+    private function addJoinsToQueryBuilder($alias, QueryBuilder $qb, $className, $recursive = true): void
     {
         foreach ($this->getEntityManager()->getClassMetadata($className)->getAssociationMappings() as $assoc) {
             if (in_array($assoc['targetEntity'], $qb->getRootEntities()) || $className === $assoc['targetEntity']) {

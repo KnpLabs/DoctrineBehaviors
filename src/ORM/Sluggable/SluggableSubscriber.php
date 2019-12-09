@@ -35,7 +35,7 @@ class SluggableSubscriber extends AbstractSubscriber
         $this->sluggableTrait = $sluggableTrait;
     }
 
-    public function loadClassMetadata(LoadClassMetadataEventArgs $eventArgs)
+    public function loadClassMetadata(LoadClassMetadataEventArgs $eventArgs): void
     {
         $classMetadata = $eventArgs->getClassMetadata();
 
@@ -54,7 +54,7 @@ class SluggableSubscriber extends AbstractSubscriber
         }
     }
 
-    public function prePersist(LifecycleEventArgs $eventArgs)
+    public function prePersist(LifecycleEventArgs $eventArgs): void
     {
         $entity = $eventArgs->getEntity();
         $em = $eventArgs->getEntityManager();
@@ -65,7 +65,7 @@ class SluggableSubscriber extends AbstractSubscriber
         }
     }
 
-    public function preUpdate(LifecycleEventArgs $eventArgs)
+    public function preUpdate(LifecycleEventArgs $eventArgs): void
     {
         $entity = $eventArgs->getEntity();
         $em = $eventArgs->getEntityManager();

@@ -101,7 +101,7 @@ trait SluggableMethods
     /**
      * Generates and sets the entity's slug. Called prePersist and preUpdate
      */
-    public function generateSlug()
+    public function generateSlug(): void
     {
         if ($this->getRegenerateSlugOnUpdate() || empty($this->slug)) {
             $fields = $this->getSluggableFields();

@@ -39,7 +39,7 @@ class TimestampableTest extends \PHPUnit_Framework_TestCase
     /**
      * @test
      */
-    public function it_should_initialize_create_and_update_datetime_when_created()
+    public function it_should_initialize_create_and_update_datetime_when_created(): void
     {
         $em = $this->getEntityManager();
 
@@ -61,7 +61,7 @@ class TimestampableTest extends \PHPUnit_Framework_TestCase
     /**
      * @test
      */
-    public function it_should_modify_update_datetime_when_updated_but_not_the_creation_datetime()
+    public function it_should_modify_update_datetime_when_updated_but_not_the_creation_datetime(): void
     {
         $em = $this->getEntityManager();
 
@@ -95,7 +95,7 @@ class TimestampableTest extends \PHPUnit_Framework_TestCase
     /**
      * @test
      */
-    public function it_should_return_the_same_datetime_when_not_updated()
+    public function it_should_return_the_same_datetime_when_not_updated(): void
     {
         $em = $this->getEntityManager();
 
@@ -132,7 +132,7 @@ class TimestampableTest extends \PHPUnit_Framework_TestCase
     /**
      * @test
      */
-    public function it_should_modify_update_datetime_only_once()
+    public function it_should_modify_update_datetime_only_once(): void
     {
         $em = $this->getEntityManager();
 

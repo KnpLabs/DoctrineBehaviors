@@ -37,7 +37,7 @@ class TreeSubscriber extends AbstractSubscriber
         $this->nodeTrait = $nodeTrait;
     }
 
-    public function loadClassMetadata(LoadClassMetadataEventArgs $eventArgs)
+    public function loadClassMetadata(LoadClassMetadataEventArgs $eventArgs): void
     {
         $classMetadata = $eventArgs->getClassMetadata();
 

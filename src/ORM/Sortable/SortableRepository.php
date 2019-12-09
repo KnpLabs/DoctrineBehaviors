@@ -8,7 +8,7 @@ use Doctrine\ORM\QueryBuilder;
 
 trait SortableRepository
 {
-    public function reorderEntity($entity)
+    public function reorderEntity($entity): void
     {
         if (!$entity->isReordered()) {
             return;
@@ -30,7 +30,7 @@ trait SortableRepository
         ;
     }
 
-    protected function addSortingScope(QueryBuilder $qb, $entity)
+    protected function addSortingScope(QueryBuilder $qb, $entity): void
     {
     }
 }

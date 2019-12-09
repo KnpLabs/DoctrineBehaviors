@@ -63,7 +63,7 @@ class GeocodableTest extends \PHPUnit_Framework_TestCase
         return $em;
     }
 
-    public function setUp()
+    public function setUp(): void
     {
         $em = $this->getDBEngineEntityManager();
 
@@ -81,7 +81,7 @@ class GeocodableTest extends \PHPUnit_Framework_TestCase
     /**
      * @dataProvider dataSetCities
      */
-    public function testInsertLocation($city, array $location)
+    public function testInsertLocation($city, array $location): void
     {
         $em = $this->getDBEngineEntityManager();
 
@@ -95,7 +95,7 @@ class GeocodableTest extends \PHPUnit_Framework_TestCase
     /**
      * @dataProvider dataSetCities
      */
-    public function testUpdateWithEditLocation($city, array $location, array $newLocation)
+    public function testUpdateWithEditLocation($city, array $location, array $newLocation): void
     {
         $em = $this->getDBEngineEntityManager();
 
@@ -123,7 +123,7 @@ class GeocodableTest extends \PHPUnit_Framework_TestCase
     /**
      * @dataProvider dataSetCities
      */
-    public function testUpdateWithoutEditLocation($city, array $location)
+    public function testUpdateWithoutEditLocation($city, array $location): void
     {
         $em = $this->getDBEngineEntityManager();
 
@@ -140,14 +140,14 @@ class GeocodableTest extends \PHPUnit_Framework_TestCase
     /**
      * @dataProvider dataSetCities
      */
-    public function testUpdateWithoutEditWithGeocodableWatcher($city, array $location, array $newLocation)
+    public function testUpdateWithoutEditWithGeocodableWatcher($city, array $location, array $newLocation): void
     {
         $this->callable = null;
 
         $this->testUpdateWithEditLocation($city, $location, $newLocation);
     }
 
-    public function testGetLocation()
+    public function testGetLocation(): void
     {
         $em = $this->getEntityManager();
 
@@ -258,7 +258,7 @@ class GeocodableTest extends \PHPUnit_Framework_TestCase
         ];
     }
 
-    private function assertLocation(array $expected, Point $given = null, $message = null)
+    private function assertLocation(array $expected, ?Point $given = null, $message = null): void
     {
         $this->assertInstanceOf('Knp\DoctrineBehaviors\ORM\Geocodable\Type\Point', $given, $message);
 

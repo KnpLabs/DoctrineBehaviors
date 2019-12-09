@@ -15,7 +15,7 @@ class ClassAnalyserTest extends \PHPUnit_Framework_TestCase
     /**
      * @test
      */
-    public function it_should_test_if_object_use_trait()
+    public function it_should_test_if_object_use_trait(): void
     {
         $analyser = new ClassAnalyzer();
 
@@ -33,7 +33,7 @@ class ClassAnalyserTest extends \PHPUnit_Framework_TestCase
     /**
      * @test
      */
-    public function it_should_test_if_object_dont_use_trait()
+    public function it_should_test_if_object_dont_use_trait(): void
     {
         $analyser = new ClassAnalyzer();
 
@@ -51,7 +51,7 @@ class ClassAnalyserTest extends \PHPUnit_Framework_TestCase
     /**
      * @test
      */
-    public function it_should_test_if_object_or_his_parent_classes_use_trait()
+    public function it_should_test_if_object_or_his_parent_classes_use_trait(): void
     {
         $analyser = new ClassAnalyzer();
 
@@ -77,7 +77,7 @@ class ClassAnalyserTest extends \PHPUnit_Framework_TestCase
     /**
      * @test
      */
-    public function it_should_test_if_object_has_a_method()
+    public function it_should_test_if_object_has_a_method(): void
     {
         $analyser = new ClassAnalyzer();
 
@@ -94,7 +94,7 @@ class ClassAnalyserTest extends \PHPUnit_Framework_TestCase
     /**
      * @test
      */
-    public function it_should_test_if_object_dont_has_a_method()
+    public function it_should_test_if_object_dont_has_a_method(): void
     {
         $analyser = new ClassAnalyzer();
 
@@ -111,7 +111,7 @@ class ClassAnalyserTest extends \PHPUnit_Framework_TestCase
     /**
      * @test
      */
-    public function it_should_test_if_object_has_a_property()
+    public function it_should_test_if_object_has_a_property(): void
     {
         $analyser = new ClassAnalyzer();
 
@@ -128,7 +128,7 @@ class ClassAnalyserTest extends \PHPUnit_Framework_TestCase
     /**
      * @test
      */
-    public function it_should_test_if_object_dont_has_a_property()
+    public function it_should_test_if_object_dont_has_a_property(): void
     {
         $analyser = new ClassAnalyzer();
 
@@ -145,7 +145,7 @@ class ClassAnalyserTest extends \PHPUnit_Framework_TestCase
     /**
      * @test
      */
-    public function it_should_test_if_object_or_his_parent_classes_has_a_property()
+    public function it_should_test_if_object_or_his_parent_classes_has_a_property(): void
     {
         $analyser = new ClassAnalyzer();
 

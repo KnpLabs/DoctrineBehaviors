@@ -39,7 +39,7 @@ trait GeocodableMethods
      *
      * @return $this
      */
-    public function setLocation(Point $location = null)
+    public function setLocation(?Point $location = null)
     {
         $this->location = $location;
 

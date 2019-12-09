@@ -62,7 +62,7 @@ trait TranslatableMethods
      *
      * @param Translation $translation The translation
      */
-    public function removeTranslation($translation)
+    public function removeTranslation($translation): void
     {
         $this->getTranslations()->removeElement($translation);
     }
@@ -129,7 +129,7 @@ trait TranslatableMethods
     /**
      * Merges newly created translations into persisted translations.
      */
-    public function mergeNewTranslations()
+    public function mergeNewTranslations(): void
     {
         foreach ($this->getNewTranslations() as $newTranslation) {
             if (!$this->getTranslations()->contains($newTranslation) && !$newTranslation->isEmpty()) {
@@ -142,7 +142,7 @@ trait TranslatableMethods
     /**
      * @param mixed $locale the current locale
      */
-    public function setCurrentLocale($locale)
+    public function setCurrentLocale($locale): void
     {
         $this->currentLocale = $locale;
     }
@@ -158,7 +158,7 @@ trait TranslatableMethods
     /**
      * @param mixed $locale the default locale
      */
-    public function setDefaultLocale($locale)
+    public function setDefaultLocale($locale): void
     {
         $this->defaultLocale = $locale;
     }

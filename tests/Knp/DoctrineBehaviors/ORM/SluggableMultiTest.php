@@ -35,7 +35,7 @@ class SluggableMultiTest extends \PHPUnit_Framework_TestCase
         return $em;
     }
 
-    public function testSlugLoading()
+    public function testSlugLoading(): void
     {
         $em = $this->getEntityManager();
 
@@ -58,7 +58,7 @@ class SluggableMultiTest extends \PHPUnit_Framework_TestCase
         $this->assertEquals($entity->getSlug(), $expected);
     }
 
-    public function testNotUpdatedSlug()
+    public function testNotUpdatedSlug(): void
     {
         $em = $this->getEntityManager();
 
@@ -79,7 +79,7 @@ class SluggableMultiTest extends \PHPUnit_Framework_TestCase
         $this->assertEquals($entity->getSlug(), $expected);
     }
 
-    public function testUpdatedSlug()
+    public function testUpdatedSlug(): void
     {
         $em = $this->getEntityManager();
 

@@ -68,7 +68,7 @@ class LoggableSubscriber extends AbstractSubscriber
      *
      * @param LifecycleEventArgs $eventArgs
      */
-    public function logChangeSet(LifecycleEventArgs $eventArgs)
+    public function logChangeSet(LifecycleEventArgs $eventArgs): void
     {
         $em = $eventArgs->getEntityManager();
         $uow = $em->getUnitOfWork();
@@ -85,7 +85,7 @@ class LoggableSubscriber extends AbstractSubscriber
         }
     }
 
-    public function preRemove(LifecycleEventArgs $eventArgs)
+    public function preRemove(LifecycleEventArgs $eventArgs): void
     {
         $em = $eventArgs->getEntityManager();
         $entity = $eventArgs->getEntity();
@@ -98,7 +98,7 @@ class LoggableSubscriber extends AbstractSubscriber
         }
     }
 
-    public function setLoggerCallable(callable $callable)
+    public function setLoggerCallable(callable $callable): void
     {
         $this->loggerCallable = $callable;
     }

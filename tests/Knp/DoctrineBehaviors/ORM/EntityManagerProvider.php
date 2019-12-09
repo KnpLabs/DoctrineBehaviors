@@ -26,7 +26,7 @@ trait EntityManagerProvider
      * @param  EventManager  $evm
      * @return EntityManager
      */
-    protected function getEntityManager(EventManager $evm = null, Configuration $config = null, array $conn = [])
+    protected function getEntityManager(?EventManager $evm = null, ?Configuration $config = null, array $conn = [])
     {
         if (null !== $this->em) {
             return $this->em;

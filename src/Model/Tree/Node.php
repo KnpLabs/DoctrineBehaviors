@@ -90,7 +90,7 @@ trait Node
     /**
      * {@inheritdoc}
      **/
-    public function setParentMaterializedPath($path)
+    public function setParentMaterializedPath($path): void
     {
         $this->parentNodePath = $path;
     }
@@ -134,7 +134,7 @@ trait Node
     /**
      * {@inheritdoc}
      **/
-    public function addChildNode(NodeInterface $node)
+    public function addChildNode(NodeInterface $node): void
     {
         $this->getChildNodes()->add($node);
     }
@@ -159,7 +159,7 @@ trait Node
     /**
      * {@inheritdoc}
      **/
-    public function setChildNodeOf(NodeInterface $node = null)
+    public function setChildNodeOf(?NodeInterface $node = null)
     {
         $id = $this->getNodeId();
         if (empty($id)) {
@@ -224,7 +224,7 @@ trait Node
     /**
      * {@inheritdoc}
      **/
-    public function buildTree(array $results)
+    public function buildTree(array $results): void
     {
         $this->getChildNodes()->clear();
         foreach ($results as $i => $node) {
@@ -240,7 +240,7 @@ trait Node
      *
      * @return string the json representation of the hierarchical result
      **/
-    public function toJson(\Closure $prepare = null)
+    public function toJson(?\Closure $prepare = null)
     {
         $tree = $this->toArray($prepare);
 
@@ -253,7 +253,7 @@ trait Node
      *
      * @return array the hierarchical result
      **/
-    public function toArray(\Closure $prepare = null, array &$tree = null)
+    public function toArray(?\Closure $prepare = null, ?array &$tree = null)
     {
         if (null === $prepare) {
             $prepare = function (NodeInterface $node) {
@@ -278,7 +278,7 @@ trait Node
      *
      * @return array the flatten result
      **/
-    public function toFlatArray(\Closure $prepare = null, array &$tree = null)
+    public function toFlatArray(?\Closure $prepare = null, ?array &$tree = null)
     {
         if (null === $prepare) {
             $prepare = function (NodeInterface $node) {
@@ -311,7 +311,7 @@ trait Node
         return isset($this->getChildNodes()[$offset]);
     }
 
-    public function offsetUnset($offset)
+    public function offsetUnset($offset): void
     {
         unset($this->getChildNodes()[$offset]);
     }

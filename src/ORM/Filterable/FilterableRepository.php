@@ -65,7 +65,7 @@ trait FilterableRepository
      * @param \Doctrine\ORM\QueryBuilder
      * @return \Doctrine\ORM\QueryBuilder
      */
-    public function filterBy(array $filters, QueryBuilder $qb = null)
+    public function filterBy(array $filters, ?QueryBuilder $qb = null)
     {
         $filters = array_filter($filters, function ($filter) {
             return !empty($filter);

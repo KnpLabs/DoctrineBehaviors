@@ -65,7 +65,7 @@ trait TimestampableMethods
     /**
      * Updates createdAt and updatedAt timestamps.
      */
-    public function updateTimestamps()
+    public function updateTimestamps(): void
     {
         // Create a datetime with microseconds
         $dateTime = \DateTime::createFromFormat('U.u', sprintf('%.6F', microtime(true)));

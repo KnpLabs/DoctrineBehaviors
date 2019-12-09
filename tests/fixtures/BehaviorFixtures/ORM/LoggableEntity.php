@@ -61,7 +61,7 @@ class LoggableEntity
      *
      * @param $title the value to set.
      */
-    public function setTitle($title)
+    public function setTitle($title): void
     {
         $this->title = $title;
     }
@@ -83,7 +83,7 @@ class LoggableEntity
      *
      * @return $this;
      */
-    public function setRoles(array $roles = null)
+    public function setRoles(?array $roles = null)
     {
         $this->roles = $roles;
 

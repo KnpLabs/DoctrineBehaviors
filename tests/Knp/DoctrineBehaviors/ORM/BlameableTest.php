@@ -41,7 +41,7 @@ class BlameableTest extends \PHPUnit_Framework_TestCase
         return $em;
     }
 
-    public function testCreate()
+    public function testCreate(): void
     {
         $em = $this->getEntityManager($this->getEventManager('user'));
 
@@ -55,7 +55,7 @@ class BlameableTest extends \PHPUnit_Framework_TestCase
         $this->assertNull($entity->getDeletedBy());
     }
 
-    public function testUpdate()
+    public function testUpdate(): void
     {
         $em = $this->getEntityManager($this->getEventManager('user'));
 
@@ -87,7 +87,7 @@ class BlameableTest extends \PHPUnit_Framework_TestCase
         );
     }
 
-    public function testRemove()
+    public function testRemove(): void
     {
         $em = $this->getEntityManager($this->getEventManager('user'));
 
@@ -110,7 +110,7 @@ class BlameableTest extends \PHPUnit_Framework_TestCase
         $this->assertEquals('user3', $entity->getDeletedBy());
     }
 
-    public function testSubscriberWithUserCallback()
+    public function testSubscriberWithUserCallback(): void
     {
         $user = new \BehaviorFixtures\ORM\UserEntity();
         $user->setUsername('user');
@@ -154,7 +154,7 @@ class BlameableTest extends \PHPUnit_Framework_TestCase
     /**
      * @test
      */
-    public function should_only_persist_user_entity()
+    public function should_only_persist_user_entity(): void
     {
         $user = new \BehaviorFixtures\ORM\UserEntity();
         $user->setUsername('user');
@@ -179,7 +179,7 @@ class BlameableTest extends \PHPUnit_Framework_TestCase
     /**
      * @test
      */
-    public function should_only_persist_user_string()
+    public function should_only_persist_user_string(): void
     {
         $user = new \BehaviorFixtures\ORM\UserEntity();
         $em = $this->getEntityManager($this->getEventManager($user));

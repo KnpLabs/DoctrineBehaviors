@@ -33,7 +33,7 @@ class LoggerCallable
         $this->logger = $logger;
     }
 
-    public function __invoke($message)
+    public function __invoke($message): void
     {
         $this->logger->debug($message);
     }

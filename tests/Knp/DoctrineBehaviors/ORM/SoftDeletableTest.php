@@ -35,7 +35,7 @@ class SoftDeletableTest extends \PHPUnit_Framework_TestCase
         return $em;
     }
 
-    public function testDelete()
+    public function testDelete(): void
     {
         $em = $this->getEntityManager();
 
@@ -57,7 +57,7 @@ class SoftDeletableTest extends \PHPUnit_Framework_TestCase
         $this->assertTrue($entity->isDeleted());
     }
 
-    public function testPostDelete()
+    public function testPostDelete(): void
     {
         $em = $this->getEntityManager();
 
@@ -92,7 +92,7 @@ class SoftDeletableTest extends \PHPUnit_Framework_TestCase
         $this->assertTrue($entity->isDeleted());
     }
 
-    public function testDeleteInheritance()
+    public function testDeleteInheritance(): void
     {
         $em = $this->getEntityManager();
 
@@ -107,7 +107,7 @@ class SoftDeletableTest extends \PHPUnit_Framework_TestCase
         $this->assertTrue($entity->isDeleted());
     }
 
-    public function testRestore()
+    public function testRestore(): void
     {
         $em = $this->getEntityManager();
 

@@ -45,8 +45,8 @@ class TranslatableSubscriber extends AbstractSubscriber
 
     public function __construct(
         ClassAnalyzer $classAnalyzer,
-        callable $currentLocaleCallable = null,
-        callable $defaultLocaleCallable = null,
+        ?callable $currentLocaleCallable = null,
+        ?callable $defaultLocaleCallable = null,
         $translatableTrait,
         $translationTrait,
         $translatableFetchMode,
@@ -67,7 +67,7 @@ class TranslatableSubscriber extends AbstractSubscriber
      *
      * @param LoadClassMetadataEventArgs $eventArgs The event arguments
      */
-    public function loadClassMetadata(LoadClassMetadataEventArgs $eventArgs)
+    public function loadClassMetadata(LoadClassMetadataEventArgs $eventArgs): void
     {
         $classMetadata = $eventArgs->getClassMetadata();
 
@@ -97,7 +97,7 @@ class TranslatableSubscriber extends AbstractSubscriber
      *
      * @see https://github.com/doctrine/doctrine2/blob/0bff6aadbc9f3fd8167a320d9f4f6cf269382da0/lib/Doctrine/ORM/Mapping/ClassMetadataFactory.php#L508
      */
-    private function mapId(ClassMetadata $class, EntityManager $em)
+    private function mapId(ClassMetadata $class, EntityManager $em): void
     {
         $platform = $em->getConnection()->getDatabasePlatform();
         if (!$class->hasField('id')) {
@@ -204,7 +204,7 @@ class TranslatableSubscriber extends AbstractSubscriber
         }
     }
 
-    private function mapTranslatable(ClassMetadata $classMetadata)
+    private function mapTranslatable(ClassMetadata $classMetadata): void
     {
         if (!$classMetadata->hasAssociation('translations')) {
             $classMetadata->mapOneToMany([
@@ -219,7 +219,7 @@ class TranslatableSubscriber extends AbstractSubscriber
         }
     }
 
-    private function mapTranslation(ClassMetadata $classMetadata)
+    private function mapTranslation(ClassMetadata $classMetadata): void
     {
         if (!$classMetadata->hasAssociation('translatable')) {
             $classMetadata->mapManyToOne([
@@ -310,17 +310,17 @@ class TranslatableSubscriber extends AbstractSubscriber
         return $this->getClassAnalyzer()->hasTrait($classMetadata->reflClass, $this->translationTrait);
     }
 
-    public function postLoad(LifecycleEventArgs $eventArgs)
+    public function postLoad(LifecycleEventArgs $eventArgs): void
     {
         $this->setLocales($eventArgs);
     }
 
-    public function prePersist(LifecycleEventArgs $eventArgs)
+    public function prePersist(LifecycleEventArgs $eventArgs): void
     {
         $this->setLocales($eventArgs);
     }
 
-    private function setLocales(LifecycleEventArgs $eventArgs)
+    private function setLocales(LifecycleEventArgs $eventArgs): void
     {
         $em = $eventArgs->getEntityManager();
         $entity = $eventArgs->getEntity();
