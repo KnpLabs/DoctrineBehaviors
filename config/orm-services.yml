@@ -7,6 +7,10 @@ parameters:
     knp.doctrine_behaviors.blameable_subscriber.user_entity: ~
 
 services:
+    _defaults:
+        autowire: true
+        autoconfigure: true
+
     knp.doctrine_behaviors.reflection.class_analyzer:
         class:   Knp\DoctrineBehaviors\Reflection\ClassAnalyzer
 
@@ -20,8 +24,6 @@ services:
             - Knp\DoctrineBehaviors\Model\Translatable\Translation
             - "%knp.doctrine_behaviors.translatable_subscriber.translatable_fetch_method%"
             - "%knp.doctrine_behaviors.translatable_subscriber.translation_fetch_method%"
-        tags:
-            - { name: doctrine.event_subscriber }
 
     knp.doctrine_behaviors.translatable_subscriber.current_locale_callable:
         class:           Knp\DoctrineBehaviors\ORM\Translatable\CurrentLocaleCallable
@@ -39,8 +41,6 @@ services:
             - "@knp.doctrine_behaviors.reflection.class_analyzer"
             - "%knp.doctrine_behaviors.reflection.is_recursive%"
             - Knp\DoctrineBehaviors\Model\SoftDeletable\SoftDeletable
-        tags:
-            - { name: doctrine.event_subscriber }
 
     knp.doctrine_behaviors.timestampable_subscriber:
         class:   Knp\DoctrineBehaviors\ORM\Timestampable\TimestampableSubscriber
@@ -49,8 +49,6 @@ services:
             - "%knp.doctrine_behaviors.reflection.is_recursive%"
             - Knp\DoctrineBehaviors\Model\Timestampable\Timestampable
             - "%knp.doctrine_behaviors.timestampable_subscriber.db_field_type%"
-        tags:
-            - { name: doctrine.event_subscriber }
 
     knp.doctrine_behaviors.tree_subscriber:
         class:   Knp\DoctrineBehaviors\ORM\Tree\TreeSubscriber
@@ -58,8 +56,6 @@ services:
             - "@knp.doctrine_behaviors.reflection.class_analyzer"
             - "%knp.doctrine_behaviors.reflection.is_recursive%"
             - Knp\DoctrineBehaviors\Model\Tree\Node
-        tags:
-            - { name: doctrine.event_subscriber }
 
     knp.doctrine_behaviors.sortable_subscriber:
         class:   Knp\DoctrineBehaviors\ORM\Sortable\SortableSubscriber
@@ -67,8 +63,6 @@ services:
             - "@knp.doctrine_behaviors.reflection.class_analyzer"
             - "%knp.doctrine_behaviors.reflection.is_recursive%"
             - Knp\DoctrineBehaviors\Model\Sortable\Sortable
-        tags:
-            - { name: doctrine.event_subscriber }
 
     knp.doctrine_behaviors.blameable_subscriber:
         class:   Knp\DoctrineBehaviors\ORM\Blameable\BlameableSubscriber
@@ -78,8 +72,6 @@ services:
             - Knp\DoctrineBehaviors\Model\Blameable\Blameable
             - "@knp.doctrine_behaviors.blameable_subscriber.user_callable"
             - "%knp.doctrine_behaviors.blameable_subscriber.user_entity%"
-        tags:
-            - { name: doctrine.event_subscriber }
 
     knp.doctrine_behaviors.blameable_subscriber.user_callable:
         class:           Knp\DoctrineBehaviors\ORM\Blameable\UserCallable
@@ -92,8 +84,6 @@ services:
             - "@knp.doctrine_behaviors.reflection.class_analyzer"
             - "%knp.doctrine_behaviors.reflection.is_recursive%"
             - "@knp.doctrine_behaviors.loggable_subscriber.logger_callable"
-        tags:
-            - { name: doctrine.event_subscriber }
 
     knp.doctrine_behaviors.loggable_subscriber.logger_callable:
         class:           Knp\DoctrineBehaviors\ORM\Loggable\LoggerCallable
@@ -107,8 +97,6 @@ services:
             - "%knp.doctrine_behaviors.reflection.is_recursive%"
             - Knp\DoctrineBehaviors\Model\Geocodable\Geocodable
             - "@?knp.doctrine_behaviors.geocodable_callable"
-        tags:
-            - { name: doctrine.event_subscriber }
 
     knp.doctrine_behaviors.sluggable_subscriber:
         class: Knp\DoctrineBehaviors\ORM\Sluggable\SluggableSubscriber
@@ -117,6 +105,4 @@ services:
             - "@knp.doctrine_behaviors.reflection.class_analyzer"
             - "%knp.doctrine_behaviors.reflection.is_recursive%"
             - Knp\DoctrineBehaviors\Model\Sluggable\Sluggable
-        tags:
-            - { name: doctrine.event_subscriber }
 
