@@ -1,4 +1,7 @@
 <?php
+
+declare(strict_types=1);
+
 /**
  * @author Lusitanian
  * Freely released with no restrictions, re-license however you'd like!
@@ -53,7 +56,7 @@ trait SluggableMethods
 
         return $this;
     }
-    
+
     /**
      * Returns the entity's slug.
      *
@@ -71,7 +74,7 @@ trait SluggableMethods
     private function generateSlugValue($values)
     {
         $usableValues = [];
-        foreach ($values as $fieldName => $fieldValue) {
+        foreach ($values as $fieldValue) {
             if (!empty($fieldValue)) {
                 $usableValues[] = $fieldValue;
             }
@@ -79,28 +82,26 @@ trait SluggableMethods
 
         if (count($usableValues) < 1) {
             throw new \UnexpectedValueException(
-                'Sluggable expects to have at least one usable (non-empty) field from the following: [ ' . implode(array_keys($values), ',') .' ]'
+                'Sluggable expects to have at least one usable (non-empty) field from the following: [ ' . implode(array_keys($values), ',') . ' ]'
             );
         }
 
         // generate the slug itself
         $sluggableText = implode(' ', $usableValues);
 
-        $transliterator = new Transliterator;
+        $transliterator = new Transliterator();
         $sluggableText = $transliterator->transliterate($sluggableText, $this->getSlugDelimiter());
 
-        $urlized = strtolower( trim( preg_replace("/[^a-zA-Z0-9\/_|+ -]/", '', $sluggableText ), $this->getSlugDelimiter() ) );
-        $urlized = preg_replace("/[\/_|+ -]+/", $this->getSlugDelimiter(), $urlized);
-
-        return $urlized;
+        $urlized = strtolower(trim(preg_replace("/[^a-zA-Z0-9\/_|+ -]/", '', $sluggableText), $this->getSlugDelimiter()));
+        return preg_replace("/[\/_|+ -]+/", $this->getSlugDelimiter(), $urlized);
     }
 
     /**
      * Generates and sets the entity's slug. Called prePersist and preUpdate
      */
-    public function generateSlug()
+    public function generateSlug(): void
     {
-        if ( $this->getRegenerateSlugOnUpdate() || empty( $this->slug ) ) {
+        if ($this->getRegenerateSlugOnUpdate() || empty($this->slug)) {
             $fields = $this->getSluggableFields();
             $values = [];
 

@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 /*
  * This file is part of the KnpDoctrineBehaviors package.
  *
@@ -11,13 +13,13 @@
 
 namespace Knp\DoctrineBehaviors\ORM\Sortable;
 
-use Knp\DoctrineBehaviors\Reflection\ClassAnalyzer;
+use Doctrine\ORM\Event\LoadClassMetadataEventArgs;
 
-use Knp\DoctrineBehaviors\ORM\AbstractSubscriber;
+use Doctrine\ORM\Events;
 
-use Doctrine\ORM\Event\LoadClassMetadataEventArgs,
-    Doctrine\ORM\Events,
-    Doctrine\ORM\Mapping\ClassMetadata;
+use Doctrine\ORM\Mapping\ClassMetadata,
+    Knp\DoctrineBehaviors\ORM\AbstractSubscriber,
+    Knp\DoctrineBehaviors\Reflection\ClassAnalyzer;
 
 /**
  * Sortable subscriber.
@@ -35,7 +37,7 @@ class SortableSubscriber extends AbstractSubscriber
         $this->sortableTrait = $sortableTrait;
     }
 
-    public function loadClassMetadata(LoadClassMetadataEventArgs $eventArgs)
+    public function loadClassMetadata(LoadClassMetadataEventArgs $eventArgs): void
     {
         $classMetadata = $eventArgs->getClassMetadata();
 
@@ -44,12 +46,11 @@ class SortableSubscriber extends AbstractSubscriber
         }
 
         if ($this->isSortable($classMetadata)) {
-
             if (!$classMetadata->hasField('sort')) {
-                $classMetadata->mapField(array(
+                $classMetadata->mapField([
                     'fieldName' => 'sort',
-                    'type'      => 'integer'
-                ));
+                    'type' => 'integer'
+                ]);
             }
         }
     }

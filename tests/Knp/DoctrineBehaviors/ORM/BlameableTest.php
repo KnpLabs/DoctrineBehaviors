@@ -1,9 +1,11 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Tests\Knp\DoctrineBehaviors\ORM;
 
-use Knp\DoctrineBehaviors\Reflection\ClassAnalyzer;
 use Doctrine\Common\EventManager;
+use Knp\DoctrineBehaviors\Reflection\ClassAnalyzer;
 
 require_once 'EntityManagerProvider.php';
 
@@ -23,7 +25,7 @@ class BlameableTest extends \PHPUnit_Framework_TestCase
 
     protected function getEventManager($user = null, $userCallback = null, $userEntity = null)
     {
-        $em = new EventManager;
+        $em = new EventManager();
 
         $this->subscriber = new \Knp\DoctrineBehaviors\ORM\Blameable\BlameableSubscriber(
             new ClassAnalyzer(),
@@ -39,7 +41,7 @@ class BlameableTest extends \PHPUnit_Framework_TestCase
         return $em;
     }
 
-    public function testCreate()
+    public function testCreate(): void
     {
         $em = $this->getEntityManager($this->getEventManager('user'));
 
@@ -53,7 +55,7 @@ class BlameableTest extends \PHPUnit_Framework_TestCase
         $this->assertNull($entity->getDeletedBy());
     }
 
-    public function testUpdate()
+    public function testUpdate(): void
     {
         $em = $this->getEntityManager($this->getEventManager('user'));
 
@@ -85,7 +87,7 @@ class BlameableTest extends \PHPUnit_Framework_TestCase
         );
     }
 
-    public function testRemove()
+    public function testRemove(): void
     {
         $em = $this->getEntityManager($this->getEventManager('user'));
 
@@ -108,7 +110,7 @@ class BlameableTest extends \PHPUnit_Framework_TestCase
         $this->assertEquals('user3', $entity->getDeletedBy());
     }
 
-    public function testSubscriberWithUserCallback()
+    public function testSubscriberWithUserCallback(): void
     {
         $user = new \BehaviorFixtures\ORM\UserEntity();
         $user->setUsername('user');
@@ -116,7 +118,7 @@ class BlameableTest extends \PHPUnit_Framework_TestCase
         $user2 = new \BehaviorFixtures\ORM\UserEntity();
         $user2->setUsername('user2');
 
-        $userCallback = function() use($user) {
+        $userCallback = function () use ($user) {
             return $user;
         };
 
@@ -152,12 +154,12 @@ class BlameableTest extends \PHPUnit_Framework_TestCase
     /**
      * @test
      */
-    public function should_only_persist_user_entity()
+    public function should_only_persist_user_entity(): void
     {
         $user = new \BehaviorFixtures\ORM\UserEntity();
         $user->setUsername('user');
 
-        $userCallback = function() use($user) {
+        $userCallback = function () use ($user) {
             return $user;
         };
 
@@ -177,10 +179,10 @@ class BlameableTest extends \PHPUnit_Framework_TestCase
     /**
      * @test
      */
-    public function should_only_persist_user_string()
+    public function should_only_persist_user_string(): void
     {
         $user = new \BehaviorFixtures\ORM\UserEntity();
-        $em   = $this->getEntityManager($this->getEventManager($user));
+        $em = $this->getEntityManager($this->getEventManager($user));
 
         $entity = new \BehaviorFixtures\ORM\BlameableEntity();
 

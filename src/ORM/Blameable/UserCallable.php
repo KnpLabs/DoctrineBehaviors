@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 /**
  * This file is part of the KnpDoctrineBehaviors package.
  *
@@ -24,7 +26,7 @@ class UserCallable
     private $container;
 
     /**
-     * @param callable
+     * @param callable $container
      * @param string $userEntity
      */
     public function __construct(Container $container)

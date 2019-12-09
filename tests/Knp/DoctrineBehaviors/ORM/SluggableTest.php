@@ -1,9 +1,11 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Tests\Knp\DoctrineBehaviors\ORM;
 
-use Knp\DoctrineBehaviors\Reflection\ClassAnalyzer;
 use Doctrine\Common\EventManager;
+use Knp\DoctrineBehaviors\Reflection\ClassAnalyzer;
 
 require_once 'EntityManagerProvider.php';
 
@@ -20,19 +22,20 @@ class SluggableTest extends \PHPUnit_Framework_TestCase
 
     protected function getEventManager()
     {
-        $em = new EventManager;
+        $em = new EventManager();
 
         $em->addEventSubscriber(
             new \Knp\DoctrineBehaviors\ORM\Sluggable\SluggableSubscriber(
                 new ClassAnalyzer(),
                 false,
                 'Knp\DoctrineBehaviors\Model\Sluggable\Sluggable'
-        ));
+            )
+        );
 
         return $em;
     }
 
-    public function testSlugLoading()
+    public function testSlugLoading(): void
     {
         $em = $this->getEntityManager();
 
@@ -55,7 +58,7 @@ class SluggableTest extends \PHPUnit_Framework_TestCase
         $this->assertEquals($expected, $entity->getSlug());
     }
 
-    public function testNotUpdatedSlug()
+    public function testNotUpdatedSlug(): void
     {
         $em = $this->getEntityManager();
 
@@ -90,7 +93,7 @@ class SluggableTest extends \PHPUnit_Framework_TestCase
             $em->persist($entity);
             $em->flush();
 
-            $entity->setDate(new \DateTime);
+            $entity->setDate(new \DateTime());
 
             $em->persist($entity);
             $em->flush();
@@ -99,7 +102,7 @@ class SluggableTest extends \PHPUnit_Framework_TestCase
         }
     }
 
-    public function testUpdatedSlug()
+    public function testUpdatedSlug(): void
     {
         $em = $this->getEntityManager();
 

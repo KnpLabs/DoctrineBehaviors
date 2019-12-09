@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 /**
  * This file is part of the KnpDoctrineBehaviors package.
  *
@@ -19,7 +21,7 @@ namespace Knp\DoctrineBehaviors\Model\Blameable;
 trait BlameableMethods
 {
     /**
-     * @param mixed the user representation
+     * @param mixed $user the user representation
      * @return $this
      */
     public function setCreatedBy($user)
@@ -30,7 +32,7 @@ trait BlameableMethods
     }
 
     /**
-     * @param mixed the user representation
+     * @param mixed $user the user representation
      * @return $this
      */
     public function setUpdatedBy($user)
@@ -41,7 +43,7 @@ trait BlameableMethods
     }
 
     /**
-     * @param mixed the user representation
+     * @param mixed $user the user representation
      * @return $this
      */
     public function setDeletedBy($user)

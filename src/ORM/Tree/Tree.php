@@ -1,9 +1,11 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Knp\DoctrineBehaviors\ORM\Tree;
 
-use Knp\DoctrineBehaviors\Model\Tree\NodeInterface;
 use Doctrine\ORM\QueryBuilder;
+use Knp\DoctrineBehaviors\Model\Tree\NodeInterface;
 
 trait Tree
 {
@@ -17,7 +19,7 @@ trait Tree
     public function getRootNodesQB($rootAlias = 't')
     {
         return $this->createQueryBuilder($rootAlias)
-            ->andWhere($rootAlias.'.materializedPath = :empty')
+            ->andWhere($rootAlias . '.materializedPath = :empty')
             ->setParameter('empty', '')
         ;
     }
@@ -51,7 +53,7 @@ trait Tree
      *
      * @return NodeInterface a node
      */
-    public function getTree($path = '', $rootAlias = 't', $extraParams = array())
+    public function getTree($path = '', $rootAlias = 't', $extraParams = [])
     {
         $results = $this->getFlatTree($path, $rootAlias, $extraParams);
 
@@ -61,9 +63,9 @@ trait Tree
     public function getTreeExceptNodeAndItsChildrenQB(NodeInterface $entity, $rootAlias = 't')
     {
         return $this->getFlatTreeQB('', $rootAlias)
-            ->andWhere($rootAlias.'.materializedPath NOT LIKE :except_path')
-            ->andWhere($rootAlias.'.id != :id')
-            ->setParameter('except_path', $entity->getRealMaterializedPath().'%')
+            ->andWhere($rootAlias . '.materializedPath NOT LIKE :except_path')
+            ->andWhere($rootAlias . '.id != :id')
+            ->setParameter('except_path', $entity->getRealMaterializedPath() . '%')
             ->setParameter('id', $entity->getId())
         ;
     }
@@ -96,18 +98,18 @@ trait Tree
      *
      * @return QueryBuilder
      */
-    public function getFlatTreeQB($path = '', $rootAlias = 't', $extraParams = array())
+    public function getFlatTreeQB($path = '', $rootAlias = 't', $extraParams = [])
     {
         $qb = $this->createQueryBuilder($rootAlias)
-            ->andWhere($rootAlias.'.materializedPath LIKE :path')
-            ->addOrderBy($rootAlias.'.materializedPath', 'ASC')
-            ->setParameter('path', $path.'%')
+            ->andWhere($rootAlias . '.materializedPath LIKE :path')
+            ->addOrderBy($rootAlias . '.materializedPath', 'ASC')
+            ->setParameter('path', $path . '%')
         ;
 
         $parentId = basename($path);
         if ($parentId) {
             $qb
-                ->orWhere($rootAlias.'.id = :parent')
+                ->orWhere($rootAlias . '.id = :parent')
                 ->setParameter('parent', $parentId)
             ;
         }
@@ -124,20 +126,20 @@ trait Tree
      * @param QueryBuilder $qb
      * @param array        $extraParams
      */
-    protected function addFlatTreeConditions(QueryBuilder $qb, $extraParams)
+    protected function addFlatTreeConditions(QueryBuilder $qb, $extraParams): void
     {
     }
 
     /**
      * Executes the flat tree query builder
-     * 
+     *
      * @param string $path
      * @param string $rootAlias
      * @param array  $extraParams To be used in addFlatTreeConditions
      *
      * @return array the flat resultset
      */
-    public function getFlatTree($path, $rootAlias = 't', $extraParams = array())
+    public function getFlatTree($path, $rootAlias = 't', $extraParams = [])
     {
         return $this
             ->getFlatTreeQB($path, $rootAlias, $extraParams)

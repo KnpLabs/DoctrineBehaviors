@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace BehaviorFixtures\ORM;
 
 use Doctrine\ORM\Mapping as ORM;
@@ -49,9 +51,9 @@ class FilterableEntity
     /**
      * Set name.
      *
-     * @param name the value to set.
+     * @param the $name value to set.
      */
-    public function setName($name)
+    public function setName($name): void
     {
         $this->name = $name;
     }
@@ -69,9 +71,9 @@ class FilterableEntity
     /**
      * Set code.
      *
-     * @param integer code the value to set.
+     * @param integer $code the value to set.
      */
-    public function setCode($code)
+    public function setCode($code): void
     {
         $this->code = $code;
     }

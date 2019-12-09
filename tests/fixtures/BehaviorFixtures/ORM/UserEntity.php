@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace BehaviorFixtures\ORM;
 
 use Doctrine\ORM\Mapping as ORM;
@@ -21,12 +23,17 @@ class UserEntity
      */
     private $username;
 
+    public function getId()
+    {
+        return $this->id;
+    }
+
     public function getUsername()
     {
         return $this->username;
     }
 
-    public function setUsername($username)
+    public function setUsername($username): void
     {
         $this->username = $username;
     }

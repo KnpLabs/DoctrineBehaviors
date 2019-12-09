@@ -32,7 +32,7 @@ jobs:
         -
             <<: *POSTGRES_JOB
             php: '7.2'
-            install: 
+            install:
                 - composer update --prefer-lowest
 
         # MySQL
@@ -59,7 +59,7 @@ jobs:
         -
             <<: *MYSQL_JOB
             php: '7.2'
-            install: 
+            install:
                 - composer update --prefer-lowest
 
         -

@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 /*
  * This file is part of the KnpDoctrineBehaviors package.
  *
@@ -34,7 +36,8 @@ trait TranslationMethods
      *
      * @return mixed
      */
-    public function getId() {
+    public function getId()
+    {
         return $this->id;
     }
 

@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Knp\DoctrineBehaviors\ORM\Geocodable\Type;
 
 /**
@@ -18,7 +20,7 @@ class Point
      */
     public function __construct($latitude, $longitude)
     {
-        $this->latitude  = $latitude;
+        $this->latitude = $latitude;
         $this->longitude = $longitude;
     }
 

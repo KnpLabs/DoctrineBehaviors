@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 /**
  * This file is part of the KnpDoctrineBehaviors package.
  *
@@ -10,8 +12,6 @@
  */
 
 namespace Knp\DoctrineBehaviors\Model\Geocodable;
-
-use Knp\DoctrineBehaviors\ORM\Geocodable\Type\Point;
 
 /**
  * Geocodable trait.

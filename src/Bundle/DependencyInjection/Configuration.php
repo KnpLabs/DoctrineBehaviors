@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Knp\DoctrineBehaviors\Bundle\DependencyInjection;
 
 use Symfony\Component\Config\Definition\Builder\TreeBuilder;
@@ -23,15 +25,15 @@ class Configuration implements ConfigurationInterface
                 ->always(function (array $config) {
                     if (empty($config)) {
                         return [
-                            'blameable'      => true,
-                            'geocodable'     => true,
-                            'loggable'       => true,
-                            'sluggable'      => true,
+                            'blameable' => true,
+                            'geocodable' => true,
+                            'loggable' => true,
+                            'sluggable' => true,
                             'soft_deletable' => true,
-                            'sortable'       => true,
-                            'timestampable'  => true,
-                            'translatable'   => true,
-                            'tree'           => true,
+                            'sortable' => true,
+                            'timestampable' => true,
+                            'translatable' => true,
+                            'tree' => true,
                         ];
                     }
 

@@ -1,14 +1,16 @@
 <?php
 
+declare(strict_types=1);
+
 namespace tests\Knp\DoctrineBehaviors\ORM;
 
+use Doctrine\Common\EventManager;
 use Doctrine\ORM\Configuration;
-use Doctrine\ORM\Mapping\Driver\AnnotationDriver;
 use Doctrine\ORM\EntityManager;
+use Doctrine\ORM\Mapping\DefaultQuoteStrategy;
+use Doctrine\ORM\Mapping\Driver\AnnotationDriver;
 use Doctrine\ORM\Repository\DefaultRepositoryFactory;
 use Doctrine\ORM\Tools\SchemaTool;
-use Doctrine\Common\EventManager;
-use Doctrine\ORM\Mapping\DefaultQuoteStrategy;
 
 trait EntityManagerProvider
 {
@@ -24,16 +26,16 @@ trait EntityManagerProvider
      * @param  EventManager  $evm
      * @return EntityManager
      */
-    protected function getEntityManager(EventManager $evm = null, Configuration $config = null, array $conn = [])
+    protected function getEntityManager(?EventManager $evm = null, ?Configuration $config = null, array $conn = [])
     {
         if (null !== $this->em) {
             return $this->em;
         }
 
-        $conn = array_merge(array(
+        $conn = array_merge([
             'driver' => 'pdo_sqlite',
             'memory' => true,
-        ), $conn);
+        ], $conn);
 
         $config = is_null($config) ? $this->getAnnotatedConfig() : $config;
         $em = EntityManager::create($conn, $config, $evm ?: $this->getEventManager());
@@ -99,7 +101,7 @@ trait EntityManagerProvider
         $refl = new \ReflectionClass($configurationClass);
         $methods = $refl->getMethods();
 
-        $mockMethods = array();
+        $mockMethods = [];
 
         foreach ($methods as $method) {
             if (!in_array($method->name, ['addFilter', 'getFilterClassName', 'addCustomNumericFunction', 'getCustomNumericFunction'])) {
@@ -151,7 +153,7 @@ trait EntityManagerProvider
             $config
                 ->expects($this->any())
                 ->method('getQuoteStrategy')
-                ->will($this->returnValue(new DefaultQuoteStrategy))
+                ->will($this->returnValue(new DefaultQuoteStrategy()))
             ;
         }
 
@@ -189,6 +191,6 @@ trait EntityManagerProvider
      */
     protected function getEventManager()
     {
-        return new EventManager;
+        return new EventManager();
     }
 }

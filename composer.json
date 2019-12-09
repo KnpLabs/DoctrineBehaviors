@@ -21,14 +21,20 @@
         "ext-pdo_pgsql": "*",
         "doctrine/orm": "^2.6",
         "phpunit/phpunit": "^8.4",
-        "jakub-onderka/php-parallel-lint": "^1.0"
-    },
-    "suggest": {
-        "symfony/framework-bundle": "To be able to use it as a bundle"
+        "jakub-onderka/php-parallel-lint": "^1.0",
+        "symplify/easy-coding-standard": "^7.1"
     },
     "autoload": {
         "psr-4": {
             "Knp\\DoctrineBehaviors\\": "src"
         }
+    },
+    "suggest": {
+        "symfony/framework-bundle": "To be able to use it as a bundle"
+    },
+    "scripts": {
+        "check-cs": "ecs check src tests --ansi",
+        "fix-cs": "ecs check src tests --fix --ansi",
+        "phpstan": "phpstan analyse src tests --ansi"
     }
 }

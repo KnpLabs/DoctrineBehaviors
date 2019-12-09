@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace BehaviorFixtures\ORM;
 
 use Doctrine\ORM\Mapping as ORM;
@@ -17,11 +19,13 @@ class GeocodableEntity
      * @ORM\Id
      * @ORM\Column(type="integer")
      * @ORM\GeneratedValue(strategy="AUTO")
+     * @var int
      */
     private $id;
 
     /**
      * @ORM\Column(type="string", nullable=true)
+     * @var string|null
      */
     private $title;
 
@@ -30,32 +34,17 @@ class GeocodableEntity
         $this->setLocation(new Point($latitude, $longitude));
     }
 
-    /**
-     * Returns object id.
-     *
-     * @return integer
-     */
-    public function getId()
+    public function getId(): int
     {
         return $this->id;
     }
 
-    /**
-     * Get title.
-     *
-     * @return title.
-     */
-    public function getTitle()
+    public function getTitle(): ?string
     {
         return $this->title;
     }
 
-    /**
-     * Set title.
-     *
-     * @param title the value to set.
-     */
-    public function setTitle($title)
+    public function setTitle(string $title): void
     {
         $this->title = $title;
     }

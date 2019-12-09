@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 /*
  * This file is part of the KnpDoctrineBehaviors package.
  *
@@ -11,15 +13,13 @@
 
 namespace Knp\DoctrineBehaviors\ORM\SoftDeletable;
 
-use Knp\DoctrineBehaviors\Reflection\ClassAnalyzer;
-
-use Knp\DoctrineBehaviors\ORM\AbstractSubscriber;
+use Doctrine\Common\Persistence\Mapping\ClassMetadata;
 
 use Doctrine\ORM\Event\LoadClassMetadataEventArgs,
-    Doctrine\Common\Persistence\Mapping\ClassMetadata,
-    Doctrine\Common\EventSubscriber,
     Doctrine\ORM\Event\OnFlushEventArgs,
-    Doctrine\ORM\Events;
+    Doctrine\ORM\Events,
+    Knp\DoctrineBehaviors\ORM\AbstractSubscriber,
+    Knp\DoctrineBehaviors\Reflection\ClassAnalyzer;
 
 /**
  * SoftDeletable Doctrine2 subscriber.
@@ -43,9 +43,9 @@ class SoftDeletableSubscriber extends AbstractSubscriber
      *
      * @param OnFlushEventArgs $args The event arguments
      */
-    public function onFlush(OnFlushEventArgs $args)
+    public function onFlush(OnFlushEventArgs $args): void
     {
-        $em  = $args->getEntityManager();
+        $em = $args->getEntityManager();
         $uow = $em->getUnitOfWork();
 
         foreach ($uow->getScheduledEntityDeletions() as $entity) {
@@ -86,7 +86,7 @@ class SoftDeletableSubscriber extends AbstractSubscriber
         return [Events::onFlush, Events::loadClassMetadata];
     }
 
-    public function loadClassMetadata(LoadClassMetadataEventArgs $eventArgs)
+    public function loadClassMetadata(LoadClassMetadataEventArgs $eventArgs): void
     {
         $classMetadata = $eventArgs->getClassMetadata();
 
@@ -95,13 +95,12 @@ class SoftDeletableSubscriber extends AbstractSubscriber
         }
 
         if ($this->isSoftDeletable($classMetadata)) {
-
             if (!$classMetadata->hasField('deletedAt')) {
-                $classMetadata->mapField(array(
+                $classMetadata->mapField([
                     'fieldName' => 'deletedAt',
-                    'type'      => 'datetime',
-                    'nullable'  => true
-                ));
+                    'type' => 'datetime',
+                    'nullable' => true
+                ]);
             }
         }
     }

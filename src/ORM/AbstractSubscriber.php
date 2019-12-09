@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 /**
  * This file is part of the KnpDoctrineBehaviors package.
  *
@@ -22,7 +24,7 @@ abstract class AbstractSubscriber implements EventSubscriber
     public function __construct(ClassAnalyzer $classAnalyser, $isRecursive)
     {
         $this->classAnalyser = $classAnalyser;
-        $this->isRecursive   = (bool) $isRecursive;
+        $this->isRecursive = (bool) $isRecursive;
     }
 
     protected function getClassAnalyzer()

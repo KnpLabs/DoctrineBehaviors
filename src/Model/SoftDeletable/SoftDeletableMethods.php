@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 /*
  * This file is part of the KnpDoctrineBehaviors package.
  *
@@ -21,7 +23,7 @@ trait SoftDeletableMethods
     /**
      * Marks entity as deleted.
      */
-    public function delete()
+    public function delete(): void
     {
         $this->deletedAt = $this->currentDateTime();
     }
@@ -29,7 +31,7 @@ trait SoftDeletableMethods
     /**
      * Restore entity by undeleting it
      */
-    public function restore()
+    public function restore(): void
     {
         $this->deletedAt = null;
     }
@@ -53,14 +55,12 @@ trait SoftDeletableMethods
      *
      * @return Boolean
      */
-    public function willBeDeleted(\DateTime $at = null)
+    public function willBeDeleted(?\DateTime $at = null)
     {
         if ($this->deletedAt === null) {
-
             return false;
         }
         if ($at === null) {
-
             return true;
         }
 

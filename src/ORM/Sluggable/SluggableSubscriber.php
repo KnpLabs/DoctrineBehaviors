@@ -1,4 +1,7 @@
 <?php
+
+declare(strict_types=1);
+
 /**
  * @author Lusitanian
  * Freely released with no restrictions, re-license however you'd like!
@@ -7,14 +10,13 @@
 namespace Knp\DoctrineBehaviors\ORM\Sluggable;
 
 use Doctrine\ORM\Event\LifecycleEventArgs;
-use Knp\DoctrineBehaviors\Reflection\ClassAnalyzer;
 
-use Knp\DoctrineBehaviors\ORM\AbstractSubscriber;
+use Doctrine\ORM\Event\LoadClassMetadataEventArgs;
 
-use Doctrine\ORM\Event\LoadClassMetadataEventArgs,
-    Doctrine\Common\EventSubscriber,
-    Doctrine\ORM\Events,
-    Doctrine\ORM\Mapping\ClassMetadata;
+use Doctrine\ORM\Events,
+    Doctrine\ORM\Mapping\ClassMetadata,
+    Knp\DoctrineBehaviors\ORM\AbstractSubscriber,
+    Knp\DoctrineBehaviors\Reflection\ClassAnalyzer;
 
 /**
  * Sluggable subscriber.
@@ -32,7 +34,7 @@ class SluggableSubscriber extends AbstractSubscriber
         $this->sluggableTrait = $sluggableTrait;
     }
 
-    public function loadClassMetadata(LoadClassMetadataEventArgs $eventArgs)
+    public function loadClassMetadata(LoadClassMetadataEventArgs $eventArgs): void
     {
         $classMetadata = $eventArgs->getClassMetadata();
 
@@ -42,16 +44,16 @@ class SluggableSubscriber extends AbstractSubscriber
 
         if ($this->isSluggable($classMetadata)) {
             if (!$classMetadata->hasField('slug')) {
-                $classMetadata->mapField(array(
+                $classMetadata->mapField([
                     'fieldName' => 'slug',
-                    'type'      => 'string',
-                    'nullable'  => true
-                ));
+                    'type' => 'string',
+                    'nullable' => true
+                ]);
             }
         }
     }
 
-    public function prePersist(LifecycleEventArgs $eventArgs)
+    public function prePersist(LifecycleEventArgs $eventArgs): void
     {
         $entity = $eventArgs->getEntity();
         $em = $eventArgs->getEntityManager();
@@ -62,7 +64,7 @@ class SluggableSubscriber extends AbstractSubscriber
         }
     }
 
-    public function preUpdate(LifecycleEventArgs $eventArgs)
+    public function preUpdate(LifecycleEventArgs $eventArgs): void
     {
         $entity = $eventArgs->getEntity();
         $em = $eventArgs->getEntityManager();

@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 /**
  * This file is part of the KnpDoctrineBehaviors package.
  *
@@ -31,7 +33,7 @@ class LoggerCallable
         $this->logger = $logger;
     }
 
-    public function __invoke($message)
+    public function __invoke($message): void
     {
         $this->logger->debug($message);
     }

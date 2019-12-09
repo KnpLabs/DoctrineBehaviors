@@ -1,10 +1,12 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Tests\Knp\DoctrineBehaviors\ORM;
 
-use Knp\DoctrineBehaviors\Reflection\ClassAnalyzer;
 use Doctrine\Common\EventManager;
 use Doctrine\ORM\Mapping\ClassMetadataInfo;
+use Knp\DoctrineBehaviors\Reflection\ClassAnalyzer;
 
 require_once 'EntityManagerProvider.php';
 
@@ -22,16 +24,14 @@ class TranslatableTest extends \PHPUnit_Framework_TestCase
 
     protected function getEventManager()
     {
-        $em = new EventManager;
+        $em = new EventManager();
 
         $em->addEventSubscriber(new \Knp\DoctrineBehaviors\ORM\Translatable\TranslatableSubscriber(
             new ClassAnalyzer(),
-            function()
-            {
+            function () {
                 return 'en';
             },
-            function()
-            {
+            function () {
                 return 'en';
             },
             'Knp\DoctrineBehaviors\Model\Translatable\Translatable',
@@ -46,7 +46,7 @@ class TranslatableTest extends \PHPUnit_Framework_TestCase
     /**
      * @test
      */
-    public function should_persist_translations()
+    public function should_persist_translations(): void
     {
         $em = $this->getEntityManager();
 
@@ -85,7 +85,7 @@ class TranslatableTest extends \PHPUnit_Framework_TestCase
     /**
      * @test
      */
-    public function should_fallback_country_locale_to_language_only_translation()
+    public function should_fallback_country_locale_to_language_only_translation(): void
     {
         $em = $this->getEntityManager();
 
@@ -124,7 +124,7 @@ class TranslatableTest extends \PHPUnit_Framework_TestCase
     /**
      * @test
      */
-    public function should_update_and_add_new_translations()
+    public function should_update_and_add_new_translations(): void
     {
         $em = $this->getEntityManager();
 
@@ -185,9 +185,9 @@ class TranslatableTest extends \PHPUnit_Framework_TestCase
     /**
      * @test
      */
-    public function translate_method_should_always_return_translation_object()
+    public function translate_method_should_always_return_translation_object(): void
     {
-        $em = $this->getEntityManager();
+        $this->getEntityManager();
 
         $entity = new \BehaviorFixtures\ORM\TranslatableEntity();
 
@@ -200,7 +200,7 @@ class TranslatableTest extends \PHPUnit_Framework_TestCase
     /**
      * @test
      */
-    public function subscriber_should_configure_entity_with_current_locale()
+    public function subscriber_should_configure_entity_with_current_locale(): void
     {
         $em = $this->getEntityManager();
 
@@ -222,7 +222,7 @@ class TranslatableTest extends \PHPUnit_Framework_TestCase
     /**
      * @test
      */
-    public function subscriber_should_configure_entity_with_default_locale()
+    public function subscriber_should_configure_entity_with_default_locale(): void
     {
         $em = $this->getEntityManager();
 
@@ -245,7 +245,7 @@ class TranslatableTest extends \PHPUnit_Framework_TestCase
     /**
      * @test
      */
-    public function should_have_oneToMany_relation()
+    public function should_have_oneToMany_relation(): void
     {
         $this->assertTranslationsOneToManyMapped(
             'BehaviorFixtures\ORM\TranslatableEntity',
@@ -256,7 +256,7 @@ class TranslatableTest extends \PHPUnit_Framework_TestCase
     /**
      * @test
      */
-    public function should_have_oneToMany_relation_when_translation_class_name_is_custom()
+    public function should_have_oneToMany_relation_when_translation_class_name_is_custom(): void
     {
         $this->assertTranslationsOneToManyMapped(
             'BehaviorFixtures\ORM\TranslatableCustomizedEntity',
@@ -267,9 +267,9 @@ class TranslatableTest extends \PHPUnit_Framework_TestCase
     /**
      * @test
      */
-    public function should_create_only_one_time_the_same_translation()
+    public function should_create_only_one_time_the_same_translation(): void
     {
-        $em = $this->getEntityManager();
+        $this->getEntityManager();
 
         $entity = new \BehaviorFixtures\ORM\TranslatableEntity();
         $translation = $entity->translate('fr');
@@ -284,7 +284,7 @@ class TranslatableTest extends \PHPUnit_Framework_TestCase
     /**
      * @test
      */
-    public function should_remove_translation()
+    public function should_remove_translation(): void
     {
         $em = $this->getEntityManager();
 
@@ -309,7 +309,7 @@ class TranslatableTest extends \PHPUnit_Framework_TestCase
      * @param string $translatableClass The class name of the translatable entity
      * @param string $translationClass  The class name of the translation entity
      */
-    private function assertTranslationsOneToManyMapped($translatableClass, $translationClass)
+    private function assertTranslationsOneToManyMapped($translatableClass, $translationClass): void
     {
         $em = $this->getEntityManager();
 

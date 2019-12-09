@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 /**
  * This file is part of the KnpDoctrineBehaviors package.
  *
@@ -11,17 +13,14 @@
 
 namespace Knp\DoctrineBehaviors\ORM\Blameable;
 
-use Knp\DoctrineBehaviors\Reflection\ClassAnalyzer;
-
-use Knp\DoctrineBehaviors\ORM\AbstractSubscriber;
-
 use Doctrine\Common\Persistence\Mapping\ClassMetadata;
-use Doctrine\ORM\Event\LoadClassMetadataEventArgs;
-use Doctrine\ORM\Event\LifecycleEventArgs;
 
-use Doctrine\Common\EventSubscriber,
-    Doctrine\ORM\Event\OnFlushEventArgs,
-    Doctrine\ORM\Events;
+use Doctrine\ORM\Event\LifecycleEventArgs;
+use Doctrine\ORM\Event\LoadClassMetadataEventArgs;
+
+use Doctrine\ORM\Events,
+    Knp\DoctrineBehaviors\ORM\AbstractSubscriber,
+    Knp\DoctrineBehaviors\Reflection\ClassAnalyzer;
 
 /**
  * BlameableSubscriber handle Blameable entites
@@ -48,10 +47,10 @@ class BlameableSubscriber extends AbstractSubscriber
     private $blameableTrait;
 
     /**
-     * @param callable
+     * @param callable $classAnalyzer
      * @param string $userEntity
      */
-    public function __construct(ClassAnalyzer $classAnalyzer, $isRecursive, $blameableTrait, callable $userCallable = null, $userEntity = null)
+    public function __construct(ClassAnalyzer $classAnalyzer, $isRecursive, $blameableTrait, ?callable $userCallable = null, $userEntity = null)
     {
         parent::__construct($classAnalyzer, $isRecursive);
 
@@ -65,7 +64,7 @@ class BlameableSubscriber extends AbstractSubscriber
      *
      * @param LoadClassMetadataEventArgs $eventArgs
      */
-    public function loadClassMetadata(LoadClassMetadataEventArgs $eventArgs)
+    public function loadClassMetadata(LoadClassMetadataEventArgs $eventArgs): void
     {
         $classMetadata = $eventArgs->getClassMetadata();
 
@@ -78,7 +77,7 @@ class BlameableSubscriber extends AbstractSubscriber
         }
     }
 
-    private function mapEntity(ClassMetadata $classMetadata)
+    private function mapEntity(ClassMetadata $classMetadata): void
     {
         if ($this->userEntity) {
             $this->mapManyToOneUser($classMetadata);
@@ -87,60 +86,60 @@ class BlameableSubscriber extends AbstractSubscriber
         }
     }
 
-    private function mapStringUser(ClassMetadata $classMetadata)
+    private function mapStringUser(ClassMetadata $classMetadata): void
     {
         if (!$classMetadata->hasField('createdBy')) {
             $classMetadata->mapField([
-                'fieldName'  => 'createdBy',
-                'type'       => 'string',
-                'nullable'   => true,
+                'fieldName' => 'createdBy',
+                'type' => 'string',
+                'nullable' => true,
             ]);
         }
 
         if (!$classMetadata->hasField('updatedBy')) {
             $classMetadata->mapField([
-                'fieldName'  => 'updatedBy',
-                'type'       => 'string',
-                'nullable'   => true,
+                'fieldName' => 'updatedBy',
+                'type' => 'string',
+                'nullable' => true,
             ]);
         }
 
         if (!$classMetadata->hasField('deletedBy')) {
             $classMetadata->mapField([
-                'fieldName'  => 'deletedBy',
-                'type'       => 'string',
-                'nullable'   => true,
+                'fieldName' => 'deletedBy',
+                'type' => 'string',
+                'nullable' => true,
             ]);
         }
     }
 
-    private function mapManyToOneUser(classMetadata $classMetadata)
+    private function mapManyToOneUser(classMetadata $classMetadata): void
     {
         if (!$classMetadata->hasAssociation('createdBy')) {
             $classMetadata->mapManyToOne([
-                'fieldName'    => 'createdBy',
+                'fieldName' => 'createdBy',
                 'targetEntity' => $this->userEntity,
-                'joinColumns'  => array(array(
-                    'onDelete'             => 'SET NULL'
-                ))
+                'joinColumns' => [[
+                    'onDelete' => 'SET NULL'
+                ]]
             ]);
         }
         if (!$classMetadata->hasAssociation('updatedBy')) {
             $classMetadata->mapManyToOne([
-                'fieldName'    => 'updatedBy',
+                'fieldName' => 'updatedBy',
                 'targetEntity' => $this->userEntity,
-                'joinColumns'  => array(array(
-                    'onDelete'             => 'SET NULL'
-                ))
+                'joinColumns' => [[
+                    'onDelete' => 'SET NULL'
+                ]]
             ]);
         }
         if (!$classMetadata->hasAssociation('deletedBy')) {
             $classMetadata->mapManyToOne([
-                'fieldName'    => 'deletedBy',
+                'fieldName' => 'deletedBy',
                 'targetEntity' => $this->userEntity,
-                'joinColumns'  => array(array(
-                    'onDelete'             => 'SET NULL'
-                ))
+                'joinColumns' => [[
+                    'onDelete' => 'SET NULL'
+                ]]
             ]);
         }
     }
@@ -150,7 +149,7 @@ class BlameableSubscriber extends AbstractSubscriber
      *
      * @param LifecycleEventArgs $eventArgs
      */
-    public function prePersist(LifecycleEventArgs $eventArgs)
+    public function prePersist(LifecycleEventArgs $eventArgs): void
     {
         $em = $eventArgs->getEntityManager();
         $uow = $em->getUnitOfWork();
@@ -204,7 +203,7 @@ class BlameableSubscriber extends AbstractSubscriber
      *
      * @param LifecycleEventArgs $eventArgs
      */
-    public function preUpdate(LifecycleEventArgs $eventArgs)
+    public function preUpdate(LifecycleEventArgs $eventArgs): void
     {
         $em = $eventArgs->getEntityManager();
         $uow = $em->getUnitOfWork();
@@ -233,7 +232,7 @@ class BlameableSubscriber extends AbstractSubscriber
      *
      * @param LifecycleEventArgs $eventArgs
      */
-    public function preRemove(LifecycleEventArgs $eventArgs)
+    public function preRemove(LifecycleEventArgs $eventArgs): void
     {
         $em = $eventArgs->getEntityManager();
         $uow = $em->getUnitOfWork();
@@ -262,7 +261,7 @@ class BlameableSubscriber extends AbstractSubscriber
      *
      * @param mixed $user
      */
-    public function setUser($user)
+    public function setUser($user): void
     {
         $this->user = $user;
     }
@@ -288,17 +287,15 @@ class BlameableSubscriber extends AbstractSubscriber
 
     public function getSubscribedEvents()
     {
-        $events = [
+        return [
             Events::prePersist,
             Events::preUpdate,
             Events::preRemove,
             Events::loadClassMetadata,
         ];
-
-        return $events;
     }
 
-    public function setUserCallable(callable $callable)
+    public function setUserCallable(callable $callable): void
     {
         $this->userCallable = $callable;
     }

@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 /**
  * This file is part of the KnpDoctrineBehaviors package.
  *
@@ -11,15 +13,12 @@
 
 namespace Knp\DoctrineBehaviors\ORM\Loggable;
 
-use Knp\DoctrineBehaviors\Reflection\ClassAnalyzer;
-
-use Knp\DoctrineBehaviors\ORM\AbstractSubscriber;
-
 use Doctrine\ORM\Event\LifecycleEventArgs;
 
-use Doctrine\Common\EventSubscriber,
-    Doctrine\ORM\Event\OnFlushEventArgs,
-    Doctrine\ORM\Events;
+
+use Doctrine\ORM\Events,
+    Knp\DoctrineBehaviors\ORM\AbstractSubscriber,
+    Knp\DoctrineBehaviors\Reflection\ClassAnalyzer;
 
 /**
  * LoggableSubscriber handle Loggable entites
@@ -33,7 +32,7 @@ class LoggableSubscriber extends AbstractSubscriber
     private $loggerCallable;
 
     /**
-     * @param callable
+     * @param callable $classAnalyzer
      */
     public function __construct(ClassAnalyzer $classAnalyzer, $isRecursive, callable $loggerCallable)
     {
@@ -43,8 +42,8 @@ class LoggableSubscriber extends AbstractSubscriber
 
     public function postPersist(LifecycleEventArgs $eventArgs)
     {
-        $em            = $eventArgs->getEntityManager();
-        $entity        = $eventArgs->getEntity();
+        $em = $eventArgs->getEntityManager();
+        $entity = $eventArgs->getEntity();
         $classMetadata = $em->getClassMetadata(get_class($entity));
 
         if ($this->isEntitySupported($classMetadata->reflClass)) {
@@ -66,11 +65,11 @@ class LoggableSubscriber extends AbstractSubscriber
      *
      * @param LifecycleEventArgs $eventArgs
      */
-    public function logChangeSet(LifecycleEventArgs $eventArgs)
+    public function logChangeSet(LifecycleEventArgs $eventArgs): void
     {
-        $em            = $eventArgs->getEntityManager();
-        $uow           = $em->getUnitOfWork();
-        $entity        = $eventArgs->getEntity();
+        $em = $eventArgs->getEntityManager();
+        $uow = $em->getUnitOfWork();
+        $entity = $eventArgs->getEntity();
         $classMetadata = $em->getClassMetadata(get_class($entity));
 
         if ($this->isEntitySupported($classMetadata->reflClass)) {
@@ -83,10 +82,10 @@ class LoggableSubscriber extends AbstractSubscriber
         }
     }
 
-    public function preRemove(LifecycleEventArgs $eventArgs)
+    public function preRemove(LifecycleEventArgs $eventArgs): void
     {
-        $em            = $eventArgs->getEntityManager();
-        $entity        = $eventArgs->getEntity();
+        $em = $eventArgs->getEntityManager();
+        $entity = $eventArgs->getEntity();
         $classMetadata = $em->getClassMetadata(get_class($entity));
 
         if ($this->isEntitySupported($classMetadata->reflClass)) {
@@ -96,7 +95,7 @@ class LoggableSubscriber extends AbstractSubscriber
         }
     }
 
-    public function setLoggerCallable(callable $callable)
+    public function setLoggerCallable(callable $callable): void
     {
         $this->loggerCallable = $callable;
     }
@@ -114,12 +113,10 @@ class LoggableSubscriber extends AbstractSubscriber
 
     public function getSubscribedEvents()
     {
-        $events = [
+        return [
             Events::postPersist,
             Events::postUpdate,
             Events::preRemove,
         ];
-
-        return $events;
     }
 }

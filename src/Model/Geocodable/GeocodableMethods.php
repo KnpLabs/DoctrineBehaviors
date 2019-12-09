@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 /**
  * This file is part of the KnpDoctrineBehaviors package.
  *
@@ -37,7 +39,7 @@ trait GeocodableMethods
      *
      * @return $this
      */
-    public function setLocation(Point $location = null)
+    public function setLocation(?Point $location = null)
     {
         $this->location = $location;
 

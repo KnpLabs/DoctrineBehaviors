@@ -1,9 +1,11 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Tests\Knp\DoctrineBehaviors\ORM;
 
-use Knp\DoctrineBehaviors\Reflection\ClassAnalyzer;
 use Doctrine\Common\EventManager;
+use Knp\DoctrineBehaviors\Reflection\ClassAnalyzer;
 
 require_once 'EntityManagerProvider.php';
 
@@ -23,8 +25,8 @@ class LoggableTest extends \PHPUnit_Framework_TestCase
 
     protected function getEventManager()
     {
-        $em = new EventManager;
-        $loggerCallback = function($message) {
+        $em = new EventManager();
+        $loggerCallback = function ($message): void {
             $this->logs[] = $message;
         };
         $this->subscriber = new \Knp\DoctrineBehaviors\ORM\Loggable\LoggableSubscriber(
@@ -43,7 +45,7 @@ class LoggableTest extends \PHPUnit_Framework_TestCase
      *
      * @dataProvider dataProviderValues
      */
-    public function should_log_changeset_message_when_created($field, $value, $expected)
+    public function should_log_changeset_message_when_created($field, $value, $expected): void
     {
         $em = $this->getEntityManager($this->getEventManager());
 
@@ -73,7 +75,7 @@ class LoggableTest extends \PHPUnit_Framework_TestCase
      *
      * @dataProvider dataProviderValues
      */
-    public function should_log_changeset_message_when_updated($field, $value, $expected)
+    public function should_log_changeset_message_when_updated($field, $value, $expected): void
     {
         $em = $this->getEntityManager($this->getEventManager());
 
@@ -97,7 +99,7 @@ class LoggableTest extends \PHPUnit_Framework_TestCase
     /**
      * @test
      */
-    public function should_not_log_changeset_message_when_no_change()
+    public function should_not_log_changeset_message_when_no_change(): void
     {
         $em = $this->getEntityManager($this->getEventManager());
 
@@ -116,7 +118,7 @@ class LoggableTest extends \PHPUnit_Framework_TestCase
     /**
      * @test
      */
-    public function should_log_removal_message_when_deleted()
+    public function should_log_removal_message_when_deleted(): void
     {
         $em = $this->getEntityManager($this->getEventManager());
 
@@ -135,17 +137,18 @@ class LoggableTest extends \PHPUnit_Framework_TestCase
         );
     }
 
-    public function dataProviderValues() {
-        return array(
-            array(
+    public function dataProviderValues()
+    {
+        return [
+            [
                 "title", "test", "test"
-            ),
-            array(
-                "roles", array("x" => "y"), "an array"
-            ),
-            array(
+            ],
+            [
+                "roles", ["x" => "y"], "an array"
+            ],
+            [
                 "date", new \DateTime("2014-02-02 12:20:30.000010"), "2014-02-02 12:20:30.000010"
-            )
-        );
+            ]
+        ];
     }
 }

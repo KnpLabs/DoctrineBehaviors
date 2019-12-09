@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace tests\Knp\DoctrineBehaviors\ORM;
 
 use BehaviorFixtures\ORM\FilterableEntity;
@@ -20,7 +22,7 @@ class FilterableRepositoryTest extends \PHPUnit_Framework_TestCase
     /**
      * @test
      */
-    public function shouldFilterByNameUsingLike()
+    public function shouldFilterByNameUsingLike(): void
     {
         $this->createEntities();
         /**@var \BehaviorFixtures\ORM\FilterableRepository $repository*/
@@ -36,7 +38,7 @@ class FilterableRepositoryTest extends \PHPUnit_Framework_TestCase
     /**
      * @test
      */
-    public function shouldFilterByCodeUsingEqual()
+    public function shouldFilterByCodeUsingEqual(): void
     {
         $this->createEntities();
 
@@ -48,7 +50,7 @@ class FilterableRepositoryTest extends \PHPUnit_Framework_TestCase
         $this->assertEquals('name1', $collection[0]->getName());
     }
 
-    private function createEntities()
+    private function createEntities(): void
     {
         $em = $this->getEntityManager();
 

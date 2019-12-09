@@ -1,4 +1,7 @@
 <?php
+
+declare(strict_types=1);
+
 /**
  * @author Lusitanian
  * Freely released with no restrictions, re-license however you'd like!

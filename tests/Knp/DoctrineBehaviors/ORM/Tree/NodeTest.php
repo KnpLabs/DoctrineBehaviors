@@ -1,15 +1,17 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Tests\Knp\DoctrineBehaviors\ORM\Tree;
 
-use Knp\DoctrineBehaviors\Model\Tree\NodeInterface;
-use Tests\Knp\DoctrineBehaviors\ORM\EntityManagerProvider;
 use BehaviorFixtures\ORM\TreeNodeEntity;
+use Doctrine\Common\EventManager;
+use Knp\DoctrineBehaviors\Model\Tree\NodeInterface;
 use Knp\DoctrineBehaviors\ORM\Tree\TreeSubscriber;
 use Knp\DoctrineBehaviors\Reflection\ClassAnalyzer;
-use Doctrine\Common\EventManager;
+use Tests\Knp\DoctrineBehaviors\ORM\EntityManagerProvider;
 
-require_once __DIR__.'/../EntityManagerProvider.php';
+require_once __DIR__ . '/../EntityManagerProvider.php';
 
 class NodeTest extends \PHPUnit_Framework_TestCase
 {
@@ -17,14 +19,14 @@ class NodeTest extends \PHPUnit_Framework_TestCase
 
     protected function getUsedEntityFixtures()
     {
-        return array(
+        return [
             'BehaviorFixtures\\ORM\\TreeNodeEntity'
-        );
+        ];
     }
 
     protected function getEventManager()
     {
-        $em = new EventManager;
+        $em = new EventManager();
 
         $em->addEventSubscriber(
             new TreeSubscriber(
@@ -37,9 +39,9 @@ class NodeTest extends \PHPUnit_Framework_TestCase
         return $em;
     }
 
-    protected function buildNode(array $values = array())
+    protected function buildNode(array $values = [])
     {
-        $node = new TreeNodeEntity;
+        $node = new TreeNodeEntity();
         foreach ($values as $method => $value) {
             $node->$method($value);
         }
@@ -76,16 +78,16 @@ class NodeTest extends \PHPUnit_Framework_TestCase
         return $item;
     }
 
-    public function testBuildTree()
+    public function testBuildTree(): void
     {
-        $root = $this->buildNode(array('setMaterializedPath' => ''     , 'setName' => 'root'        , 'setId' => 1));
-        $flatTree = array(
-            $this->buildNode(array('setMaterializedPath' => '/1'       , 'setName' => 'Villes'      , 'setId' => 2)),
-            $this->buildNode(array('setMaterializedPath' => '/1/2'     , 'setName' => 'Nantes'      , 'setId' => 3)),
-            $this->buildNode(array('setMaterializedPath' => '/1/2/3'   , 'setName' => 'Nantes Est'  , 'setId' => 4)),
-            $this->buildNode(array('setMaterializedPath' => '/1/2/3'   , 'setName' => 'Nantes Nord' , 'setId' => 5)),
-            $this->buildNode(array('setMaterializedPath' => '/1/2/3/5' , 'setName' => 'St-Mihiel'   , 'setId' => 6)),
-        );
+        $root = $this->buildNode(['setMaterializedPath' => '', 'setName' => 'root', 'setId' => 1]);
+        $flatTree = [
+            $this->buildNode(['setMaterializedPath' => '/1', 'setName' => 'Villes', 'setId' => 2]),
+            $this->buildNode(['setMaterializedPath' => '/1/2', 'setName' => 'Nantes', 'setId' => 3]),
+            $this->buildNode(['setMaterializedPath' => '/1/2/3', 'setName' => 'Nantes Est', 'setId' => 4]),
+            $this->buildNode(['setMaterializedPath' => '/1/2/3', 'setName' => 'Nantes Nord', 'setId' => 5]),
+            $this->buildNode(['setMaterializedPath' => '/1/2/3/5', 'setName' => 'St-Mihiel', 'setId' => 6]),
+        ];
 
         $root->buildTree($flatTree);
         $this->assertCount(1, $root->getChildNodes());
@@ -97,7 +99,7 @@ class NodeTest extends \PHPUnit_Framework_TestCase
         $this->assertEquals(4, $root->getChildNodes()->first()->getChildNodes()->first()->getChildNodes()->first()->getNodeLevel());
     }
 
-    public function testIsRoot()
+    public function testIsRoot(): void
     {
         $tree = $this->buildTree();
 
@@ -105,7 +107,7 @@ class NodeTest extends \PHPUnit_Framework_TestCase
         $this->assertTrue($tree->isRootNode());
     }
 
-    public function testIsLeaf()
+    public function testIsLeaf(): void
     {
         $tree = $this->buildTree();
 
@@ -113,7 +115,7 @@ class NodeTest extends \PHPUnit_Framework_TestCase
         $this->assertTrue($tree[1]->isLeafNode());
     }
 
-    public function testGetRoot()
+    public function testGetRoot(): void
     {
         $tree = $this->buildTree();
 
@@ -125,19 +127,19 @@ class NodeTest extends \PHPUnit_Framework_TestCase
 
     public function provideRootPaths()
     {
-        return array(
-            array($this->buildNode(array('setMaterializedPath' => '/0/1'))            , '/0'),
-            array($this->buildNode(array('setMaterializedPath' => '/'))               , '/'),
-            array($this->buildNode(array('setMaterializedPath' => ''))                , '/'),
-            array($this->buildNode(array('setMaterializedPath' => '/test'))           , '/test'),
-            array($this->buildNode(array('setMaterializedPath' => '/0/1/2/3/4/5/6/')) , '/0'),
-        );
+        return [
+            [$this->buildNode(['setMaterializedPath' => '/0/1']), '/0'],
+            [$this->buildNode(['setMaterializedPath' => '/']), '/'],
+            [$this->buildNode(['setMaterializedPath' => '']), '/'],
+            [$this->buildNode(['setMaterializedPath' => '/test']), '/test'],
+            [$this->buildNode(['setMaterializedPath' => '/0/1/2/3/4/5/6/']), '/0'],
+        ];
     }
 
     /**
      * @dataProvider provideisChildNodeOf
      **/
-    public function testisChildNodeOf(NodeInterface $child, NodeInterface $parent, $expected)
+    public function testisChildNodeOf(NodeInterface $child, NodeInterface $parent, $expected): void
     {
         $this->assertEquals($expected, $child->isChildNodeOf($parent));
     }
@@ -146,96 +148,94 @@ class NodeTest extends \PHPUnit_Framework_TestCase
     {
         $tree = $this->buildTree();
 
-        return array(
-            array($tree[0][0]    ,  $tree[0]          ,  true),
-            array($tree[0][0][0] ,  $tree[0][0]       ,  true),
-            array($tree[0][0][0] ,  $tree[0]          ,  false),
-            array($tree[0][0][0] ,  $tree[0][0][0]    ,  false),
-        );
+        return [
+            [$tree[0][0],  $tree[0],  true],
+            [$tree[0][0][0],  $tree[0][0],  true],
+            [$tree[0][0][0],  $tree[0],  false],
+            [$tree[0][0][0],  $tree[0][0][0],  false],
+        ];
     }
 
     public function provideToArray()
     {
-        $expected = array (
+        return [
             1 =>
-            array (
+            [
                 'node' => '',
                 'children' =>
-                array (
+                [
                     2 =>
-                    array (
+                    [
                         'node' => '',
                         'children' =>
-                        array (
+                        [
                             4 =>
-                            array (
+                            [
                                 'node' => '',
                                 'children' =>
-                                array (
+                                [
                                     5 =>
-                                    array (
+                                    [
                                         'node' => '',
                                         'children' =>
-                                        array (
-                                        ),
-                                    ),
-                                ),
-                            ),
-                        ),
-                    ),
+                                        [
+                                        ],
+                                    ],
+                                ],
+                            ],
+                        ],
+                    ],
                     3 =>
-                    array (
+                    [
                         'node' => '',
                         'children' =>
-                        array (
-                        ),
-                    ),
-                ),
-            ),
-        );
-
-        return $expected;
+                        [
+                        ],
+                    ],
+                ],
+            ],
+        ];
     }
 
-    public function testToArray()
+    public function testToArray(): void
     {
         $expected = $this->provideToArray();
         $tree = $this->buildTree();
         $this->assertEquals($expected, $tree->toArray());
     }
 
-    public function testToJson()
+    public function testToJson(): void
     {
         $expected = $this->provideToArray();
         $tree = $this->buildTree();
         $this->assertEquals(json_encode($expected), $tree->toJson());
     }
 
-    public function testToFlatArray()
+    public function testToFlatArray(): void
     {
         $tree = $this->buildTree();
 
-        $expected = array(
+        $expected = [
           1 => '',
           2 => '----',
           4 => '------',
           5 => '--------',
           3 => '----',
-        );
+        ];
 
         $this->assertEquals($expected, $tree->toFlatArray());
     }
 
-    public function testArrayAccess()
+    public function testArrayAccess(): void
     {
         $tree = $this->buildTree();
 
-        $tree[] = $this->buildNode(array('setId' => 45));
-        $tree[] = $this->buildNode(array('setId' => 46));
+        $tree[] = $this->buildNode(['setId' => 45]);
+        $tree[] = $this->buildNode(['setId' => 46]);
         $this->assertEquals(4, $tree->getChildNodes()->count());
 
-        $tree[2][] = $this->buildNode(array('setId' => 47));
-        $tree[2][] = $this->buildNode(array('setId' => 48));
+        $tree[2][] = $this->buildNode(['setId' => 47]);
+        $tree[2][] = $this->buildNode(['setId' => 48]);
         $this->assertEquals(2, $tree[2]->getChildNodes()->count());
 
         $this->assertTrue(isset($tree[2][1]));
@@ -249,12 +249,12 @@ class NodeTest extends \PHPUnit_Framework_TestCase
      * @expectedException \LogicException
      * @expectedExceptionMessage You must provide an id for this node if you want it to be part of a tree.
      **/
-    public function testsetChildNodeOfWithoutId()
+    public function testsetChildNodeOfWithoutId(): void
     {
-        $this->buildNode(array('setMaterializedPath' => '/0/1'))->setChildNodeOf($this->buildNode(array('setMaterializedPath' => '/0')));
+        $this->buildNode(['setMaterializedPath' => '/0/1'])->setChildNodeOf($this->buildNode(['setMaterializedPath' => '/0']));
     }
 
-    public function testChildrenCount()
+    public function testChildrenCount(): void
     {
         $tree = $this->buildTree();
 
@@ -262,7 +262,7 @@ class NodeTest extends \PHPUnit_Framework_TestCase
         $this->assertEquals(1, $tree->getChildNodes()->get(0)->getChildNodes()->count());
     }
 
-    public function testGetPath()
+    public function testGetPath(): void
     {
         $tree = $this->buildTree();
 
@@ -279,7 +279,7 @@ class NodeTest extends \PHPUnit_Framework_TestCase
         $this->assertTrue($tree->getChildNodes()->contains($childChildItem), 'The children collection has been updated to reference the moved node');
     }
 
-    public function testMoveChildren()
+    public function testMoveChildren(): void
     {
         $tree = $this->buildTree();
 
@@ -295,7 +295,7 @@ class NodeTest extends \PHPUnit_Framework_TestCase
         $this->assertEquals(3, $childChildChildItem->getNodeLevel(), 'The level has been updated');
     }
 
-    public function testGetTree()
+    public function testGetTree(): void
     {
         $em = $this->getEntityManager();
         $repo = $em->getRepository('BehaviorFixtures\ORM\TreeNodeEntity');
@@ -314,4 +314,3 @@ class NodeTest extends \PHPUnit_Framework_TestCase
         $this->assertEquals($root[0][0], $entity[0][0]);
     }
 }
-

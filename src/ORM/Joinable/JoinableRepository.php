@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 /*
  * This file is part of the KnpDoctrineBehaviors package.
  *
@@ -20,7 +22,7 @@ use Doctrine\ORM\QueryBuilder;
  */
 trait JoinableRepository
 {
-    public function getJoinAllQueryBuilder($alias = null, QueryBuilder $qb = null)
+    public function getJoinAllQueryBuilder($alias = null, ?QueryBuilder $qb = null)
     {
         if (null === $alias) {
             $alias = $this->getAlias($this->getClassName());
@@ -37,10 +39,9 @@ trait JoinableRepository
         return $qb;
     }
 
-    private function addJoinsToQueryBuilder($alias, QueryBuilder $qb, $className, $recursive = true)
+    private function addJoinsToQueryBuilder($alias, QueryBuilder $qb, $className, $recursive = true): void
     {
         foreach ($this->getEntityManager()->getClassMetadata($className)->getAssociationMappings() as $assoc) {
-
             if (in_array($assoc['targetEntity'], $qb->getRootEntities()) || $className === $assoc['targetEntity']) {
                 continue;
             }
@@ -59,9 +60,7 @@ trait JoinableRepository
     private function getAlias($className)
     {
         $shortName = $this->getEntityManager()->getClassMetadata($className)->reflClass->getShortName();
-        $alias = strtolower(substr($shortName, 0, 1));
-
-        return $alias;
+        return strtolower(substr($shortName, 0, 1));
     }
 
     private function getUniqueAlias($className, QueryBuilder $qb)
@@ -71,7 +70,7 @@ trait JoinableRepository
         $i = 1;
         $firstAlias = $alias;
         while ($this->aliasExists($alias, $qb)) {
-            $alias = $firstAlias.$i;
+            $alias = $firstAlias . $i;
             $i++;
         }
 

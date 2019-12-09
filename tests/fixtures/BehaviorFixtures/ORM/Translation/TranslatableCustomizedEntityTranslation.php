@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace BehaviorFixtures\ORM\Translation;
 
 use Doctrine\ORM\Mapping as ORM;
@@ -31,7 +33,7 @@ class TranslatableCustomizedEntityTranslation
         return $this->title;
     }
 
-    public function setTitle($title)
+    public function setTitle($title): void
     {
         $this->title = $title;
     }

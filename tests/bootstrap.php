@@ -1,4 +1,7 @@
 <?php
+
+declare(strict_types=1);
+
 /**
  * This is bootstrap for phpUnit unit tests,
  * use README.md for more details
@@ -26,14 +29,14 @@ define("DB_USER", getenv("DB_USER") ?: null);
 define("DB_PASSWD", getenv("DB_PASSWD") ?: null);
 
 define('TESTS_PATH', __DIR__);
-define('TESTS_TEMP_DIR', __DIR__.'/temp');
+define('TESTS_TEMP_DIR', __DIR__ . '/temp');
 define('VENDOR_PATH', realpath(__DIR__ . '/../vendor'));
 
-$loader = require(VENDOR_PATH.'/autoload.php');
-$loader->add('BehaviorFixtures', __DIR__.'/fixtures');
+$loader = require(VENDOR_PATH . '/autoload.php');
+$loader->add('BehaviorFixtures', __DIR__ . '/fixtures');
 
 Doctrine\Common\Annotations\AnnotationRegistry::registerFile(
-    VENDOR_PATH.'/doctrine/orm/lib/Doctrine/ORM/Mapping/Driver/DoctrineAnnotations.php'
+    VENDOR_PATH . '/doctrine/orm/lib/Doctrine/ORM/Mapping/Driver/DoctrineAnnotations.php'
 );
 
 $reader = new \Doctrine\Common\Annotations\AnnotationReader();

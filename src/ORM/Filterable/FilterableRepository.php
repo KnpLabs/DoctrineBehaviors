@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 /*
  * This file is part of the KnpDoctrineBehaviors package.
  *
@@ -60,10 +62,10 @@ trait FilterableRepository
      * Filter values
      *
      * @param  array                      $filters - array like ['e:name' => 'nameValue'] where "e" is entity alias query, so we can filter using joins.
-     * @param \Doctrine\ORM\QueryBuilder
+     * @param \Doctrine\ORM\QueryBuilder $qb
      * @return \Doctrine\ORM\QueryBuilder
      */
-    public function filterBy(array $filters, QueryBuilder $qb = null)
+    public function filterBy(array $filters, ?QueryBuilder $qb = null)
     {
         $filters = array_filter($filters, function ($filter) {
             return !empty($filter);
@@ -75,19 +77,19 @@ trait FilterableRepository
 
         foreach ($filters as $col => $value) {
             foreach ($this->getColumnParameters($col) as $colName => $colParam) {
-                $compare = $this->getWhereOperator($col).'Where';
+                $compare = $this->getWhereOperator($col) . 'Where';
 
                 if (in_array($col, $this->getLikeFilterColumns())) {
                     $qb
                         ->$compare(sprintf('%s LIKE :%s', $colName, $colParam))
-                        ->setParameter($colParam, '%'.$value.'%')
+                        ->setParameter($colParam, '%' . $value . '%')
                     ;
                 }
 
                 if (in_array($col, $this->getILikeFilterColumns())) {
                     $qb
                         ->$compare(sprintf('LOWER(%s) LIKE :%s', $colName, $colParam))
-                        ->setParameter($colParam, '%'.strtolower($value).'%')
+                        ->setParameter($colParam, '%' . strtolower($value) . '%')
                     ;
                 }
 
@@ -111,7 +113,7 @@ trait FilterableRepository
 
     protected function getColumnParameters($col)
     {
-        $colName  = str_replace(':', '.', $col);
+        $colName = str_replace(':', '.', $col);
         $colParam = str_replace(':', '_', $col);
 
         return [$colName => $colParam];

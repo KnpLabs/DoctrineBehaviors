@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Knp\DoctrineBehaviors\Model\Tree;
 
 use Doctrine\Common\Collections\Collection;
@@ -65,7 +67,7 @@ interface NodeInterface
      *
      * @return NodeInterface $this Fluent interface
      **/
-    public function setChildNodeOf(NodeInterface $node = null);
+    public function setChildNodeOf(?NodeInterface $node = null);
 
     /**
      * @param NodeInterface $node the node to append to the children collection
@@ -113,5 +115,5 @@ interface NodeInterface
      *
      * @return void
      **/
-    public function buildTree(array $nodes);
+    public function buildTree(array $nodes): void;
 }

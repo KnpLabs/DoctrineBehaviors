@@ -1,9 +1,11 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Tests\Knp\DoctrineBehaviors\ORM;
 
-use Knp\DoctrineBehaviors\Reflection\ClassAnalyzer;
 use Doctrine\Common\EventManager;
+use Knp\DoctrineBehaviors\Reflection\ClassAnalyzer;
 
 require_once 'EntityManagerProvider.php';
 
@@ -13,26 +15,27 @@ class SoftDeletableTest extends \PHPUnit_Framework_TestCase
 
     protected function getUsedEntityFixtures()
     {
-        return array(
+        return [
             'BehaviorFixtures\\ORM\\DeletableEntity'
-        );
+        ];
     }
 
     protected function getEventManager()
     {
-        $em = new EventManager;
+        $em = new EventManager();
 
         $em->addEventSubscriber(
             new \Knp\DoctrineBehaviors\ORM\SoftDeletable\SoftDeletableSubscriber(
                 new ClassAnalyzer(),
                 true,
                 'Knp\DoctrineBehaviors\Model\SoftDeletable\SoftDeletable'
-        ));
+            )
+        );
 
         return $em;
     }
 
-    public function testDelete()
+    public function testDelete(): void
     {
         $em = $this->getEntityManager();
 
@@ -54,7 +57,7 @@ class SoftDeletableTest extends \PHPUnit_Framework_TestCase
         $this->assertTrue($entity->isDeleted());
     }
 
-    public function testPostDelete()
+    public function testPostDelete(): void
     {
         $em = $this->getEntityManager();
 
@@ -89,7 +92,7 @@ class SoftDeletableTest extends \PHPUnit_Framework_TestCase
         $this->assertTrue($entity->isDeleted());
     }
 
-    public function testDeleteInheritance()
+    public function testDeleteInheritance(): void
     {
         $em = $this->getEntityManager();
 
@@ -104,7 +107,7 @@ class SoftDeletableTest extends \PHPUnit_Framework_TestCase
         $this->assertTrue($entity->isDeleted());
     }
 
-    public function testRestore()
+    public function testRestore(): void
     {
         $em = $this->getEntityManager();
 

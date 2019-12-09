@@ -1,10 +1,12 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Knp\DoctrineBehaviors\DBAL\Types;
 
+use Doctrine\DBAL\Platforms\AbstractPlatform;
 use Doctrine\DBAL\Platforms\MySqlPlatform;
 use Doctrine\DBAL\Types\Type;
-use Doctrine\DBAL\Platforms\AbstractPlatform;
 use Knp\DoctrineBehaviors\ORM\Geocodable\Type\Point;
 
 /**

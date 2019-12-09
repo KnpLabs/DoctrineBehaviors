@@ -1,8 +1,8 @@
 <?php
 
-namespace Knp\DoctrineBehaviors\ORM\Translatable;
+declare(strict_types=1);
 
-use Symfony\Component\DependencyInjection\Container;
+namespace Knp\DoctrineBehaviors\ORM\Translatable;
 
 /**
  * @author    Jérôme Fix <jerome.fix@zapoyok.info>
