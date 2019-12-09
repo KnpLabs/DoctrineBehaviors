@@ -3,51 +3,40 @@
     "type": "library",
     "description": "Doctrine2 behavior traits",
     "keywords": [
-        "behaviors",
-        "doctrine2",
-        "timestampable",
-        "translatable",
-        "filterable",
-        "blameable",
-        "softdeletable",
-        "tree"
+        "behaviors", "doctrine2", "timestampable", "translatable", "filterable", "blameable", "softdeletable", "tree"
     ],
     "homepage": "http://knplabs.com",
     "license": "MIT",
     "authors": [
-        {
-            "name":     "Knplabs",
-            "homepage": "http://knplabs.com"
-        }
+        { "name":     "Knplabs", "homepage": "http://knplabs.com" }
     ],
     "require": {
-        "php":                              "~7.0",
-        "doctrine/common":                  ">=2.2",
-        "behat/transliterator":             "~1.0"
+        "php": "^7.2",
+        "doctrine/common": "^2.7",
+        "behat/transliterator": "^1.2"
     },
     "require-dev": {
-        "ext-pdo_sqlite":                   "*",
-        "ext-pdo_mysql":                    "*",
-        "ext-pdo_pgsql":                    "*",
-        "doctrine/orm":                     ">=2.4.5",
-        "phpunit/phpunit":                  "~4.8",
-        "jakub-onderka/php-parallel-lint":  "~0.8",
-        "hexmedia/yaml-linter":             "~0.1"
+        "ext-pdo_sqlite": "*",
+        "ext-pdo_mysql": "*",
+        "ext-pdo_pgsql": "*",
+        "doctrine/orm": "^2.6",
+        "phpunit/phpunit": "^8.4",
+        "jakub-onderka/php-parallel-lint": "^1.0",
+        "hexmedia/yaml-linter": "^0.1"
     },
     "suggest": {
         "symfony/framework-bundle": "To be able to use it as a bundle"
     },
     "autoload": {
-        "psr-4": { "Knp\\DoctrineBehaviors\\": "src/" }
-    },
-    "minimum-stability": "dev",
-    "prefer-stable": true,
-    "config": {
-        "bin-dir": "bin"
+        "psr-4": {
+            "Knp\\DoctrineBehaviors\\": "src"
+        }
     },
     "extra": {
         "branch-alias": {
             "dev-master": "1.5.x-dev"
         }
-    }
+    },
+    "minimum-stability": "dev",
+    "prefer-stable": true
 }
