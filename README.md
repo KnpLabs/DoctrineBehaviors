@@ -34,8 +34,8 @@ Make sure to activate them by reading the [Subscribers](#subscribers) section.
 
 ## Installation
 
-```
-composer require knplabs/doctrine-behaviors:~1.1
+```bash
+composer require knplabs/doctrine-behaviors
 ```
 
 ## Configuration
