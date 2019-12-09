@@ -2,11 +2,7 @@
 
 [![Build Status](https://travis-ci.org/KnpLabs/DoctrineBehaviors.svg?branch=master)](http://travis-ci.org/KnpLabs/DoctrineBehaviors)
 
-* Branch `master` contains the next v2.0
-* Branch `v1` contains the current v1.x
-
-This PHP `>=7.0` library is a collection of traits and interfaces
-that add behaviors to Doctrine2 entities and repositories.
+This PHP library is a collection of traits and interfaces that add behaviors to Doctrine entities and repositories.
 
 It currently handles:
 
@@ -39,8 +35,10 @@ composer require knplabs/doctrine-behaviors
 ```
 
 ## Configuration
+
 By default, when integrated with Symfony, all subscribers are enabled (if you don't specify any configuration for the bundle).
 But you can enable behaviors you need in a whitelist manner:
+
 ```yaml
 knp_doctrine_behaviors:
     blameable:      false
@@ -51,7 +49,6 @@ knp_doctrine_behaviors:
     # All others behaviors are disabled
 ```
 
-<a name="subscribers" id="subscribers"></a>
 ## Subscribers
 
 If you use symfony2, you can easily register them in:
@@ -83,16 +80,15 @@ class AppKernel
 Importing a service definition file:
 
 ``` yaml
-    # app/config/config.yml
-    imports:
-        - { resource: ../../vendor/knplabs/doctrine-behaviors/config/orm-services.yml }
-
+# app/config/config.yml
+imports:
+    - { resource: ../../vendor/knplabs/doctrine-behaviors/config/orm-services.yml }
 ```
 
 You can also register them using doctrine2 api:
 
 
-``` php
+```php
 <?php
 
 $em->getEventManager()->addEventSubscriber(new \Knp\DoctrineBehaviors\ORM\Translatable\TranslatableSubscriber);
@@ -100,12 +96,11 @@ $em->getEventManager()->addEventSubscriber(new \Knp\DoctrineBehaviors\ORM\Transl
 
 ```
 
-
 ## Usage
 
 All you have to do is to define a Doctrine2 entity and use traits:
 
-``` php
+```php
 <?php
 
 use Doctrine\ORM\Mapping as ORM;
@@ -134,13 +129,12 @@ class Category implements ORMBehaviors\Tree\NodeInterface, \ArrayAccess
      */
     protected $id;
 }
-
 ```
 
 
 For some behaviors like tree, you can use repository traits:
 
-``` php
+```php
 <?php
 
 use Doctrine\ORM\EntityRepository;
@@ -150,7 +144,6 @@ class CategoryRepository extends EntityRepository
 {
     use ORMBehaviors\Tree\Tree,
 }
-
 ```
 
 Voila!
@@ -160,7 +153,7 @@ You now have a working `Category` that behaves like:
 <a name="tree" id="tree"></a>
 ### tree:
 
-``` php
+```php
 <?php
 
     $category = new Category;
@@ -197,7 +190,7 @@ It is handled automatically by the TranslationSubscriber.
 
 In order to use the Translatable trait, you will have to create this `CategoryTranslation` entity.
 
-``` php
+```php
 <?php
 
 use Doctrine\ORM\Mapping as ORM;
@@ -258,7 +251,7 @@ class CategoryTranslation
 The corresponding Category entity needs to `use ORMBehaviors\Translatable\Translatable;`
 and should only contain fields that you do not need to translate.
 
-``` php
+```php
 <?php
 
 use Doctrine\ORM\Mapping as ORM;
@@ -282,19 +275,18 @@ class Category
 After updating the database, ie. with `./console doctrine:schema:update --force`,
 you can now work on translations using `translate` or `getTranslations` methods.
 
-``` php
+```php
 <?php
 
-    $category = new Category;
-    $category->translate('fr')->setName('Chaussures');
-    $category->translate('en')->setName('Shoes');
-    $em->persist($category);
+$category = new Category;
+$category->translate('fr')->setName('Chaussures');
+$category->translate('en')->setName('Shoes');
+$em->persist($category);
 
-    // In order to persist new translations, call mergeNewTranslations method, before flush
-    $category->mergeNewTranslations();
+// In order to persist new translations, call mergeNewTranslations method, before flush
+$category->mergeNewTranslations();
 
-    $category->translate('en')->getName();
-
+$category->translate('en')->getName();
 ```
 
 #### Override
@@ -310,7 +302,7 @@ If you override one, you also need to override the other to return the inverse c
 Example: Let's say you want to create a sub namespace AppBundle\Entity\Translation to stock translations classes
 then put overrided traits in that folder.
 
-``` php
+```php
 <?php
 namespace AppBundle\Entity\Translation;
 
@@ -333,7 +325,7 @@ trait TranslatableTrait
 }
 ```
 
-``` php
+```php
 <?php
 namespace AppBundle\Entity\Translation;
 
@@ -369,12 +361,10 @@ If you want to define a custom translation entity class name just for a single t
 Override the trait method `getTranslationEntityClass` in the translatable entity and `getTranslatableEntityClass`
 in the translation entity. If you override one, you also need to override the other to return the inverse class.
 
-
 #### guess the current locale
 
 You can configure the way the subscriber guesses the current locale, by giving a callable as its first argument.
 This library provides a callable object (`Knp\DoctrineBehaviors\ORM\Translatable\CurrentLocaleCallable`) that returns the current locale using Symfony2.
-
 
 #### proxy translations
 
@@ -383,7 +373,7 @@ An extra feature allows you to proxy translated fields of a translatable entity.
 You can use it in the magic `__call` method of you translatable entity
 so that when you try to call `getName` (for example) it will return you the translated value of the name for current locale:
 
-``` php
+```php
 <?php
 
     public function __call($method, $arguments)
@@ -399,10 +389,10 @@ so that when you try to call `getName` (for example) it will return you the tran
     }
 ```
 
-<a name="softDeletable" id="softDeletable"></a>
+
 ### soft-deletable
 
-``` php
+```php
 <?php
 
     $category = new Category;
@@ -432,7 +422,7 @@ so that when you try to call `getName` (for example) it will return you the tran
     $em->flush();
 ```
 
-``` php
+```php
 <?php
 
     $category = new Category;
@@ -453,10 +443,9 @@ so that when you try to call `getName` (for example) it will return you the tran
     $category->isDeleted(); // === true
 ```
 
-<a name="timestampable" id="timestampable"></a>
 ### timestampable
 
-``` php
+```php
 <?php
 
     $category = new Category;
@@ -485,7 +474,6 @@ timezone issues. For more information on this see:
 
 The default type is `datetime`.
 
-<a name="blameable" id="blameable"></a>
 ### blameable
 
 Blameable is able to track creators and updators of a given entity.
@@ -503,7 +491,7 @@ for example:
 
 Then, you can use it like that:
 
-``` php
+```php
 <?php
 
     $category = new Category;
@@ -515,13 +503,12 @@ Then, you can use it like that:
 
 ```
 
-<a name="loggable" id="loggable"></a>
 ### loggable
 
 Loggable is able to track lifecycle modifications and log them using any third party log system.
 A loggable [callable](#callables) is used to get the logger from anywhere you want.
 
-``` php
+```php
 <?php
 
 /**
@@ -549,7 +536,7 @@ These messages are then passed to the configured callable.
 You can define your own, by passing another callable to the LoggableSubscriber:
 
 
-``` php
+```php
 <?php
 
 $em->getEventManager()->addEventSubscriber(
@@ -571,7 +558,6 @@ If you're using symfony, you can also configure which callable to use:
         knp.doctrine_behaviors.loggable_subscriber.logger_callable.class: Your\InvokableClass
 
 
-<a name="geocodable" id="geocodable"></a>
 ### geocodable
 
 Geocodable Provides extensions to PostgreSQL platform in order to work with cube and earthdistance extensions.
@@ -580,7 +566,7 @@ It allows you to query entities based on geographical coordinates.
 It also provides an easy entry point to use 3rd party libraries like the excellent [geocoder](https://github.com/willdurand/Geocoder) to transform addresses into latitude and longitude.
 
 
-``` php
+```php
 <?php
 
     $geocoder = new \Geocoder\Geocoder;
@@ -605,7 +591,6 @@ It also provides an easy entry point to use 3rd party libraries like the excelle
 
 ```
 
-<a name="sluggable" id="sluggable"></a>
 ### sluggable
 
 Sluggable generates slugs (uniqueness is not guaranteed) for an entity.
@@ -643,7 +628,6 @@ class BlogPost
 }
 ```
 
-<a name="filterable" id="filterable"></a>
 ### filterable:
 
 Filterable can be used at the Repository level
@@ -724,9 +708,6 @@ Now we can filtering using:
     $products = $em->getRepository('Product')->filterBy(['o:code' => '21']);
 ```
 
-
-
-<a name="callables" id="callables"></a>
 ## callables
 
 Callables are used by some subscribers like blameable and geocodable to fill information based on 3rd party system.
