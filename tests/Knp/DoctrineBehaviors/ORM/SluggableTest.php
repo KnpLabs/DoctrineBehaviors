@@ -9,7 +9,7 @@ use Knp\DoctrineBehaviors\Reflection\ClassAnalyzer;
 
 require_once 'EntityManagerProvider.php';
 
-class SluggableTest extends \PHPUnit_Framework_TestCase
+class SluggableTest extends \PHPUnit\Framework\TestCase
 {
     use EntityManagerProvider;
 

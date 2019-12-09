@@ -9,7 +9,7 @@ use Knp\DoctrineBehaviors\Reflection\ClassAnalyzer;
 
 require_once 'EntityManagerProvider.php';
 
-class LoggableTest extends \PHPUnit_Framework_TestCase
+class LoggableTest extends \PHPUnit\Framework\TestCase
 {
     private $subscriber;
     private $logs = [];

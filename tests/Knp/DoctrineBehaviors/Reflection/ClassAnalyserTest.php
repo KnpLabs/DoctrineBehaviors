@@ -10,7 +10,7 @@ use BehaviorFixtures\ORM\GeocodableEntity;
 use BehaviorFixtures\ORM\TranslatableEntity;
 use Knp\DoctrineBehaviors\Reflection\ClassAnalyzer;
 
-class ClassAnalyserTest extends \PHPUnit_Framework_TestCase
+class ClassAnalyserTest extends \PHPUnit\Framework\TestCase
 {
     /**
      * @test

@@ -13,7 +13,7 @@ use Tests\Knp\DoctrineBehaviors\ORM\EntityManagerProvider;
 
 require_once __DIR__ . '/../EntityManagerProvider.php';
 
-class NodeTest extends \PHPUnit_Framework_TestCase
+class NodeTest extends \PHPUnit\Framework\TestCase
 {
     use EntityManagerProvider;
 

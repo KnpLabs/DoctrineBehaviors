@@ -10,7 +10,7 @@ use Knp\DoctrineBehaviors\Reflection\ClassAnalyzer;
 
 require_once 'EntityManagerProvider.php';
 
-class TranslatableTest extends \PHPUnit_Framework_TestCase
+class TranslatableTest extends \PHPUnit\Framework\TestCase
 {
     use EntityManagerProvider;
 

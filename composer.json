@@ -20,13 +20,20 @@
         "ext-pdo_mysql": "*",
         "ext-pdo_pgsql": "*",
         "doctrine/orm": "^2.6",
-        "phpunit/phpunit": "^8.4",
+        "phpunit/phpunit": "^8.5",
         "jakub-onderka/php-parallel-lint": "^1.0",
-        "symplify/easy-coding-standard": "^7.1"
+        "symplify/easy-coding-standard": "^7.1",
+        "phpstan/phpstan": "^0.12.2"
     },
     "autoload": {
         "psr-4": {
             "Knp\\DoctrineBehaviors\\": "src"
+        }
+    },
+    "autoload-dev": {
+        "psr-4": {
+            "BehaviorFixtures\\": "tests/Fixtures/BehaviorFixtures",
+            "Tests\\Knp\\DoctrineBehaviors\\": "tests/Knp/DoctrineBehaviors"
         }
     },
     "suggest": {

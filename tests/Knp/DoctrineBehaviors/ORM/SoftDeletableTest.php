@@ -9,7 +9,7 @@ use Knp\DoctrineBehaviors\Reflection\ClassAnalyzer;
 
 require_once 'EntityManagerProvider.php';
 
-class SoftDeletableTest extends \PHPUnit_Framework_TestCase
+class SoftDeletableTest extends \PHPUnit\Framework\TestCase
 {
     use EntityManagerProvider;
 

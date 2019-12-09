@@ -1,0 +1,6 @@
+parameters:
+    level: 0
+
+    ignoreErrors:
+        # traits
+        - '#Access to an undefined property BehaviorFixtures\\ORM\\TreeNodeEntity::\$parentNodePath#'

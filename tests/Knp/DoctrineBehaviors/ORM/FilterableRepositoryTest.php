@@ -2,13 +2,13 @@
 
 declare(strict_types=1);
 
-namespace tests\Knp\DoctrineBehaviors\ORM;
+namespace Tests\Knp\DoctrineBehaviors\ORM;
 
 use BehaviorFixtures\ORM\FilterableEntity;
 
 require_once 'EntityManagerProvider.php';
 
-class FilterableRepositoryTest extends \PHPUnit_Framework_TestCase
+class FilterableRepositoryTest extends \PHPUnit\Framework\TestCase
 {
     use EntityManagerProvider;
 

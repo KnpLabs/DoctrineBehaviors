@@ -13,14 +13,12 @@ declare(strict_types=1);
 
 namespace Knp\DoctrineBehaviors\ORM\Translatable;
 
-use Doctrine\DBAL\Platforms;
-
+use Doctrine\DBAL\Platforms\PostgreSqlPlatform;
 use Doctrine\ORM\EntityManager;
 use Doctrine\ORM\Event\LifecycleEventArgs;
 use Doctrine\ORM\Event\LoadClassMetadataEventArgs;
 use Doctrine\ORM\Events;
 use Doctrine\ORM\Id\BigIntegerIdentityGenerator;
-
 use Doctrine\ORM\Id\IdentityGenerator;
 use Doctrine\ORM\Mapping\Builder\ClassMetadataBuilder;
 use Doctrine\ORM\Mapping\ClassMetadata;
@@ -124,7 +122,7 @@ class TranslatableSubscriber extends AbstractSubscriber
                 $sequenceName = null;
                 $fieldName = $class->identifier ? $class->getSingleIdentifierFieldName() : null;
 
-                if ($platform instanceof Platforms\PostgreSQLPlatform) {
+                if ($platform instanceof PostgreSqlPlatform) {
                     $columnName = $class->getSingleIdentifierColumnName();
                     $quoted = isset($class->fieldMappings[$fieldName]['quoted']) || isset($class->table['quoted']);
                     $sequenceName = $class->getTableName() . '_' . $columnName . '_seq';

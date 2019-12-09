@@ -40,7 +40,7 @@ class LoggableSubscriber extends AbstractSubscriber
         $this->loggerCallable = $loggerCallable;
     }
 
-    public function postPersist(LifecycleEventArgs $eventArgs)
+    public function postPersist(LifecycleEventArgs $eventArgs): void
     {
         $em = $eventArgs->getEntityManager();
         $entity = $eventArgs->getEntity();
@@ -52,12 +52,12 @@ class LoggableSubscriber extends AbstractSubscriber
             $loggerCallable($message);
         }
 
-        return $this->logChangeSet($eventArgs);
+        $this->logChangeSet($eventArgs);
     }
 
-    public function postUpdate(LifecycleEventArgs $eventArgs)
+    public function postUpdate(LifecycleEventArgs $eventArgs): void
     {
-        return $this->logChangeSet($eventArgs);
+        $this->logChangeSet($eventArgs);
     }
 
     /**
