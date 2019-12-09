@@ -69,6 +69,21 @@ jobs:
             script:
                 - vendor/bin/parallel-lint src tests -e php,phpt
 
+        -
+            stage: test
+            name: "Coding Standards"
+            php: '7.2'
+            script:
+                - composer check-cs
+
+
+        -
+            stage: test
+            name: "Static Analysis"
+            php: '7.2'
+            script:
+                - composer phpstan
+
 cache:
     directories:
         - $HOME/.composer/cache
