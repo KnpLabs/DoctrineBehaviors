@@ -1,0 +1,10 @@
+parameters:
+    sets:
+        - 'psr12'
+#        - 'php71'
+#        - 'symplify'
+#        - 'common'
+#        - 'clean-code'
+
+    skip:
+        PhpCsFixer\Fixer\Operator\UnaryOperatorSpacesFixer: null
