@@ -9,7 +9,7 @@ use Knp\DoctrineBehaviors\Reflection\ClassAnalyzer;
 
 require_once 'EntityManagerProvider.php';
 
-class BlameableTest extends \PHPUnit_Framework_TestCase
+class BlameableTest extends \PHPUnit\Framework\TestCase
 {
     private $subscriber;
 

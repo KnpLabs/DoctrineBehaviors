@@ -9,7 +9,7 @@ use Knp\DoctrineBehaviors\Reflection\ClassAnalyzer;
 
 require_once 'EntityManagerProvider.php';
 
-class TimestampableTest extends \PHPUnit_Framework_TestCase
+class TimestampableTest extends \PHPUnit\Framework\TestCase
 {
     use EntityManagerProvider;
 

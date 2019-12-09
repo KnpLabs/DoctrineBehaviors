@@ -32,7 +32,7 @@ class TreeNodeEntity implements Tree\NodeInterface, \ArrayAccess
 
     public function __construct($id = null)
     {
-        $this->children = new ArrayCollection();
+        $this->childNodes = new ArrayCollection();
         $this->id = $id;
     }
 

@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace tests\Knp\DoctrineBehaviors\ORM;
+namespace Tests\Knp\DoctrineBehaviors\ORM;
 
 use Doctrine\Common\EventManager;
 use Doctrine\ORM\Configuration;
@@ -11,7 +11,11 @@ use Doctrine\ORM\Mapping\DefaultQuoteStrategy;
 use Doctrine\ORM\Mapping\Driver\AnnotationDriver;
 use Doctrine\ORM\Repository\DefaultRepositoryFactory;
 use Doctrine\ORM\Tools\SchemaTool;
+use PHPUnit\Framework\MockObject\MockBuilder;
 
+/**
+ * @property-read $this \PHPUnit\Framework\TestCase
+ */
 trait EntityManagerProvider
 {
     private $em;
@@ -109,7 +113,11 @@ trait EntityManagerProvider
             }
         }
 
-        $config = $this->getMock($configurationClass, $mockMethods);
+        /** @var MockBuilder $mockBuilder */
+        $mockBuilder = $this->getMockBuilder($configurationClass);
+        $mockBuilder->addMethods($mockMethods);
+
+        $config = $mockBuilder->getMock();
 
         $config
             ->expects($this->once())

@@ -11,7 +11,7 @@ use Knp\DoctrineBehaviors\Reflection\ClassAnalyzer;
 
 require_once 'EntityManagerProvider.php';
 
-class GeocodableTest extends \PHPUnit_Framework_TestCase
+class GeocodableTest extends \PHPUnit\Framework\TestCase
 {
     use EntityManagerProvider;
 
