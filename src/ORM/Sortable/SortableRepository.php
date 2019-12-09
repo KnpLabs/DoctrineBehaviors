@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Knp\DoctrineBehaviors\ORM\Sortable;
 
 use Doctrine\ORM\QueryBuilder;

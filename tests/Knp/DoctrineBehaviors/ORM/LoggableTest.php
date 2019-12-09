@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Tests\Knp\DoctrineBehaviors\ORM;
 
 use Doctrine\Common\EventManager;
@@ -137,16 +139,16 @@ class LoggableTest extends \PHPUnit_Framework_TestCase
 
     public function dataProviderValues()
     {
-        return array(
-            array(
+        return [
+            [
                 "title", "test", "test"
-            ),
-            array(
-                "roles", array("x" => "y"), "an array"
-            ),
-            array(
+            ],
+            [
+                "roles", ["x" => "y"], "an array"
+            ],
+            [
                 "date", new \DateTime("2014-02-02 12:20:30.000010"), "2014-02-02 12:20:30.000010"
-            )
-        );
+            ]
+        ];
     }
 }

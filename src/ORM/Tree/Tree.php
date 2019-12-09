@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Knp\DoctrineBehaviors\ORM\Tree;
 
 use Doctrine\ORM\QueryBuilder;
@@ -51,7 +53,7 @@ trait Tree
      *
      * @return NodeInterface a node
      */
-    public function getTree($path = '', $rootAlias = 't', $extraParams = array())
+    public function getTree($path = '', $rootAlias = 't', $extraParams = [])
     {
         $results = $this->getFlatTree($path, $rootAlias, $extraParams);
 
@@ -96,7 +98,7 @@ trait Tree
      *
      * @return QueryBuilder
      */
-    public function getFlatTreeQB($path = '', $rootAlias = 't', $extraParams = array())
+    public function getFlatTreeQB($path = '', $rootAlias = 't', $extraParams = [])
     {
         $qb = $this->createQueryBuilder($rootAlias)
             ->andWhere($rootAlias . '.materializedPath LIKE :path')
@@ -137,7 +139,7 @@ trait Tree
      *
      * @return array the flat resultset
      */
-    public function getFlatTree($path, $rootAlias = 't', $extraParams = array())
+    public function getFlatTree($path, $rootAlias = 't', $extraParams = [])
     {
         return $this
             ->getFlatTreeQB($path, $rootAlias, $extraParams)

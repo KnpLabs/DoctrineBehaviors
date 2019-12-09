@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 /**
  * This file is part of the KnpDoctrineBehaviors package.
  *
@@ -259,11 +261,11 @@ trait Node
             };
         }
         if (null === $tree) {
-            $tree = array($this->getNodeId() => array('node' => $prepare($this), 'children' => array()));
+            $tree = [$this->getNodeId() => ['node' => $prepare($this), 'children' => []]];
         }
 
         foreach ($this->getChildNodes() as $node) {
-            $tree[$this->getNodeId()]['children'][$node->getNodeId()] = array('node' => $prepare($node), 'children' => array());
+            $tree[$this->getNodeId()]['children'][$node->getNodeId()] = ['node' => $prepare($node), 'children' => []];
             $node->toArray($prepare, $tree[$this->getNodeId()]['children']);
         }
 
@@ -286,7 +288,7 @@ trait Node
             };
         }
         if (null === $tree) {
-            $tree = array($this->getNodeId() => $prepare($this));
+            $tree = [$this->getNodeId() => $prepare($this)];
         }
 
         foreach ($this->getChildNodes() as $node) {

@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Knp\DoctrineBehaviors\ORM\Geocodable\Query\AST\Functions;
 
 use Doctrine\ORM\Query\AST\Functions\FunctionNode;

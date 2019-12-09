@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Tests\Knp\DoctrineBehaviors\Reflection;
 
 use BehaviorFixtures\ORM\DeletableEntity;

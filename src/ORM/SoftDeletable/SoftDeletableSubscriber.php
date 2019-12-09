@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 /*
  * This file is part of the KnpDoctrineBehaviors package.
  *
@@ -96,11 +98,11 @@ class SoftDeletableSubscriber extends AbstractSubscriber
 
         if ($this->isSoftDeletable($classMetadata)) {
             if (!$classMetadata->hasField('deletedAt')) {
-                $classMetadata->mapField(array(
+                $classMetadata->mapField([
                     'fieldName' => 'deletedAt',
                     'type' => 'datetime',
                     'nullable' => true
-                ));
+                ]);
             }
         }
     }

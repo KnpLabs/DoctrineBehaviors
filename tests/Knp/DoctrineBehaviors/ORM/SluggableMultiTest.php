@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Tests\Knp\DoctrineBehaviors\ORM;
 
 use Doctrine\Common\EventManager;
@@ -13,9 +15,9 @@ class SluggableMultiTest extends \PHPUnit_Framework_TestCase
 
     protected function getUsedEntityFixtures()
     {
-        return array(
+        return [
             'BehaviorFixtures\\ORM\\SluggableMultiEntity'
-        );
+        ];
     }
 
     protected function getEventManager()

@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 /*
  * This file is part of the KnpDoctrineBehaviors package.
  *
@@ -45,10 +47,10 @@ class SortableSubscriber extends AbstractSubscriber
 
         if ($this->isSortable($classMetadata)) {
             if (!$classMetadata->hasField('sort')) {
-                $classMetadata->mapField(array(
+                $classMetadata->mapField([
                     'fieldName' => 'sort',
                     'type' => 'integer'
-                ));
+                ]);
             }
         }
     }

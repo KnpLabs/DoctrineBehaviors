@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 /*
  * This file is part of the KnpDoctrineBehaviors package.
  *
@@ -126,9 +128,9 @@ class TranslatableSubscriber extends AbstractSubscriber
                     $columnName = $class->getSingleIdentifierColumnName();
                     $quoted = isset($class->fieldMappings[$fieldName]['quoted']) || isset($class->table['quoted']);
                     $sequenceName = $class->getTableName() . '_' . $columnName . '_seq';
-                    $definition = array(
+                    $definition = [
                         'sequenceName' => $platform->fixSchemaElementName($sequenceName)
-                    );
+                    ];
 
                     if ($quoted) {
                         $definition['quoted'] = true;
@@ -154,11 +156,11 @@ class TranslatableSubscriber extends AbstractSubscriber
                     $columnName = $class->getSingleIdentifierColumnName();
                     $quoted = isset($class->fieldMappings[$fieldName]['quoted']) || isset($class->table['quoted']);
                     $sequenceName = $class->getTableName() . '_' . $columnName . '_seq';
-                    $definition = array(
+                    $definition = [
                         'sequenceName' => $platform->fixSchemaElementName($sequenceName),
                         'allocationSize' => 1,
                         'initialValue' => 1,
-                    );
+                    ];
 
                     if ($quoted) {
                         $definition['quoted'] = true;

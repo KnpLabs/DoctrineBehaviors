@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 /**
  * This file is part of the KnpDoctrineBehaviors package.
  *
@@ -120,27 +122,27 @@ class BlameableSubscriber extends AbstractSubscriber
             $classMetadata->mapManyToOne([
                 'fieldName' => 'createdBy',
                 'targetEntity' => $this->userEntity,
-                'joinColumns' => array(array(
+                'joinColumns' => [[
                     'onDelete' => 'SET NULL'
-                ))
+                ]]
             ]);
         }
         if (!$classMetadata->hasAssociation('updatedBy')) {
             $classMetadata->mapManyToOne([
                 'fieldName' => 'updatedBy',
                 'targetEntity' => $this->userEntity,
-                'joinColumns' => array(array(
+                'joinColumns' => [[
                     'onDelete' => 'SET NULL'
-                ))
+                ]]
             ]);
         }
         if (!$classMetadata->hasAssociation('deletedBy')) {
             $classMetadata->mapManyToOne([
                 'fieldName' => 'deletedBy',
                 'targetEntity' => $this->userEntity,
-                'joinColumns' => array(array(
+                'joinColumns' => [[
                     'onDelete' => 'SET NULL'
-                ))
+                ]]
             ]);
         }
     }

@@ -1,4 +1,7 @@
 <?php
+
+declare(strict_types=1);
+
 /**
  * This is bootstrap for phpUnit unit tests,
  * use README.md for more details

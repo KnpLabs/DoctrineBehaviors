@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace BehaviorFixtures\ORM\Translation;
 
 use Doctrine\ORM\Mapping as ORM;

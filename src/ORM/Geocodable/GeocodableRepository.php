@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Knp\DoctrineBehaviors\ORM\Geocodable;
 
 use Knp\DoctrineBehaviors\ORM\Geocodable\Type\Point;

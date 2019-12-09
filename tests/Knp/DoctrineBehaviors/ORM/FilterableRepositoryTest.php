@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace tests\Knp\DoctrineBehaviors\ORM;
 
 use BehaviorFixtures\ORM\FilterableEntity;

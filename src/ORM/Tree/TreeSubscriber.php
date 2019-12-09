@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 /*
  * This file is part of the KnpDoctrineBehaviors package.
  *
@@ -45,11 +47,11 @@ class TreeSubscriber extends AbstractSubscriber
 
         if ($this->isTreeNode($classMetadata)) {
             if (!$classMetadata->hasField('materializedPath')) {
-                $classMetadata->mapField(array(
+                $classMetadata->mapField([
                     'fieldName' => 'materializedPath',
                     'type' => 'string',
                     'length' => 255
-                ));
+                ]);
             }
         }
     }

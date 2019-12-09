@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Tests\Knp\DoctrineBehaviors\ORM\Tree;
 
 use BehaviorFixtures\ORM\TreeNodeEntity;
@@ -17,9 +19,9 @@ class NodeTest extends \PHPUnit_Framework_TestCase
 
     protected function getUsedEntityFixtures()
     {
-        return array(
+        return [
             'BehaviorFixtures\\ORM\\TreeNodeEntity'
-        );
+        ];
     }
 
     protected function getEventManager()
@@ -37,7 +39,7 @@ class NodeTest extends \PHPUnit_Framework_TestCase
         return $em;
     }
 
-    protected function buildNode(array $values = array())
+    protected function buildNode(array $values = [])
     {
         $node = new TreeNodeEntity();
         foreach ($values as $method => $value) {
@@ -78,14 +80,14 @@ class NodeTest extends \PHPUnit_Framework_TestCase
 
     public function testBuildTree()
     {
-        $root = $this->buildNode(array('setMaterializedPath' => '', 'setName' => 'root', 'setId' => 1));
-        $flatTree = array(
-            $this->buildNode(array('setMaterializedPath' => '/1', 'setName' => 'Villes', 'setId' => 2)),
-            $this->buildNode(array('setMaterializedPath' => '/1/2', 'setName' => 'Nantes', 'setId' => 3)),
-            $this->buildNode(array('setMaterializedPath' => '/1/2/3', 'setName' => 'Nantes Est', 'setId' => 4)),
-            $this->buildNode(array('setMaterializedPath' => '/1/2/3', 'setName' => 'Nantes Nord', 'setId' => 5)),
-            $this->buildNode(array('setMaterializedPath' => '/1/2/3/5', 'setName' => 'St-Mihiel', 'setId' => 6)),
-        );
+        $root = $this->buildNode(['setMaterializedPath' => '', 'setName' => 'root', 'setId' => 1]);
+        $flatTree = [
+            $this->buildNode(['setMaterializedPath' => '/1', 'setName' => 'Villes', 'setId' => 2]),
+            $this->buildNode(['setMaterializedPath' => '/1/2', 'setName' => 'Nantes', 'setId' => 3]),
+            $this->buildNode(['setMaterializedPath' => '/1/2/3', 'setName' => 'Nantes Est', 'setId' => 4]),
+            $this->buildNode(['setMaterializedPath' => '/1/2/3', 'setName' => 'Nantes Nord', 'setId' => 5]),
+            $this->buildNode(['setMaterializedPath' => '/1/2/3/5', 'setName' => 'St-Mihiel', 'setId' => 6]),
+        ];
 
         $root->buildTree($flatTree);
         $this->assertCount(1, $root->getChildNodes());
@@ -125,13 +127,13 @@ class NodeTest extends \PHPUnit_Framework_TestCase
 
     public function provideRootPaths()
     {
-        return array(
-            array($this->buildNode(array('setMaterializedPath' => '/0/1')), '/0'),
-            array($this->buildNode(array('setMaterializedPath' => '/')), '/'),
-            array($this->buildNode(array('setMaterializedPath' => '')), '/'),
-            array($this->buildNode(array('setMaterializedPath' => '/test')), '/test'),
-            array($this->buildNode(array('setMaterializedPath' => '/0/1/2/3/4/5/6/')), '/0'),
-        );
+        return [
+            [$this->buildNode(['setMaterializedPath' => '/0/1']), '/0'],
+            [$this->buildNode(['setMaterializedPath' => '/']), '/'],
+            [$this->buildNode(['setMaterializedPath' => '']), '/'],
+            [$this->buildNode(['setMaterializedPath' => '/test']), '/test'],
+            [$this->buildNode(['setMaterializedPath' => '/0/1/2/3/4/5/6/']), '/0'],
+        ];
     }
 
     /**
@@ -146,53 +148,53 @@ class NodeTest extends \PHPUnit_Framework_TestCase
     {
         $tree = $this->buildTree();
 
-        return array(
-            array($tree[0][0],  $tree[0],  true),
-            array($tree[0][0][0],  $tree[0][0],  true),
-            array($tree[0][0][0],  $tree[0],  false),
-            array($tree[0][0][0],  $tree[0][0][0],  false),
-        );
+        return [
+            [$tree[0][0],  $tree[0],  true],
+            [$tree[0][0][0],  $tree[0][0],  true],
+            [$tree[0][0][0],  $tree[0],  false],
+            [$tree[0][0][0],  $tree[0][0][0],  false],
+        ];
     }
 
     public function provideToArray()
     {
-        $expected = array(
+        $expected = [
             1 =>
-            array(
+            [
                 'node' => '',
                 'children' =>
-                array(
+                [
                     2 =>
-                    array(
+                    [
                         'node' => '',
                         'children' =>
-                        array(
+                        [
                             4 =>
-                            array(
+                            [
                                 'node' => '',
                                 'children' =>
-                                array(
+                                [
                                     5 =>
-                                    array(
+                                    [
                                         'node' => '',
                                         'children' =>
-                                        array(
-                                        ),
-                                    ),
-                                ),
-                            ),
-                        ),
-                    ),
+                                        [
+                                        ],
+                                    ],
+                                ],
+                            ],
+                        ],
+                    ],
                     3 =>
-                    array(
+                    [
                         'node' => '',
                         'children' =>
-                        array(
-                        ),
-                    ),
-                ),
-            ),
-        );
+                        [
+                        ],
+                    ],
+                ],
+            ],
+        ];
 
         return $expected;
     }
@@ -215,13 +217,13 @@ class NodeTest extends \PHPUnit_Framework_TestCase
     {
         $tree = $this->buildTree();
 
-        $expected = array(
+        $expected = [
           1 => '',
           2 => '----',
           4 => '------',
           5 => '--------',
           3 => '----',
-        );
+        ];
 
         $this->assertEquals($expected, $tree->toFlatArray());
     }
@@ -230,12 +232,12 @@ class NodeTest extends \PHPUnit_Framework_TestCase
     {
         $tree = $this->buildTree();
 
-        $tree[] = $this->buildNode(array('setId' => 45));
-        $tree[] = $this->buildNode(array('setId' => 46));
+        $tree[] = $this->buildNode(['setId' => 45]);
+        $tree[] = $this->buildNode(['setId' => 46]);
         $this->assertEquals(4, $tree->getChildNodes()->count());
 
-        $tree[2][] = $this->buildNode(array('setId' => 47));
-        $tree[2][] = $this->buildNode(array('setId' => 48));
+        $tree[2][] = $this->buildNode(['setId' => 47]);
+        $tree[2][] = $this->buildNode(['setId' => 48]);
         $this->assertEquals(2, $tree[2]->getChildNodes()->count());
 
         $this->assertTrue(isset($tree[2][1]));
@@ -251,7 +253,7 @@ class NodeTest extends \PHPUnit_Framework_TestCase
      **/
     public function testsetChildNodeOfWithoutId()
     {
-        $this->buildNode(array('setMaterializedPath' => '/0/1'))->setChildNodeOf($this->buildNode(array('setMaterializedPath' => '/0')));
+        $this->buildNode(['setMaterializedPath' => '/0/1'])->setChildNodeOf($this->buildNode(['setMaterializedPath' => '/0']));
     }
 
     public function testChildrenCount()

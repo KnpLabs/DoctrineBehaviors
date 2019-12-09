@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 /*
  * This file is part of the KnpDoctrineBehaviors package.
  *
@@ -51,13 +53,13 @@ class TimestampableSubscriber extends AbstractSubscriber
                 $classMetadata->addLifecycleCallback('updateTimestamps', Events::preUpdate);
             }
 
-            foreach (array('createdAt', 'updatedAt') as $field) {
+            foreach (['createdAt', 'updatedAt'] as $field) {
                 if (!$classMetadata->hasField($field)) {
-                    $classMetadata->mapField(array(
+                    $classMetadata->mapField([
                         'fieldName' => $field,
                         'type' => $this->dbFieldType,
                         'nullable' => true
-                    ));
+                    ]);
                 }
             }
         }

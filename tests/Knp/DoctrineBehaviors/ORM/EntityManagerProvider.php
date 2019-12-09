@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace tests\Knp\DoctrineBehaviors\ORM;
 
 use Doctrine\Common\EventManager;
@@ -30,10 +32,10 @@ trait EntityManagerProvider
             return $this->em;
         }
 
-        $conn = array_merge(array(
+        $conn = array_merge([
             'driver' => 'pdo_sqlite',
             'memory' => true,
-        ), $conn);
+        ], $conn);
 
         $config = is_null($config) ? $this->getAnnotatedConfig() : $config;
         $em = EntityManager::create($conn, $config, $evm ?: $this->getEventManager());
@@ -99,7 +101,7 @@ trait EntityManagerProvider
         $refl = new \ReflectionClass($configurationClass);
         $methods = $refl->getMethods();
 
-        $mockMethods = array();
+        $mockMethods = [];
 
         foreach ($methods as $method) {
             if (!in_array($method->name, ['addFilter', 'getFilterClassName', 'addCustomNumericFunction', 'getCustomNumericFunction'])) {

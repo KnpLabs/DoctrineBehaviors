@@ -1,4 +1,7 @@
 <?php
+
+declare(strict_types=1);
+
 /**
  * @author Lusitanian
  * Freely released with no restrictions, re-license however you'd like!
@@ -42,11 +45,11 @@ class SluggableSubscriber extends AbstractSubscriber
 
         if ($this->isSluggable($classMetadata)) {
             if (!$classMetadata->hasField('slug')) {
-                $classMetadata->mapField(array(
+                $classMetadata->mapField([
                     'fieldName' => 'slug',
                     'type' => 'string',
                     'nullable' => true
-                ));
+                ]);
             }
         }
     }
