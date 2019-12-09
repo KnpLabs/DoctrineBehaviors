@@ -1,41 +1,74 @@
+dist: xenial # see https://travis-ci.community/t/postgresql-fails-to-start-unrecognized-operating-system/4558
 language: php
-sudo: false
 
-php:
-    - '7.2'
-    - '7.3'
-    - '7.4snapshot'
+install:
+    - composer install
 
-matrix:
-    fast_finish: true
+jobs:
+    include:
+        # PostgreSQL
+        - &POSTGRES_JOB
+            stage: test
+            name: "PostgreSQL"
+            services:
+                # https://docs.travis-ci.com/user/database-setup/#postgresql
+                - postgresql
+            php: '7.2'
+            before_script:
+                - psql -c 'create database orm_behaviors_test;' -U postgres
+                - psql orm_behaviors_test -c 'create extension cube;' -U postgres
+                - psql orm_behaviors_test -c 'create extension earthdistance;' -U postgres
+            script:
+                - vendor/bin/phpunit
 
-env:
-    matrix:
-        - DOCTRINE_COMMON_VERSION="~2.6.0" DB=mysql DB_USER=root PREFER=latest
-        - DOCTRINE_COMMON_VERSION="~2.7.0" DB=mysql DB_USER=root PREFER=latest
-        - DOCTRINE_COMMON_VERSION="~2.6.0" DB=pgsql PREFER=latest
-        - DOCTRINE_COMMON_VERSION="~2.7.0" DB=pgsql PREFER=latest
-        - DOCTRINE_COMMON_VERSION="~2.6.0" DB=mysql DB_USER=root PREFER=lowest
-        - DOCTRINE_COMMON_VERSION="~2.7.0" DB=mysql DB_USER=root PREFER=lowest
-        - DOCTRINE_COMMON_VERSION="~2.6.0" DB=pgsql PREFER=lowest
-        - DOCTRINE_COMMON_VERSION="~2.7.0" DB=pgsql PREFER=lowest
-    global:
-        - secure: "VKbBEUu1CftMOWU+dKRmV3KWMB/2rtTYbQh3jR2cgtIZuELPc/QvCgUO2YsiG686vaOOJt9pwVW+CAmQBManRxJEGvJMD3LI3/gif8HH478DYobRO8QLgpICGZrpMx85i8y9ln69gigERdEkHo8ILtwYTRzV4nK9LqVXVTxcnjQ="
+        -
+            <<: *POSTGRES_JOB
+            php: '7.3'
+
+        -
+            <<: *POSTGRES_JOB
+            php: '7.4snapshot'
+
+        -
+            <<: *POSTGRES_JOB
+            php: '7.2'
+            install: 
+                - composer update --prefer-lowest
+
+        # MySQL
+        - &MYSQL_JOB
+            stage: test
+            name: "MySQL"
+            services:
+                # https://docs.travis-ci.com/user/database-setup/#mysql
+                - mysql
+            php: '7.2'
+            before_script:
+                - mysql -e 'create database IF NOT EXISTS orm_behaviors_test' -uroot
+            script:
+                - vendor/bin/phpunit
+
+        -
+            <<: *MYSQL_JOB
+            php: '7.3'
+
+        -
+            <<: *MYSQL_JOB
+            php: '7.4snapshot'
+
+        -
+            <<: *MYSQL_JOB
+            php: '7.2'
+            install: 
+                - composer update --prefer-lowest
+
+        -
+            stage: test
+            name: "Lint PHP"
+            php: '7.2'
+            script:
+                - vendor/bin/parallel-lint src tests -e php,phpt
+
 cache:
     directories:
         - $HOME/.composer/cache
-
-before_script:
-    - sh -c "if [ '$DB' = 'pgsql' ]; then psql -c 'create database orm_behaviors_test' -U postgres; fi"
-    - sh -c "if [ '$DB' = 'pgsql' ]; then psql orm_behaviors_test -c 'create extension cube' -U postgres; fi"
-    - sh -c "if [ '$DB' = 'pgsql' ]; then psql orm_behaviors_test -c 'create extension earthdistance' -U postgres; fi"
-
-    - sh -c "if [ '$DB' = 'mysql' ]; then mysql -e 'create database IF NOT EXISTS orm_behaviors_test' -u$DB_USER; fi"
-
-    - composer require doctrine/common:${DOCTRINE_COMMON_VERSION}
-    - sh -c "if [ '$PREFER' = 'lowest' ]; then composer update --prefer-lowest; fi"
-
-script:
-    - bin/parallel-lint -e php,phpt --exclude vendor .
-    - bin/yaml-lint config/*
-    - bin/phpunit

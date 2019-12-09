@@ -8,7 +8,7 @@
     "homepage": "http://knplabs.com",
     "license": "MIT",
     "authors": [
-        { "name":     "Knplabs", "homepage": "http://knplabs.com" }
+        { "name": "Knplabs", "homepage": "http://knplabs.com" }
     ],
     "require": {
         "php": "^7.2",
@@ -21,8 +21,7 @@
         "ext-pdo_pgsql": "*",
         "doctrine/orm": "^2.6",
         "phpunit/phpunit": "^8.4",
-        "jakub-onderka/php-parallel-lint": "^1.0",
-        "hexmedia/yaml-linter": "^0.1"
+        "jakub-onderka/php-parallel-lint": "^1.0"
     },
     "suggest": {
         "symfony/framework-bundle": "To be able to use it as a bundle"
@@ -31,7 +30,5 @@
         "psr-4": {
             "Knp\\DoctrineBehaviors\\": "src"
         }
-    },
-    "minimum-stability": "dev",
-    "prefer-stable": true
+    }
 }
