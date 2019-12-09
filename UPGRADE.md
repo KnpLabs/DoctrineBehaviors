@@ -1,3 +1,9 @@
+# 2.0.0
+
+Translatable:
+* `locale` columns are now capped at 5 chars. You might need to manually define
+  `locale` mapping, if you store anything lengthier.
+
 # 1.0.2 to 1.0.x-dev
 
 Most occurences of "listener" have been replaced with "subscriber" to honor a
