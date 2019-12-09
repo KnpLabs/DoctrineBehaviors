@@ -32,16 +32,53 @@ jobs:
         -
             <<: *POSTGRES_JOB
             php: '7.2'
-            install: 
+            install:
                 - composer update --prefer-lowest
+=======
+dist: bionic # Ubuntu 18.04 LTS
+language: php
+sudo: false
+
+services:
+    - mysql
+    - postgresql
+
+install:
+    - composer install
+
+jobs:
+    include:
+        # PostgreSQL
+        - &POSTGRES_JOB
+            stage: test
+            name: "PostgreSQL"
+            php: '7.2'
+            before_script:
+                - psql -c 'create database orm_behaviors_test' -U postgres
+                - psql orm_behaviors_test -c 'create extension cube' -U postgres
+                - psql orm_behaviors_test -c 'create extension earthdistance' -U postgres
+            script:
+                - vendor/bin/phpunit
+
+        -
+            <<: *POSTGRES_JOB
+            php: '7.3'
+
+        -
+            <<: *POSTGRES_JOB
+            php: '7.4snapshot'
+>>>>>>> travis: use jobs over matrix
 
         # MySQL
         - &MYSQL_JOB
             stage: test
             name: "MySQL"
+<<<<<<< HEAD
             services:
                 # https://docs.travis-ci.com/user/database-setup/#mysql
                 - mysql
+=======
+>>>>>>> travis: use jobs over matrix
             php: '7.2'
             before_script:
                 - mysql -e 'create database IF NOT EXISTS orm_behaviors_test' -uroot
@@ -57,10 +94,23 @@ jobs:
             php: '7.4snapshot'
 
         -
+<<<<<<< HEAD
             <<: *MYSQL_JOB
             php: '7.2'
-            install: 
+            install:
                 - composer update --prefer-lowest
+=======
+            stage: test
+            name: 'Lowest Dependencies'
+            php: '7.2'
+            install:
+                # install lowest dependencies
+                - composer update --prefer-lowest --no-progress
+            before_script:
+                - mysql -e 'create database IF NOT EXISTS orm_behaviors_test' -uroot
+            script:
+                - vendor/bin/phpunit
+>>>>>>> travis: use jobs over matrix
 
         -
             stage: test
