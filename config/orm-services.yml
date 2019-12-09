@@ -19,13 +19,13 @@ services:
             $translatableFetchMode: "%knp.doctrine_behaviors.translatable_subscriber.translatable_fetch_method%"
             $translationFetchMode: "%knp.doctrine_behaviors.translatable_subscriber.translation_fetch_method%"
 
-            $softDeletableTrait: "Knp\DoctrineBehaviors\Model\SoftDeletable\SoftDeletable"
-            $nodeTrait: "Knp\DoctrineBehaviors\Model\Tree\Node"
-            $sortableTrait: "Knp\DoctrineBehaviors\Model\Sortable\Sortable"
-            $sluggableTrait: "Knp\DoctrineBehaviors\Model\Sluggable\Sluggable"
-            $blameableTrait: "Knp\DoctrineBehaviors\Model\Blameable\Blameable"
-            $translatableTrait: "Knp\DoctrineBehaviors\Model\Translatable\Translatable"
-            $translationTrait: "Knp\DoctrineBehaviors\Model\Translatable\Translation"
+            $softDeletableTrait: 'Knp\DoctrineBehaviors\Model\SoftDeletable\SoftDeletable'
+            $nodeTrait: 'Knp\DoctrineBehaviors\Model\Tree\Node'
+            $sortableTrait: 'Knp\DoctrineBehaviors\Model\Sortable\Sortable'
+            $sluggableTrait: 'Knp\DoctrineBehaviors\Model\Sluggable\Sluggable'
+            $blameableTrait: 'Knp\DoctrineBehaviors\Model\Blameable\Blameable'
+            $translatableTrait: 'Knp\DoctrineBehaviors\Model\Translatable\Translatable'
+            $translationTrait: 'Knp\DoctrineBehaviors\Model\Translatable\Translation'
 
     Knp\DoctrineBehaviors\:
         resource: '../src'
