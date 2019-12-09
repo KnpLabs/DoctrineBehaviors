@@ -15,21 +15,18 @@ namespace Knp\DoctrineBehaviors\Model\Tree;
 
 use Doctrine\Common\Collections\ArrayCollection;
 
-use Doctrine\Common\Collections\Collection;
-use Knp\DoctrineBehaviors\Model\Tree\NodeInterface;
-
 /*
  * @author     Florian Klein <florian.klein@free.fr>
  */
 trait Node
 {
     /**
-     * @var ArrayCollection $childNodes the children in the tree
+     * @var ArrayCollection the children in the tree
      */
     private $childNodes;
 
     /**
-     * @var NodeInterface $parentNode the parent in the tree
+     * @var NodeInterface the parent in the tree
      */
     private $parentNode;
 
@@ -82,9 +79,7 @@ trait Node
         $path = $this->getExplodedPath();
         array_pop($path);
 
-        $parentPath = static::getMaterializedPathSeparator() . implode(static::getMaterializedPathSeparator(), $path);
-
-        return $parentPath;
+        return static::getMaterializedPathSeparator() . implode(static::getMaterializedPathSeparator(), $path);
     }
 
     /**
@@ -227,7 +222,7 @@ trait Node
     public function buildTree(array $results): void
     {
         $this->getChildNodes()->clear();
-        foreach ($results as $i => $node) {
+        foreach ($results as $node) {
             if ($node->getMaterializedPath() === $this->getRealMaterializedPath()) {
                 $node->setParentNode($this);
                 $node->buildTree($results);

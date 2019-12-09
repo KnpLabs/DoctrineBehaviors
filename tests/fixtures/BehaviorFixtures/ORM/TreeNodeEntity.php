@@ -50,7 +50,7 @@ class TreeNodeEntity implements Tree\NodeInterface, \ArrayAccess
     }
 
     /**
-     * @param  string
+     * @param  string $id
      * @return null
      */
     public function setId($id)
@@ -67,7 +67,7 @@ class TreeNodeEntity implements Tree\NodeInterface, \ArrayAccess
     }
 
     /**
-     * @param  string
+     * @param  string $name
      * @return null
      */
     public function setName($name)

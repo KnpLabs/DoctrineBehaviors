@@ -21,7 +21,7 @@ namespace Knp\DoctrineBehaviors\Model\Blameable;
 trait BlameableMethods
 {
     /**
-     * @param mixed the user representation
+     * @param mixed $user the user representation
      * @return $this
      */
     public function setCreatedBy($user)
@@ -32,7 +32,7 @@ trait BlameableMethods
     }
 
     /**
-     * @param mixed the user representation
+     * @param mixed $user the user representation
      * @return $this
      */
     public function setUpdatedBy($user)
@@ -43,7 +43,7 @@ trait BlameableMethods
     }
 
     /**
-     * @param mixed the user representation
+     * @param mixed $user the user representation
      * @return $this
      */
     public function setDeletedBy($user)

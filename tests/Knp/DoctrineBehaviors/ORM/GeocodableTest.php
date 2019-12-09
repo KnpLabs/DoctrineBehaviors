@@ -16,7 +16,7 @@ class GeocodableTest extends \PHPUnit_Framework_TestCase
     use EntityManagerProvider;
 
     /**
-     * @var callable $callable
+     * @var callable
      */
     private $callable;
 
@@ -73,7 +73,7 @@ class GeocodableTest extends \PHPUnit_Framework_TestCase
             $entity = new GeocodableEntity($city[1][0], $city[1][1]);
             $entity->setTitle($city[0]);
             $em->persist($entity);
-        };
+        }
 
         $em->flush();
     }

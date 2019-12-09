@@ -4,8 +4,6 @@ declare(strict_types=1);
 
 namespace Knp\DoctrineBehaviors\ORM\Translatable;
 
-use Symfony\Component\DependencyInjection\Container;
-
 /**
  * @author    Jérôme Fix <jerome.fix@zapoyok.info>
  */

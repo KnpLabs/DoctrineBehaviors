@@ -62,7 +62,7 @@ trait FilterableRepository
      * Filter values
      *
      * @param  array                      $filters - array like ['e:name' => 'nameValue'] where "e" is entity alias query, so we can filter using joins.
-     * @param \Doctrine\ORM\QueryBuilder
+     * @param \Doctrine\ORM\QueryBuilder $qb
      * @return \Doctrine\ORM\QueryBuilder
      */
     public function filterBy(array $filters, ?QueryBuilder $qb = null)

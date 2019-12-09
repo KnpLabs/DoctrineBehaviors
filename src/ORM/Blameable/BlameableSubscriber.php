@@ -13,13 +13,10 @@ declare(strict_types=1);
 
 namespace Knp\DoctrineBehaviors\ORM\Blameable;
 
-use Doctrine\Common\EventSubscriber;
-
 use Doctrine\Common\Persistence\Mapping\ClassMetadata;
 
 use Doctrine\ORM\Event\LifecycleEventArgs;
 use Doctrine\ORM\Event\LoadClassMetadataEventArgs;
-use Doctrine\ORM\Event\OnFlushEventArgs;
 
 use Doctrine\ORM\Events,
     Knp\DoctrineBehaviors\ORM\AbstractSubscriber,
@@ -50,7 +47,7 @@ class BlameableSubscriber extends AbstractSubscriber
     private $blameableTrait;
 
     /**
-     * @param callable
+     * @param callable $classAnalyzer
      * @param string $userEntity
      */
     public function __construct(ClassAnalyzer $classAnalyzer, $isRecursive, $blameableTrait, ?callable $userCallable = null, $userEntity = null)
@@ -290,14 +287,12 @@ class BlameableSubscriber extends AbstractSubscriber
 
     public function getSubscribedEvents()
     {
-        $events = [
+        return [
             Events::prePersist,
             Events::preUpdate,
             Events::preRemove,
             Events::loadClassMetadata,
         ];
-
-        return $events;
     }
 
     public function setUserCallable(callable $callable): void

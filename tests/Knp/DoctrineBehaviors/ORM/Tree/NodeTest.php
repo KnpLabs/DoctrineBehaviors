@@ -158,7 +158,7 @@ class NodeTest extends \PHPUnit_Framework_TestCase
 
     public function provideToArray()
     {
-        $expected = [
+        return [
             1 =>
             [
                 'node' => '',
@@ -195,8 +195,6 @@ class NodeTest extends \PHPUnit_Framework_TestCase
                 ],
             ],
         ];
-
-        return $expected;
     }
 
     public function testToArray(): void

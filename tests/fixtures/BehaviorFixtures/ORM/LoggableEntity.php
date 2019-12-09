@@ -18,11 +18,13 @@ class LoggableEntity
      * @ORM\Id
      * @ORM\Column(type="integer")
      * @ORM\GeneratedValue(strategy="AUTO")
+     * @var int
      */
     private $id;
 
     /**
      * @ORM\Column(type="string", nullable=true)
+     * @var string
      */
     private $title;
 
@@ -36,12 +38,7 @@ class LoggableEntity
      */
     private $date;
 
-    /**
-     * Returns object id.
-     *
-     * @return integer
-     */
-    public function getId()
+    public function getId(): int
     {
         return $this->id;
     }
@@ -56,19 +53,12 @@ class LoggableEntity
         return $this->title;
     }
 
-    /**
-     * Set title.
-     *
-     * @param $title the value to set.
-     */
-    public function setTitle($title): void
+    public function setTitle(string $title): void
     {
         $this->title = $title;
     }
 
     /**
-     * Get Roles
-     *
      * @return mixed
      */
     public function getRoles()
@@ -76,41 +66,18 @@ class LoggableEntity
         return $this->roles;
     }
 
-    /**
-     * Set roles
-     *
-     * @param array $roles
-     *
-     * @return $this;
-     */
-    public function setRoles(?array $roles = null)
+    public function setRoles(?array $roles = null): void
     {
         $this->roles = $roles;
-
-        return $this;
     }
 
-    /**
-     * Get date
-     *
-     * @return mixed
-     */
     public function getDate()
     {
         return $this->date;
     }
 
-    /**
-     * Set date
-     *
-     * @param mixed $date
-     *
-     * @return $this;
-     */
-    public function setDate($date)
+    public function setDate($date): void
     {
         $this->date = $date;
-
-        return $this;
     }
 }

@@ -187,7 +187,7 @@ class TranslatableTest extends \PHPUnit_Framework_TestCase
      */
     public function translate_method_should_always_return_translation_object(): void
     {
-        $em = $this->getEntityManager();
+        $this->getEntityManager();
 
         $entity = new \BehaviorFixtures\ORM\TranslatableEntity();
 
@@ -269,7 +269,7 @@ class TranslatableTest extends \PHPUnit_Framework_TestCase
      */
     public function should_create_only_one_time_the_same_translation(): void
     {
-        $em = $this->getEntityManager();
+        $this->getEntityManager();
 
         $entity = new \BehaviorFixtures\ORM\TranslatableEntity();
         $translation = $entity->translate('fr');

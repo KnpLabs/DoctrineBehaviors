@@ -13,8 +13,6 @@ declare(strict_types=1);
 
 namespace Knp\DoctrineBehaviors\ORM\Geocodable;
 
-use Doctrine\Common\EventSubscriber;
-
 use Doctrine\Common\Persistence\Mapping\ClassMetadata;
 
 use Doctrine\DBAL\Platforms\MySqlPlatform;
@@ -23,7 +21,6 @@ use Doctrine\DBAL\Platforms\PostgreSqlPlatform;
 use Doctrine\DBAL\Types\Type;
 use Doctrine\ORM\Event\LifecycleEventArgs;
 use Doctrine\ORM\Event\LoadClassMetadataEventArgs;
-use Doctrine\ORM\Event\OnFlushEventArgs;
 use Doctrine\ORM\Events;
 
 use Knp\DoctrineBehaviors\ORM\AbstractSubscriber,

@@ -5,7 +5,6 @@ declare(strict_types=1);
 namespace Knp\DoctrineBehaviors\ORM\Translatable;
 
 use Symfony\Component\DependencyInjection\Container;
-use Symfony\Component\HttpFoundation\Request;
 
 /**
  * @author     Florian Klein <florian.klein@free.fr>

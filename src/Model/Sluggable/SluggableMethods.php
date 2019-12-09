@@ -56,7 +56,7 @@ trait SluggableMethods
 
         return $this;
     }
-    
+
     /**
      * Returns the entity's slug.
      *
@@ -74,7 +74,7 @@ trait SluggableMethods
     private function generateSlugValue($values)
     {
         $usableValues = [];
-        foreach ($values as $fieldName => $fieldValue) {
+        foreach ($values as $fieldValue) {
             if (!empty($fieldValue)) {
                 $usableValues[] = $fieldValue;
             }
@@ -93,9 +93,7 @@ trait SluggableMethods
         $sluggableText = $transliterator->transliterate($sluggableText, $this->getSlugDelimiter());
 
         $urlized = strtolower(trim(preg_replace("/[^a-zA-Z0-9\/_|+ -]/", '', $sluggableText), $this->getSlugDelimiter()));
-        $urlized = preg_replace("/[\/_|+ -]+/", $this->getSlugDelimiter(), $urlized);
-
-        return $urlized;
+        return preg_replace("/[\/_|+ -]+/", $this->getSlugDelimiter(), $urlized);
     }
 
     /**

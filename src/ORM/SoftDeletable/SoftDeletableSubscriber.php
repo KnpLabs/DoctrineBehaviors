@@ -13,8 +13,6 @@ declare(strict_types=1);
 
 namespace Knp\DoctrineBehaviors\ORM\SoftDeletable;
 
-use Doctrine\Common\EventSubscriber;
-
 use Doctrine\Common\Persistence\Mapping\ClassMetadata;
 
 use Doctrine\ORM\Event\LoadClassMetadataEventArgs,

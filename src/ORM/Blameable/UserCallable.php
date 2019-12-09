@@ -26,7 +26,7 @@ class UserCallable
     private $container;
 
     /**
-     * @param callable
+     * @param callable $container
      * @param string $userEntity
      */
     public function __construct(Container $container)

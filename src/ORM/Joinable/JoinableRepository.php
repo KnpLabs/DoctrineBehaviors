@@ -60,9 +60,7 @@ trait JoinableRepository
     private function getAlias($className)
     {
         $shortName = $this->getEntityManager()->getClassMetadata($className)->reflClass->getShortName();
-        $alias = strtolower(substr($shortName, 0, 1));
-
-        return $alias;
+        return strtolower(substr($shortName, 0, 1));
     }
 
     private function getUniqueAlias($className, QueryBuilder $qb)

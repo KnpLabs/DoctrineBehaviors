@@ -139,7 +139,7 @@ class TranslatableSubscriber extends AbstractSubscriber
                     $sequenceName = $em->getConfiguration()->getQuoteStrategy()->getSequenceName($definition, $class, $platform);
                 }
 
-                $generator = ($fieldName && $class->fieldMappings[$fieldName]['type'] === 'bigint')
+                $generator = $fieldName && $class->fieldMappings[$fieldName]['type'] === 'bigint'
                     ? new BigIntegerIdentityGenerator($sequenceName)
                     : new IdentityGenerator($sequenceName);
 

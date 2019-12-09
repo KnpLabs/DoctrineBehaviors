@@ -51,7 +51,7 @@ class FilterableEntity
     /**
      * Set name.
      *
-     * @param name the value to set.
+     * @param the $name value to set.
      */
     public function setName($name): void
     {
@@ -71,7 +71,7 @@ class FilterableEntity
     /**
      * Set code.
      *
-     * @param integer code the value to set.
+     * @param integer $code the value to set.
      */
     public function setCode($code): void
     {

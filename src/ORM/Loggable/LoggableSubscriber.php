@@ -13,11 +13,8 @@ declare(strict_types=1);
 
 namespace Knp\DoctrineBehaviors\ORM\Loggable;
 
-use Doctrine\Common\EventSubscriber;
-
 use Doctrine\ORM\Event\LifecycleEventArgs;
 
-use Doctrine\ORM\Event\OnFlushEventArgs;
 
 use Doctrine\ORM\Events,
     Knp\DoctrineBehaviors\ORM\AbstractSubscriber,
@@ -35,7 +32,7 @@ class LoggableSubscriber extends AbstractSubscriber
     private $loggerCallable;
 
     /**
-     * @param callable
+     * @param callable $classAnalyzer
      */
     public function __construct(ClassAnalyzer $classAnalyzer, $isRecursive, callable $loggerCallable)
     {
@@ -116,12 +113,10 @@ class LoggableSubscriber extends AbstractSubscriber
 
     public function getSubscribedEvents()
     {
-        $events = [
+        return [
             Events::postPersist,
             Events::postUpdate,
             Events::preRemove,
         ];
-
-        return $events;
     }
 }
