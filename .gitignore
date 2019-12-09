@@ -1,4 +1,4 @@
-composer.phar
-vendor
+/vendor
 composer.lock
-bin
+
+.phpunit.result.cache

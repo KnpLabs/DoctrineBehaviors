@@ -4,33 +4,30 @@ declare(strict_types=1);
 
 namespace Knp\DoctrineBehaviors\ORM\Translatable;
 
-use Symfony\Component\DependencyInjection\Container;
+use Symfony\Component\HttpFoundation\RequestStack;
 
 /**
  * @author     Florian Klein <florian.klein@free.fr>
  */
 class CurrentLocaleCallable
 {
-    private $container;
+    /**
+     * @var RequestStack
+     */
+    private $requestStack;
 
-    public function __construct(Container $container)
+    public function __construct(RequestStack $requestStack)
     {
-        $this->container = $container;
+        $this->requestStack = $requestStack;
     }
 
-    public function __invoke()
+    public function __invoke(): ?string
     {
-        if (!$this->container->has('request_stack')) {
-            if (!$this->container->isScopeActive('request')) {
-                return null;
-            }
-            $request = $this->container->get('request');
-
-            return $request->getLocale();
-        } elseif ($request = $this->container->get('request_stack')->getCurrentRequest()) {
-            return $request->getLocale();
+        $currentRequest = $this->requestStack->getCurrentRequest();
+        if ($currentRequest === null) {
+            return null;
         }
 
-        return null;
+        return $currentRequest->getLocale();
     }
 }

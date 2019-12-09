@@ -17,20 +17,18 @@ use Doctrine\ORM\Event\LoadClassMetadataEventArgs;
 
 use Doctrine\ORM\Events;
 
-use Doctrine\ORM\Mapping\ClassMetadata,
-    Knp\DoctrineBehaviors\ORM\AbstractSubscriber,
-    Knp\DoctrineBehaviors\Reflection\ClassAnalyzer;
+use Doctrine\ORM\Mapping\ClassMetadata;
+use Knp\DoctrineBehaviors\ORM\AbstractSubscriber;
+use Knp\DoctrineBehaviors\Reflection\ClassAnalyzer;
 
-/**
- * Sortable subscriber.
- *
- * Adds mapping to the sortable entities.
- */
 class SortableSubscriber extends AbstractSubscriber
 {
+    /**
+     * @var string
+     */
     private $sortableTrait;
 
-    public function __construct(ClassAnalyzer $classAnalyzer, $isRecursive, $sortableTrait)
+    public function __construct(ClassAnalyzer $classAnalyzer, bool $isRecursive, string $sortableTrait)
     {
         parent::__construct($classAnalyzer, $isRecursive);
 
@@ -60,14 +58,7 @@ class SortableSubscriber extends AbstractSubscriber
         return [Events::loadClassMetadata];
     }
 
-    /**
-     * Checks if entity is a sortable
-     *
-     * @param ClassMetadata $classMetadata The metadata
-     *
-     * @return Boolean
-     */
-    private function isSortable(ClassMetadata $classMetadata)
+    private function isSortable(ClassMetadata $classMetadata): bool
     {
         return $this->getClassAnalyzer()->hasTrait(
             $classMetadata->reflClass,

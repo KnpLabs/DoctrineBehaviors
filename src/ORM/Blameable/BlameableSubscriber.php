@@ -40,17 +40,16 @@ class BlameableSubscriber extends AbstractSubscriber
     private $user;
 
     /**
-     * userEntity name
+     * @var null
      */
     private $userEntity;
 
+    /**
+     * @var string
+     */
     private $blameableTrait;
 
-    /**
-     * @param callable $classAnalyzer
-     * @param string $userEntity
-     */
-    public function __construct(ClassAnalyzer $classAnalyzer, $isRecursive, $blameableTrait, ?callable $userCallable = null, $userEntity = null)
+    public function __construct(ClassAnalyzer $classAnalyzer, bool $isRecursive, string $blameableTrait, ?callable $userCallable = null, $userEntity = null)
     {
         parent::__construct($classAnalyzer, $isRecursive);
 
@@ -300,14 +299,7 @@ class BlameableSubscriber extends AbstractSubscriber
         $this->userCallable = $callable;
     }
 
-    /**
-     * Checks if entity is blameable
-     *
-     * @param ClassMetadata $classMetadata The metadata
-     *
-     * @return Boolean
-     */
-    private function isBlameable(ClassMetadata $classMetadata)
+    private function isBlameable(ClassMetadata $classMetadata): bool
     {
         return $this->getClassAnalyzer()->hasTrait($classMetadata->reflClass, $this->blameableTrait, $this->isRecursive);
     }

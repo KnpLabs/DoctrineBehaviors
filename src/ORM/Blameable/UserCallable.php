@@ -13,32 +13,23 @@ declare(strict_types=1);
 
 namespace Knp\DoctrineBehaviors\ORM\Blameable;
 
-use Symfony\Component\DependencyInjection\Container;
+use Symfony\Component\Security\Core\Security;
+use Symfony\Component\Security\Core\User\UserInterface;
 
-/**
- * UserCallable can be invoked to return a blameable user
- */
 class UserCallable
 {
     /**
-     * @var Container
+     * @var Security
      */
-    private $container;
+    private $security;
 
-    /**
-     * @param callable $container
-     * @param string $userEntity
-     */
-    public function __construct(Container $container)
+    public function __construct(Security $security)
     {
-        $this->container = $container;
+        $this->security = $security;
     }
 
-    public function __invoke()
+    public function __invoke(): ?UserInterface
     {
-        $token = $this->container->get('security.token_storage')->getToken();
-        if (null !== $token) {
-            return $token->getUser();
-        }
+        return $this->security->getUser();
     }
 }

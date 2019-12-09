@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace Tests\Knp\DoctrineBehaviors\ORM\Tree;
 
 use BehaviorFixtures\ORM\TreeNodeEntity;
+use BehaviorFixtures\ORM\TreeNodeEntityRepository;
 use Doctrine\Common\EventManager;
 use Knp\DoctrineBehaviors\Model\Tree\NodeInterface;
 use Knp\DoctrineBehaviors\ORM\Tree\TreeSubscriber;
@@ -298,6 +299,8 @@ class NodeTest extends \PHPUnit\Framework\TestCase
     public function testGetTree(): void
     {
         $em = $this->getEntityManager();
+
+        /** @var TreeNodeEntityRepository $repo */
         $repo = $em->getRepository('BehaviorFixtures\ORM\TreeNodeEntity');
 
         $entity = new TreeNodeEntity(1);

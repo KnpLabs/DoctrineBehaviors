@@ -10,24 +10,20 @@ declare(strict_types=1);
 namespace Knp\DoctrineBehaviors\ORM\Sluggable;
 
 use Doctrine\ORM\Event\LifecycleEventArgs;
-
 use Doctrine\ORM\Event\LoadClassMetadataEventArgs;
+use Doctrine\ORM\Events;
+use Doctrine\ORM\Mapping\ClassMetadata;
+use Knp\DoctrineBehaviors\ORM\AbstractSubscriber;
+use Knp\DoctrineBehaviors\Reflection\ClassAnalyzer;
 
-use Doctrine\ORM\Events,
-    Doctrine\ORM\Mapping\ClassMetadata,
-    Knp\DoctrineBehaviors\ORM\AbstractSubscriber,
-    Knp\DoctrineBehaviors\Reflection\ClassAnalyzer;
-
-/**
- * Sluggable subscriber.
- *
- * Adds mapping to sluggable entities.
- */
 class SluggableSubscriber extends AbstractSubscriber
 {
+    /**
+     * @var string
+     */
     private $sluggableTrait;
 
-    public function __construct(ClassAnalyzer $classAnalyzer, $isRecursive, $sluggableTrait)
+    public function __construct(ClassAnalyzer $classAnalyzer, bool $isRecursive, string $sluggableTrait)
     {
         parent::__construct($classAnalyzer, $isRecursive);
 
@@ -75,19 +71,15 @@ class SluggableSubscriber extends AbstractSubscriber
         }
     }
 
-    public function getSubscribedEvents()
+    /**
+     * @return string[]
+     */
+    public function getSubscribedEvents(): array
     {
-        return [ Events::loadClassMetadata, Events::prePersist, Events::preUpdate ];
+        return [Events::loadClassMetadata, Events::prePersist, Events::preUpdate];
     }
 
-    /**
-     * Checks if entity is sluggable
-     *
-     * @param ClassMetadata $classMetadata The metadata
-     *
-     * @return boolean
-     */
-    private function isSluggable(ClassMetadata $classMetadata)
+    private function isSluggable(ClassMetadata $classMetadata): bool
     {
         return $this->getClassAnalyzer()->hasTrait(
             $classMetadata->reflClass,

@@ -21,7 +21,7 @@ class ClassAnalyzer
      * @param string $traitName
      * @param boolean $isRecursive
      */
-    public function hasTrait(\ReflectionClass $class, $traitName, $isRecursive = false)
+    public function hasTrait(\ReflectionClass $class, $traitName, bool $isRecursive = false)
     {
         if (in_array($traitName, $class->getTraitNames())) {
             return true;
@@ -62,7 +62,7 @@ class ClassAnalyzer
         if (false === $parentClass) {
             return false;
         }
-        
+
         return $this->hasProperty($parentClass, $propertyName);
     }
 }

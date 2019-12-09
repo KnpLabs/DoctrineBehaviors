@@ -28,9 +28,12 @@ use Doctrine\ORM\Mapping\ClassMetadata,
  */
 class TreeSubscriber extends AbstractSubscriber
 {
+    /**
+     * @var string
+     */
     private $nodeTrait;
 
-    public function __construct(ClassAnalyzer $classAnalyzer, $isRecursive, $nodeTrait)
+    public function __construct(ClassAnalyzer $classAnalyzer, bool $isRecursive, string $nodeTrait)
     {
         parent::__construct($classAnalyzer, $isRecursive);
 

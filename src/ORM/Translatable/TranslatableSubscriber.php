@@ -34,21 +34,44 @@ use Knp\DoctrineBehaviors\Reflection\ClassAnalyzer;
  */
 class TranslatableSubscriber extends AbstractSubscriber
 {
+    /**
+     * @var callable|null
+     */
     private $currentLocaleCallable;
+
+    /**
+     * @var callable|null
+     */
     private $defaultLocaleCallable;
+
+    /**
+     * @var string
+     */
     private $translatableTrait;
+
+    /**
+     * @var string
+     */
     private $translationTrait;
+
+    /**
+     * @var int
+     */
     private $translatableFetchMode;
+
+    /**
+     * @var int
+     */
     private $translationFetchMode;
 
     public function __construct(
         ClassAnalyzer $classAnalyzer,
         ?callable $currentLocaleCallable = null,
         ?callable $defaultLocaleCallable = null,
-        $translatableTrait,
-        $translationTrait,
-        $translatableFetchMode,
-        $translationFetchMode
+        string $translatableTrait,
+        string $translationTrait,
+        string $translatableFetchMode,
+        string $translationFetchMode
     ) {
         parent::__construct($classAnalyzer, false);
 
@@ -62,8 +85,6 @@ class TranslatableSubscriber extends AbstractSubscriber
 
     /**
      * Adds mapping to the translatable and translations.
-     *
-     * @param LoadClassMetadataEventArgs $eventArgs The event arguments
      */
     public function loadClassMetadata(LoadClassMetadataEventArgs $eventArgs): void
     {
@@ -352,11 +373,9 @@ class TranslatableSubscriber extends AbstractSubscriber
     }
 
     /**
-     * Returns hash of events, that this subscriber is bound to.
-     *
-     * @return array
+     * @return string[]
      */
-    public function getSubscribedEvents()
+    public function getSubscribedEvents(): array
     {
         return [
             Events::loadClassMetadata,

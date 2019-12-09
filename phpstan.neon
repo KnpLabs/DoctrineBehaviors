@@ -1,6 +1,7 @@
 parameters:
-    level: 0
+    level: 1
 
     ignoreErrors:
         # traits
         - '#Access to an undefined property BehaviorFixtures\\ORM\\TreeNodeEntity::\$parentNodePath#'
+        - '#Constant (.*?) not found#'

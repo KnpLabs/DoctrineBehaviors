@@ -28,10 +28,17 @@ use Doctrine\ORM\Mapping\ClassMetadata,
  */
 class TimestampableSubscriber extends AbstractSubscriber
 {
+    /**
+     * @var string
+     */
     private $timestampableTrait;
+
+    /**
+     * @var string
+     */
     private $dbFieldType;
 
-    public function __construct(ClassAnalyzer $classAnalyzer, $isRecursive, $timestampableTrait, $dbFieldType)
+    public function __construct(ClassAnalyzer $classAnalyzer, bool $isRecursive, string $timestampableTrait, string $dbFieldType)
     {
         parent::__construct($classAnalyzer, $isRecursive);
 
