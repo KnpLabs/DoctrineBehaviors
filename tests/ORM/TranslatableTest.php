@@ -233,7 +233,8 @@ final class TranslatableTest extends TestCase
             Translatable::class,
             Translation::class,
             'LAZY',
-            'LAZY'
+            'LAZY',
+            false
         ));
 
         return $eventManager;

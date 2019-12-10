@@ -26,7 +26,8 @@
         "phpstan/phpstan": "^0.12.2",
         "doctrine/annotations": "^1.8",
         "symfony/http-kernel": "^4.4|^5.0",
-        "symplify/package-builder": "^7.1"
+        "symplify/package-builder": "^7.1",
+        "rector/rector": "^0.6.1"
     },
     "autoload": {
         "psr-4": {

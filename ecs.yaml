@@ -40,3 +40,6 @@ services:
             - 'license'
             - 'link'
             - 'abstract'
+
+    # every property should have @var annotation
+    # SlevomatCodingStandard\Sniffs\TypeHints\PropertyTypeHintSniff: ~

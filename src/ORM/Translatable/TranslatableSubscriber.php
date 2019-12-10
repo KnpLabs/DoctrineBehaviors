@@ -54,9 +54,10 @@ final class TranslatableSubscriber extends AbstractSubscriber
         string $translatableTrait,
         string $translationTrait,
         $translatableFetchMode,
-        $translationFetchMode
+        $translationFetchMode,
+        $isRecursive
     ) {
-        parent::__construct($classAnalyzer, false);
+        parent::__construct($classAnalyzer, $isRecursive);
 
         $this->currentLocaleCallable = $currentLocaleCallable;
         $this->defaultLocaleCallable = $defaultLocaleCallable;
@@ -128,7 +129,11 @@ final class TranslatableSubscriber extends AbstractSubscriber
 
     private function isTranslatable(ClassMetadata $classMetadata): bool
     {
-        return $this->getClassAnalyzer()->hasTrait($classMetadata->reflClass, $this->translatableTrait);
+        return $this->getClassAnalyzer()->hasTrait(
+            $classMetadata->reflClass,
+            $this->translatableTrait,
+            $this->isRecursive
+        );
     }
 
     private function mapTranslatable(ClassMetadata $classMetadata): void
@@ -152,7 +157,11 @@ final class TranslatableSubscriber extends AbstractSubscriber
 
     private function isTranslation(ClassMetadata $classMetadata): bool
     {
-        return $this->getClassAnalyzer()->hasTrait($classMetadata->reflClass, $this->translationTrait);
+        return $this->getClassAnalyzer()->hasTrait(
+            $classMetadata->reflClass,
+            $this->translationTrait,
+            $this->isRecursive
+        );
     }
 
     private function mapTranslation(ClassMetadata $classMetadata): void
