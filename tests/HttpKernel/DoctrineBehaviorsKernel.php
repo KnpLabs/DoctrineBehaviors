@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace Knp\DoctrineBehaviors\Tests\HttpKernel;
 
+use Doctrine\Bundle\DoctrineBundle\DoctrineBundle;
 use Knp\DoctrineBehaviors\Bundle\DoctrineBehaviorsBundle;
 use Symfony\Component\Config\Loader\LoaderInterface;
 use Symfony\Component\HttpKernel\Bundle\BundleInterface;
@@ -16,7 +17,7 @@ final class DoctrineBehaviorsKernel extends Kernel
      */
     public function registerBundles(): array
     {
-        return [new DoctrineBehaviorsBundle()];
+        return [new DoctrineBehaviorsBundle(), new DoctrineBundle()];
     }
 
     public function getCacheDir(): string

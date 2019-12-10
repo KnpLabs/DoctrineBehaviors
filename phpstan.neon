@@ -1,6 +1,10 @@
+includes:
+    - vendor/symplify/phpstan-extensions/config/config.neon
+
 parameters:
-    level: 0
+    level: 1
 
     ignoreErrors:
         # traits
         - '#Access to an undefined property Knp\\DoctrineBehaviors\\Tests\\Fixtures\\ORM\\TreeNodeEntity::\$parentNodePath#'
+        - '#Constant (.*?) not found#'

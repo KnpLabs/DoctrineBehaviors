@@ -28,7 +28,9 @@
         "doctrine/annotations": "^1.8",
         "symfony/http-kernel": "^4.4|^5.0",
         "symplify/package-builder": "^7.1",
-        "rector/rector": "^0.6.1"
+        "rector/rector": "^0.6.1",
+        "doctrine/doctrine-bundle": "^2.0",
+        "symplify/phpstan-extensions": "^7.1"
     },
     "autoload": {
         "psr-4": {
@@ -43,6 +45,6 @@
     "scripts": {
         "check-cs": "ecs check src tests --ansi",
         "fix-cs": "ecs check src tests --fix --ansi",
-        "phpstan": "phpstan analyse src tests --ansi"
+        "phpstan": "phpstan analyse src tests --ansi --error-format symplify"
     }
 }
