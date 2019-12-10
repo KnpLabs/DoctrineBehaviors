@@ -19,28 +19,22 @@ use Knp\DoctrineBehaviors\ORM\Geocodable\Query\AST\Functions\DistanceFunction;
 use Knp\DoctrineBehaviors\ORM\Geocodable\Type\Point;
 use Knp\DoctrineBehaviors\Reflection\ClassAnalyzer;
 
-/**
- * GeocodableSubscriber handle Geocodable entites
- * Adds doctrine point type
- */
-class GeocodableSubscriber extends AbstractSubscriber
+final class GeocodableSubscriber extends AbstractSubscriber
 {
     /**
      * @var callable
      */
     private $geolocationCallable;
 
+    /**
+     * @var string
+     */
     private $geocodableTrait;
 
-    /**
-     * @param                                                 $isRecursive
-     * @param                                                 $geocodableTrait
-     * @param callable                                        $geolocationCallable
-     */
     public function __construct(
         ClassAnalyzer $classAnalyzer,
-        $isRecursive,
-        $geocodableTrait,
+        bool $isRecursive,
+        string $geocodableTrait,
         ?callable $geolocationCallable = null
     ) {
         parent::__construct($classAnalyzer, $isRecursive);
@@ -102,20 +96,19 @@ class GeocodableSubscriber extends AbstractSubscriber
         $this->updateLocation($lifecycleEventArgs, true);
     }
 
-    /**
-     * @return Point the location
-     */
-    public function getLocation($entity)
+    public function getLocation(Point $point)
     {
         if ($this->geolocationCallable === null) {
             return false;
         }
 
         $callable = $this->geolocationCallable;
-
-        return $callable($entity);
+        return $callable($point);
     }
 
+    /**
+     * @return string[]
+     */
     public function getSubscribedEvents()
     {
         return [Events::prePersist, Events::preUpdate, Events::loadClassMetadata];
@@ -126,14 +119,7 @@ class GeocodableSubscriber extends AbstractSubscriber
         $this->geolocationCallable = $callable;
     }
 
-    /**
-     * Checks if entity is geocodable
-     *
-     * @param ClassMetadata $classMetadata The metadata
-     *
-     * @return boolean
-     */
-    private function isGeocodable(ClassMetadata $classMetadata)
+    private function isGeocodable(ClassMetadata $classMetadata): bool
     {
         return $this->getClassAnalyzer()->hasTrait(
             $classMetadata->reflClass,

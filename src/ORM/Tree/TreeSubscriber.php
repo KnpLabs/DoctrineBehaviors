@@ -10,11 +10,14 @@ use Doctrine\ORM\Mapping\ClassMetadata;
 use Knp\DoctrineBehaviors\ORM\AbstractSubscriber;
 use Knp\DoctrineBehaviors\Reflection\ClassAnalyzer;
 
-class TreeSubscriber extends AbstractSubscriber
+final class TreeSubscriber extends AbstractSubscriber
 {
+    /**
+     * @var string
+     */
     private $nodeTrait;
 
-    public function __construct(ClassAnalyzer $classAnalyzer, $isRecursive, $nodeTrait)
+    public function __construct(ClassAnalyzer $classAnalyzer, bool $isRecursive, string $nodeTrait)
     {
         parent::__construct($classAnalyzer, $isRecursive);
 
@@ -29,30 +32,30 @@ class TreeSubscriber extends AbstractSubscriber
             return;
         }
 
-        if ($this->isTreeNode($classMetadata)) {
-            if (! $classMetadata->hasField('materializedPath')) {
-                $classMetadata->mapField([
-                    'fieldName' => 'materializedPath',
-                    'type' => 'string',
-                    'length' => 255,
-                ]);
-            }
+        if (! $this->isTreeNode($classMetadata)) {
+            return;
         }
+
+        if ($classMetadata->hasField('materializedPath')) {
+            return;
+        }
+
+        $classMetadata->mapField([
+            'fieldName' => 'materializedPath',
+            'type' => 'string',
+            'length' => 255,
+        ]);
     }
 
+    /**
+     * @return string[]
+     */
     public function getSubscribedEvents()
     {
         return [Events::loadClassMetadata];
     }
 
-    /**
-     * Checks if entity is a tree
-     *
-     * @param ClassMetadata $classMetadata The metadata
-     *
-     * @return boolean
-     */
-    private function isTreeNode(ClassMetadata $classMetadata)
+    private function isTreeNode(ClassMetadata $classMetadata): bool
     {
         return $this->getClassAnalyzer()->hasTrait($classMetadata->reflClass, $this->nodeTrait, $this->isRecursive);
     }

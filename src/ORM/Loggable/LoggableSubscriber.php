@@ -11,7 +11,7 @@ use Knp\DoctrineBehaviors\ORM\AbstractSubscriber;
 use Knp\DoctrineBehaviors\Reflection\ClassAnalyzer;
 use ReflectionClass;
 
-class LoggableSubscriber extends AbstractSubscriber
+final class LoggableSubscriber extends AbstractSubscriber
 {
     /**
      * @var callable
@@ -21,7 +21,7 @@ class LoggableSubscriber extends AbstractSubscriber
     /**
      * @param callable $classAnalyzer
      */
-    public function __construct(ClassAnalyzer $classAnalyzer, $isRecursive, callable $loggerCallable)
+    public function __construct(ClassAnalyzer $classAnalyzer, bool $isRecursive, callable $loggerCallable)
     {
         parent::__construct($classAnalyzer, $isRecursive);
         $this->loggerCallable = $loggerCallable;
@@ -85,17 +85,15 @@ class LoggableSubscriber extends AbstractSubscriber
         $this->loggerCallable = $callable;
     }
 
+    /**
+     * @return string[]
+     */
     public function getSubscribedEvents()
     {
         return [Events::postPersist, Events::postUpdate, Events::preRemove];
     }
 
-    /**
-     * Checks if entity supports Loggable
-     *
-     * @return boolean
-     */
-    protected function isEntitySupported(ReflectionClass $reflectionClass)
+    protected function isEntitySupported(ReflectionClass $reflectionClass): bool
     {
         return $this->getClassAnalyzer()->hasTrait($reflectionClass, Loggable::class, $this->isRecursive);
     }

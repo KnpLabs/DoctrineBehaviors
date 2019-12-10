@@ -7,6 +7,7 @@ namespace Knp\DoctrineBehaviors\Tests\ORM;
 use Doctrine\Common\EventManager;
 use Doctrine\ORM\Configuration;
 use Doctrine\ORM\EntityManager;
+use Doctrine\ORM\EntityManagerInterface;
 use Doctrine\ORM\EntityRepository;
 use Doctrine\ORM\Mapping\ClassMetadataFactory;
 use Doctrine\ORM\Mapping\DefaultQuoteStrategy;
@@ -22,25 +23,23 @@ use ReflectionClass;
  */
 trait EntityManagerProvider
 {
-    private $em;
+    /**
+     * @var EntityManagerInterface
+     */
+    private $entityManager;
 
     abstract protected function getUsedEntityFixtures();
 
     /**
-     * EntityManager mock object together with
-     * annotation mapping driver and pdo_sqlite
-     * database in memory
-     *
-     * @param  EventManager  $eventManager
-     * @return EntityManager
+     * EntityManager mock object together with annotation mapping driver and pdo_sqlite database in memory
      */
     protected function getEntityManager(
         ?EventManager $eventManager = null,
         ?Configuration $configuration = null,
         array $conn = []
-    ) {
-        if ($this->em !== null) {
-            return $this->em;
+    ): EntityManagerInterface {
+        if ($this->entityManager !== null) {
+            return $this->entityManager;
         }
 
         $conn = array_merge([
@@ -59,41 +58,20 @@ trait EntityManagerProvider
         $schemaTool->dropSchema($schema);
         $schemaTool->createSchema($schema);
 
-        return $this->em = $entityManager;
+        return $this->entityManager = $entityManager;
     }
 
     /**
-     * EntityManager mock object together with
-     * annotation mapping driver and engine given
-     * by DB_ENGINE (pdo_mysql or pdo_pgsql)
-     * database in memory
+     * EntityManager mock object together with annotation mapping driver and engine given
+     * by DB_ENGINE (pdo_mysql or pdo_pgsql) database in memory
      */
-    protected function getDBEngineEntityManager(): EntityManager
+    protected function getDBEngineEntityManager(): EntityManagerInterface
     {
         if (DB_ENGINE === 'pgsql') {
-            return $this->getEntityManager(
-                null,
-                null,
-                [
-                    'driver' => 'pdo_pgsql',
-                    'host' => DB_HOST,
-                    'dbname' => DB_NAME,
-                    'user' => DB_USER,
-                    'password' => DB_PASSWD,
-                ]
-            );
+            return $this->createPgsqlEntityManager();
         }
-        return $this->getEntityManager(
-                null,
-                null,
-                [
-                    'driver' => 'pdo_mysql',
-                    'host' => DB_HOST,
-                    'dbname' => DB_NAME,
-                    'user' => DB_USER,
-                    'password' => DB_PASSWD,
-                ]
-            );
+
+        return $this->createMysqlEntityManager();
     }
 
     protected function getAnnotatedConfig(): Configuration
@@ -193,5 +171,35 @@ trait EntityManagerProvider
     protected function getEventManager(): EventManager
     {
         return new EventManager();
+    }
+
+    private function createPgsqlEntityManager(): EntityManagerInterface
+    {
+        return $this->getEntityManager(
+            null,
+            null,
+            [
+                'driver' => 'pdo_pgsql',
+                'host' => DB_HOST,
+                'dbname' => DB_NAME,
+                'user' => DB_USER,
+                'password' => DB_PASSWD,
+            ]
+        );
+    }
+
+    private function createMysqlEntityManager(): EntityManagerInterface
+    {
+        return $this->getEntityManager(
+            null,
+            null,
+            [
+                'driver' => 'pdo_mysql',
+                'host' => DB_HOST,
+                'dbname' => DB_NAME,
+                'user' => DB_USER,
+                'password' => DB_PASSWD,
+            ]
+        );
     }
 }

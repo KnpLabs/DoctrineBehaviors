@@ -27,20 +27,32 @@ class TranslatableSubscriber extends AbstractSubscriber
 
     private $defaultLocaleCallable;
 
+    /**
+     * @var string
+     */
     private $translatableTrait;
 
+    /**
+     * @var string
+     */
     private $translationTrait;
 
+    /**
+     * @var int
+     */
     private $translatableFetchMode;
 
+    /**
+     * @var int
+     */
     private $translationFetchMode;
 
     public function __construct(
         ClassAnalyzer $classAnalyzer,
         ?callable $currentLocaleCallable = null,
         ?callable $defaultLocaleCallable = null,
-        $translatableTrait,
-        $translationTrait,
+        string $translatableTrait,
+        string $translationTrait,
         $translatableFetchMode,
         $translationFetchMode
     ) {
@@ -56,8 +68,6 @@ class TranslatableSubscriber extends AbstractSubscriber
 
     /**
      * Adds mapping to the translatable and translations.
-     *
-     * @param LoadClassMetadataEventArgs $loadClassMetadataEventArgs The event arguments
      */
     public function loadClassMetadata(LoadClassMetadataEventArgs $loadClassMetadataEventArgs): void
     {
@@ -88,9 +98,7 @@ class TranslatableSubscriber extends AbstractSubscriber
     }
 
     /**
-     * Returns hash of events, that this subscriber is bound to.
-     *
-     * @return array
+     * @return string[]
      */
     public function getSubscribedEvents()
     {
@@ -99,12 +107,8 @@ class TranslatableSubscriber extends AbstractSubscriber
 
     /**
      * Convert string FETCH mode to required string
-     *
-     * @param $fetchMode
-     *
-     * @return int
      */
-    private function convertFetchString($fetchMode)
+    private function convertFetchString($fetchMode): int
     {
         if (is_int($fetchMode)) {
             return $fetchMode;
@@ -122,39 +126,31 @@ class TranslatableSubscriber extends AbstractSubscriber
         }
     }
 
-    /**
-     * Checks if entity is translatable
-     *
-     * @return boolean
-     */
-    private function isTranslatable(ClassMetadata $classMetadata)
+    private function isTranslatable(ClassMetadata $classMetadata): bool
     {
         return $this->getClassAnalyzer()->hasTrait($classMetadata->reflClass, $this->translatableTrait);
     }
 
     private function mapTranslatable(ClassMetadata $classMetadata): void
     {
-        if (! $classMetadata->hasAssociation('translations')) {
-            $classMetadata->mapOneToMany([
-                'fieldName' => 'translations',
-                'mappedBy' => 'translatable',
-                'indexBy' => 'locale',
-                'cascade' => ['persist', 'merge', 'remove'],
-                'fetch' => $this->translatableFetchMode,
-                'targetEntity' => $classMetadata->getReflectionClass()->getMethod('getTranslationEntityClass')->invoke(
-                    null
-                ),
-                'orphanRemoval' => true,
-            ]);
+        if ($classMetadata->hasAssociation('translations')) {
+            return;
         }
+
+        $classMetadata->mapOneToMany([
+            'fieldName' => 'translations',
+            'mappedBy' => 'translatable',
+            'indexBy' => 'locale',
+            'cascade' => ['persist', 'merge', 'remove'],
+            'fetch' => $this->translatableFetchMode,
+            'targetEntity' => $classMetadata->getReflectionClass()->getMethod('getTranslationEntityClass')->invoke(
+                null
+            ),
+            'orphanRemoval' => true,
+        ]);
     }
 
-    /**
-     * Checks if entity is a translation
-     *
-     * @return boolean
-     */
-    private function isTranslation(ClassMetadata $classMetadata)
+    private function isTranslation(ClassMetadata $classMetadata): bool
     {
         return $this->getClassAnalyzer()->hasTrait($classMetadata->reflClass, $this->translationTrait);
     }

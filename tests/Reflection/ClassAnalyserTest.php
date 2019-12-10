@@ -16,94 +16,88 @@ use ReflectionClass;
 
 class ClassAnalyserTest extends TestCase
 {
+    /**
+     * @var ClassAnalyzer
+     */
+    private $classAnalyzer;
+
+    protected function setUp(): void
+    {
+        $this->classAnalyzer = new ClassAnalyzer();
+    }
+
     public function testItShouldTestIfObjectUseTrait(): void
     {
-        $analyser = new ClassAnalyzer();
-
         $object = new DeletableEntity();
 
-        $use = $analyser->hasTrait(new ReflectionClass($object), SoftDeletable::class, false);
+        $use = $this->classAnalyzer->hasTrait(new ReflectionClass($object), SoftDeletable::class, false);
 
         $this->assertTrue($use);
     }
 
     public function testItShouldTestIfObjectDontUseTrait(): void
     {
-        $analyser = new ClassAnalyzer();
-
         $object = new DeletableEntity();
 
-        $use = $analyser->hasTrait(new ReflectionClass($object), Blameable::class, false);
+        $use = $this->classAnalyzer->hasTrait(new ReflectionClass($object), Blameable::class, false);
 
         $this->assertFalse($use);
     }
 
     public function testItShouldTestIfObjectOrHisParentClassesUseTrait(): void
     {
-        $analyser = new ClassAnalyzer();
-
         $object = new DeletableEntityInherit();
 
-        $use = $analyser->hasTrait(new ReflectionClass($object), SoftDeletable::class, false);
+        $use = $this->classAnalyzer->hasTrait(new ReflectionClass($object), SoftDeletable::class, false);
 
         $this->assertFalse($use);
 
-        $useInherit = $analyser->hasTrait(new ReflectionClass($object), SoftDeletable::class, true);
+        $useInherit = $this->classAnalyzer->hasTrait(new ReflectionClass($object), SoftDeletable::class, true);
 
         $this->assertTrue($useInherit);
     }
 
     public function testItShouldTestIfObjectHasAMethod(): void
     {
-        $analyser = new ClassAnalyzer();
-
         $object = new GeocodableEntity();
 
-        $use = $analyser->hasMethod(new ReflectionClass($object), 'getLocation');
+        $use = $this->classAnalyzer->hasMethod(new ReflectionClass($object), 'getLocation');
 
         $this->assertTrue($use);
     }
 
     public function testItShouldTestIfObjectDontHasAMethod(): void
     {
-        $analyser = new ClassAnalyzer();
-
         $object = new DeletableEntity();
 
-        $use = $analyser->hasMethod(new ReflectionClass($object), 'getLocation');
+        $use = $this->classAnalyzer->hasMethod(new ReflectionClass($object), 'getLocation');
 
         $this->assertFalse($use);
     }
 
     public function testItShouldTestIfObjectHasAProperty(): void
     {
-        $analyser = new ClassAnalyzer();
-
         $object = new TranslatableEntity();
 
-        $use = $analyser->hasProperty(new ReflectionClass($object), 'translations');
+        $use = $this->classAnalyzer->hasProperty(new ReflectionClass($object), 'translations');
 
         $this->assertTrue($use);
     }
 
     public function testItShouldTestIfObjectDontHasAProperty(): void
     {
-        $analyser = new ClassAnalyzer();
-
         $object = new DeletableEntity();
 
-        $use = $analyser->hasProperty(new ReflectionClass($object), 'translations');
+        $use = $this->classAnalyzer->hasProperty(new ReflectionClass($object), 'translations');
 
         $this->assertFalse($use);
     }
 
     public function testItShouldTestIfObjectOrHisParentClassesHasAProperty(): void
     {
-        $analyser = new ClassAnalyzer();
-
         $object = new DeletableEntityInherit();
 
-        $use = $analyser->hasProperty(new ReflectionClass($object), 'deletedAt');
+        $use = $this->classAnalyzer->hasProperty(new ReflectionClass($object), 'deletedAt');
 
         $this->assertTrue($use);
     }

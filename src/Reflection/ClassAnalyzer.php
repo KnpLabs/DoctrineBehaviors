@@ -6,14 +6,12 @@ namespace Knp\DoctrineBehaviors\Reflection;
 
 use ReflectionClass;
 
-class ClassAnalyzer
+final class ClassAnalyzer
 {
     /**
      * Return TRUE if the given object use the given trait, FALSE if not
-     * @param string $traitName
-     * @param boolean $isRecursive
      */
-    public function hasTrait(ReflectionClass $reflectionClass, $traitName, $isRecursive = false)
+    public function hasTrait(ReflectionClass $reflectionClass, string $traitName, bool $isRecursive = false)
     {
         if (in_array($traitName, $reflectionClass->getTraitNames(), true)) {
             return true;
@@ -21,34 +19,33 @@ class ClassAnalyzer
 
         $parentClass = $reflectionClass->getParentClass();
 
-        if (($isRecursive === false) || ($parentClass === false) || ($parentClass === null)) {
+        if ($isRecursive === false) {
+            return false;
+        }
+
+        if ($parentClass === false) {
+            return false;
+        }
+
+        if ($parentClass === null) {
             return false;
         }
 
         return $this->hasTrait($parentClass, $traitName, $isRecursive);
     }
 
-    /**
-     * Return TRUE if the given object has the given method, FALSE if not
-     * @param string $methodName
-     */
-    public function hasMethod(ReflectionClass $reflectionClass, $methodName)
+    public function hasMethod(ReflectionClass $reflectionClass, string $methodName): bool
     {
         return $reflectionClass->hasMethod($methodName);
     }
 
-    /**
-     * Return TRUE if the given object has the given property, FALSE if not
-     * @param string $propertyName
-     */
-    public function hasProperty(ReflectionClass $reflectionClass, $propertyName)
+    public function hasProperty(ReflectionClass $reflectionClass, string $propertyName): bool
     {
         if ($reflectionClass->hasProperty($propertyName)) {
             return true;
         }
 
         $parentClass = $reflectionClass->getParentClass();
-
         if ($parentClass === false) {
             return false;
         }
