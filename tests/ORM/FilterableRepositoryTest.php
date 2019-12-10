@@ -4,21 +4,18 @@ declare(strict_types=1);
 
 namespace Knp\DoctrineBehaviors\Tests\ORM;
 
+use Knp\DoctrineBehaviors\Tests\AbstractBehaviorTestCase;
 use Knp\DoctrineBehaviors\Tests\Fixtures\ORM\FilterableEntity;
 use Knp\DoctrineBehaviors\Tests\Fixtures\ORM\FilterableRepository;
-use PHPUnit\Framework\TestCase;
 
-require_once __DIR__ . '/EntityManagerProvider.php';
-
-final class FilterableRepositoryTest extends TestCase
+final class FilterableRepositoryTest extends AbstractBehaviorTestCase
 {
-    use EntityManagerProvider;
-
     public function testShouldFilterByNameUsingLike(): void
     {
         $this->createEntities();
+
         /** @var FilterableRepository $repository */
-        $repository = $this->getEntityManager()->getRepository(FilterableEntity::class);
+        $repository = $this->entityManager->getRepository(FilterableEntity::class);
 
         $collection = $repository->filterBy(['e:name' => 'name'])->getQuery()->execute();
 
@@ -31,7 +28,8 @@ final class FilterableRepositoryTest extends TestCase
     {
         $this->createEntities();
 
-        $repository = $this->getEntityManager()->getRepository(FilterableEntity::class);
+        /** @var FilterableRepository $repository */
+        $repository = $this->entityManager->getRepository(FilterableEntity::class);
 
         $collection = $repository->filterBy(['e:code' => '2'])->getQuery()->execute();
 
@@ -39,15 +37,8 @@ final class FilterableRepositoryTest extends TestCase
         $this->assertSame('name1', $collection[0]->getName());
     }
 
-    protected function getUsedEntityFixtures()
-    {
-        return [FilterableEntity::class];
-    }
-
     private function createEntities(): void
     {
-        $entityManager = $this->getEntityManager();
-
         foreach ([
             2 => 'name1',
             20 => 'name2',
@@ -57,8 +48,9 @@ final class FilterableRepositoryTest extends TestCase
             $entity->setCode($code);
             $entity->setName($name);
 
-            $entityManager->persist($entity);
+            $this->entityManager->persist($entity);
         }
-        $entityManager->flush();
+
+        $this->entityManager->flush();
     }
 }

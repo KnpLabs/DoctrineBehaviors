@@ -4,21 +4,15 @@ declare(strict_types=1);
 
 namespace Knp\DoctrineBehaviors\Tests\ORM\Tree;
 
-use Doctrine\Common\EventManager;
-use Knp\DoctrineBehaviors\Model\Tree\Node;
+use Iterator;
 use Knp\DoctrineBehaviors\Model\Tree\NodeInterface;
-use Knp\DoctrineBehaviors\ORM\Tree\TreeSubscriber;
-use Knp\DoctrineBehaviors\Reflection\ClassAnalyzer;
+use Knp\DoctrineBehaviors\Tests\AbstractBehaviorTestCase;
 use Knp\DoctrineBehaviors\Tests\Fixtures\ORM\TreeNodeEntity;
-use Knp\DoctrineBehaviors\Tests\ORM\EntityManagerProvider;
-use PHPUnit\Framework\TestCase;
+use Knp\DoctrineBehaviors\Tests\Fixtures\ORM\TreeNodeEntityRepository;
+use LogicException;
 
-require_once __DIR__ . '/../EntityManagerProvider.php';
-
-final class NodeTest extends TestCase
+final class NodeTest extends AbstractBehaviorTestCase
 {
-    use EntityManagerProvider;
-
     public function testBuildTree(): void
     {
         $root = $this->buildNode([
@@ -93,42 +87,37 @@ final class NodeTest extends TestCase
         $this->assertSame($tree, $tree->getChildNodes()->get(0)->getChildNodes()->get(0)->getRootNode());
     }
 
-    public function provideRootPaths()
+    public function provideRootPaths(): Iterator
     {
-        return [
-            [$this->buildNode(['setMaterializedPath' => '/0/1']), '/0'],
-            [$this->buildNode(['setMaterializedPath' => '/']), '/'],
-            [$this->buildNode(['setMaterializedPath' => '']), '/'],
-            [$this->buildNode(['setMaterializedPath' => '/test']), '/test'],
-            [$this->buildNode(['setMaterializedPath' => '/0/1/2/3/4/5/6/']), '/0'],
-        ];
+        yield [$this->buildNode(['setMaterializedPath' => '/0/1']), '/0'];
+        yield [$this->buildNode(['setMaterializedPath' => '/']), '/'];
+        yield [$this->buildNode(['setMaterializedPath' => '']), '/'];
+        yield [$this->buildNode(['setMaterializedPath' => '/test']), '/test'];
+        yield [$this->buildNode(['setMaterializedPath' => '/0/1/2/3/4/5/6/']), '/0'];
     }
 
     /**
-     * @dataProvider provideisChildNodeOf
-     **/
+     * @dataProvider provideIsChildNodeOf()
+     */
     public function testTestisChildNodeOf(NodeInterface $child, NodeInterface $parent, $expected): void
     {
         $this->assertSame($expected, $child->isChildNodeOf($parent));
     }
 
-    public function provideisChildNodeOf()
+    public function provideIsChildNodeOf(): Iterator
     {
         $tree = $this->buildTree();
 
-        return [
-            [$tree[0][0], $tree[0], true],
-            [$tree[0][0][0], $tree[0][0], true],
-            [$tree[0][0][0], $tree[0], false],
-            [$tree[0][0][0], $tree[0][0][0], false],
-        ];
+        yield [$tree[0][0], $tree[0], true];
+        yield [$tree[0][0][0], $tree[0][0], true];
+        yield [$tree[0][0][0], $tree[0], false];
+        yield [$tree[0][0][0], $tree[0][0][0], false];
     }
 
-    public function provideToArray()
+    public function provideToArray(): array
     {
         return [
-            1 =>
-            [
+            1 => [
                 'node' => '',
                 'children' =>
                 [
@@ -167,6 +156,7 @@ final class NodeTest extends TestCase
     {
         $expected = $this->provideToArray();
         $tree = $this->buildTree();
+
         $this->assertSame($expected, $tree->toArray());
     }
 
@@ -179,8 +169,6 @@ final class NodeTest extends TestCase
 
     public function testToFlatArray(): void
     {
-        $tree = $this->buildTree();
-
         $expected = [
             1 => '',
             2 => '----',
@@ -189,7 +177,7 @@ final class NodeTest extends TestCase
             3 => '----',
         ];
 
-        $this->assertSame($expected, $tree->toFlatArray());
+        $this->assertSame($expected, $this->buildTree()->toFlatArray());
     }
 
     public function testArrayAccess(): void
@@ -211,12 +199,11 @@ final class NodeTest extends TestCase
         $this->assertFalse(isset($tree[2][1]));
     }
 
-    /**
-     * @expectedException \LogicException
-     * @expectedExceptionMessage You must provide an id for this node if you want it to be part of a tree.
-     **/
     public function testTestsetChildNodeOfWithoutId(): void
     {
+        $this->expectException(LogicException::class);
+        $this->expectExceptionMessage('You must provide an id for this node if you want it to be part of a tree.');
+
         $this->buildNode(['setMaterializedPath' => '/0/1'])->setChildNodeOf(
             $this->buildNode(['setMaterializedPath' => '/0'])
         );
@@ -282,37 +269,24 @@ final class NodeTest extends TestCase
 
     public function testGetTree(): void
     {
-        $entityManager = $this->getEntityManager();
-        $repository = $entityManager->getRepository(TreeNodeEntity::class);
+        /** @var TreeNodeEntityRepository $repository */
+        $repository = $this->entityManager->getRepository(TreeNodeEntity::class);
 
         $entity = new TreeNodeEntity(1);
         $entity[0] = new TreeNodeEntity(2);
         $entity[0][0] = new TreeNodeEntity(3);
 
-        $entityManager->persist($entity);
-        $entityManager->persist($entity[0]);
-        $entityManager->persist($entity[0][0]);
-        $entityManager->flush();
+        $this->entityManager->persist($entity);
+        $this->entityManager->persist($entity[0]);
+        $this->entityManager->persist($entity[0][0]);
+        $this->entityManager->flush();
 
         $root = $repository->getTree();
 
         $this->assertSame($root[0][0], $entity[0][0]);
     }
 
-    protected function getUsedEntityFixtures()
-    {
-        return [TreeNodeEntity::class];
-    }
-
-    protected function getEventManager(): EventManager
-    {
-        $eventManager = new EventManager();
-        $eventManager->addEventSubscriber(new TreeSubscriber(new ClassAnalyzer(), false, Node::class));
-
-        return $eventManager;
-    }
-
-    protected function buildNode(array $values = [])
+    private function buildNode(array $values = []): TreeNodeEntity
     {
         $node = new TreeNodeEntity();
         foreach ($values as $method => $value) {

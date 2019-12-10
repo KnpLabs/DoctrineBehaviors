@@ -4,72 +4,43 @@ declare(strict_types=1);
 
 namespace Knp\DoctrineBehaviors\Model\Translatable;
 
+use Knp\DoctrineBehaviors\Contract\Entity\TranslatableInterface;
+
 trait TranslationMethods
 {
-    /**
-     * @return string
-     */
-    public static function getTranslatableEntityClass()
+    public static function getTranslatableEntityClass(): string
     {
         // By default, the translatable class has the same name but without the "Translation" suffix
         return substr(self::class, 0, -11);
     }
 
-    public function getId()
-    {
-        return $this->id;
-    }
-
     /**
      * Sets entity, that this translation should be mapped to.
-     *
-     * @param Translatable $translatable The translatable
      */
-    public function setTranslatable($translatable)
+    public function setTranslatable(TranslatableInterface $translatable): void
     {
         $this->translatable = $translatable;
-
-        return $this;
     }
 
     /**
      * Returns entity, that this translation is mapped to.
-     *
-     * @return Translatable
      */
-    public function getTranslatable()
+    public function getTranslatable(): TranslatableInterface
     {
         return $this->translatable;
     }
 
-    /**
-     * Sets locale name for this translation.
-     *
-     * @param string $locale The locale
-     */
-    public function setLocale($locale)
+    public function setLocale(string $locale): void
     {
         $this->locale = $locale;
-
-        return $this;
     }
 
-    /**
-     * Returns this translation locale.
-     *
-     * @return string
-     */
-    public function getLocale()
+    public function getLocale(): string
     {
         return $this->locale;
     }
 
-    /**
-     * Tells if translation is empty
-     *
-     * @return bool true if translation is not filled
-     */
-    public function isEmpty()
+    public function isEmpty(): bool
     {
         foreach (get_object_vars($this) as $var => $value) {
             if (in_array($var, ['id', 'translatable', 'locale'], true)) {

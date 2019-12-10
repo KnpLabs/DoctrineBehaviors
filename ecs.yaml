@@ -17,14 +17,21 @@ parameters:
         Symplify\CodingStandard\Sniffs\Architecture\ExplicitExceptionSniff: null
         Symplify\CodingStandard\Sniffs\Architecture\DuplicatedClassShortNameSniff: null
 
+        # mixed types
+        SlevomatCodingStandard\Sniffs\TypeHints\PropertyTypeHintSniff: null
+
         # buggy
         Symplify\CodingStandard\Fixer\ControlStructure\PregDelimiterFixer: null
 
         SlevomatCodingStandard\Sniffs\Namespaces\ReferenceUsedNamesOnlySniff.PartialUse:
             - 'tests/Fixtures/ORM/FilterableRepository.php'
 
-        SlevomatCodingStandard\Sniffs\Namespaces\ReferenceUsedNamesOnlySniff.ReferenceViaFullyQualifiedName:
-            - 'src/Model/Sluggable/Transliterator.php'
+        PhpCsFixer\Fixer\PhpUnit\PhpUnitStrictFixer:
+            - "tests/ORM/TimestampableTest.php"
+
+        # weird naming
+        Symplify\CodingStandard\Fixer\Naming\PropertyNameMatchingTypeFixer:
+            - "src/Model/Geocodable/GeocodableProperties.php"
 
 services:
     PhpCsFixer\Fixer\ClassNotation\FinalClassFixer: ~

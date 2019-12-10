@@ -15,34 +15,27 @@ class FilterableEntity
      * @ORM\Id
      * @ORM\Column(type="integer")
      * @ORM\GeneratedValue(strategy="AUTO")
+     * @var int
      */
     private $id;
 
     /**
      * @ORM\Column(type="string", nullable=true)
+     * @var string|null
      */
     private $name;
 
     /**
      * @ORM\Column(type="integer")
+     * @var int
      */
     private $code;
 
-    /**
-     * Returns object id.
-     *
-     * @return integer
-     */
-    public function getId()
+    public function getId(): int
     {
         return $this->id;
     }
 
-    /**
-     * Get name.
-     *
-     * @return name.
-     */
     public function getName()
     {
         return $this->name;
@@ -53,22 +46,12 @@ class FilterableEntity
         $this->name = $name;
     }
 
-    /**
-     * Get code.
-     *
-     * @return integer code.
-     */
-    public function getCode()
+    public function getCode(): int
     {
         return $this->code;
     }
 
-    /**
-     * Set code.
-     *
-     * @param integer $code the value to set.
-     */
-    public function setCode($code): void
+    public function setCode(int $code): void
     {
         $this->code = $code;
     }

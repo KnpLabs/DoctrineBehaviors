@@ -4,38 +4,19 @@ declare(strict_types=1);
 
 namespace Knp\DoctrineBehaviors\ORM\Sluggable;
 
+use Doctrine\Common\EventSubscriber;
 use Doctrine\ORM\Event\LifecycleEventArgs;
 use Doctrine\ORM\Event\LoadClassMetadataEventArgs;
 use Doctrine\ORM\Events;
-use Doctrine\ORM\Mapping\ClassMetadata;
-use Knp\DoctrineBehaviors\ORM\AbstractSubscriber;
+use Doctrine\ORM\Mapping\ClassMetadataInfo;
+use Knp\DoctrineBehaviors\Contract\Entity\SluggableInterface;
 
-final class SluggableSubscriber extends AbstractSubscriber
+final class SluggableSubscriber implements EventSubscriber
 {
-    /**
-     * @var string
-     */
-    private $sluggableTrait;
-
-    public function __construct(bool $isRecursive, string $sluggableTrait)
-    {
-        parent::__construct($isRecursive);
-
-        $this->sluggableTrait = $sluggableTrait;
-    }
-
     public function loadClassMetadata(LoadClassMetadataEventArgs $loadClassMetadataEventArgs): void
     {
         $classMetadata = $loadClassMetadataEventArgs->getClassMetadata();
-        if ($classMetadata->reflClass === null) {
-            return;
-        }
-
-        if (! $this->isSluggable($classMetadata)) {
-            return;
-        }
-
-        if ($classMetadata->hasField('slug')) {
+        if ($this->shouldSkip($classMetadata)) {
             return;
         }
 
@@ -48,40 +29,42 @@ final class SluggableSubscriber extends AbstractSubscriber
 
     public function prePersist(LifecycleEventArgs $lifecycleEventArgs): void
     {
-        $entity = $lifecycleEventArgs->getEntity();
-        $entityManager = $lifecycleEventArgs->getEntityManager();
-        $classMetadata = $entityManager->getClassMetadata(get_class($entity));
-
-        if ($this->isSluggable($classMetadata)) {
-            $entity->generateSlug();
-        }
+        $this->processLifecycleEventArgs($lifecycleEventArgs);
     }
 
     public function preUpdate(LifecycleEventArgs $lifecycleEventArgs): void
     {
-        $entity = $lifecycleEventArgs->getEntity();
-        $entityManager = $lifecycleEventArgs->getEntityManager();
-        $classMetadata = $entityManager->getClassMetadata(get_class($entity));
-
-        if ($this->isSluggable($classMetadata)) {
-            $entity->generateSlug();
-        }
+        $this->processLifecycleEventArgs($lifecycleEventArgs);
     }
 
     /**
      * @return string[]
      */
-    public function getSubscribedEvents()
+    public function getSubscribedEvents(): array
     {
         return [Events::loadClassMetadata, Events::prePersist, Events::preUpdate];
     }
 
-    private function isSluggable(ClassMetadata $classMetadata): bool
+    private function shouldSkip(ClassMetadataInfo $classMetadataInfo): bool
     {
-        return $this->getClassAnalyzer()->hasTrait(
-            $classMetadata->reflClass,
-            $this->sluggableTrait,
-            $this->isRecursive
-        );
+        if (! is_a($classMetadataInfo->getName(), SluggableInterface::class, true)) {
+            return true;
+        }
+
+        if ($classMetadataInfo->hasField('slug')) {
+            return true;
+        }
+
+        return false;
+    }
+
+    private function processLifecycleEventArgs(LifecycleEventArgs $lifecycleEventArgs): void
+    {
+        $entity = $lifecycleEventArgs->getEntity();
+        if (! $entity instanceof SluggableInterface) {
+            return;
+        }
+
+        $entity->generateSlug();
     }
 }

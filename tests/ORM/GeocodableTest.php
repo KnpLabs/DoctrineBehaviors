@@ -4,117 +4,95 @@ declare(strict_types=1);
 
 namespace Knp\DoctrineBehaviors\Tests\ORM;
 
-use Doctrine\Common\EventManager;
-use Knp\DoctrineBehaviors\Model\Geocodable\Geocodable;
-use Knp\DoctrineBehaviors\ORM\Geocodable\GeocodableSubscriber;
+use Doctrine\DBAL\Connection;
+use Doctrine\DBAL\Platforms\MySqlPlatform;
+use Doctrine\DBAL\Platforms\PostgreSqlPlatform;
+use Iterator;
+use Knp\DoctrineBehaviors\Contract\Provider\LocationProviderInterface;
 use Knp\DoctrineBehaviors\ORM\Geocodable\Type\Point;
-use Knp\DoctrineBehaviors\Reflection\ClassAnalyzer;
+use Knp\DoctrineBehaviors\Tests\AbstractBehaviorTestCase;
 use Knp\DoctrineBehaviors\Tests\Fixtures\ORM\GeocodableEntity;
-use PHPUnit\Framework\TestCase;
+use Knp\DoctrineBehaviors\Tests\Fixtures\ORM\GeocodableEntityRepository;
 
-require_once __DIR__ . '/EntityManagerProvider.php';
-
-final class GeocodableTest extends TestCase
+final class GeocodableTest extends AbstractBehaviorTestCase
 {
-    use EntityManagerProvider;
+    /**
+     * @var GeocodableEntityRepository
+     */
+    private $geocodableEntityRepository;
 
     /**
-     * @var callable
+     * @var LocationProviderInterface
      */
-    private $callable;
+    private $locationProvider;
+
+    /**
+     * @var Connection
+     */
+    private $connection;
 
     protected function setUp(): void
     {
-        $entityManager = $this->getDBEngineEntityManager();
+        parent::setUp();
 
-        $cities = $this->dataSetCities();
+        $this->locationProvider = static::$container->get(LocationProviderInterface::class);
+        $this->connection = static::$container->get('doctrine.dbal.default_connection');
 
-        foreach ($cities as $city) {
-            $entity = new GeocodableEntity($city[1][0], $city[1][1]);
-            $entity->setTitle($city[0]);
-            $entityManager->persist($entity);
-        }
+        // load cities to database
+        $this->loadEntitiesToDatabase();
 
-        $entityManager->flush();
+        $this->geocodableEntityRepository = $this->entityManager->getRepository(GeocodableEntity::class);
     }
 
     /**
-     * @dataProvider dataSetCities
+     * @dataProvider dataSetCities()
      */
-    public function testInsertLocation($city, array $location): void
+    public function testInsertLocation($city, Point $expectedPoint): void
     {
-        $entityManager = $this->getDBEngineEntityManager();
-
-        $repository = $entityManager->getRepository(GeocodableEntity::class);
-
-        $entity = $repository->findOneByTitle($city);
-
-        $this->assertLocation($location, $entity->getLocation());
+        $entity = $this->geocodableEntityRepository->findOneByTitle($city);
+        $this->assertLocation($expectedPoint, $entity->getLocation());
     }
 
     /**
-     * @dataProvider dataSetCities
+     * @dataProvider dataSetCities()
      */
-    public function testUpdateWithEditLocation($city, array $location, array $newLocation): void
+    public function testUpdateWithEditLocation($city, Point $expectedPoint, Point $newPoint): void
     {
-        $entityManager = $this->getDBEngineEntityManager();
+        $entity = $this->geocodableEntityRepository->findOneByTitle($city);
 
-        $repository = $entityManager->getRepository(GeocodableEntity::class);
-
-        /** @var GeocodableEntity $entity */
-        $entity = $repository->findOneByTitle($city);
-
-        $entity->setLocation(new Point($newLocation[0], $newLocation[1]));
+        $entity->setLocation($newPoint);
 
         $newTitle = $city . ' - edited';
-
         $entity->setTitle($newTitle);
 
-        $entityManager->flush();
+        $this->entityManager->persist($entity);
+        $this->entityManager->flush();
 
-        /** @var GeocodableEntity $entity */
-        $entity = $repository->findOneByTitle($newTitle);
-
+        $entity = $this->geocodableEntityRepository->findOneByTitle($newTitle);
         $this->assertSame($newTitle, $entity->getTitle());
 
-        $this->assertLocation($newLocation, $entity->getLocation());
+        $providedPoint = $this->locationProvider->providePoint();
+        $this->assertLocation($providedPoint, $entity->getLocation());
     }
 
     /**
-     * @dataProvider dataSetCities
+     * @dataProvider dataSetCities()
      */
-    public function testUpdateWithoutEditLocation($city, array $location): void
+    public function testUpdateWithoutEditLocation(string $city, Point $expectedPoint): void
     {
-        $entityManager = $this->getDBEngineEntityManager();
+        $entity = $this->geocodableEntityRepository->findOneByTitle($city);
 
-        $repository = $entityManager->getRepository(GeocodableEntity::class);
+        $this->entityManager->flush();
 
-        /** @var GeocodableEntity $entity */
-        $entity = $repository->findOneByTitle($city);
-
-        $entityManager->flush();
-
-        $this->assertLocation($location, $entity->getLocation());
-    }
-
-    /**
-     * @dataProvider dataSetCities
-     */
-    public function testUpdateWithoutEditWithGeocodableWatcher($city, array $location, array $newLocation): void
-    {
-        $this->callable = null;
-
-        $this->testUpdateWithEditLocation($city, $location, $newLocation);
+        $this->assertLocation($expectedPoint, $entity->getLocation());
     }
 
     public function testGetLocation(): void
     {
-        $entityManager = $this->getEntityManager();
-
         $entity = new GeocodableEntity();
 
-        $entityManager->persist($entity);
-        $entityManager->flush();
+        $this->entityManager->persist($entity);
+        $this->entityManager->flush();
 
         $this->assertInstanceOf(Point::class, $entity->getLocation());
     }
@@ -128,94 +106,75 @@ final class GeocodableTest extends TestCase
      * Requisheim <-> Nantes        ~671 km,  ~417 miles
      * Requisheim <-> New-York     ~6217 km, ~3864 miles
      *
-     * @dataProvider dataSetCitiesDistances
+     * @dataProvider dataSetCitiesDistances()
      */
-    public function testFindByDistance(array $location, $distance, $result, $text = null)
+    public function testFindByDistance(Point $point, int $distance, $result): void
     {
-        if (getenv('DB') === 'mysql') {
-            $this->markTestSkipped('findByDistance does not work with MYSQL');
-
-            return null;
+        // skip non-postgres platforms
+        $databasePlatform = $this->connection->getDatabasePlatform();
+        if (! $databasePlatform instanceof PostgreSqlPlatform/* && ! $databasePlatform instanceof MySqlPlatform*/) {
+            $this->markTestSkipped('Skip non-postgres platforms');
         }
 
-        $entityManager = $this->getDBEngineEntityManager();
+        if (getenv('DB_ENGINE') === 'pdo_mysql') {
+            $this->markTestSkipped('findByDistance does not work with MYSQL');
+        }
 
-        $repository = $entityManager->getRepository(GeocodableEntity::class);
+        $cities = $this->geocodableEntityRepository->findByDistance($point, $distance);
 
-        $cities = $repository->findByDistance(new Point($location[0], $location[1]), $distance);
-
-        $this->assertCount($result, $cities, $text);
+        $this->assertCount($result, $cities);
     }
 
-    public function dataSetCities(): array
+    public function dataSetCities(): Iterator
     {
-        return [
-            ['New-York', [40.742786, -73.989272], [40.742787, -73.989273]],
-            ['Paris', [48.858842, 2.355194], [48.858843, 2.355195]],
-            ['Nantes', [47.218635, -1.544266], [47.218636, -1.544267]],
-        ];
+        $currentPoint = new Point(40.742786, -73.989272);
+        $newPoint = new Point(40.742787, -73.989273);
+        yield ['New-York', $currentPoint, $newPoint];
+
+        $currentPoint = new Point(48.858842, 2.355194);
+        $newPoint = new Point(48.858843, 2.355195);
+        yield ['Paris', $currentPoint, $newPoint];
+
+        $currentPoint = new Point(47.218635, -1.544266);
+        $newPoint = new Point(47.218636, -1.544267);
+        yield ['Nantes', $currentPoint, $newPoint];
     }
 
     /**
      * From 'Reguisheim' (47.896319, 7.352943)
      */
-    public function dataSetCitiesDistances(): array
+    public function dataSetCitiesDistances(): Iterator
     {
-        return [
-            [[47.896319, 7.352943], 384000, 0, 'Paris is more than 384 km far from Reguisheim'],
-            [[47.896319, 7.352943], 385000, 1, 'Paris is less than 385 km far from Reguisheim'],
-            [[47.896319, 7.352943], 672000, 1, 'Nantes is more than 672 km far from Reguisheim'],
-            [[47.896319, 7.352943], 673000, 2, 'Paris and Nantes are less than 673 km far from Reguisheim'],
-            [[47.896319, 7.352943], 6222000, 2, 'New-York is more than 6222 km far from Reguisheim'],
-            [
-                [47.896319, 7.352943],
-                6223000,
-                3,
-                'Paris, Nantes and New-York are less than 6223 km far from Reguisheim',
-            ],
-        ];
+        $point = new Point(47.896319, 7.352943);
+
+        yield [$point, 384000, 0, 'Paris is more than 384 km far from Reguisheim'];
+        yield [$point, 385000, 1, 'Paris is less than 385 km far from Reguisheim'];
+        yield [$point, 672000, 1, 'Nantes is more than 672 km far from Reguisheim'];
+        yield [$point, 673000, 2, 'Paris and Nantes are less than 673 km far from Reguisheim'];
+        yield [$point, 6222000, 2, 'New-York is more than 6222 km far from Reguisheim'];
+        yield [$point, 6223000, 3, 'Paris, Nantes and New-York are less than 6223 km far from Reguisheim'];
     }
 
-    /**
-     * @return string[]
-     */
-    protected function getUsedEntityFixtures(): array
+    private function loadEntitiesToDatabase(): void
     {
-        return [GeocodableEntity::class];
-    }
+        foreach ($this->dataSetCities() as $city) {
+            /** @var Point $cityPoint */
+            $cityPoint = $city[1];
 
-    protected function getEventManager(): EventManager
-    {
-        $eventManager = new EventManager();
+            $entity = new GeocodableEntity($cityPoint->getLatitude(), $cityPoint->getLongitude());
+            $entity->setTitle($city[0]);
 
-        if ($this->callable === false) {
-            $callable = function ($entity) {
-                $location = $entity->getLocation();
-                if ($location) {
-                    return $location;
-                }
-
-                return Point::fromArray([
-                    'longitude' => 47.7,
-                    'latitude' => 7.9,
-                ]);
-            };
-        } else {
-            $callable = $this->callable;
+            $this->entityManager->persist($entity);
         }
 
-        $eventManager->addEventSubscriber(
-            new GeocodableSubscriber(new ClassAnalyzer(), false, Geocodable::class, $callable)
-        );
-
-        return $eventManager;
+        $this->entityManager->flush();
     }
 
-    private function assertLocation(array $expected, ?Point $point = null, $message = null): void
+    private function assertLocation(Point $expectedPoint, ?Point $point): void
     {
-        $this->assertInstanceOf(Point::class, $point, $message);
+        $this->assertInstanceOf(Point::class, $point);
 
-        $this->assertSame($expected[0], $point->getLatitude(), $message);
-        $this->assertSame($expected[1], $point->getLongitude(), $message);
+        $this->assertSame($expectedPoint->getLatitude(), $point->getLatitude());
+        $this->assertSame($expectedPoint->getLongitude(), $point->getLongitude());
     }
 }

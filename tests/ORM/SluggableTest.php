@@ -5,122 +5,89 @@ declare(strict_types=1);
 namespace Knp\DoctrineBehaviors\Tests\ORM;
 
 use DateTime;
-use Doctrine\Common\EventManager;
-use Knp\DoctrineBehaviors\Model\Sluggable\Sluggable;
-use Knp\DoctrineBehaviors\ORM\Sluggable\SluggableSubscriber;
-use Knp\DoctrineBehaviors\Reflection\ClassAnalyzer;
+use Doctrine\Common\Persistence\ObjectRepository;
+use Doctrine\ORM\EntityRepository;
+use Iterator;
+use Knp\DoctrineBehaviors\Tests\AbstractBehaviorTestCase;
 use Knp\DoctrineBehaviors\Tests\Fixtures\ORM\SluggableEntity;
-use PHPUnit\Framework\TestCase;
 
-require_once __DIR__ . '/EntityManagerProvider.php';
-
-final class SluggableTest extends TestCase
+final class SluggableTest extends AbstractBehaviorTestCase
 {
-    use EntityManagerProvider;
+    /**
+     * @var ObjectRepository|EntityRepository
+     */
+    private $sluggableRepository;
+
+    protected function setUp(): void
+    {
+        parent::setUp();
+
+        $this->sluggableRepository = $this->entityManager->getRepository(SluggableEntity::class);
+    }
 
     public function testSlugLoading(): void
     {
-        $entityManager = $this->getEntityManager();
-
         $entity = new SluggableEntity();
-
-        $expected = 'the-name';
-
         $entity->setName('The name');
 
-        $entityManager->persist($entity);
-        $entityManager->flush();
+        $this->entityManager->persist($entity);
+        $this->entityManager->flush();
 
-        $this->assertNotNull($id = $entity->getId());
+        $id = $entity->getId();
+        $this->assertNotNull($id);
 
-        $entityManager->clear();
+        $this->entityManager->clear();
 
-        $entity = $entityManager->getRepository(SluggableEntity::class)->find($id);
+        /** @var SluggableEntity $entity */
+        $entity = $this->sluggableRepository->find($id);
 
         $this->assertNotNull($entity);
-        $this->assertSame($expected, $entity->getSlug());
+        $this->assertSame('the-name', $entity->getSlug());
     }
 
-    public function testNotUpdatedSlug(): void
+    /**
+     * @dataProvider provideDataForTest()
+     */
+    public function testNotUpdatedSlug(string $value, string $expectedSlug): void
     {
-        $entityManager = $this->getEntityManager();
+        $entity = new SluggableEntity();
+        $entity->setName($value);
 
-        $data = [
-            [
-                'slug' => 'the-name',
-                'name' => 'The name',
-            ],
-            [
-                'slug' => 'loic-rene',
-                'name' => 'Löic & René',
-            ],
-            [
-                'slug' => 'ivan-ivanovich',
-                'name' => 'Иван Иванович',
-            ],
-            [
-                'slug' => 'chateauneuf-du-pape',
-                'name' => 'Châteauneuf du Pape',
-            ],
-            [
-                'slug' => 'zlutoucky-kun',
-                'name' => 'Žluťoučký kůň',
-            ],
-        ];
+        $this->entityManager->persist($entity);
+        $this->entityManager->flush();
 
-        foreach ($data as $row) {
-            $entity = new SluggableEntity();
+        $entity->setDate(new DateTime());
 
-            $entity->setName($row['name']);
+        $this->entityManager->persist($entity);
+        $this->entityManager->flush();
 
-            $entityManager->persist($entity);
-            $entityManager->flush();
+        $this->assertSame($expectedSlug, $entity->getSlug());
+    }
 
-            $entity->setDate(new DateTime());
-
-            $entityManager->persist($entity);
-            $entityManager->flush();
-
-            $this->assertSame($row['slug'], $entity->getSlug());
-        }
+    public function provideDataForTest(): Iterator
+    {
+        yield ['The name', 'the-name'];
+        yield ['Löic & René', 'loic-rene'];
+        yield ['Иван Иванович', 'ivan-ivanovich'];
+        yield ['Châteauneuf du Pape', 'chateauneuf-du-pape'];
+        yield ['Žluťoučký kůň', 'zlutoucky-kun'];
     }
 
     public function testUpdatedSlug(): void
     {
-        $entityManager = $this->getEntityManager();
-
         $entity = new SluggableEntity();
-
-        $expected = 'the-name';
-
         $entity->setName('The name');
 
-        $entityManager->persist($entity);
-        $entityManager->flush();
+        $this->entityManager->persist($entity);
+        $this->entityManager->flush();
 
-        $this->assertSame($entity->getSlug(), $expected);
-
-        $expected = 'the-name-2';
+        $this->assertSame('the-name', $entity->getSlug());
 
         $entity->setName('The name 2');
 
-        $entityManager->persist($entity);
-        $entityManager->flush();
+        $this->entityManager->persist($entity);
+        $this->entityManager->flush();
 
-        $this->assertSame($expected, $entity->getSlug());
-    }
-
-    protected function getUsedEntityFixtures()
-    {
-        return [SluggableEntity::class];
-    }
-
-    protected function getEventManager(): EventManager
-    {
-        $eventManager = new EventManager();
-
-        $eventManager->addEventSubscriber(new SluggableSubscriber(new ClassAnalyzer(), false, Sluggable::class));
-
-        return $eventManager;
+        $this->assertSame('the-name-2', $entity->getSlug());
     }
 }

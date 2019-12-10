@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace Knp\DoctrineBehaviors\Bundle\DependencyInjection;
 
+use Doctrine\Common\EventSubscriber;
 use Symfony\Component\Config\FileLocator;
 use Symfony\Component\DependencyInjection\ContainerBuilder;
 use Symfony\Component\DependencyInjection\Extension\Extension;
@@ -16,8 +17,9 @@ final class DoctrineBehaviorsExtension extends Extension
         $loader = new YamlFileLoader($containerBuilder, new FileLocator(__DIR__ . '/../../../config'));
         $loader->load('orm-services.yml');
 
-        $containerBuilder->registerForAutoconfiguration(\Doctrine\Common\EventSubscriber::class)
-            ->addTag('');
+        // @see https://github.com/doctrine/DoctrineBundle/issues/674
+        $containerBuilder->registerForAutoconfiguration(EventSubscriber::class)
+            ->addTag('doctrine.event_subscriber');
     }
 
     public function getAlias(): string

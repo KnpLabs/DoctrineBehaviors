@@ -13,10 +13,8 @@ trait GeocodableMethods
         return $this->location;
     }
 
-    public function setLocation(?Point $point = null)
+    public function setLocation(?Point $point = null): void
     {
         $this->location = $point;
-
-        return $this;
     }
 }

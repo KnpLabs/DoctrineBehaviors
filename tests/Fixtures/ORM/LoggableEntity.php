@@ -4,25 +4,23 @@ declare(strict_types=1);
 
 namespace Knp\DoctrineBehaviors\Tests\Fixtures\ORM;
 
+use DateTimeInterface;
 use Doctrine\ORM\Mapping as ORM;
+use Knp\DoctrineBehaviors\Contract\Entity\LoggableInterface;
 use Knp\DoctrineBehaviors\Model\Loggable\Loggable;
 
 /**
  * @ORM\Entity
  */
-class LoggableEntity
+class LoggableEntity implements LoggableInterface
 {
     use Loggable;
 
     /**
-     * @ORM\Column(type="array", nullable=true)
+     * @ORM\Column(type="string", nullable=true)
+     * @var string|null
      */
-    private $roles;
-
-    /**
-     * @ORM\Column(type="date", nullable=true)
-     */
-    private $date;
+    private $title;
 
     /**
      * @ORM\Id
@@ -33,27 +31,28 @@ class LoggableEntity
     private $id;
 
     /**
-     * @ORM\Column(type="string", nullable=true)
-     * @var string
+     * @ORM\Column(type="array", nullable=true)
+     * @var string[]|null
      */
-    private $title;
+    private $roles;
+
+    /**
+     * @ORM\Column(type="date", nullable=true)
+     * @var DateTimeInterface|null
+     */
+    private $date;
 
     public function getId(): int
     {
         return $this->id;
     }
 
-    /**
-     * Get title.
-     *
-     * @return string.
-     */
-    public function getTitle()
+    public function getTitle(): ?string
     {
         return $this->title;
     }
 
-    public function setTitle(string $title): void
+    public function setTitle(?string $title): void
     {
         $this->title = $title;
     }

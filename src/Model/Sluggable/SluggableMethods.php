@@ -4,35 +4,22 @@ declare(strict_types=1);
 
 namespace Knp\DoctrineBehaviors\Model\Sluggable;
 
+use Behat\Transliterator\Transliterator;
 use UnexpectedValueException;
 
 trait SluggableMethods
 {
     /**
-     * Returns an array of the fields used to generate the slug.
-     *
-     * @return array
+     * @return string[]
      */
-    abstract public function getSluggableFields();
+    abstract public function getSluggableFields(): array;
 
-    /**
-     * Sets the entity's slug.
-     *
-     * @param $slug
-     */
-    public function setSlug($slug)
+    public function setSlug(string $slug): void
     {
         $this->slug = $slug;
-
-        return $this;
     }
 
-    /**
-     * Returns the entity's slug.
-     *
-     * @return string
-     */
-    public function getSlug()
+    public function getSlug(): string
     {
         return $this->slug;
     }
@@ -42,51 +29,29 @@ trait SluggableMethods
      */
     public function generateSlug(): void
     {
-        if ($this->getRegenerateSlugOnUpdate() || empty($this->slug)) {
-            $fields = $this->getSluggableFields();
-            $values = [];
-
-            foreach ($fields as $field) {
-                if (property_exists($this, $field)) {
-                    $val = $this->{$field};
-                } else {
-                    $methodName = 'get' . ucfirst($field);
-                    if (method_exists($this, $methodName)) {
-                        $val = $this->{$methodName}();
-                    } else {
-                        $val = null;
-                    }
-                }
-
-                $values[] = $val;
-            }
-
-            $this->slug = $this->generateSlugValue($values);
+        if (! $this->getRegenerateSlugOnUpdate()) {
+            return;
         }
+
+        $values = [];
+        foreach ($this->getSluggableFields() as $field) {
+            $values[] = $this->resolveFieldValue($field);
+        }
+
+        $this->slug = $this->generateSlugValue($values);
     }
 
-    /**
-     * Returns the slug's delimiter
-     *
-     * @return string
-     */
-    private function getSlugDelimiter()
+    private function getSlugDelimiter(): string
     {
         return '-';
     }
 
-    /**
-     * Returns whether or not the slug gets regenerated on update.
-     *
-     * @return bool
-     */
-    private function getRegenerateSlugOnUpdate()
+    private function getRegenerateSlugOnUpdate(): bool
     {
         return true;
     }
 
     /**
-     * @param $values
      * @return mixed|string
      */
     private function generateSlugValue($values)
@@ -98,24 +63,43 @@ trait SluggableMethods
             }
         }
 
-        if (count($usableValues) < 1) {
-            throw new UnexpectedValueException(
-                'Sluggable expects to have at least one usable (non-empty) field from the following: [ ' . implode(
-                    array_keys($values),
-                    ','
-                ) . ' ]'
-            );
-        }
+        $this->ensureAtLeastOneUsableValue($values, $usableValues);
 
         // generate the slug itself
         $sluggableText = implode(' ', $usableValues);
 
-        $transliterator = new Transliterator();
-        $sluggableText = $transliterator->transliterate($sluggableText, $this->getSlugDelimiter());
+        $sluggableText = Transliterator::transliterate($sluggableText, $this->getSlugDelimiter());
 
         $urlized = strtolower(
             trim(preg_replace("/[^a-zA-Z0-9\/_|+ -]/", '', $sluggableText), $this->getSlugDelimiter())
         );
+
         return preg_replace("/[\/_|+ -]+/", $this->getSlugDelimiter(), $urlized);
+    }
+
+    private function ensureAtLeastOneUsableValue(array $values, array $usableValues): void
+    {
+        if (count($usableValues) >= 1) {
+            return;
+        }
+
+        throw new UnexpectedValueException(sprintf(
+            'Sluggable expects to have at least one non-empty field from the following: ["%s"]',
+            implode(array_keys($values), '", "')
+        ));
+    }
+
+    private function resolveFieldValue(string $field)
+    {
+        if (property_exists($this, $field)) {
+            return $this->{$field};
+        }
+
+        $methodName = 'get' . ucfirst($field);
+        if (method_exists($this, $methodName)) {
+            return $this->{$methodName}();
+        }
+
+        return null;
     }
 }

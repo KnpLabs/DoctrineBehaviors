@@ -5,13 +5,14 @@ declare(strict_types=1);
 namespace Knp\DoctrineBehaviors\Tests\Fixtures\ORM;
 
 use Doctrine\ORM\Mapping as ORM;
+use Knp\DoctrineBehaviors\Contract\Entity\GeocodableInterface;
 use Knp\DoctrineBehaviors\Model\Geocodable\Geocodable;
 use Knp\DoctrineBehaviors\ORM\Geocodable\Type\Point;
 
 /**
  * @ORM\Entity(repositoryClass="Knp\DoctrineBehaviors\Tests\Fixtures\ORM\GeocodableEntityRepository")
  */
-class GeocodableEntity
+class GeocodableEntity implements GeocodableInterface
 {
     use Geocodable;
 
@@ -29,9 +30,14 @@ class GeocodableEntity
      */
     private $title;
 
+    /**
+     * @param int|float $latitude
+     * @param int|float $longitude
+     */
     public function __construct($latitude = 0, $longitude = 0)
     {
-        $this->setLocation(new Point($latitude, $longitude));
+        $point = new Point($latitude, $longitude);
+        $this->setLocation($point);
     }
 
     public function getId(): int

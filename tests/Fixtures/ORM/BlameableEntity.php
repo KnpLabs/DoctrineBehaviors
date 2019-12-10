@@ -5,12 +5,13 @@ declare(strict_types=1);
 namespace Knp\DoctrineBehaviors\Tests\Fixtures\ORM;
 
 use Doctrine\ORM\Mapping as ORM;
+use Knp\DoctrineBehaviors\Contract\Entity\BlameableInterface;
 use Knp\DoctrineBehaviors\Model\Blameable\Blameable;
 
 /**
  * @ORM\Entity
  */
-class BlameableEntity
+class BlameableEntity implements BlameableInterface
 {
     use Blameable;
 

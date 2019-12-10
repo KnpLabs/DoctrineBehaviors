@@ -4,25 +4,18 @@ declare(strict_types=1);
 
 namespace Knp\DoctrineBehaviors\ORM\SoftDeletable;
 
-use Doctrine\Common\Persistence\Mapping\ClassMetadata;
+use Doctrine\Common\EventSubscriber;
 use Doctrine\ORM\Event\LoadClassMetadataEventArgs;
 use Doctrine\ORM\Event\OnFlushEventArgs;
 use Doctrine\ORM\Events;
-use Knp\DoctrineBehaviors\ORM\AbstractSubscriber;
+use Knp\DoctrineBehaviors\Contract\Entity\SoftDeletableInterface;
 
-final class SoftDeletableSubscriber extends AbstractSubscriber
+final class SoftDeletableSubscriber implements EventSubscriber
 {
     /**
      * @var string
      */
-    private $softDeletableTrait;
-
-    public function __construct(bool $isRecursive, string $softDeletableTrait)
-    {
-        parent::__construct($isRecursive);
-
-        $this->softDeletableTrait = $softDeletableTrait;
-    }
+    private const DELETED_AT = 'deletedAt';
 
     public function onFlush(OnFlushEventArgs $onFlushEventArgs): void
     {
@@ -30,58 +23,46 @@ final class SoftDeletableSubscriber extends AbstractSubscriber
         $unitOfWork = $entityManager->getUnitOfWork();
 
         foreach ($unitOfWork->getScheduledEntityDeletions() as $entity) {
-            $classMetadata = $entityManager->getClassMetadata(get_class($entity));
-            if ($this->isSoftDeletable($classMetadata)) {
-                $oldValue = $entity->getDeletedAt();
-
-                $entity->delete();
-                $entityManager->persist($entity);
-
-                $unitOfWork->propertyChanged($entity, 'deletedAt', $oldValue, $entity->getDeletedAt());
-                $unitOfWork->scheduleExtraUpdate($entity, [
-                    'deletedAt' => [$oldValue, $entity->getDeletedAt()],
-                ]);
+            if (! $entity instanceof SoftDeletableInterface) {
+                continue;
             }
-        }
-    }
 
-    /**
-     * @return string[]
-     */
-    public function getSubscribedEvents()
-    {
-        return [Events::onFlush, Events::loadClassMetadata];
+            $oldValue = $entity->getDeletedAt();
+
+            $entity->delete();
+            $entityManager->persist($entity);
+
+            $unitOfWork->propertyChanged($entity, self::DELETED_AT, $oldValue, $entity->getDeletedAt());
+            $unitOfWork->scheduleExtraUpdate($entity, [
+                self::DELETED_AT => [$oldValue, $entity->getDeletedAt()],
+            ]);
+        }
     }
 
     public function loadClassMetadata(LoadClassMetadataEventArgs $loadClassMetadataEventArgs): void
     {
         $classMetadata = $loadClassMetadataEventArgs->getClassMetadata();
 
-        if ($classMetadata->reflClass === null) {
+        if (! is_a($classMetadata->reflClass->getName(), SoftDeletableInterface::class, true)) {
             return;
         }
 
-        if (! $this->isSoftDeletable($classMetadata)) {
-            return;
-        }
-
-        if ($classMetadata->hasField('deletedAt')) {
+        if ($classMetadata->hasField(self::DELETED_AT)) {
             return;
         }
 
         $classMetadata->mapField([
-            'fieldName' => 'deletedAt',
+            'fieldName' => self::DELETED_AT,
             'type' => 'datetime',
             'nullable' => true,
         ]);
     }
 
-    private function isSoftDeletable(ClassMetadata $classMetadata): bool
+    /**
+     * @return string[]
+     */
+    public function getSubscribedEvents(): array
     {
-        return $this->getClassAnalyzer()->hasTrait(
-            $classMetadata->reflClass,
-            $this->softDeletableTrait,
-            $this->isRecursive
-        );
+        return [Events::onFlush, Events::loadClassMetadata];
     }
 }

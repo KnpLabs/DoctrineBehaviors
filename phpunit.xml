@@ -3,6 +3,7 @@
      colors="true"
      bootstrap="tests/bootstrap.php"
 >
+
     <testsuites>
         <testsuite name="Knp Doctrine2 Behaviors">
             <directory>tests</directory>

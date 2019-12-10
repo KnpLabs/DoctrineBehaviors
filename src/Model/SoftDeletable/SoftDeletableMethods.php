@@ -7,6 +7,7 @@ namespace Knp\DoctrineBehaviors\Model\SoftDeletable;
 use DateTime;
 use DateTimeInterface;
 use DateTimeZone;
+use Knp\DoctrineBehaviors\Exception\ShouldNotHappenException;
 
 trait SoftDeletableMethods
 {
@@ -32,16 +33,16 @@ trait SoftDeletableMethods
         return false;
     }
 
-    public function willBeDeleted(?DateTime $at = null): bool
+    public function willBeDeleted(?DateTimeInterface $dateTime = null): bool
     {
         if ($this->deletedAt === null) {
             return false;
         }
-        if ($at === null) {
+        if ($dateTime === null) {
             return true;
         }
 
-        return $this->deletedAt <= $at;
+        return $this->deletedAt <= $dateTime;
     }
 
     public function getDeletedAt(): ?DateTimeInterface
@@ -49,16 +50,18 @@ trait SoftDeletableMethods
         return $this->deletedAt;
     }
 
-    public function setDeletedAt(?DateTime $date)
+    public function setDeletedAt(?DateTimeInterface $deletedAt): void
     {
-        $this->deletedAt = $date;
-
-        return $this;
+        $this->deletedAt = $deletedAt;
     }
 
-    private function currentDateTime(): ?DateTimeInterface
+    private function currentDateTime(): DateTimeInterface
     {
         $dateTime = DateTime::createFromFormat('U.u', sprintf('%.6F', microtime(true)));
+        if ($dateTime === false) {
+            throw new ShouldNotHappenException();
+        }
+
         $dateTime->setTimezone(new DateTimeZone(date_default_timezone_get()));
 
         return $dateTime;

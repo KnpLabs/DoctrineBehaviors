@@ -1,0 +1,11 @@
+# inspiration https://github.com/cpliakas/git-wrapper/tree/master/upgrade/rector
+
+services:
+    # @todo
+    # rename classes
+    # rename methods
+
+    # add implement interface for direct trait users, e.g. for https://github:com/KnpLabs/DoctrineBehaviors/pull/325/files:
+
+    # defluent method calls
+    # add scalar types to trait methods

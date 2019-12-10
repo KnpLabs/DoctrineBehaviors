@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace Knp\DoctrineBehaviors\Tests\Fixtures\ORM\Translation;
 
 use Doctrine\ORM\Mapping as ORM;
+use Knp\DoctrineBehaviors\Contract\Entity\TranslationInterface;
 use Knp\DoctrineBehaviors\Model\Translatable\Translation;
 use Knp\DoctrineBehaviors\Tests\Fixtures\ORM\TranslatableCustomizedEntity;
 
@@ -12,16 +13,30 @@ use Knp\DoctrineBehaviors\Tests\Fixtures\ORM\TranslatableCustomizedEntity;
  * @ORM\Entity
  * Used to test translatable classes which declare a custom translation class.
  */
-class TranslatableCustomizedEntityTranslation
+class TranslatableCustomizedEntityTranslation implements TranslationInterface
 {
     use Translation;
 
     /**
+     * @ORM\Id
+     * @ORM\Column(type="integer")
+     * @ORM\GeneratedValue(strategy="AUTO")
+     * @var int
+     */
+    private $id;
+
+    /**
      * @ORM\Column(type="string")
+     * @var string
      */
     private $title;
 
-    public static function getTranslatableEntityClass()
+    public function getId(): int
+    {
+        return $this->id;
+    }
+
+    public static function getTranslatableEntityClass(): string
     {
         return TranslatableCustomizedEntity::class;
     }
@@ -31,7 +46,7 @@ class TranslatableCustomizedEntityTranslation
         return $this->title;
     }
 
-    public function setTitle($title): void
+    public function setTitle(string $title): void
     {
         $this->title = $title;
     }

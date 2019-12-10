@@ -5,42 +5,30 @@ declare(strict_types=1);
 namespace Knp\DoctrineBehaviors\Model\Timestampable;
 
 use DateTime;
+use DateTimeInterface;
 use DateTimeZone;
+use Knp\DoctrineBehaviors\Exception\ShouldNotHappenException;
 
 trait TimestampableMethods
 {
-    /**
-     * Returns createdAt value.
-     *
-     * @return DateTime
-     */
-    public function getCreatedAt()
+    public function getCreatedAt(): DateTimeInterface
     {
         return $this->createdAt;
     }
 
-    /**
-     * Returns updatedAt value.
-     *
-     * @return DateTime
-     */
-    public function getUpdatedAt()
+    public function getUpdatedAt(): DateTimeInterface
     {
         return $this->updatedAt;
     }
 
-    public function setCreatedAt(DateTime $createdAt)
+    public function setCreatedAt(DateTimeInterface $createdAt): void
     {
         $this->createdAt = $createdAt;
-
-        return $this;
     }
 
-    public function setUpdatedAt(DateTime $updatedAt)
+    public function setUpdatedAt(DateTimeInterface $updatedAt): void
     {
         $this->updatedAt = $updatedAt;
-
-        return $this;
     }
 
     /**
@@ -50,6 +38,11 @@ trait TimestampableMethods
     {
         // Create a datetime with microseconds
         $dateTime = DateTime::createFromFormat('U.u', sprintf('%.6F', microtime(true)));
+
+        if ($dateTime === false) {
+            throw new ShouldNotHappenException();
+        }
+
         $dateTime->setTimezone(new DateTimeZone(date_default_timezone_get()));
 
         if ($this->createdAt === null) {

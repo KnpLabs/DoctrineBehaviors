@@ -4,21 +4,18 @@ declare(strict_types=1);
 
 namespace Knp\DoctrineBehaviors\Model\Translatable;
 
+use Knp\DoctrineBehaviors\Contract\Entity\TranslatableInterface;
+
 trait TranslationProperties
 {
-    /**
-     * @var int
-     */
-    protected $id;
-
     /**
      * @var string
      */
     protected $locale;
 
     /**
-     * Will be mapped to translatable entity
-     * by TranslatableSubscriber
+     * Will be mapped to translatable entity by TranslatableSubscriber
+     * @var TranslatableInterface
      */
     protected $translatable;
 }

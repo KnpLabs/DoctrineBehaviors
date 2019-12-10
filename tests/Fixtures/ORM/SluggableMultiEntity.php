@@ -5,23 +5,27 @@ declare(strict_types=1);
 namespace Knp\DoctrineBehaviors\Tests\Fixtures\ORM;
 
 use DateTime;
+use DateTimeInterface;
 use Doctrine\ORM\Mapping as ORM;
+use Knp\DoctrineBehaviors\Contract\Entity\SluggableInterface;
 use Knp\DoctrineBehaviors\Model\Sluggable\Sluggable;
 
 /**
  * @ORM\Entity
  */
-class SluggableMultiEntity
+class SluggableMultiEntity implements SluggableInterface
 {
     use Sluggable;
 
     /**
      * @ORM\Column(type="string")
+     * @var string
      */
     protected $name;
 
     /**
      * @ORM\Column(type="datetime")
+     * @var DateTimeInterface
      */
     protected $date;
 
@@ -29,6 +33,7 @@ class SluggableMultiEntity
      * @ORM\Id
      * @ORM\Column(type="integer")
      * @ORM\GeneratedValue(strategy="AUTO")
+     * @var int
      */
     private $id;
 
@@ -39,10 +44,8 @@ class SluggableMultiEntity
 
     /**
      * Returns object id.
-     *
-     * @return integer
      */
-    public function getId()
+    public function getId(): int
     {
         return $this->id;
     }
@@ -71,7 +74,10 @@ class SluggableMultiEntity
         return $this;
     }
 
-    public function getSluggableFields()
+    /**
+     * @return string[]
+     */
+    public function getSluggableFields(): array
     {
         return ['name', 'title'];
     }
@@ -82,10 +88,9 @@ class SluggableMultiEntity
     }
 
     /**
-     * @param $values
      * @return mixed|string
      */
-    public function generateSlugValue($values)
+    public function generateSlugValue(array $values)
     {
         $sluggableText = implode(' ', $values);
 

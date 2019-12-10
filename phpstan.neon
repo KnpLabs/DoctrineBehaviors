@@ -2,9 +2,28 @@ includes:
     - vendor/symplify/phpstan-extensions/config/config.neon
 
 parameters:
-    level: 1
+    level: 7
+    checkGenericClassInNonGenericObjectType: false
+
+    # to allow installing with various phsptan versions without reporting old errors here
+    reportUnmatchedIgnoredErrors: false
 
     ignoreErrors:
         # traits
         - '#Access to an undefined property Knp\\DoctrineBehaviors\\Tests\\Fixtures\\ORM\\TreeNodeEntity::\$parentNodePath#'
-        - '#Constant (.*?) not found#'
+        - '#Call to an undefined method Knp\\DoctrineBehaviors(.*?)#'
+
+        # buggy
+        - '#does not accept Doctrine\\Common\\Persistence\\ObjectRepository#'
+        - '#of function call_user_func_array expects callable#'
+
+        # mixed
+        - '#has no return typehint specified#'
+        - '#return type has no value type specified#'
+        - '#has parameter (.*?) with no (typehint|value type) specified#'
+        - '#has no typehint specified#'
+
+        - '#Parameter \#1 \$input of function array_filter expects array, array<int, string\>\|false given#'
+        - '#Method Knp\\DoctrineBehaviors\\Tests\\Fixtures\\ORM\\GeocodableEntityRepository\:\:findOneByTitle\(\) should return Knp\\DoctrineBehaviors\\Contract\\Entity\\GeocodableInterface but returns object\|null#'
+
+        - '#Method Knp\\DoctrineBehaviors\\Tests\\Fixtures\\ORM\\TreeNodeEntityRepository\:\:getTree\(\) should return array<Knp\\DoctrineBehaviors\\Model\\Tree\\NodeInterface\>\|ArrayAccess\|null but returns ArrayAccess\|Knp\\DoctrineBehaviors\\Model\\Tree\\NodeInterface\|null#'

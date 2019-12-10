@@ -7,6 +7,5 @@ namespace Knp\DoctrineBehaviors\Model\Blameable;
 trait Blameable
 {
     use BlameableProperties;
-    use BlameableMethods
-    ;
+    use BlameableMethods;
 }

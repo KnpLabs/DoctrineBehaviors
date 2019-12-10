@@ -4,37 +4,22 @@ declare(strict_types=1);
 
 namespace Knp\DoctrineBehaviors\ORM\Sortable;
 
+use Doctrine\Common\EventSubscriber;
 use Doctrine\ORM\Event\LoadClassMetadataEventArgs;
 use Doctrine\ORM\Events;
-use Doctrine\ORM\Mapping\ClassMetadata;
-use Knp\DoctrineBehaviors\ORM\AbstractSubscriber;
+use Knp\DoctrineBehaviors\Contract\Entity\SortableInterface;
 
-final class SortableSubscriber extends AbstractSubscriber
+final class SortableSubscriber implements EventSubscriber
 {
-    /**
-     * @var string
-     */
-    private $sortableTrait;
-
-    public function __construct(bool $isRecursive, string $sortableTrait)
-    {
-        parent::__construct($isRecursive);
-
-        $this->sortableTrait = $sortableTrait;
-    }
-
     public function loadClassMetadata(LoadClassMetadataEventArgs $loadClassMetadataEventArgs): void
     {
         $classMetadata = $loadClassMetadataEventArgs->getClassMetadata();
 
-        if ($classMetadata->reflClass === null) {
+        if (! is_a($classMetadata->reflClass->getName(), SortableInterface::class, true)) {
             return;
         }
 
-        if (! $this->isSortable($classMetadata)) {
-            return;
-        }
-
+        // already has the field
         if ($classMetadata->hasField('sort')) {
             return;
         }
@@ -48,17 +33,8 @@ final class SortableSubscriber extends AbstractSubscriber
     /**
      * @return string[]
      */
-    public function getSubscribedEvents()
+    public function getSubscribedEvents(): array
     {
         return [Events::loadClassMetadata];
-    }
-
-    private function isSortable(ClassMetadata $classMetadata): bool
-    {
-        return $this->getClassAnalyzer()->hasTrait(
-            $classMetadata->reflClass,
-            $this->sortableTrait,
-            $this->isRecursive
-        );
     }
 }

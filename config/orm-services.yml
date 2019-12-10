@@ -1,79 +1,23 @@
-parameters:
-    # for tests
-    locale: en
-
-    knp.doctrine_behaviors.reflection.is_recursive: true
-    knp.doctrine_behaviors.translatable_subscriber.translatable_trait: Knp\DoctrineBehaviors\Model\Translatable\Translatable
-    knp.doctrine_behaviors.translatable_subscriber.translation_trait: Knp\DoctrineBehaviors\Model\Translatable\Translation
-    knp.doctrine_behaviors.translatable_subscriber.translatable_fetch_method: LAZY
-    knp.doctrine_behaviors.translatable_subscriber.translation_fetch_method: LAZY
-
-    knp.doctrine_behaviors.softdeletable_subscriber.softdeletable_trait: Knp\DoctrineBehaviors\Model\SoftDeletable\SoftDeletable
-    knp.doctrine_behaviors.timestampable_subscriber.timestampable_trait: Knp\DoctrineBehaviors\Model\Timestampable\Timestampable
-    knp.doctrine_behaviors.timestampable_subscriber.db_field_type: datetime
-    knp.doctrine_behaviors.blameable_subscriber.blameable_trait: Knp\DoctrineBehaviors\Model\Blameable\Blameable
-    knp.doctrine_behaviors.blameable_subscriber.user_entity: ~
-    knp.doctrine_behaviors.geocodable_subscriber.geocodable_trait: Knp\DoctrineBehaviors\Model\Geocodable\Geocodable
-    knp.doctrine_behaviors.sluggable_subscriber.sluggable_trait: Knp\DoctrineBehaviors\Model\Sluggable\Sluggable
-    knp.doctrine_behaviors.tree_subscriber.tree_trait: Knp\DoctrineBehaviors\Model\Tree\Node
-    knp.doctrine_behaviors.sortable_subscriber.sortable_trait: Knp\DoctrineBehaviors\Model\Sortable\Sortable
-
 services:
     _defaults:
         public: true
         autowire: true
-        bind:
-            $loggerCallable: '@Knp\DoctrineBehaviors\ORM\Loggable\LoggerCallable'
-            $isRecursive: "%knp.doctrine_behaviors.reflection.is_recursive%"
+        autoconfigure: true
 
-    Knp\DoctrineBehaviors\Reflection\ClassAnalyzer: ~
+    Knp\DoctrineBehaviors\:
+        resource: "../src"
+        exclude:
+            - "../src/ORM/Geocodable/Query/*"
+            - "../src/ORM/Geocodable/Type/*"
+            - "../src/Bundle/*"
+            - "../src/DBAL/Types/*"
+            - "../src/Exception/*"
 
     Knp\DoctrineBehaviors\ORM\Translatable\TranslatableSubscriber:
         arguments:
-            $translatableTrait: "%knp.doctrine_behaviors.translatable_subscriber.translatable_trait%"
-            $translationTrait: "%knp.doctrine_behaviors.translatable_subscriber.translation_trait%"
-            $translatableFetchMode: "%knp.doctrine_behaviors.translatable_subscriber.translatable_fetch_method%"
-            $translationFetchMode: "%knp.doctrine_behaviors.translatable_subscriber.translation_fetch_method%"
-
-    Knp\DoctrineBehaviors\ORM\Translatable\CurrentLocaleCallable: null
-
-    Knp\DoctrineBehaviors\ORM\Translatable\DefaultLocaleCallable:
-        arguments:
-            $locale: "%locale%"
-
-    Knp\DoctrineBehaviors\ORM\SoftDeletable\SoftDeletableSubscriber:
-        arguments:
-            $softDeletableTrait: "%knp.doctrine_behaviors.softdeletable_subscriber.softdeletable_trait%"
+            $translatableFetchMode: "LAZY"
+            $translationFetchMode: "LAZY"
 
     Knp\DoctrineBehaviors\ORM\Timestampable\TimestampableSubscriber:
         arguments:
-            $timestampableTrait: "%knp.doctrine_behaviors.timestampable_subscriber.timestampable_trait%"
-            $dbFieldType: "%knp.doctrine_behaviors.timestampable_subscriber.db_field_type%"
-
-    Knp\DoctrineBehaviors\ORM\Tree\TreeSubscriber:
-        arguments:
-            $nodeTrait: "%knp.doctrine_behaviors.tree_subscriber.tree_trait%"
-
-    Knp\DoctrineBehaviors\ORM\Sortable\SortableSubscriber:
-        arguments:
-            $sortableTrait: "%knp.doctrine_behaviors.sortable_subscriber.sortable_trait%"
-
-    Knp\DoctrineBehaviors\ORM\Blameable\BlameableSubscriber:
-        arguments:
-            $blameableTrait: "%knp.doctrine_behaviors.blameable_subscriber.blameable_trait%"
-            $userEntity: "%knp.doctrine_behaviors.blameable_subscriber.user_entity%"
-
-    Knp\DoctrineBehaviors\ORM\Blameable\UserCallable:
-        arguments:
-            - "@service_container" # because of circular dep
-
-    Knp\DoctrineBehaviors\ORM\Loggable\LoggableSubscriber: null
-    Knp\DoctrineBehaviors\ORM\Loggable\LoggerCallable: null
-
-    Knp\DoctrineBehaviors\ORM\Geocodable\GeocodableSubscriber:
-        arguments:
-            $geocodableTrait: "%knp.doctrine_behaviors.geocodable_subscriber.geocodable_trait%"
-
-    Knp\DoctrineBehaviors\ORM\Sluggable\SluggableSubscriber:
-        arguments:
-            $sluggableTrait: "%knp.doctrine_behaviors.sluggable_subscriber.sluggable_trait%"
+            $dbFieldType: "datetime"
