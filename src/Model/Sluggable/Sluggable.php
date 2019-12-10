@@ -16,7 +16,7 @@ namespace Knp\DoctrineBehaviors\Model\Sluggable;
  */
 trait Sluggable
 {
-    use SluggableProperties,
-        SluggableMethods
+    use SluggableProperties;
+    use SluggableMethods
     ;
 }

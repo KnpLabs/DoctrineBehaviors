@@ -29,6 +29,7 @@ use Doctrine\ORM\Mapping\ClassMetadata,
 class TimestampableSubscriber extends AbstractSubscriber
 {
     private $timestampableTrait;
+
     private $dbFieldType;
 
     public function __construct(ClassAnalyzer $classAnalyzer, $isRecursive, $timestampableTrait, $dbFieldType)
@@ -43,7 +44,7 @@ class TimestampableSubscriber extends AbstractSubscriber
     {
         $classMetadata = $eventArgs->getClassMetadata();
 
-        if (null === $classMetadata->reflClass) {
+        if ($classMetadata->reflClass === null) {
             return;
         }
 
@@ -54,11 +55,11 @@ class TimestampableSubscriber extends AbstractSubscriber
             }
 
             foreach (['createdAt', 'updatedAt'] as $field) {
-                if (!$classMetadata->hasField($field)) {
+                if (! $classMetadata->hasField($field)) {
                     $classMetadata->mapField([
                         'fieldName' => $field,
                         'type' => $this->dbFieldType,
-                        'nullable' => true
+                        'nullable' => true,
                     ]);
                 }
             }
@@ -75,7 +76,7 @@ class TimestampableSubscriber extends AbstractSubscriber
      *
      * @param ClassMetadata $classMetadata The metadata
      *
-     * @return Boolean
+     * @return boolean
      */
     private function isTimestampable(ClassMetadata $classMetadata)
     {

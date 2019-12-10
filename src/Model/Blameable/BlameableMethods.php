@@ -77,7 +77,6 @@ trait BlameableMethods
         return $this->deletedBy;
     }
 
-
     public function isBlameable()
     {
         return true;

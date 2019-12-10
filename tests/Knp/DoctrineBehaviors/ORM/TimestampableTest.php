@@ -13,33 +13,7 @@ class TimestampableTest extends \PHPUnit\Framework\TestCase
 {
     use EntityManagerProvider;
 
-    protected function getUsedEntityFixtures()
-    {
-        return [
-            'BehaviorFixtures\\ORM\\TimestampableEntity'
-        ];
-    }
-
-    protected function getEventManager()
-    {
-        $em = new EventManager();
-
-        $em->addEventSubscriber(
-            new \Knp\DoctrineBehaviors\ORM\Timestampable\TimestampableSubscriber(
-                new ClassAnalyzer(),
-                false,
-                'Knp\DoctrineBehaviors\Model\Timestampable\Timestampable',
-                'datetime'
-            )
-        );
-
-        return $em;
-    }
-
-    /**
-     * @test
-     */
-    public function it_should_initialize_create_and_update_datetime_when_created(): void
+    public function testItShouldInitializeCreateAndUpdateDatetimeWhenCreated(): void
     {
         $em = $this->getEntityManager();
 
@@ -51,17 +25,14 @@ class TimestampableTest extends \PHPUnit\Framework\TestCase
         $this->assertInstanceOf('Datetime', $entity->getCreatedAt());
         $this->assertInstanceOf('Datetime', $entity->getUpdatedAt());
 
-        $this->assertEquals(
+        $this->assertSame(
             $entity->getCreatedAt(),
             $entity->getUpdatedAt(),
             'On creation, createdAt and updatedAt are the same'
         );
     }
 
-    /**
-     * @test
-     */
-    public function it_should_modify_update_datetime_when_updated_but_not_the_creation_datetime(): void
+    public function testItShouldModifyUpdateDatetimeWhenUpdatedButNotTheCreationDatetime(): void
     {
         $em = $this->getEntityManager();
 
@@ -83,19 +54,16 @@ class TimestampableTest extends \PHPUnit\Framework\TestCase
         $em->clear();
 
         $entity = $em->getRepository('BehaviorFixtures\ORM\TimestampableEntity')->find($id);
-        $this->assertEquals($createdAt, $entity->getCreatedAt(), 'createdAt is constant');
+        $this->assertSame($createdAt, $entity->getCreatedAt(), 'createdAt is constant');
 
-        $this->assertNotEquals(
+        $this->assertNotSame(
             $entity->getCreatedAt(),
             $entity->getUpdatedAt(),
             'createat and updatedAt have diverged since new update'
         );
     }
 
-    /**
-     * @test
-     */
-    public function it_should_return_the_same_datetime_when_not_updated(): void
+    public function testItShouldReturnTheSameDatetimeWhenNotUpdated(): void
     {
         $em = $this->getEntityManager();
 
@@ -116,23 +84,20 @@ class TimestampableTest extends \PHPUnit\Framework\TestCase
         $em->flush();
         $em->clear();
 
-        $this->assertEquals(
+        $this->assertSame(
             $entity->getCreatedAt(),
             $createdAt,
             'Creation timestamp has changed'
         );
 
-        $this->assertEquals(
+        $this->assertSame(
             $entity->getUpdatedAt(),
             $updatedAt,
             'Update timestamp has changed'
         );
     }
 
-    /**
-     * @test
-     */
-    public function it_should_modify_update_datetime_only_once(): void
+    public function testItShouldModifyUpdateDatetimeOnlyOnce(): void
     {
         $em = $this->getEntityManager();
 
@@ -156,16 +121,39 @@ class TimestampableTest extends \PHPUnit\Framework\TestCase
 
         $em->flush();
 
-        $this->assertEquals(
+        $this->assertSame(
             $entity->getCreatedAt(),
             $createdAt,
             'Creation timestamp has changed'
         );
 
-        $this->assertEquals(
+        $this->assertSame(
             $entity->getUpdatedAt(),
             $updatedAt,
             'Update timestamp has changed'
         );
+    }
+
+    protected function getUsedEntityFixtures()
+    {
+        return [
+            'BehaviorFixtures\\ORM\\TimestampableEntity',
+        ];
+    }
+
+    protected function getEventManager()
+    {
+        $em = new EventManager();
+
+        $em->addEventSubscriber(
+            new \Knp\DoctrineBehaviors\ORM\Timestampable\TimestampableSubscriber(
+                new ClassAnalyzer(),
+                false,
+                'Knp\DoctrineBehaviors\Model\Timestampable\Timestampable',
+                'datetime'
+            )
+        );
+
+        return $em;
     }
 }

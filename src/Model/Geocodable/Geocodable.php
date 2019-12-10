@@ -20,7 +20,7 @@ namespace Knp\DoctrineBehaviors\Model\Geocodable;
  */
 trait Geocodable
 {
-    use GeocodableProperties,
-        GeocodableMethods
+    use GeocodableProperties;
+    use GeocodableMethods
     ;
 }

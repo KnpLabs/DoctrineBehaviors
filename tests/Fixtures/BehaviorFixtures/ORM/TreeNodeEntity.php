@@ -14,9 +14,9 @@ use Knp\DoctrineBehaviors\Model\Tree;
  */
 class TreeNodeEntity implements Tree\NodeInterface, \ArrayAccess
 {
-    public const PATH_SEPARATOR = '/';
-
     use Tree\Node;
+
+    public const PATH_SEPARATOR = '/';
 
     /**
      * @ORM\Id
@@ -51,9 +51,8 @@ class TreeNodeEntity implements Tree\NodeInterface, \ArrayAccess
 
     /**
      * @param  string $id
-     * @return null
      */
-    public function setId($id)
+    public function setId($id): void
     {
         $this->id = $id;
     }
@@ -68,9 +67,8 @@ class TreeNodeEntity implements Tree\NodeInterface, \ArrayAccess
 
     /**
      * @param  string $name
-     * @return null
      */
-    public function setName($name)
+    public function setName($name): void
     {
         $this->name = $name;
     }

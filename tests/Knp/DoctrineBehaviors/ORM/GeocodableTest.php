@@ -20,50 +20,7 @@ class GeocodableTest extends \PHPUnit\Framework\TestCase
      */
     private $callable;
 
-    protected function getUsedEntityFixtures()
-    {
-        return [
-            'BehaviorFixtures\\ORM\\GeocodableEntity'
-        ];
-    }
-
-    /**
-     * @return \Doctrine\Common\EventManager
-     */
-    protected function getEventManager()
-    {
-        $em = new EventManager();
-
-        if ($this->callable === false) {
-            $callable = function ($entity) {
-                if ($location = $entity->getLocation()) {
-                    return $location;
-                }
-
-                return Point::fromArray(
-                    [
-                        'longitude' => 47.7,
-                        'latitude' => 7.9
-                    ]
-                );
-            };
-        } else {
-            $callable = $this->callable;
-        }
-
-        $em->addEventSubscriber(
-            new \Knp\DoctrineBehaviors\ORM\Geocodable\GeocodableSubscriber(
-                new ClassAnalyzer(),
-                false,
-                'Knp\DoctrineBehaviors\Model\Geocodable\Geocodable',
-                $callable
-            )
-        );
-
-        return $em;
-    }
-
-    public function setUp(): void
+    protected function setUp(): void
     {
         $em = $this->getDBEngineEntityManager();
 
@@ -106,7 +63,7 @@ class GeocodableTest extends \PHPUnit\Framework\TestCase
 
         $entity->setLocation(new Point($newLocation[0], $newLocation[1]));
 
-        $newTitle = $city . " - edited";
+        $newTitle = $city . ' - edited';
 
         $entity->setTitle($newTitle);
 
@@ -115,7 +72,7 @@ class GeocodableTest extends \PHPUnit\Framework\TestCase
         /** @var GeocodableEntity $entity */
         $entity = $repository->findOneByTitle($newTitle);
 
-        $this->assertEquals($newTitle, $entity->getTitle());
+        $this->assertSame($newTitle, $entity->getTitle());
 
         $this->assertLocation($newLocation, $entity->getLocation());
     }
@@ -172,8 +129,8 @@ class GeocodableTest extends \PHPUnit\Framework\TestCase
      */
     public function testFindByDistance(array $location, $distance, $result, $text = null)
     {
-        if (getenv("DB") == "mysql") {
-            $this->markTestSkipped("findByDistance does not work with MYSQL");
+        if (getenv('DB') === 'mysql') {
+            $this->markTestSkipped('findByDistance does not work with MYSQL');
 
             return null;
         }
@@ -196,18 +153,18 @@ class GeocodableTest extends \PHPUnit\Framework\TestCase
             [
                 'New-York',
                 [40.742786, -73.989272],
-                [40.742787, -73.989273]
+                [40.742787, -73.989273],
             ],
             [
                 'Paris',
                 [48.858842, 2.355194],
-                [48.858843, 2.355195]
+                [48.858843, 2.355195],
             ],
             [
                 'Nantes',
                 [47.218635, -1.544266],
-                [47.218636, -1.544267]
-            ]
+                [47.218636, -1.544267],
+            ],
         ];
     }
 
@@ -223,46 +180,90 @@ class GeocodableTest extends \PHPUnit\Framework\TestCase
                 [47.896319, 7.352943],
                 384000,
                 0,
-                'Paris is more than 384 km far from Reguisheim'
+                'Paris is more than 384 km far from Reguisheim',
             ],
             [
                 [47.896319, 7.352943],
                 385000,
                 1,
-                'Paris is less than 385 km far from Reguisheim'
+                'Paris is less than 385 km far from Reguisheim',
             ],
             [
                 [47.896319, 7.352943],
                 672000,
                 1,
-                'Nantes is more than 672 km far from Reguisheim'
+                'Nantes is more than 672 km far from Reguisheim',
             ],
             [
                 [47.896319, 7.352943],
                 673000,
                 2,
-                'Paris and Nantes are less than 673 km far from Reguisheim'
+                'Paris and Nantes are less than 673 km far from Reguisheim',
             ],
             [
                 [47.896319, 7.352943],
                 6222000,
                 2,
-                'New-York is more than 6222 km far from Reguisheim'
+                'New-York is more than 6222 km far from Reguisheim',
             ],
             [
                 [47.896319, 7.352943],
                 6223000,
                 3,
-                'Paris, Nantes and New-York are less than 6223 km far from Reguisheim'
-            ]
+                'Paris, Nantes and New-York are less than 6223 km far from Reguisheim',
+            ],
         ];
+    }
+
+    protected function getUsedEntityFixtures()
+    {
+        return [
+            'BehaviorFixtures\\ORM\\GeocodableEntity',
+        ];
+    }
+
+    /**
+     * @return \Doctrine\Common\EventManager
+     */
+    protected function getEventManager()
+    {
+        $em = new EventManager();
+
+        if ($this->callable === false) {
+            $callable = function ($entity) {
+                $location = $entity->getLocation();
+                if ($location) {
+                    return $location;
+                }
+
+                return Point::fromArray(
+                    [
+                        'longitude' => 47.7,
+                        'latitude' => 7.9,
+                    ]
+                );
+            };
+        } else {
+            $callable = $this->callable;
+        }
+
+        $em->addEventSubscriber(
+            new \Knp\DoctrineBehaviors\ORM\Geocodable\GeocodableSubscriber(
+                new ClassAnalyzer(),
+                false,
+                'Knp\DoctrineBehaviors\Model\Geocodable\Geocodable',
+                $callable
+            )
+        );
+
+        return $em;
     }
 
     private function assertLocation(array $expected, ?Point $given = null, $message = null): void
     {
         $this->assertInstanceOf('Knp\DoctrineBehaviors\ORM\Geocodable\Type\Point', $given, $message);
 
-        $this->assertEquals($expected[0], $given->getLatitude(), $message);
-        $this->assertEquals($expected[1], $given->getLongitude(), $message);
+        $this->assertSame($expected[0], $given->getLatitude(), $message);
+        $this->assertSame($expected[1], $given->getLongitude(), $message);
     }
 }

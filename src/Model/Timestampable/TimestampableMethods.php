@@ -41,7 +41,6 @@ trait TimestampableMethods
     }
 
     /**
-     * @param \DateTime $createdAt
      * @return $this
      */
     public function setCreatedAt(\DateTime $createdAt)
@@ -52,7 +51,6 @@ trait TimestampableMethods
     }
 
     /**
-     * @param \DateTime $updatedAt
      * @return $this
      */
     public function setUpdatedAt(\DateTime $updatedAt)
@@ -71,7 +69,7 @@ trait TimestampableMethods
         $dateTime = \DateTime::createFromFormat('U.u', sprintf('%.6F', microtime(true)));
         $dateTime->setTimezone(new \DateTimeZone(date_default_timezone_get()));
 
-        if (null === $this->createdAt) {
+        if ($this->createdAt === null) {
             $this->createdAt = $dateTime;
         }
 

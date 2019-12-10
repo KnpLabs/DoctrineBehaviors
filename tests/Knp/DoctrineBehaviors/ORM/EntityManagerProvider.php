@@ -32,7 +32,7 @@ trait EntityManagerProvider
      */
     protected function getEntityManager(?EventManager $evm = null, ?Configuration $config = null, array $conn = [])
     {
-        if (null !== $this->em) {
+        if ($this->em !== null) {
             return $this->em;
         }
 
@@ -41,7 +41,7 @@ trait EntityManagerProvider
             'memory' => true,
         ], $conn);
 
-        $config = is_null($config) ? $this->getAnnotatedConfig() : $config;
+        $config = $config === null ? $this->getAnnotatedConfig() : $config;
         $em = EntityManager::create($conn, $config, $evm ?: $this->getEventManager());
 
         $schema = array_map(function ($class) use ($em) {
@@ -65,7 +65,7 @@ trait EntityManagerProvider
      */
     protected function getDBEngineEntityManager()
     {
-        if (DB_ENGINE == "pgsql") {
+        if (DB_ENGINE === 'pgsql') {
             return $this->getEntityManager(
                 null,
                 null,
@@ -74,11 +74,11 @@ trait EntityManagerProvider
                     'host' => DB_HOST,
                     'dbname' => DB_NAME,
                     'user' => DB_USER,
-                    'password' => DB_PASSWD
+                    'password' => DB_PASSWD,
                 ]
             );
-        } else {
-            return $this->getEntityManager(
+        }
+        return $this->getEntityManager(
                 null,
                 null,
                 [
@@ -86,10 +86,9 @@ trait EntityManagerProvider
                     'host' => DB_HOST,
                     'dbname' => DB_NAME,
                     'user' => DB_USER,
-                    'password' => DB_PASSWD
+                    'password' => DB_PASSWD,
                 ]
             );
-        }
     }
 
     /**
@@ -108,7 +107,7 @@ trait EntityManagerProvider
         $mockMethods = [];
 
         foreach ($methods as $method) {
-            if (!in_array($method->name, ['addFilter', 'getFilterClassName', 'addCustomNumericFunction', 'getCustomNumericFunction'])) {
+            if (! in_array($method->name, ['addFilter', 'getFilterClassName', 'addCustomNumericFunction', 'getCustomNumericFunction'], true)) {
                 $mockMethods[] = $method->name;
             }
         }

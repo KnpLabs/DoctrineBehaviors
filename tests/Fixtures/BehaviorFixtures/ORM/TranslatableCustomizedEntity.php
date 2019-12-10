@@ -22,17 +22,14 @@ class TranslatableCustomizedEntity
      */
     private $id;
 
-    /**
-     * {@inheritdoc}
-     */
-    public static function getTranslationEntityClass()
-    {
-        return '\BehaviorFixtures\ORM\Translation\TranslatableCustomizedEntityTranslation';
-    }
-
     public function __call($method, $arguments)
     {
         return $this->proxyCurrentLocaleTranslation($method, $arguments);
+    }
+
+    public static function getTranslationEntityClass()
+    {
+        return '\BehaviorFixtures\ORM\Translation\TranslatableCustomizedEntityTranslation';
     }
 
     /**

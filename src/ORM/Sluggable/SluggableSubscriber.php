@@ -38,16 +38,16 @@ class SluggableSubscriber extends AbstractSubscriber
     {
         $classMetadata = $eventArgs->getClassMetadata();
 
-        if (null === $classMetadata->reflClass) {
+        if ($classMetadata->reflClass === null) {
             return;
         }
 
         if ($this->isSluggable($classMetadata)) {
-            if (!$classMetadata->hasField('slug')) {
+            if (! $classMetadata->hasField('slug')) {
                 $classMetadata->mapField([
                     'fieldName' => 'slug',
                     'type' => 'string',
-                    'nullable' => true
+                    'nullable' => true,
                 ]);
             }
         }
@@ -77,7 +77,7 @@ class SluggableSubscriber extends AbstractSubscriber
 
     public function getSubscribedEvents()
     {
-        return [ Events::loadClassMetadata, Events::prePersist, Events::preUpdate ];
+        return [Events::loadClassMetadata, Events::prePersist, Events::preUpdate];
     }
 
     /**

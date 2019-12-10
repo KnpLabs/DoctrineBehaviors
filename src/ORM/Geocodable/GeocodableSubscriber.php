@@ -60,19 +60,17 @@ class GeocodableSubscriber extends AbstractSubscriber
 
     /**
      * Adds doctrine point type
-     *
-     * @param LoadClassMetadataEventArgs $eventArgs
      */
     public function loadClassMetadata(LoadClassMetadataEventArgs $eventArgs): void
     {
         $classMetadata = $eventArgs->getClassMetadata();
 
-        if (null === $classMetadata->reflClass) {
+        if ($classMetadata->reflClass === null) {
             return;
         }
 
         if ($this->isGeocodable($classMetadata)) {
-            if (!Type::hasType('point')) {
+            if (! Type::hasType('point')) {
                 Type::addType('point', 'Knp\DoctrineBehaviors\DBAL\Types\PointType');
             }
 
@@ -80,14 +78,14 @@ class GeocodableSubscriber extends AbstractSubscriber
             $con = $em->getConnection();
 
             // skip non-postgres platforms
-            if (!$con->getDatabasePlatform() instanceof PostgreSqlPlatform &&
-                !$con->getDatabasePlatform() instanceof MySqlPlatform
+            if (! $con->getDatabasePlatform() instanceof PostgreSqlPlatform &&
+                ! $con->getDatabasePlatform() instanceof MySqlPlatform
             ) {
                 return;
             }
 
             // skip platforms with registerd stuff
-            if (!$con->getDatabasePlatform()->hasDoctrineTypeMappingFor('point')) {
+            if (! $con->getDatabasePlatform()->hasDoctrineTypeMappingFor('point')) {
                 $con->getDatabasePlatform()->registerDoctrineTypeMapping('point', 'point');
 
                 if ($con->getDatabasePlatform() instanceof PostgreSqlPlatform) {
@@ -102,39 +100,9 @@ class GeocodableSubscriber extends AbstractSubscriber
                 [
                     'fieldName' => 'location',
                     'type' => 'point',
-                    'nullable' => true
+                    'nullable' => true,
                 ]
             );
-        }
-    }
-
-    /**
-     * @param LifecycleEventArgs $eventArgs
-     */
-    private function updateLocation(LifecycleEventArgs $eventArgs, $override = false): void
-    {
-        $em = $eventArgs->getEntityManager();
-        $uow = $em->getUnitOfWork();
-        $entity = $eventArgs->getEntity();
-
-        $classMetadata = $em->getClassMetadata(get_class($entity));
-        if ($this->isGeocodable($classMetadata)) {
-            $oldValue = $entity->getLocation();
-            if (!$oldValue instanceof Point || $override) {
-                $newLocation = $this->getLocation($entity);
-
-                if ($newLocation !== false) {
-                    $entity->setLocation($newLocation);
-                }
-
-                $uow->propertyChanged($entity, 'location', $oldValue, $entity->getLocation());
-                $uow->scheduleExtraUpdate(
-                    $entity,
-                    [
-                        'location' => [$oldValue, $entity->getLocation()],
-                    ]
-                );
-            }
         }
     }
 
@@ -153,13 +121,54 @@ class GeocodableSubscriber extends AbstractSubscriber
      */
     public function getLocation($entity)
     {
-        if (null === $this->geolocationCallable) {
+        if ($this->geolocationCallable === null) {
             return false;
         }
 
         $callable = $this->geolocationCallable;
 
         return $callable($entity);
+    }
+
+    public function getSubscribedEvents()
+    {
+        return [
+            Events::prePersist,
+            Events::preUpdate,
+            Events::loadClassMetadata,
+        ];
+    }
+
+    public function setGeolocationCallable(callable $callable): void
+    {
+        $this->geolocationCallable = $callable;
+    }
+
+    private function updateLocation(LifecycleEventArgs $eventArgs, $override = false): void
+    {
+        $em = $eventArgs->getEntityManager();
+        $uow = $em->getUnitOfWork();
+        $entity = $eventArgs->getEntity();
+
+        $classMetadata = $em->getClassMetadata(get_class($entity));
+        if ($this->isGeocodable($classMetadata)) {
+            $oldValue = $entity->getLocation();
+            if (! $oldValue instanceof Point || $override) {
+                $newLocation = $this->getLocation($entity);
+
+                if ($newLocation !== false) {
+                    $entity->setLocation($newLocation);
+                }
+
+                $uow->propertyChanged($entity, 'location', $oldValue, $entity->getLocation());
+                $uow->scheduleExtraUpdate(
+                    $entity,
+                    [
+                        'location' => [$oldValue, $entity->getLocation()],
+                    ]
+                );
+            }
+        }
     }
 
     /**
@@ -176,19 +185,5 @@ class GeocodableSubscriber extends AbstractSubscriber
             $this->geocodableTrait,
             $this->isRecursive
         );
-    }
-
-    public function getSubscribedEvents()
-    {
-        return [
-            Events::prePersist,
-            Events::preUpdate,
-            Events::loadClassMetadata,
-        ];
-    }
-
-    public function setGeolocationCallable(callable $callable): void
-    {
-        $this->geolocationCallable = $callable;
     }
 }

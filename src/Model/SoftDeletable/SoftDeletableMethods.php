@@ -39,11 +39,11 @@ trait SoftDeletableMethods
     /**
      * Checks whether the entity has been deleted.
      *
-     * @return Boolean
+     * @return boolean
      */
     public function isDeleted()
     {
-        if (null !== $this->deletedAt) {
+        if ($this->deletedAt !== null) {
             return $this->deletedAt <= $this->currentDateTime();
         }
 
@@ -53,7 +53,7 @@ trait SoftDeletableMethods
     /**
      * Checks whether the entity will be deleted.
      *
-     * @return Boolean
+     * @return boolean
      */
     public function willBeDeleted(?\DateTime $at = null)
     {
@@ -81,7 +81,7 @@ trait SoftDeletableMethods
      * Set the delete date to given date.
      *
      * @param DateTime $date
-     * @param               Object
+     * @param               object
      *
      * @return $this
      */

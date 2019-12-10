@@ -12,10 +12,7 @@ use Knp\DoctrineBehaviors\Reflection\ClassAnalyzer;
 
 class ClassAnalyserTest extends \PHPUnit\Framework\TestCase
 {
-    /**
-     * @test
-     */
-    public function it_should_test_if_object_use_trait(): void
+    public function testItShouldTestIfObjectUseTrait(): void
     {
         $analyser = new ClassAnalyzer();
 
@@ -30,10 +27,7 @@ class ClassAnalyserTest extends \PHPUnit\Framework\TestCase
         $this->assertTrue($use);
     }
 
-    /**
-     * @test
-     */
-    public function it_should_test_if_object_dont_use_trait(): void
+    public function testItShouldTestIfObjectDontUseTrait(): void
     {
         $analyser = new ClassAnalyzer();
 
@@ -48,10 +42,7 @@ class ClassAnalyserTest extends \PHPUnit\Framework\TestCase
         $this->assertFalse($use);
     }
 
-    /**
-     * @test
-     */
-    public function it_should_test_if_object_or_his_parent_classes_use_trait(): void
+    public function testItShouldTestIfObjectOrHisParentClassesUseTrait(): void
     {
         $analyser = new ClassAnalyzer();
 
@@ -74,10 +65,7 @@ class ClassAnalyserTest extends \PHPUnit\Framework\TestCase
         $this->assertTrue($useInherit);
     }
 
-    /**
-     * @test
-     */
-    public function it_should_test_if_object_has_a_method(): void
+    public function testItShouldTestIfObjectHasAMethod(): void
     {
         $analyser = new ClassAnalyzer();
 
@@ -91,10 +79,7 @@ class ClassAnalyserTest extends \PHPUnit\Framework\TestCase
         $this->assertTrue($use);
     }
 
-    /**
-     * @test
-     */
-    public function it_should_test_if_object_dont_has_a_method(): void
+    public function testItShouldTestIfObjectDontHasAMethod(): void
     {
         $analyser = new ClassAnalyzer();
 
@@ -108,10 +93,7 @@ class ClassAnalyserTest extends \PHPUnit\Framework\TestCase
         $this->assertFalse($use);
     }
 
-    /**
-     * @test
-     */
-    public function it_should_test_if_object_has_a_property(): void
+    public function testItShouldTestIfObjectHasAProperty(): void
     {
         $analyser = new ClassAnalyzer();
 
@@ -125,10 +107,7 @@ class ClassAnalyserTest extends \PHPUnit\Framework\TestCase
         $this->assertTrue($use);
     }
 
-    /**
-     * @test
-     */
-    public function it_should_test_if_object_dont_has_a_property(): void
+    public function testItShouldTestIfObjectDontHasAProperty(): void
     {
         $analyser = new ClassAnalyzer();
 
@@ -142,10 +121,7 @@ class ClassAnalyserTest extends \PHPUnit\Framework\TestCase
         $this->assertFalse($use);
     }
 
-    /**
-     * @test
-     */
-    public function it_should_test_if_object_or_his_parent_classes_has_a_property(): void
+    public function testItShouldTestIfObjectOrHisParentClassesHasAProperty(): void
     {
         $analyser = new ClassAnalyzer();
 

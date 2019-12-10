@@ -62,8 +62,6 @@ class LoggableSubscriber extends AbstractSubscriber
 
     /**
      * Logs entity changeset
-     *
-     * @param LifecycleEventArgs $eventArgs
      */
     public function logChangeSet(LifecycleEventArgs $eventArgs): void
     {
@@ -100,6 +98,15 @@ class LoggableSubscriber extends AbstractSubscriber
         $this->loggerCallable = $callable;
     }
 
+    public function getSubscribedEvents()
+    {
+        return [
+            Events::postPersist,
+            Events::postUpdate,
+            Events::preRemove,
+        ];
+    }
+
     /**
      * Checks if entity supports Loggable
      *
@@ -109,14 +116,5 @@ class LoggableSubscriber extends AbstractSubscriber
     protected function isEntitySupported(\ReflectionClass $reflClass)
     {
         return $this->getClassAnalyzer()->hasTrait($reflClass, 'Knp\DoctrineBehaviors\Model\Loggable\Loggable', $this->isRecursive);
-    }
-
-    public function getSubscribedEvents()
-    {
-        return [
-            Events::postPersist,
-            Events::postUpdate,
-            Events::preRemove,
-        ];
     }
 }

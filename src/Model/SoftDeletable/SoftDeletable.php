@@ -20,7 +20,7 @@ namespace Knp\DoctrineBehaviors\Model\SoftDeletable;
  */
 trait SoftDeletable
 {
-    use SoftDeletableProperties,
-        SoftDeletableMethods
+    use SoftDeletableProperties;
+    use SoftDeletableMethods
     ;
 }

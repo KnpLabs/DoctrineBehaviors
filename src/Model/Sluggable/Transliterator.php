@@ -10,8 +10,8 @@ declare(strict_types=1);
 namespace Knp\DoctrineBehaviors\Model\Sluggable;
 
 /**
-* Transliteration utility
-*/
+ * Transliteration utility
+ */
 class Transliterator extends \Behat\Transliterator\Transliterator
 {
 }

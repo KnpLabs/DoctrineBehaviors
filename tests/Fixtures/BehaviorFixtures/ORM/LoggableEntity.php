@@ -58,9 +58,6 @@ class LoggableEntity
         $this->title = $title;
     }
 
-    /**
-     * @return mixed
-     */
     public function getRoles()
     {
         return $this->roles;

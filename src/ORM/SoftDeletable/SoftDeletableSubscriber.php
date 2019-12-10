@@ -58,22 +58,10 @@ class SoftDeletableSubscriber extends AbstractSubscriber
 
                 $uow->propertyChanged($entity, 'deletedAt', $oldValue, $entity->getDeletedAt());
                 $uow->scheduleExtraUpdate($entity, [
-                    'deletedAt' => [$oldValue, $entity->getDeletedAt()]
+                    'deletedAt' => [$oldValue, $entity->getDeletedAt()],
                 ]);
             }
         }
-    }
-
-    /**
-     * Checks if entity is softDeletable
-     *
-     * @param ClassMetadata $classMetadata The metadata
-     *
-     * @return Boolean
-     */
-    private function isSoftDeletable(ClassMetadata $classMetadata)
-    {
-        return $this->getClassAnalyzer()->hasTrait($classMetadata->reflClass, $this->softDeletableTrait, $this->isRecursive);
     }
 
     /**
@@ -90,18 +78,30 @@ class SoftDeletableSubscriber extends AbstractSubscriber
     {
         $classMetadata = $eventArgs->getClassMetadata();
 
-        if (null === $classMetadata->reflClass) {
+        if ($classMetadata->reflClass === null) {
             return;
         }
 
         if ($this->isSoftDeletable($classMetadata)) {
-            if (!$classMetadata->hasField('deletedAt')) {
+            if (! $classMetadata->hasField('deletedAt')) {
                 $classMetadata->mapField([
                     'fieldName' => 'deletedAt',
                     'type' => 'datetime',
-                    'nullable' => true
+                    'nullable' => true,
                 ]);
             }
         }
+    }
+
+    /**
+     * Checks if entity is softDeletable
+     *
+     * @param ClassMetadata $classMetadata The metadata
+     *
+     * @return boolean
+     */
+    private function isSoftDeletable(ClassMetadata $classMetadata)
+    {
+        return $this->getClassAnalyzer()->hasTrait($classMetadata->reflClass, $this->softDeletableTrait, $this->isRecursive);
     }
 }

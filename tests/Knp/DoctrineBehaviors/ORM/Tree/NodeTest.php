@@ -17,67 +17,6 @@ class NodeTest extends \PHPUnit\Framework\TestCase
 {
     use EntityManagerProvider;
 
-    protected function getUsedEntityFixtures()
-    {
-        return [
-            'BehaviorFixtures\\ORM\\TreeNodeEntity'
-        ];
-    }
-
-    protected function getEventManager()
-    {
-        $em = new EventManager();
-
-        $em->addEventSubscriber(
-            new TreeSubscriber(
-                new ClassAnalyzer(),
-                false,
-                'Knp\DoctrineBehaviors\Model\Tree\Node'
-            )
-        );
-
-        return $em;
-    }
-
-    protected function buildNode(array $values = [])
-    {
-        $node = new TreeNodeEntity();
-        foreach ($values as $method => $value) {
-            $node->$method($value);
-        }
-
-        return $node;
-    }
-
-    private function buildTree()
-    {
-        $item = $this->buildNode();
-        $item->setMaterializedPath('');
-        $item->setId(1);
-
-        $childItem = $this->buildNode();
-        $childItem->setMaterializedPath('/1');
-        $childItem->setId(2);
-        $childItem->setChildNodeOf($item);
-
-        $secondChildItem = $this->buildNode();
-        $secondChildItem->setMaterializedPath('/1');
-        $secondChildItem->setId(3);
-        $secondChildItem->setChildNodeOf($item);
-
-        $childChildItem = $this->buildNode();
-        $childChildItem->setId(4);
-        $childChildItem->setMaterializedPath('/1/2');
-        $childChildItem->setChildNodeOf($childItem);
-
-        $childChildChildItem = $this->buildNode();
-        $childChildChildItem->setId(5);
-        $childChildChildItem->setMaterializedPath('/1/2/4');
-        $childChildChildItem->setChildNodeOf($childChildItem);
-
-        return $item;
-    }
-
     public function testBuildTree(): void
     {
         $root = $this->buildNode(['setMaterializedPath' => '', 'setName' => 'root', 'setId' => 1]);
@@ -95,8 +34,8 @@ class NodeTest extends \PHPUnit\Framework\TestCase
         $this->assertCount(1, $root->getChildNodes()->first()->getChildNodes());
         $this->assertCount(2, $root->getChildNodes()->first()->getChildNodes()->first()->getChildNodes());
 
-        $this->assertEquals(1, $root->getNodeLevel());
-        $this->assertEquals(4, $root->getChildNodes()->first()->getChildNodes()->first()->getChildNodes()->first()->getNodeLevel());
+        $this->assertSame(1, $root->getNodeLevel());
+        $this->assertSame(4, $root->getChildNodes()->first()->getChildNodes()->first()->getChildNodes()->first()->getNodeLevel());
     }
 
     public function testIsRoot(): void
@@ -119,10 +58,10 @@ class NodeTest extends \PHPUnit\Framework\TestCase
     {
         $tree = $this->buildTree();
 
-        $this->assertEquals($tree, $tree->getRootNode());
+        $this->assertSame($tree, $tree->getRootNode());
         $this->assertNull($tree->getRootNode()->getParentNode());
 
-        $this->assertEquals($tree, $tree->getChildNodes()->get(0)->getChildNodes()->get(0)->getRootNode());
+        $this->assertSame($tree, $tree->getChildNodes()->get(0)->getChildNodes()->get(0)->getRootNode());
     }
 
     public function provideRootPaths()
@@ -139,9 +78,9 @@ class NodeTest extends \PHPUnit\Framework\TestCase
     /**
      * @dataProvider provideisChildNodeOf
      **/
-    public function testisChildNodeOf(NodeInterface $child, NodeInterface $parent, $expected): void
+    public function testTestisChildNodeOf(NodeInterface $child, NodeInterface $parent, $expected): void
     {
-        $this->assertEquals($expected, $child->isChildNodeOf($parent));
+        $this->assertSame($expected, $child->isChildNodeOf($parent));
     }
 
     public function provideisChildNodeOf()
@@ -201,14 +140,14 @@ class NodeTest extends \PHPUnit\Framework\TestCase
     {
         $expected = $this->provideToArray();
         $tree = $this->buildTree();
-        $this->assertEquals($expected, $tree->toArray());
+        $this->assertSame($expected, $tree->toArray());
     }
 
     public function testToJson(): void
     {
         $expected = $this->provideToArray();
         $tree = $this->buildTree();
-        $this->assertEquals(json_encode($expected), $tree->toJson());
+        $this->assertSame(json_encode($expected), $tree->toJson());
     }
 
     public function testToFlatArray(): void
@@ -216,14 +155,14 @@ class NodeTest extends \PHPUnit\Framework\TestCase
         $tree = $this->buildTree();
 
         $expected = [
-          1 => '',
-          2 => '----',
-          4 => '------',
-          5 => '--------',
-          3 => '----',
+            1 => '',
+            2 => '----',
+            4 => '------',
+            5 => '--------',
+            3 => '----',
         ];
 
-        $this->assertEquals($expected, $tree->toFlatArray());
+        $this->assertSame($expected, $tree->toFlatArray());
     }
 
     public function testArrayAccess(): void
@@ -232,11 +171,11 @@ class NodeTest extends \PHPUnit\Framework\TestCase
 
         $tree[] = $this->buildNode(['setId' => 45]);
         $tree[] = $this->buildNode(['setId' => 46]);
-        $this->assertEquals(4, $tree->getChildNodes()->count());
+        $this->assertSame(4, $tree->getChildNodes()->count());
 
         $tree[2][] = $this->buildNode(['setId' => 47]);
         $tree[2][] = $this->buildNode(['setId' => 48]);
-        $this->assertEquals(2, $tree[2]->getChildNodes()->count());
+        $this->assertSame(2, $tree[2]->getChildNodes()->count());
 
         $this->assertTrue(isset($tree[2][1]));
         $this->assertFalse(isset($tree[2][1][2]));
@@ -249,7 +188,7 @@ class NodeTest extends \PHPUnit\Framework\TestCase
      * @expectedException \LogicException
      * @expectedExceptionMessage You must provide an id for this node if you want it to be part of a tree.
      **/
-    public function testsetChildNodeOfWithoutId(): void
+    public function testTestsetChildNodeOfWithoutId(): void
     {
         $this->buildNode(['setMaterializedPath' => '/0/1'])->setChildNodeOf($this->buildNode(['setMaterializedPath' => '/0']));
     }
@@ -258,24 +197,24 @@ class NodeTest extends \PHPUnit\Framework\TestCase
     {
         $tree = $this->buildTree();
 
-        $this->assertEquals(2, $tree->getChildNodes()->count());
-        $this->assertEquals(1, $tree->getChildNodes()->get(0)->getChildNodes()->count());
+        $this->assertSame(2, $tree->getChildNodes()->count());
+        $this->assertSame(1, $tree->getChildNodes()->get(0)->getChildNodes()->count());
     }
 
     public function testGetPath(): void
     {
         $tree = $this->buildTree();
 
-        $this->assertEquals('/1', $tree->getRealMaterializedPath());
-        $this->assertEquals('/1/2', $tree->getChildNodes()->get(0)->getRealMaterializedPath());
-        $this->assertEquals('/1/2/4', $tree->getChildNodes()->get(0)->getChildNodes()->get(0)->getRealMaterializedPath());
-        $this->assertEquals('/1/2/4/5', $tree->getChildNodes()->get(0)->getChildNodes()->get(0)->getChildNodes()->get(0)->getRealMaterializedPath());
+        $this->assertSame('/1', $tree->getRealMaterializedPath());
+        $this->assertSame('/1/2', $tree->getChildNodes()->get(0)->getRealMaterializedPath());
+        $this->assertSame('/1/2/4', $tree->getChildNodes()->get(0)->getChildNodes()->get(0)->getRealMaterializedPath());
+        $this->assertSame('/1/2/4/5', $tree->getChildNodes()->get(0)->getChildNodes()->get(0)->getChildNodes()->get(0)->getRealMaterializedPath());
 
         $childChildItem = $tree->getChildNodes()->get(0)->getChildNodes()->get(0);
         $childChildChildItem = $tree->getChildNodes()->get(0)->getChildNodes()->get(0)->getChildNodes()->get(0);
         $childChildItem->setChildNodeOf($tree);
-        $this->assertEquals('/1/4', $childChildItem->getRealMaterializedPath(), 'The path has been updated fo the node');
-        $this->assertEquals('/1/4/5', $childChildChildItem->getRealMaterializedPath(), 'The path has been updated fo the node and all its descendants');
+        $this->assertSame('/1/4', $childChildItem->getRealMaterializedPath(), 'The path has been updated fo the node');
+        $this->assertSame('/1/4/5', $childChildChildItem->getRealMaterializedPath(), 'The path has been updated fo the node and all its descendants');
         $this->assertTrue($tree->getChildNodes()->contains($childChildItem), 'The children collection has been updated to reference the moved node');
     }
 
@@ -285,14 +224,14 @@ class NodeTest extends \PHPUnit\Framework\TestCase
 
         $childChildItem = $tree->getChildNodes()->get(0)->getChildNodes()->get(0);
         $childChildChildItem = $tree->getChildNodes()->get(0)->getChildNodes()->get(0)->getChildNodes()->get(0);
-        $this->assertEquals(4, $childChildChildItem->getNodeLevel(), 'The level is well calcuated');
+        $this->assertSame(4, $childChildChildItem->getNodeLevel(), 'The level is well calcuated');
 
         $childChildItem->setChildNodeOf($tree);
-        $this->assertEquals('/1/4', $childChildItem->getRealMaterializedPath(), 'The path has been updated fo the node');
-        $this->assertEquals('/1/4/5', $childChildChildItem->getRealMaterializedPath(), 'The path has been updated fo the node and all its descendants');
+        $this->assertSame('/1/4', $childChildItem->getRealMaterializedPath(), 'The path has been updated fo the node');
+        $this->assertSame('/1/4/5', $childChildChildItem->getRealMaterializedPath(), 'The path has been updated fo the node and all its descendants');
         $this->assertTrue($tree->getChildNodes()->contains($childChildItem), 'The children collection has been updated to reference the moved node');
 
-        $this->assertEquals(3, $childChildChildItem->getNodeLevel(), 'The level has been updated');
+        $this->assertSame(3, $childChildChildItem->getNodeLevel(), 'The level has been updated');
     }
 
     public function testGetTree(): void
@@ -311,6 +250,67 @@ class NodeTest extends \PHPUnit\Framework\TestCase
 
         $root = $repo->getTree();
 
-        $this->assertEquals($root[0][0], $entity[0][0]);
+        $this->assertSame($root[0][0], $entity[0][0]);
+    }
+
+    protected function getUsedEntityFixtures()
+    {
+        return [
+            'BehaviorFixtures\\ORM\\TreeNodeEntity',
+        ];
+    }
+
+    protected function getEventManager()
+    {
+        $em = new EventManager();
+
+        $em->addEventSubscriber(
+            new TreeSubscriber(
+                new ClassAnalyzer(),
+                false,
+                'Knp\DoctrineBehaviors\Model\Tree\Node'
+            )
+        );
+
+        return $em;
+    }
+
+    protected function buildNode(array $values = [])
+    {
+        $node = new TreeNodeEntity();
+        foreach ($values as $method => $value) {
+            $node->{$method}($value);
+        }
+
+        return $node;
+    }
+
+    private function buildTree()
+    {
+        $item = $this->buildNode();
+        $item->setMaterializedPath('');
+        $item->setId(1);
+
+        $childItem = $this->buildNode();
+        $childItem->setMaterializedPath('/1');
+        $childItem->setId(2);
+        $childItem->setChildNodeOf($item);
+
+        $secondChildItem = $this->buildNode();
+        $secondChildItem->setMaterializedPath('/1');
+        $secondChildItem->setId(3);
+        $secondChildItem->setChildNodeOf($item);
+
+        $childChildItem = $this->buildNode();
+        $childChildItem->setId(4);
+        $childChildItem->setMaterializedPath('/1/2');
+        $childChildItem->setChildNodeOf($childItem);
+
+        $childChildChildItem = $this->buildNode();
+        $childChildChildItem->setId(5);
+        $childChildChildItem->setMaterializedPath('/1/2/4');
+        $childChildChildItem->setChildNodeOf($childChildItem);
+
+        return $item;
     }
 }

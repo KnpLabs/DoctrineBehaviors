@@ -13,28 +13,6 @@ class SluggableMultiTest extends \PHPUnit\Framework\TestCase
 {
     use EntityManagerProvider;
 
-    protected function getUsedEntityFixtures()
-    {
-        return [
-            'BehaviorFixtures\\ORM\\SluggableMultiEntity'
-        ];
-    }
-
-    protected function getEventManager()
-    {
-        $em = new EventManager();
-
-        $em->addEventSubscriber(
-            new \Knp\DoctrineBehaviors\ORM\Sluggable\SluggableSubscriber(
-                new ClassAnalyzer(),
-                false,
-                'Knp\DoctrineBehaviors\Model\Sluggable\Sluggable'
-            )
-        );
-
-        return $em;
-    }
-
     public function testSlugLoading(): void
     {
         $em = $this->getEntityManager();
@@ -55,7 +33,7 @@ class SluggableMultiTest extends \PHPUnit\Framework\TestCase
         $entity = $em->getRepository('BehaviorFixtures\ORM\SluggableMultiEntity')->find($id);
 
         $this->assertNotNull($entity);
-        $this->assertEquals($entity->getSlug(), $expected);
+        $this->assertSame($entity->getSlug(), $expected);
     }
 
     public function testNotUpdatedSlug(): void
@@ -76,7 +54,7 @@ class SluggableMultiTest extends \PHPUnit\Framework\TestCase
         $em->persist($entity);
         $em->flush();
 
-        $this->assertEquals($entity->getSlug(), $expected);
+        $this->assertSame($entity->getSlug(), $expected);
     }
 
     public function testUpdatedSlug(): void
@@ -92,7 +70,7 @@ class SluggableMultiTest extends \PHPUnit\Framework\TestCase
         $em->persist($entity);
         $em->flush();
 
-        $this->assertEquals($entity->getSlug(), $expected);
+        $this->assertSame($entity->getSlug(), $expected);
 
         $expected = 'the+name+2+title';
 
@@ -101,6 +79,28 @@ class SluggableMultiTest extends \PHPUnit\Framework\TestCase
         $em->persist($entity);
         $em->flush();
 
-        $this->assertEquals($entity->getSlug(), $expected);
+        $this->assertSame($entity->getSlug(), $expected);
+    }
+
+    protected function getUsedEntityFixtures()
+    {
+        return [
+            'BehaviorFixtures\\ORM\\SluggableMultiEntity',
+        ];
+    }
+
+    protected function getEventManager()
+    {
+        $em = new EventManager();
+
+        $em->addEventSubscriber(
+            new \Knp\DoctrineBehaviors\ORM\Sluggable\SluggableSubscriber(
+                new ClassAnalyzer(),
+                false,
+                'Knp\DoctrineBehaviors\Model\Sluggable\Sluggable'
+            )
+        );
+
+        return $em;
     }
 }

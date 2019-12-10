@@ -41,16 +41,16 @@ class TreeSubscriber extends AbstractSubscriber
     {
         $classMetadata = $eventArgs->getClassMetadata();
 
-        if (null === $classMetadata->reflClass) {
+        if ($classMetadata->reflClass === null) {
             return;
         }
 
         if ($this->isTreeNode($classMetadata)) {
-            if (!$classMetadata->hasField('materializedPath')) {
+            if (! $classMetadata->hasField('materializedPath')) {
                 $classMetadata->mapField([
                     'fieldName' => 'materializedPath',
                     'type' => 'string',
-                    'length' => 255
+                    'length' => 255,
                 ]);
             }
         }
@@ -66,7 +66,7 @@ class TreeSubscriber extends AbstractSubscriber
      *
      * @param ClassMetadata $classMetadata The metadata
      *
-     * @return Boolean
+     * @return boolean
      */
     private function isTreeNode(ClassMetadata $classMetadata)
     {

@@ -27,7 +27,6 @@ class UserCallable
 
     /**
      * @param callable $container
-     * @param string $userEntity
      */
     public function __construct(Container $container)
     {
@@ -37,7 +36,7 @@ class UserCallable
     public function __invoke()
     {
         $token = $this->container->get('security.token_storage')->getToken();
-        if (null !== $token) {
+        if ($token !== null) {
             return $token->getUser();
         }
     }

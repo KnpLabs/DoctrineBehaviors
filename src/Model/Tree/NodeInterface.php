@@ -67,14 +67,14 @@ interface NodeInterface
      *
      * @return NodeInterface $this Fluent interface
      **/
-    public function setChildNodeOf(?NodeInterface $node = null);
+    public function setChildNodeOf(?self $node = null);
 
     /**
      * @param NodeInterface $node the node to append to the children collection
      *
      * @return NodeInterface $this Fluent interface
      **/
-    public function addChildNode(NodeInterface $node);
+    public function addChildNode(self $node);
 
     /**
      * @return Collection the children collection
@@ -90,7 +90,7 @@ interface NodeInterface
      * @return bool if the node is a root (i.e has no parent)
      **/
     public function isRootNode();
-    
+
     /**
      * @return NodeInterface
      **/
@@ -102,10 +102,9 @@ interface NodeInterface
      *
      * @return boolean true if this node is a direct child of $node
      **/
-    public function isChildNodeOf(NodeInterface $node);
+    public function isChildNodeOf(self $node);
 
     /**
-     *
      * @return integer the level of this node, eg: the depth compared to root node
      **/
     public function getNodeLevel();
@@ -113,7 +112,6 @@ interface NodeInterface
     /**
      * Builds a hierarchical tree from a flat collection of NodeInterface elements
      *
-     * @return void
      **/
     public function buildTree(array $nodes): void;
 }

@@ -41,15 +41,15 @@ class SortableSubscriber extends AbstractSubscriber
     {
         $classMetadata = $eventArgs->getClassMetadata();
 
-        if (null === $classMetadata->reflClass) {
+        if ($classMetadata->reflClass === null) {
             return;
         }
 
         if ($this->isSortable($classMetadata)) {
-            if (!$classMetadata->hasField('sort')) {
+            if (! $classMetadata->hasField('sort')) {
                 $classMetadata->mapField([
                     'fieldName' => 'sort',
-                    'type' => 'integer'
+                    'type' => 'integer',
                 ]);
             }
         }
@@ -65,7 +65,7 @@ class SortableSubscriber extends AbstractSubscriber
      *
      * @param ClassMetadata $classMetadata The metadata
      *
-     * @return Boolean
+     * @return boolean
      */
     private function isSortable(ClassMetadata $classMetadata)
     {

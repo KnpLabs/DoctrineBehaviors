@@ -18,8 +18,9 @@ use Knp\DoctrineBehaviors\Reflection\ClassAnalyzer;
 
 abstract class AbstractSubscriber implements EventSubscriber
 {
-    private $classAnalyser;
     protected $isRecursive;
+
+    private $classAnalyser;
 
     public function __construct(ClassAnalyzer $classAnalyser, $isRecursive)
     {
@@ -27,10 +28,10 @@ abstract class AbstractSubscriber implements EventSubscriber
         $this->isRecursive = (bool) $isRecursive;
     }
 
+    abstract public function getSubscribedEvents();
+
     protected function getClassAnalyzer()
     {
         return $this->classAnalyser;
     }
-
-    abstract public function getSubscribedEvents();
 }

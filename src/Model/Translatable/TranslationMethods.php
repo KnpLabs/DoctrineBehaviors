@@ -28,13 +28,11 @@ trait TranslationMethods
     public static function getTranslatableEntityClass()
     {
         // By default, the translatable class has the same name but without the "Translation" suffix
-        return substr(__CLASS__, 0, -11);
+        return substr(self::class, 0, -11);
     }
 
     /**
      * Returns object id.
-     *
-     * @return mixed
      */
     public function getId()
     {
@@ -97,11 +95,11 @@ trait TranslationMethods
     public function isEmpty()
     {
         foreach (get_object_vars($this) as $var => $value) {
-            if (in_array($var, ['id', 'translatable', 'locale'])) {
+            if (in_array($var, ['id', 'translatable', 'locale'], true)) {
                 continue;
             }
 
-            if (!empty($value)) {
+            if (! empty($value)) {
                 return false;
             }
         }

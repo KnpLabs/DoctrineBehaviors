@@ -24,11 +24,11 @@ trait JoinableRepository
 {
     public function getJoinAllQueryBuilder($alias = null, ?QueryBuilder $qb = null)
     {
-        if (null === $alias) {
+        if ($alias === null) {
             $alias = $this->getAlias($this->getClassName());
         }
 
-        if (null === $qb) {
+        if ($qb === null) {
             $qb = $this->createQueryBuilder($alias);
         }
 
@@ -42,7 +42,7 @@ trait JoinableRepository
     private function addJoinsToQueryBuilder($alias, QueryBuilder $qb, $className, $recursive = true): void
     {
         foreach ($this->getEntityManager()->getClassMetadata($className)->getAssociationMappings() as $assoc) {
-            if (in_array($assoc['targetEntity'], $qb->getRootEntities()) || $className === $assoc['targetEntity']) {
+            if (in_array($assoc['targetEntity'], $qb->getRootEntities(), true) || $className === $assoc['targetEntity']) {
                 continue;
             }
 
@@ -88,6 +88,6 @@ trait JoinableRepository
 
         $aliases[] = $qb->getRootAlias();
 
-        return in_array($alias, $aliases);
+        return in_array($alias, $aliases, true);
     }
 }

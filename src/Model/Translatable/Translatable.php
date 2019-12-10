@@ -20,7 +20,7 @@ namespace Knp\DoctrineBehaviors\Model\Translatable;
  */
 trait Translatable
 {
-    use TranslatableProperties,
-        TranslatableMethods
+    use TranslatableProperties;
+    use TranslatableMethods
     ;
 }

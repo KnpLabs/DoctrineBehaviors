@@ -20,7 +20,7 @@ namespace Knp\DoctrineBehaviors\Model\Timestampable;
  */
 trait Timestampable
 {
-    use TimestampableProperties,
-        TimestampableMethods
+    use TimestampableProperties;
+    use TimestampableMethods
     ;
 }

@@ -10,7 +10,7 @@ trait SortableRepository
 {
     public function reorderEntity($entity): void
     {
-        if (!$entity->isReordered()) {
+        if (! $entity->isReordered()) {
             return;
         }
 

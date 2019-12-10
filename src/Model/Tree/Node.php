@@ -20,6 +20,8 @@ use Doctrine\Common\Collections\ArrayCollection;
  */
 trait Node
 {
+    protected $materializedPath = '';
+
     /**
      * @var ArrayCollection the children in the tree
      */
@@ -29,8 +31,6 @@ trait Node
      * @var NodeInterface the parent in the tree
      */
     private $parentNode;
-
-    protected $materializedPath = '';
 
     public function getNodeId()
     {
@@ -47,9 +47,6 @@ trait Node
         return '/';
     }
 
-    /**
-     * {@inheritdoc}
-     **/
     public function getRealMaterializedPath()
     {
         return $this->getMaterializedPath() . self::getMaterializedPathSeparator() . $this->getNodeId();
@@ -60,9 +57,6 @@ trait Node
         return $this->materializedPath;
     }
 
-    /**
-     * {@inheritdoc}
-     **/
     public function setMaterializedPath($path)
     {
         $this->materializedPath = $path;
@@ -71,9 +65,6 @@ trait Node
         return $this;
     }
 
-    /**
-     * {@inheritdoc}
-     **/
     public function getParentMaterializedPath()
     {
         $path = $this->getExplodedPath();
@@ -82,17 +73,11 @@ trait Node
         return static::getMaterializedPathSeparator() . implode(static::getMaterializedPathSeparator(), $path);
     }
 
-    /**
-     * {@inheritdoc}
-     **/
     public function setParentMaterializedPath($path): void
     {
         $this->parentNodePath = $path;
     }
 
-    /**
-     * {@inheritdoc}
-     **/
     public function getRootMaterializedPath()
     {
         $explodedPath = $this->getExplodedPath();
@@ -100,9 +85,6 @@ trait Node
         return static::getMaterializedPathSeparator() . array_shift($explodedPath);
     }
 
-    /**
-     * {@inheritdoc}
-     **/
     public function getNodeLevel()
     {
         return count($this->getExplodedPath());
@@ -115,45 +97,30 @@ trait Node
 
     public function isLeafNode()
     {
-        return 0 === $this->getChildNodes()->count();
+        return $this->getChildNodes()->count() === 0;
     }
 
-    /**
-     * {@inheritdoc}
-     **/
     public function getChildNodes()
     {
         return $this->childNodes = $this->childNodes ?: new ArrayCollection();
     }
 
-    /**
-     * {@inheritdoc}
-     **/
     public function addChildNode(NodeInterface $node): void
     {
         $this->getChildNodes()->add($node);
     }
 
-    /**
-     * {@inheritdoc}
-     **/
     public function isIndirectChildNodeOf(NodeInterface $node)
     {
         return $this->getRealMaterializedPath() !== $node->getRealMaterializedPath()
-            && 0 === strpos($this->getRealMaterializedPath(), $node->getRealMaterializedPath());
+            && strpos($this->getRealMaterializedPath(), $node->getRealMaterializedPath()) === 0;
     }
 
-    /**
-     * {@inheritdoc}
-     **/
     public function isChildNodeOf(NodeInterface $node)
     {
         return $this->getParentMaterializedPath() === $node->getRealMaterializedPath();
     }
 
-    /**
-     * {@inheritdoc}
-     **/
     public function setChildNodeOf(?NodeInterface $node = null)
     {
         $id = $this->getNodeId();
@@ -161,19 +128,19 @@ trait Node
             throw new \LogicException('You must provide an id for this node if you want it to be part of a tree.');
         }
 
-        $path = null !== $node
+        $path = $node !== null
             ? rtrim($node->getRealMaterializedPath(), static::getMaterializedPathSeparator())
             : static::getMaterializedPathSeparator()
         ;
         $this->setMaterializedPath($path);
 
-        if (null !== $this->parentNode) {
+        if ($this->parentNode !== null) {
             $this->parentNode->getChildNodes()->removeElement($this);
         }
 
         $this->parentNode = $node;
 
-        if (null !== $node) {
+        if ($node !== null) {
             $this->parentNode->addChildNode($this);
         }
 
@@ -184,17 +151,11 @@ trait Node
         return $this;
     }
 
-    /**
-     * {@inheritdoc}
-     **/
     public function getParentNode()
     {
         return $this->parentNode;
     }
 
-    /**
-     * {@inheritdoc}
-     **/
     public function setParentNode(NodeInterface $node)
     {
         $this->parentNode = $node;
@@ -203,22 +164,16 @@ trait Node
         return $this;
     }
 
-    /**
-     * {@inheritdoc}
-     **/
     public function getRootNode()
     {
         $parent = $this;
-        while (null !== $parent->getParentNode()) {
+        while ($parent->getParentNode() !== null) {
             $parent = $parent->getParentNode();
         }
 
         return $parent;
     }
 
-    /**
-     * {@inheritdoc}
-     **/
     public function buildTree(array $results): void
     {
         $this->getChildNodes()->clear();
@@ -250,12 +205,12 @@ trait Node
      **/
     public function toArray(?\Closure $prepare = null, ?array &$tree = null)
     {
-        if (null === $prepare) {
+        if ($prepare === null) {
             $prepare = function (NodeInterface $node) {
                 return (string) $node;
             };
         }
-        if (null === $tree) {
+        if ($tree === null) {
             $tree = [$this->getNodeId() => ['node' => $prepare($this), 'children' => []]];
         }
 
@@ -275,14 +230,14 @@ trait Node
      **/
     public function toFlatArray(?\Closure $prepare = null, ?array &$tree = null)
     {
-        if (null === $prepare) {
+        if ($prepare === null) {
             $prepare = function (NodeInterface $node) {
                 $pre = $node->getNodeLevel() > 1 ? implode('', array_fill(0, $node->getNodeLevel(), '--')) : '';
 
                 return $pre . (string) $node;
             };
         }
-        if (null === $tree) {
+        if ($tree === null) {
             $tree = [$this->getNodeId() => $prepare($this)];
         }
 
@@ -316,15 +271,12 @@ trait Node
         return $this->getChildNodes()[$offset];
     }
 
-    /**
-     * {@inheritdoc}
-     **/
     protected function getExplodedPath()
     {
         $path = explode(static::getMaterializedPathSeparator(), $this->getRealMaterializedPath());
 
         return array_filter($path, function ($item) {
-            return '' !== $item;
+            return $item !== '';
         });
     }
 }
