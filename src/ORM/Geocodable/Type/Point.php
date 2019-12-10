@@ -10,6 +10,7 @@ namespace Knp\DoctrineBehaviors\ORM\Geocodable\Type;
 class Point
 {
     private $latitude;
+
     private $longitude;
 
     /**
@@ -25,6 +26,16 @@ class Point
     }
 
     /**
+     * Returns string representation for Point in (%f,%f) format.
+     *
+     * @return string
+     */
+    public function __toString()
+    {
+        return sprintf('(%F,%F)', $this->latitude, $this->longitude);
+    }
+
+    /**
      * Creates new Point from array.
      *
      * @param array $array either hash or array of lat, long
@@ -35,9 +46,8 @@ class Point
     {
         if (isset($array['latitude'])) {
             return new self($array['latitude'], $array['longitude']);
-        } else {
-            return new self($array[0], $array[1]);
         }
+        return new self($array[0], $array[1]);
     }
 
     /**
@@ -70,16 +80,6 @@ class Point
     public function getLongitude()
     {
         return $this->longitude;
-    }
-
-    /**
-     * Returns string representation for Point in (%f,%f) format.
-     *
-     * @return string
-     */
-    public function __toString()
-    {
-        return sprintf('(%F,%F)', $this->latitude, $this->longitude);
     }
 
     public function isEmpty()

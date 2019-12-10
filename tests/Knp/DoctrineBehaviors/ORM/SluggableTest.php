@@ -13,28 +13,6 @@ class SluggableTest extends \PHPUnit\Framework\TestCase
 {
     use EntityManagerProvider;
 
-    protected function getUsedEntityFixtures()
-    {
-        return [
-            'BehaviorFixtures\\ORM\\SluggableEntity'
-        ];
-    }
-
-    protected function getEventManager()
-    {
-        $em = new EventManager();
-
-        $em->addEventSubscriber(
-            new \Knp\DoctrineBehaviors\ORM\Sluggable\SluggableSubscriber(
-                new ClassAnalyzer(),
-                false,
-                'Knp\DoctrineBehaviors\Model\Sluggable\Sluggable'
-            )
-        );
-
-        return $em;
-    }
-
     public function testSlugLoading(): void
     {
         $em = $this->getEntityManager();
@@ -55,7 +33,7 @@ class SluggableTest extends \PHPUnit\Framework\TestCase
         $entity = $em->getRepository('BehaviorFixtures\ORM\SluggableEntity')->find($id);
 
         $this->assertNotNull($entity);
-        $this->assertEquals($expected, $entity->getSlug());
+        $this->assertSame($expected, $entity->getSlug());
     }
 
     public function testNotUpdatedSlug(): void
@@ -77,12 +55,12 @@ class SluggableTest extends \PHPUnit\Framework\TestCase
             ],
             [
                 'slug' => 'chateauneuf-du-pape',
-                'name' => 'Châteauneuf du Pape'
+                'name' => 'Châteauneuf du Pape',
             ],
             [
                 'slug' => 'zlutoucky-kun',
-                'name' => 'Žluťoučký kůň'
-            ]
+                'name' => 'Žluťoučký kůň',
+            ],
         ];
 
         foreach ($data as $row) {
@@ -98,7 +76,7 @@ class SluggableTest extends \PHPUnit\Framework\TestCase
             $em->persist($entity);
             $em->flush();
 
-            $this->assertEquals($row['slug'], $entity->getSlug());
+            $this->assertSame($row['slug'], $entity->getSlug());
         }
     }
 
@@ -115,7 +93,7 @@ class SluggableTest extends \PHPUnit\Framework\TestCase
         $em->persist($entity);
         $em->flush();
 
-        $this->assertEquals($entity->getSlug(), $expected);
+        $this->assertSame($entity->getSlug(), $expected);
 
         $expected = 'the-name-2';
 
@@ -124,6 +102,28 @@ class SluggableTest extends \PHPUnit\Framework\TestCase
         $em->persist($entity);
         $em->flush();
 
-        $this->assertEquals($expected, $entity->getSlug());
+        $this->assertSame($expected, $entity->getSlug());
+    }
+
+    protected function getUsedEntityFixtures()
+    {
+        return [
+            'BehaviorFixtures\\ORM\\SluggableEntity',
+        ];
+    }
+
+    protected function getEventManager()
+    {
+        $em = new EventManager();
+
+        $em->addEventSubscriber(
+            new \Knp\DoctrineBehaviors\ORM\Sluggable\SluggableSubscriber(
+                new ClassAnalyzer(),
+                false,
+                'Knp\DoctrineBehaviors\Model\Sluggable\Sluggable'
+            )
+        );
+
+        return $em;
     }
 }

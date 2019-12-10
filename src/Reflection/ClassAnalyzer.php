@@ -2,15 +2,6 @@
 
 declare(strict_types=1);
 
-/**
- * This file is part of the KnpDoctrineBehaviors package.
- *
- * (c) KnpLabs <http://knplabs.com/>
- *
- * For the full copyright and license information, please view the LICENSE
- * file that was distributed with this source code.
- */
-
 namespace Knp\DoctrineBehaviors\Reflection;
 
 class ClassAnalyzer
@@ -23,13 +14,13 @@ class ClassAnalyzer
      */
     public function hasTrait(\ReflectionClass $class, $traitName, $isRecursive = false)
     {
-        if (in_array($traitName, $class->getTraitNames())) {
+        if (in_array($traitName, $class->getTraitNames(), true)) {
             return true;
         }
 
         $parentClass = $class->getParentClass();
 
-        if ((false === $isRecursive) || (false === $parentClass) || (null === $parentClass)) {
+        if (($isRecursive === false) || ($parentClass === false) || ($parentClass === null)) {
             return false;
         }
 
@@ -59,10 +50,10 @@ class ClassAnalyzer
 
         $parentClass = $class->getParentClass();
 
-        if (false === $parentClass) {
+        if ($parentClass === false) {
             return false;
         }
-        
+
         return $this->hasProperty($parentClass, $propertyName);
     }
 }

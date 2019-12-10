@@ -2,15 +2,6 @@
 
 declare(strict_types=1);
 
-/**
- * This file is part of the KnpDoctrineBehaviors package.
- *
- * (c) KnpLabs <http://knplabs.com/>
- *
- * For the full copyright and license information, please view the LICENSE
- * file that was distributed with this source code.
- */
-
 namespace Knp\DoctrineBehaviors\ORM;
 
 use Doctrine\Common\EventSubscriber;
@@ -18,8 +9,15 @@ use Knp\DoctrineBehaviors\Reflection\ClassAnalyzer;
 
 abstract class AbstractSubscriber implements EventSubscriber
 {
-    private $classAnalyser;
+    /**
+     * @var bool
+     */
     protected $isRecursive;
+
+    /**
+     * @var ClassAnalyzer
+     */
+    private $classAnalyser;
 
     public function __construct(ClassAnalyzer $classAnalyser, $isRecursive)
     {
@@ -27,10 +25,10 @@ abstract class AbstractSubscriber implements EventSubscriber
         $this->isRecursive = (bool) $isRecursive;
     }
 
-    protected function getClassAnalyzer()
+    abstract public function getSubscribedEvents();
+
+    protected function getClassAnalyzer(): ClassAnalyzer
     {
         return $this->classAnalyser;
     }
-
-    abstract public function getSubscribedEvents();
 }

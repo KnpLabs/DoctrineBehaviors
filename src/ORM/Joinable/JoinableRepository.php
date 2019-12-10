@@ -2,33 +2,19 @@
 
 declare(strict_types=1);
 
-/*
- * This file is part of the KnpDoctrineBehaviors package.
- *
- * (c) KnpLabs <http://knplabs.com/>
- *
- * For the full copyright and license information, please view the LICENSE
- * file that was distributed with this source code.
- */
-
 namespace Knp\DoctrineBehaviors\ORM\Joinable;
 
 use Doctrine\ORM\QueryBuilder;
 
-/**
- * Joinable trait.
- *
- * Should be used inside entity repository, that needs to easily make joined queries
- */
 trait JoinableRepository
 {
     public function getJoinAllQueryBuilder($alias = null, ?QueryBuilder $qb = null)
     {
-        if (null === $alias) {
+        if ($alias === null) {
             $alias = $this->getAlias($this->getClassName());
         }
 
-        if (null === $qb) {
+        if ($qb === null) {
             $qb = $this->createQueryBuilder($alias);
         }
 
@@ -42,7 +28,7 @@ trait JoinableRepository
     private function addJoinsToQueryBuilder($alias, QueryBuilder $qb, $className, $recursive = true): void
     {
         foreach ($this->getEntityManager()->getClassMetadata($className)->getAssociationMappings() as $assoc) {
-            if (in_array($assoc['targetEntity'], $qb->getRootEntities()) || $className === $assoc['targetEntity']) {
+            if (in_array($assoc['targetEntity'], $qb->getRootEntities(), true) || $className === $assoc['targetEntity']) {
                 continue;
             }
 
@@ -88,6 +74,6 @@ trait JoinableRepository
 
         $aliases[] = $qb->getRootAlias();
 
-        return in_array($alias, $aliases);
+        return in_array($alias, $aliases, true);
     }
 }

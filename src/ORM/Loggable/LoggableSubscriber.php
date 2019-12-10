@@ -2,28 +2,13 @@
 
 declare(strict_types=1);
 
-/**
- * This file is part of the KnpDoctrineBehaviors package.
- *
- * (c) KnpLabs <http://knplabs.com/>
- *
- * For the full copyright and license information, please view the LICENSE
- * file that was distributed with this source code.
- */
-
 namespace Knp\DoctrineBehaviors\ORM\Loggable;
 
 use Doctrine\ORM\Event\LifecycleEventArgs;
+use Doctrine\ORM\Events;
+use Knp\DoctrineBehaviors\ORM\AbstractSubscriber;
+use Knp\DoctrineBehaviors\Reflection\ClassAnalyzer;
 
-
-use Doctrine\ORM\Events,
-    Knp\DoctrineBehaviors\ORM\AbstractSubscriber,
-    Knp\DoctrineBehaviors\Reflection\ClassAnalyzer;
-
-/**
- * LoggableSubscriber handle Loggable entites
- * Listens to lifecycle events
- */
 class LoggableSubscriber extends AbstractSubscriber
 {
     /**
@@ -62,8 +47,6 @@ class LoggableSubscriber extends AbstractSubscriber
 
     /**
      * Logs entity changeset
-     *
-     * @param LifecycleEventArgs $eventArgs
      */
     public function logChangeSet(LifecycleEventArgs $eventArgs): void
     {
@@ -100,6 +83,15 @@ class LoggableSubscriber extends AbstractSubscriber
         $this->loggerCallable = $callable;
     }
 
+    public function getSubscribedEvents()
+    {
+        return [
+            Events::postPersist,
+            Events::postUpdate,
+            Events::preRemove,
+        ];
+    }
+
     /**
      * Checks if entity supports Loggable
      *
@@ -109,14 +101,5 @@ class LoggableSubscriber extends AbstractSubscriber
     protected function isEntitySupported(\ReflectionClass $reflClass)
     {
         return $this->getClassAnalyzer()->hasTrait($reflClass, 'Knp\DoctrineBehaviors\Model\Loggable\Loggable', $this->isRecursive);
-    }
-
-    public function getSubscribedEvents()
-    {
-        return [
-            Events::postPersist,
-            Events::postUpdate,
-            Events::preRemove,
-        ];
     }
 }

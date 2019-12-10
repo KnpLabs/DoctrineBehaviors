@@ -73,13 +73,13 @@ trait Tree
     /**
      * Extracts the root node and constructs a tree using flat resultset
      *
-     * @param Iterable|array $results a flat resultset
+     * @param iterable|array $results a flat resultset
      *
      * @return NodeInterface
      */
     public function buildTree($results)
     {
-        if (!count($results)) {
+        if (! count($results)) {
             return;
         }
 
@@ -120,17 +120,6 @@ trait Tree
     }
 
     /**
-     * manipulates the flat tree query builder before executing it.
-     * Override this method to customize the tree query
-     *
-     * @param QueryBuilder $qb
-     * @param array        $extraParams
-     */
-    protected function addFlatTreeConditions(QueryBuilder $qb, $extraParams): void
-    {
-    }
-
-    /**
      * Executes the flat tree query builder
      *
      * @param string $path
@@ -146,5 +135,15 @@ trait Tree
             ->getQuery()
             ->execute()
         ;
+    }
+
+    /**
+     * manipulates the flat tree query builder before executing it.
+     * Override this method to customize the tree query
+     *
+     * @param array        $extraParams
+     */
+    protected function addFlatTreeConditions(QueryBuilder $qb, $extraParams): void
+    {
     }
 }

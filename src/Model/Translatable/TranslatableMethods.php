@@ -2,29 +2,13 @@
 
 declare(strict_types=1);
 
-/*
- * This file is part of the KnpDoctrineBehaviors package.
- *
- * (c) KnpLabs <http://knplabs.com/>
- *
- * For the full copyright and license information, please view the LICENSE
- * file that was distributed with this source code.
- */
-
 namespace Knp\DoctrineBehaviors\Model\Translatable;
 
 use Doctrine\Common\Collections\ArrayCollection;
 
-/**
- * Translatable trait.
- *
- * Should be used inside entity, that needs to be translated.
- */
 trait TranslatableMethods
 {
     /**
-     * Returns collection of translations.
-     *
      * @return ArrayCollection
      */
     public function getTranslations()
@@ -51,7 +35,7 @@ trait TranslatableMethods
      */
     public function addTranslation($translation)
     {
-        $this->getTranslations()->set((string)$translation->getLocale(), $translation);
+        $this->getTranslations()->set((string) $translation->getLocale(), $translation);
         $translation->setTranslatable($this);
 
         return $this;
@@ -84,55 +68,12 @@ trait TranslatableMethods
     }
 
     /**
-     * Returns translation for specific locale (creates new one if doesn't exists).
-     * If requested translation doesn't exist, it will first try to fallback default locale
-     * If any translation doesn't exist, it will be added to newTranslations collection.
-     * In order to persist new translations, call mergeNewTranslations method, before flush
-     *
-     * @param string $locale The locale (en, ru, fr) | null If null, will try with current locale
-     * @param bool $fallbackToDefault Whether fallback to default locale
-     *
-     * @return Translation
-     */
-    protected function doTranslate($locale = null, $fallbackToDefault = true)
-    {
-        if (null === $locale) {
-            $locale = $this->getCurrentLocale();
-        }
-
-        $translation = $this->findTranslationByLocale($locale);
-        if ($translation and !$translation->isEmpty()) {
-            return $translation;
-        }
-
-        if ($fallbackToDefault) {
-            if (($fallbackLocale = $this->computeFallbackLocale($locale))
-                && ($translation = $this->findTranslationByLocale($fallbackLocale))) {
-                return $translation;
-            }
-
-            if ($defaultTranslation = $this->findTranslationByLocale($this->getDefaultLocale(), false)) {
-                return $defaultTranslation;
-            }
-        }
-
-        $class = static::getTranslationEntityClass();
-        $translation = new $class();
-        $translation->setLocale($locale);
-
-        $this->getNewTranslations()->set((string)$translation->getLocale(), $translation);
-        $translation->setTranslatable($this);
-
-        return $translation;
-    }
-
-    /**
      * Merges newly created translations into persisted translations.
      */
     public function mergeNewTranslations(): void
     {
         foreach ($this->getNewTranslations() as $newTranslation) {
-            if (!$this->getTranslations()->contains($newTranslation) && !$newTranslation->isEmpty()) {
+            if (! $this->getTranslations()->contains($newTranslation) && ! $newTranslation->isEmpty()) {
                 $this->addTranslation($newTranslation);
                 $this->getNewTranslations()->removeElement($newTranslation);
             }
@@ -172,10 +113,67 @@ trait TranslatableMethods
     }
 
     /**
+     * Returns translation entity class name.
+     *
+     * @return string
+     */
+    public static function getTranslationEntityClass()
+    {
+        return self::class . 'Translation';
+    }
+
+    /**
+     * Returns translation for specific locale (creates new one if doesn't exists).
+     * If requested translation doesn't exist, it will first try to fallback default locale
+     * If any translation doesn't exist, it will be added to newTranslations collection.
+     * In order to persist new translations, call mergeNewTranslations method, before flush
+     *
+     * @param string $locale The locale (en, ru, fr) | null If null, will try with current locale
+     * @param bool $fallbackToDefault Whether fallback to default locale
+     *
+     * @return Translation
+     */
+    protected function doTranslate($locale = null, $fallbackToDefault = true)
+    {
+        if ($locale === null) {
+            $locale = $this->getCurrentLocale();
+        }
+
+        $translation = $this->findTranslationByLocale($locale);
+        if ($translation and ! $translation->isEmpty()) {
+            return $translation;
+        }
+
+        if ($fallbackToDefault) {
+            $fallbackLocale = $this->computeFallbackLocale($locale);
+
+            if ($fallbackLocale) {
+                $translation = $this->findTranslationByLocale($fallbackLocale);
+                if ($translation) {
+                    return $translation;
+                }
+            }
+
+            $defaultTranslation = $this->findTranslationByLocale($this->getDefaultLocale(), false);
+            if ($defaultTranslation) {
+                return $defaultTranslation;
+            }
+        }
+
+        $class = static::getTranslationEntityClass();
+        $translation = new $class();
+        $translation->setLocale($locale);
+
+        $this->getNewTranslations()->set((string) $translation->getLocale(), $translation);
+        $translation->setTranslatable($this);
+
+        return $translation;
+    }
+
+    /**
      * An extra feature allows you to proxy translated fields of a translatable entity.
      *
      * @param string $method
-     * @param array $arguments
      *
      * @return mixed The translated value of the field for current locale
      */
@@ -185,16 +183,6 @@ trait TranslatableMethods
             [$this->translate($this->getCurrentLocale()), $method],
             $arguments
         );
-    }
-
-    /**
-     * Returns translation entity class name.
-     *
-     * @return string
-     */
-    public static function getTranslationEntityClass()
-    {
-        return __CLASS__ . 'Translation';
     }
 
     /**

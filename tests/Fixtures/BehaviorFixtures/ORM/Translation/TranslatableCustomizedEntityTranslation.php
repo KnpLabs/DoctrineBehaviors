@@ -20,9 +20,6 @@ class TranslatableCustomizedEntityTranslation
      */
     private $title;
 
-    /**
-     * {@inheritdoc}
-     */
     public static function getTranslatableEntityClass()
     {
         return '\BehaviorFixtures\ORM\TranslatableCustomizedEntity';

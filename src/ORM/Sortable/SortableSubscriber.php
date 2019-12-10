@@ -2,30 +2,14 @@
 
 declare(strict_types=1);
 
-/*
- * This file is part of the KnpDoctrineBehaviors package.
- *
- * (c) KnpLabs <http://knplabs.com/>
- *
- * For the full copyright and license information, please view the LICENSE
- * file that was distributed with this source code.
- */
-
 namespace Knp\DoctrineBehaviors\ORM\Sortable;
 
 use Doctrine\ORM\Event\LoadClassMetadataEventArgs;
-
 use Doctrine\ORM\Events;
+use Doctrine\ORM\Mapping\ClassMetadata;
+use Knp\DoctrineBehaviors\ORM\AbstractSubscriber;
+use Knp\DoctrineBehaviors\Reflection\ClassAnalyzer;
 
-use Doctrine\ORM\Mapping\ClassMetadata,
-    Knp\DoctrineBehaviors\ORM\AbstractSubscriber,
-    Knp\DoctrineBehaviors\Reflection\ClassAnalyzer;
-
-/**
- * Sortable subscriber.
- *
- * Adds mapping to the sortable entities.
- */
 class SortableSubscriber extends AbstractSubscriber
 {
     private $sortableTrait;
@@ -41,15 +25,15 @@ class SortableSubscriber extends AbstractSubscriber
     {
         $classMetadata = $eventArgs->getClassMetadata();
 
-        if (null === $classMetadata->reflClass) {
+        if ($classMetadata->reflClass === null) {
             return;
         }
 
         if ($this->isSortable($classMetadata)) {
-            if (!$classMetadata->hasField('sort')) {
+            if (! $classMetadata->hasField('sort')) {
                 $classMetadata->mapField([
                     'fieldName' => 'sort',
-                    'type' => 'integer'
+                    'type' => 'integer',
                 ]);
             }
         }
@@ -65,7 +49,7 @@ class SortableSubscriber extends AbstractSubscriber
      *
      * @param ClassMetadata $classMetadata The metadata
      *
-     * @return Boolean
+     * @return boolean
      */
     private function isSortable(ClassMetadata $classMetadata)
     {

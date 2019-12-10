@@ -2,31 +2,15 @@
 
 declare(strict_types=1);
 
-/**
- * This file is part of the KnpDoctrineBehaviors package.
- *
- * (c) KnpLabs <http://knplabs.com/>
- *
- * For the full copyright and license information, please view the LICENSE
- * file that was distributed with this source code.
- */
-
 namespace Knp\DoctrineBehaviors\ORM\Blameable;
 
 use Doctrine\Common\Persistence\Mapping\ClassMetadata;
-
 use Doctrine\ORM\Event\LifecycleEventArgs;
 use Doctrine\ORM\Event\LoadClassMetadataEventArgs;
+use Doctrine\ORM\Events;
+use Knp\DoctrineBehaviors\ORM\AbstractSubscriber;
+use Knp\DoctrineBehaviors\Reflection\ClassAnalyzer;
 
-use Doctrine\ORM\Events,
-    Knp\DoctrineBehaviors\ORM\AbstractSubscriber,
-    Knp\DoctrineBehaviors\Reflection\ClassAnalyzer;
-
-/**
- * BlameableSubscriber handle Blameable entites
- * Adds class metadata depending of user type (entity or string)
- * Listens to prePersist and PreUpdate lifecycle events
- */
 class BlameableSubscriber extends AbstractSubscriber
 {
     /**
@@ -61,14 +45,12 @@ class BlameableSubscriber extends AbstractSubscriber
 
     /**
      * Adds metadata about how to store user, either a string or an ManyToOne association on user entity
-     *
-     * @param LoadClassMetadataEventArgs $eventArgs
      */
     public function loadClassMetadata(LoadClassMetadataEventArgs $eventArgs): void
     {
         $classMetadata = $eventArgs->getClassMetadata();
 
-        if (null === $classMetadata->reflClass) {
+        if ($classMetadata->reflClass === null) {
             return;
         }
 
@@ -77,77 +59,8 @@ class BlameableSubscriber extends AbstractSubscriber
         }
     }
 
-    private function mapEntity(ClassMetadata $classMetadata): void
-    {
-        if ($this->userEntity) {
-            $this->mapManyToOneUser($classMetadata);
-        } else {
-            $this->mapStringUser($classMetadata);
-        }
-    }
-
-    private function mapStringUser(ClassMetadata $classMetadata): void
-    {
-        if (!$classMetadata->hasField('createdBy')) {
-            $classMetadata->mapField([
-                'fieldName' => 'createdBy',
-                'type' => 'string',
-                'nullable' => true,
-            ]);
-        }
-
-        if (!$classMetadata->hasField('updatedBy')) {
-            $classMetadata->mapField([
-                'fieldName' => 'updatedBy',
-                'type' => 'string',
-                'nullable' => true,
-            ]);
-        }
-
-        if (!$classMetadata->hasField('deletedBy')) {
-            $classMetadata->mapField([
-                'fieldName' => 'deletedBy',
-                'type' => 'string',
-                'nullable' => true,
-            ]);
-        }
-    }
-
-    private function mapManyToOneUser(classMetadata $classMetadata): void
-    {
-        if (!$classMetadata->hasAssociation('createdBy')) {
-            $classMetadata->mapManyToOne([
-                'fieldName' => 'createdBy',
-                'targetEntity' => $this->userEntity,
-                'joinColumns' => [[
-                    'onDelete' => 'SET NULL'
-                ]]
-            ]);
-        }
-        if (!$classMetadata->hasAssociation('updatedBy')) {
-            $classMetadata->mapManyToOne([
-                'fieldName' => 'updatedBy',
-                'targetEntity' => $this->userEntity,
-                'joinColumns' => [[
-                    'onDelete' => 'SET NULL'
-                ]]
-            ]);
-        }
-        if (!$classMetadata->hasAssociation('deletedBy')) {
-            $classMetadata->mapManyToOne([
-                'fieldName' => 'deletedBy',
-                'targetEntity' => $this->userEntity,
-                'joinColumns' => [[
-                    'onDelete' => 'SET NULL'
-                ]]
-            ]);
-        }
-    }
-
     /**
      * Stores the current user into createdBy and updatedBy properties
-     *
-     * @param LifecycleEventArgs $eventArgs
      */
     public function prePersist(LifecycleEventArgs $eventArgs): void
     {
@@ -157,7 +70,7 @@ class BlameableSubscriber extends AbstractSubscriber
 
         $classMetadata = $em->getClassMetadata(get_class($entity));
         if ($this->isBlameable($classMetadata)) {
-            if (!$entity->getCreatedBy()) {
+            if (! $entity->getCreatedBy()) {
                 $user = $this->getUser();
                 if ($this->isValidUser($user)) {
                     $entity->setCreatedBy($user);
@@ -168,7 +81,7 @@ class BlameableSubscriber extends AbstractSubscriber
                     ]);
                 }
             }
-            if (!$entity->getUpdatedBy()) {
+            if (! $entity->getUpdatedBy()) {
                 $user = $this->getUser();
                 if ($this->isValidUser($user)) {
                     $entity->setUpdatedBy($user);
@@ -183,25 +96,7 @@ class BlameableSubscriber extends AbstractSubscriber
     }
 
     /**
-     *
-     */
-    private function isValidUser($user)
-    {
-        if ($this->userEntity) {
-            return $user instanceof $this->userEntity;
-        }
-
-        if (is_object($user)) {
-            return method_exists($user, '__toString');
-        }
-
-        return is_string($user);
-    }
-
-    /**
      * Stores the current user into updatedBy property
-     *
-     * @param LifecycleEventArgs $eventArgs
      */
     public function preUpdate(LifecycleEventArgs $eventArgs): void
     {
@@ -211,7 +106,7 @@ class BlameableSubscriber extends AbstractSubscriber
 
         $classMetadata = $em->getClassMetadata(get_class($entity));
         if ($this->isBlameable($classMetadata)) {
-            if (!$entity->isBlameable()) {
+            if (! $entity->isBlameable()) {
                 return;
             }
             $user = $this->getUser();
@@ -229,8 +124,6 @@ class BlameableSubscriber extends AbstractSubscriber
 
     /**
      * Stores the current user into deletedBy property
-     *
-     * @param LifecycleEventArgs $eventArgs
      */
     public function preRemove(LifecycleEventArgs $eventArgs): void
     {
@@ -240,7 +133,7 @@ class BlameableSubscriber extends AbstractSubscriber
 
         $classMetadata = $em->getClassMetadata(get_class($entity));
         if ($this->isBlameable($classMetadata)) {
-            if (!$entity->isBlameable()) {
+            if (! $entity->isBlameable()) {
                 return;
             }
             $user = $this->getUser();
@@ -258,8 +151,6 @@ class BlameableSubscriber extends AbstractSubscriber
 
     /**
      * set a custome representation of current user
-     *
-     * @param mixed $user
      */
     public function setUser($user): void
     {
@@ -273,10 +164,10 @@ class BlameableSubscriber extends AbstractSubscriber
      */
     public function getUser()
     {
-        if (null !== $this->user) {
+        if ($this->user !== null) {
             return $this->user;
         }
-        if (null === $this->userCallable) {
+        if ($this->userCallable === null) {
             return;
         }
 
@@ -300,12 +191,92 @@ class BlameableSubscriber extends AbstractSubscriber
         $this->userCallable = $callable;
     }
 
+    private function mapEntity(ClassMetadata $classMetadata): void
+    {
+        if ($this->userEntity) {
+            $this->mapManyToOneUser($classMetadata);
+        } else {
+            $this->mapStringUser($classMetadata);
+        }
+    }
+
+    private function mapStringUser(ClassMetadata $classMetadata): void
+    {
+        if (! $classMetadata->hasField('createdBy')) {
+            $classMetadata->mapField([
+                'fieldName' => 'createdBy',
+                'type' => 'string',
+                'nullable' => true,
+            ]);
+        }
+
+        if (! $classMetadata->hasField('updatedBy')) {
+            $classMetadata->mapField([
+                'fieldName' => 'updatedBy',
+                'type' => 'string',
+                'nullable' => true,
+            ]);
+        }
+
+        if (! $classMetadata->hasField('deletedBy')) {
+            $classMetadata->mapField([
+                'fieldName' => 'deletedBy',
+                'type' => 'string',
+                'nullable' => true,
+            ]);
+        }
+    }
+
+    private function mapManyToOneUser(classMetadata $classMetadata): void
+    {
+        if (! $classMetadata->hasAssociation('createdBy')) {
+            $classMetadata->mapManyToOne([
+                'fieldName' => 'createdBy',
+                'targetEntity' => $this->userEntity,
+                'joinColumns' => [[
+                    'onDelete' => 'SET NULL',
+                ]],
+            ]);
+        }
+        if (! $classMetadata->hasAssociation('updatedBy')) {
+            $classMetadata->mapManyToOne([
+                'fieldName' => 'updatedBy',
+                'targetEntity' => $this->userEntity,
+                'joinColumns' => [[
+                    'onDelete' => 'SET NULL',
+                ]],
+            ]);
+        }
+        if (! $classMetadata->hasAssociation('deletedBy')) {
+            $classMetadata->mapManyToOne([
+                'fieldName' => 'deletedBy',
+                'targetEntity' => $this->userEntity,
+                'joinColumns' => [[
+                    'onDelete' => 'SET NULL',
+                ]],
+            ]);
+        }
+    }
+
+    private function isValidUser($user)
+    {
+        if ($this->userEntity) {
+            return $user instanceof $this->userEntity;
+        }
+
+        if (is_object($user)) {
+            return method_exists($user, '__toString');
+        }
+
+        return is_string($user);
+    }
+
     /**
      * Checks if entity is blameable
      *
      * @param ClassMetadata $classMetadata The metadata
      *
-     * @return Boolean
+     * @return boolean
      */
     private function isBlameable(ClassMetadata $classMetadata)
     {

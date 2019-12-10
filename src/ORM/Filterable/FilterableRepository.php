@@ -2,24 +2,10 @@
 
 declare(strict_types=1);
 
-/*
- * This file is part of the KnpDoctrineBehaviors package.
- *
- * (c) KnpLabs <http://knplabs.com/>
- *
- * For the full copyright and license information, please view the LICENSE
- * file that was distributed with this source code.
- */
-
 namespace Knp\DoctrineBehaviors\ORM\Filterable;
 
 use Doctrine\ORM\QueryBuilder;
 
-/**
- * Filterable trait.
- *
- * Should be used inside entity repository, that needs to be filterable
- */
 trait FilterableRepository
 {
     /**
@@ -68,10 +54,10 @@ trait FilterableRepository
     public function filterBy(array $filters, ?QueryBuilder $qb = null)
     {
         $filters = array_filter($filters, function ($filter) {
-            return !empty($filter);
+            return ! empty($filter);
         });
 
-        if (null === $qb) {
+        if ($qb === null) {
             $qb = $this->createFilterQueryBuilder();
         }
 
@@ -79,30 +65,30 @@ trait FilterableRepository
             foreach ($this->getColumnParameters($col) as $colName => $colParam) {
                 $compare = $this->getWhereOperator($col) . 'Where';
 
-                if (in_array($col, $this->getLikeFilterColumns())) {
+                if (in_array($col, $this->getLikeFilterColumns(), true)) {
                     $qb
-                        ->$compare(sprintf('%s LIKE :%s', $colName, $colParam))
+                        ->{$compare}(sprintf('%s LIKE :%s', $colName, $colParam))
                         ->setParameter($colParam, '%' . $value . '%')
                     ;
                 }
 
-                if (in_array($col, $this->getILikeFilterColumns())) {
+                if (in_array($col, $this->getILikeFilterColumns(), true)) {
                     $qb
-                        ->$compare(sprintf('LOWER(%s) LIKE :%s', $colName, $colParam))
+                        ->{$compare}(sprintf('LOWER(%s) LIKE :%s', $colName, $colParam))
                         ->setParameter($colParam, '%' . strtolower($value) . '%')
                     ;
                 }
 
-                if (in_array($col, $this->getEqualFilterColumns())) {
+                if (in_array($col, $this->getEqualFilterColumns(), true)) {
                     $qb
-                        ->$compare(sprintf('%s = :%s', $colName, $colParam))
+                        ->{$compare}(sprintf('%s = :%s', $colName, $colParam))
                         ->setParameter($colParam, $value)
                     ;
                 }
 
-                if (in_array($col, $this->getInFilterColumns())) {
+                if (in_array($col, $this->getInFilterColumns(), true)) {
                     $qb
-                        ->$compare($qb->expr()->in(sprintf('%s', $colName), (array) $value))
+                        ->{$compare}($qb->expr()->in(sprintf('%s', $colName), (array) $value))
                     ;
                 }
             }

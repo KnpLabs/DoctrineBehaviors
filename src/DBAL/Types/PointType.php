@@ -47,14 +47,14 @@ class PointType extends Type
      */
     public function convertToPHPValue($value, AbstractPlatform $platform)
     {
-        if (!$value) {
+        if (! $value) {
             return null;
         }
 
         if ($platform instanceof MySqlPlatform) {
             $data = sscanf($value, 'POINT(%f %f)');
         } else {
-            $data = sscanf($value, "(%f,%f)");
+            $data = sscanf($value, '(%f,%f)');
         }
 
         return new Point($data[0], $data[1]);
@@ -70,14 +70,14 @@ class PointType extends Type
      */
     public function convertToDatabaseValue($value, AbstractPlatform $platform)
     {
-        if (!$value) {
+        if (! $value) {
             return null;
         }
 
         if ($platform instanceof MySqlPlatform) {
-            $format = "POINT(%F %F)";
+            $format = 'POINT(%F %F)';
         } else {
-            $format = "(%F, %F)";
+            $format = '(%F, %F)';
         }
 
         return sprintf($format, $value->getLatitude(), $value->getLongitude());
@@ -102,7 +102,6 @@ class PointType extends Type
      * Modifies the SQL expression (identifier, parameter) to convert to a database value.
      *
      * @param string                                    $sqlExpr
-     * @param \Doctrine\DBAL\Platforms\AbstractPlatform $platform
      *
      * @return string
      */
@@ -110,9 +109,8 @@ class PointType extends Type
     {
         if ($platform instanceof MySqlPlatform) {
             return sprintf('PointFromText(%s)', $sqlExpr);
-        } else {
-            return parent::convertToDatabaseValueSQL($sqlExpr, $platform);
         }
+        return parent::convertToDatabaseValueSQL($sqlExpr, $platform);
     }
 
     /**
@@ -125,8 +123,7 @@ class PointType extends Type
     {
         if ($platform instanceof MySqlPlatform) {
             return sprintf('AsText(%s)', $sqlExpr);
-        } else {
-            return parent::convertToPHPValueSQL($sqlExpr, $platform);
         }
+        return parent::convertToPHPValueSQL($sqlExpr, $platform);
     }
 }

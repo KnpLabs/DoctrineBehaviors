@@ -15,13 +15,6 @@ class SluggableEntity
     use Model\Sluggable\Sluggable;
 
     /**
-     * @ORM\Id
-     * @ORM\Column(type="integer")
-     * @ORM\GeneratedValue(strategy="AUTO")
-     */
-    private $id;
-
-    /**
      * @ORM\Column(type="string")
      */
     protected $name;
@@ -30,6 +23,13 @@ class SluggableEntity
      * @ORM\Column(type="datetime")
      */
     protected $date;
+
+    /**
+     * @ORM\Id
+     * @ORM\Column(type="integer")
+     * @ORM\GeneratedValue(strategy="AUTO")
+     */
+    private $id;
 
     public function __construct()
     {
@@ -72,6 +72,6 @@ class SluggableEntity
 
     protected function getSluggableFields()
     {
-        return [ 'name' ];
+        return ['name'];
     }
 }

@@ -17,13 +17,13 @@ use Doctrine\ORM\Query\SqlWalker;
 class DistanceFunction extends FunctionNode
 {
     private $entityLocation;
+
     private $latitude;
+
     private $longitude;
 
     /**
      * Returns SQL representation of this function.
-     *
-     * @param SqlWalker $sqlWalker
      *
      * @return string
      */
@@ -41,8 +41,6 @@ class DistanceFunction extends FunctionNode
 
     /**
      * Parses DQL function.
-     *
-     * @param Parser $parser
      */
     public function parse(Parser $parser): void
     {

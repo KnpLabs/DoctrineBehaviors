@@ -2,33 +2,18 @@
 
 declare(strict_types=1);
 
-/*
- * This file is part of the KnpDoctrineBehaviors package.
- *
- * (c) KnpLabs <http://knplabs.com/>
- *
- * For the full copyright and license information, please view the LICENSE
- * file that was distributed with this source code.
- */
-
 namespace Knp\DoctrineBehaviors\ORM\Timestampable;
 
 use Doctrine\ORM\Event\LoadClassMetadataEventArgs;
-
 use Doctrine\ORM\Events;
+use Doctrine\ORM\Mapping\ClassMetadata;
+use Knp\DoctrineBehaviors\ORM\AbstractSubscriber;
+use Knp\DoctrineBehaviors\Reflection\ClassAnalyzer;
 
-use Doctrine\ORM\Mapping\ClassMetadata,
-    Knp\DoctrineBehaviors\ORM\AbstractSubscriber,
-    Knp\DoctrineBehaviors\Reflection\ClassAnalyzer;
-
-/**
- * Timestampable subscriber.
- *
- * Adds mapping to the timestampable entites.
- */
 class TimestampableSubscriber extends AbstractSubscriber
 {
     private $timestampableTrait;
+
     private $dbFieldType;
 
     public function __construct(ClassAnalyzer $classAnalyzer, $isRecursive, $timestampableTrait, $dbFieldType)
@@ -43,7 +28,7 @@ class TimestampableSubscriber extends AbstractSubscriber
     {
         $classMetadata = $eventArgs->getClassMetadata();
 
-        if (null === $classMetadata->reflClass) {
+        if ($classMetadata->reflClass === null) {
             return;
         }
 
@@ -54,11 +39,11 @@ class TimestampableSubscriber extends AbstractSubscriber
             }
 
             foreach (['createdAt', 'updatedAt'] as $field) {
-                if (!$classMetadata->hasField($field)) {
+                if (! $classMetadata->hasField($field)) {
                     $classMetadata->mapField([
                         'fieldName' => $field,
                         'type' => $this->dbFieldType,
-                        'nullable' => true
+                        'nullable' => true,
                     ]);
                 }
             }
@@ -75,7 +60,7 @@ class TimestampableSubscriber extends AbstractSubscriber
      *
      * @param ClassMetadata $classMetadata The metadata
      *
-     * @return Boolean
+     * @return boolean
      */
     private function isTimestampable(ClassMetadata $classMetadata)
     {

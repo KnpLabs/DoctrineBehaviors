@@ -4,9 +4,6 @@ declare(strict_types=1);
 
 namespace Knp\DoctrineBehaviors\ORM\Translatable;
 
-/**
- * @author    Jérôme Fix <jerome.fix@zapoyok.info>
- */
 class DefaultLocaleCallable
 {
     private $locale;

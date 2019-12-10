@@ -11,10 +11,113 @@ require_once 'EntityManagerProvider.php';
 
 class LoggableTest extends \PHPUnit\Framework\TestCase
 {
+    use EntityManagerProvider;
+
     private $subscriber;
+
     private $logs = [];
 
-    use EntityManagerProvider;
+    /**
+     * @dataProvider dataProviderValues
+     */
+    public function testShouldLogChangesetMessageWhenCreated($field, $value, $expected): void
+    {
+        $em = $this->getEntityManager($this->getEventManager());
+
+        $entity = new \BehaviorFixtures\ORM\LoggableEntity();
+
+        $set = 'set' . ucfirst($field);
+
+        $entity->{$set}($value);
+
+        $em->persist($entity);
+        $em->flush();
+
+        $this->assertCount(2, $this->logs);
+        $this->assertSame(
+            $this->logs[0],
+            'BehaviorFixtures\ORM\LoggableEntity #1 created'
+        );
+
+        $this->assertSame(
+            $this->logs[1],
+            'BehaviorFixtures\ORM\LoggableEntity #1 : property "' . $field . '" changed from "" to "' . $expected . '"'
+        );
+    }
+
+    /**
+     * @dataProvider dataProviderValues
+     */
+    public function testShouldLogChangesetMessageWhenUpdated($field, $value, $expected): void
+    {
+        $em = $this->getEntityManager($this->getEventManager());
+
+        $entity = new \BehaviorFixtures\ORM\LoggableEntity();
+
+        $em->persist($entity);
+        $em->flush();
+
+        $set = 'set' . ucfirst($field);
+
+        $entity->{$set}($value);
+        $em->flush();
+
+        $this->assertCount(3, $this->logs);
+        $this->assertSame(
+            $this->logs[2],
+            'BehaviorFixtures\ORM\LoggableEntity #1 : property "' . $field . '" changed from "" to "' . $expected . '"'
+        );
+    }
+
+    public function testShouldNotLogChangesetMessageWhenNoChange(): void
+    {
+        $em = $this->getEntityManager($this->getEventManager());
+
+        $entity = new \BehaviorFixtures\ORM\LoggableEntity();
+
+        $em->persist($entity);
+        $em->flush();
+
+        $entity->setTitle('test2');
+        $entity->setTitle(null);
+        $em->flush();
+
+        $this->assertCount(2, $this->logs);
+    }
+
+    public function testShouldLogRemovalMessageWhenDeleted(): void
+    {
+        $em = $this->getEntityManager($this->getEventManager());
+
+        $entity = new \BehaviorFixtures\ORM\LoggableEntity();
+
+        $em->persist($entity);
+        $em->flush();
+
+        $em->remove($entity);
+        $em->flush();
+
+        $this->assertCount(3, $this->logs);
+        $this->assertSame(
+            $this->logs[2],
+            'BehaviorFixtures\ORM\LoggableEntity #1 removed'
+        );
+    }
+
+    public function dataProviderValues()
+    {
+        return [
+            [
+                'title', 'test', 'test',
+            ],
+            [
+                'roles', ['x' => 'y'], 'an array',
+            ],
+            [
+                'date', new \DateTime('2014-02-02 12:20:30.000010'), '2014-02-02 12:20:30.000010',
+            ],
+        ];
+    }
 
     protected function getUsedEntityFixtures()
     {
@@ -38,117 +141,5 @@ class LoggableTest extends \PHPUnit\Framework\TestCase
         $em->addEventSubscriber($this->subscriber);
 
         return $em;
-    }
-
-    /**
-     * @test
-     *
-     * @dataProvider dataProviderValues
-     */
-    public function should_log_changeset_message_when_created($field, $value, $expected): void
-    {
-        $em = $this->getEntityManager($this->getEventManager());
-
-        $entity = new \BehaviorFixtures\ORM\LoggableEntity();
-
-        $set = "set" . ucfirst($field);
-
-        $entity->$set($value);
-
-        $em->persist($entity);
-        $em->flush();
-
-        $this->assertCount(2, $this->logs);
-        $this->assertEquals(
-            $this->logs[0],
-            'BehaviorFixtures\ORM\LoggableEntity #1 created'
-        );
-
-        $this->assertEquals(
-            $this->logs[1],
-            'BehaviorFixtures\ORM\LoggableEntity #1 : property "' . $field . '" changed from "" to "' . $expected . '"'
-        );
-    }
-
-    /**
-     * @test
-     *
-     * @dataProvider dataProviderValues
-     */
-    public function should_log_changeset_message_when_updated($field, $value, $expected): void
-    {
-        $em = $this->getEntityManager($this->getEventManager());
-
-        $entity = new \BehaviorFixtures\ORM\LoggableEntity();
-
-        $em->persist($entity);
-        $em->flush();
-
-        $set = "set" . ucfirst($field);
-
-        $entity->$set($value);
-        $em->flush();
-
-        $this->assertCount(3, $this->logs);
-        $this->assertEquals(
-            $this->logs[2],
-            'BehaviorFixtures\ORM\LoggableEntity #1 : property "' . $field . '" changed from "" to "' . $expected . '"'
-        );
-    }
-
-    /**
-     * @test
-     */
-    public function should_not_log_changeset_message_when_no_change(): void
-    {
-        $em = $this->getEntityManager($this->getEventManager());
-
-        $entity = new \BehaviorFixtures\ORM\LoggableEntity();
-
-        $em->persist($entity);
-        $em->flush();
-
-        $entity->setTitle('test2');
-        $entity->setTitle(null);
-        $em->flush();
-
-        $this->assertCount(2, $this->logs);
-    }
-
-    /**
-     * @test
-     */
-    public function should_log_removal_message_when_deleted(): void
-    {
-        $em = $this->getEntityManager($this->getEventManager());
-
-        $entity = new \BehaviorFixtures\ORM\LoggableEntity();
-
-        $em->persist($entity);
-        $em->flush();
-
-        $em->remove($entity);
-        $em->flush();
-
-        $this->assertCount(3, $this->logs);
-        $this->assertEquals(
-            $this->logs[2],
-            'BehaviorFixtures\ORM\LoggableEntity #1 removed'
-        );
-    }
-
-    public function dataProviderValues()
-    {
-        return [
-            [
-                "title", "test", "test"
-            ],
-            [
-                "roles", ["x" => "y"], "an array"
-            ],
-            [
-                "date", new \DateTime("2014-02-02 12:20:30.000010"), "2014-02-02 12:20:30.000010"
-            ]
-        ];
     }
 }

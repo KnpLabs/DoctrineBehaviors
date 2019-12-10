@@ -2,40 +2,19 @@
 
 declare(strict_types=1);
 
-/*
- * This file is part of the KnpDoctrineBehaviors package.
- *
- * (c) KnpLabs <http://knplabs.com/>
- *
- * For the full copyright and license information, please view the LICENSE
- * file that was distributed with this source code.
- */
-
 namespace Knp\DoctrineBehaviors\Model\Translatable;
 
-/**
- * Translation trait.
- *
- * Should be used inside translation entity.
- */
 trait TranslationMethods
 {
     /**
-     * Returns the translatable entity class name.
-     *
      * @return string
      */
     public static function getTranslatableEntityClass()
     {
         // By default, the translatable class has the same name but without the "Translation" suffix
-        return substr(__CLASS__, 0, -11);
+        return substr(self::class, 0, -11);
     }
 
-    /**
-     * Returns object id.
-     *
-     * @return mixed
-     */
     public function getId()
     {
         return $this->id;
@@ -97,11 +76,11 @@ trait TranslationMethods
     public function isEmpty()
     {
         foreach (get_object_vars($this) as $var => $value) {
-            if (in_array($var, ['id', 'translatable', 'locale'])) {
+            if (in_array($var, ['id', 'translatable', 'locale'], true)) {
                 continue;
             }
 
-            if (!empty($value)) {
+            if (! empty($value)) {
                 return false;
             }
         }

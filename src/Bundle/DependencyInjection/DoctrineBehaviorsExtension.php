@@ -11,9 +11,6 @@ use Symfony\Component\DependencyInjection\Loader\YamlFileLoader;
 
 class DoctrineBehaviorsExtension extends Extension
 {
-    /**
-     * {@inheritDoc}
-     */
     public function load(array $configs, ContainerBuilder $container): void
     {
         $loader = new YamlFileLoader($container, new FileLocator(__DIR__ . '/../../../config'));
@@ -27,15 +24,12 @@ class DoctrineBehaviorsExtension extends Extension
         unset($config['soft_deletable']);
 
         foreach ($config as $behavior => $enabled) {
-            if (!$enabled) {
+            if (! $enabled) {
                 $container->removeDefinition(sprintf('knp.doctrine_behaviors.%s_subscriber', $behavior));
             }
         }
     }
 
-    /**
-     * {@inheritDoc}
-     */
     public function getAlias()
     {
         return 'knp_doctrine_behaviors';

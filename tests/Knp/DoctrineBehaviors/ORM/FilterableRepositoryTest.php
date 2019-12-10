@@ -12,33 +12,20 @@ class FilterableRepositoryTest extends \PHPUnit\Framework\TestCase
 {
     use EntityManagerProvider;
 
-    protected function getUsedEntityFixtures()
-    {
-        return [
-            'BehaviorFixtures\\ORM\\FilterableEntity'
-        ];
-    }
-
-    /**
-     * @test
-     */
-    public function shouldFilterByNameUsingLike(): void
+    public function testShouldFilterByNameUsingLike(): void
     {
         $this->createEntities();
-        /**@var \BehaviorFixtures\ORM\FilterableRepository $repository*/
+        /** @var \BehaviorFixtures\ORM\FilterableRepository $repository */
         $repository = $this->getEntityManager()->getRepository('BehaviorFixtures\ORM\FilterableEntity');
 
         $collection = $repository->filterBy(['e:name' => 'name'])->getQuery()->execute();
 
         $this->assertCount(2, $collection);
-        $this->assertEquals('name1', $collection[0]->getName());
-        $this->assertEquals('name2', $collection[1]->getName());
+        $this->assertSame('name1', $collection[0]->getName());
+        $this->assertSame('name2', $collection[1]->getName());
     }
 
-    /**
-     * @test
-     */
-    public function shouldFilterByCodeUsingEqual(): void
+    public function testShouldFilterByCodeUsingEqual(): void
     {
         $this->createEntities();
 
@@ -47,7 +34,14 @@ class FilterableRepositoryTest extends \PHPUnit\Framework\TestCase
         $collection = $repository->filterBy(['e:code' => '2'])->getQuery()->execute();
 
         $this->assertCount(1, $collection);
-        $this->assertEquals('name1', $collection[0]->getName());
+        $this->assertSame('name1', $collection[0]->getName());
+    }
+
+    protected function getUsedEntityFixtures()
+    {
+        return [
+            'BehaviorFixtures\\ORM\\FilterableEntity',
+        ];
     }
 
     private function createEntities(): void
