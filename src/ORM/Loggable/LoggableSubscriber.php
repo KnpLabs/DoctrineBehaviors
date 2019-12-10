@@ -5,16 +5,10 @@ declare(strict_types=1);
 namespace Knp\DoctrineBehaviors\ORM\Loggable;
 
 use Doctrine\ORM\Event\LifecycleEventArgs;
+use Doctrine\ORM\Events;
+use Knp\DoctrineBehaviors\ORM\AbstractSubscriber;
+use Knp\DoctrineBehaviors\Reflection\ClassAnalyzer;
 
-
-use Doctrine\ORM\Events,
-    Knp\DoctrineBehaviors\ORM\AbstractSubscriber,
-    Knp\DoctrineBehaviors\Reflection\ClassAnalyzer;
-
-/**
- * LoggableSubscriber handle Loggable entites
- * Listens to lifecycle events
- */
 class LoggableSubscriber extends AbstractSubscriber
 {
     /**

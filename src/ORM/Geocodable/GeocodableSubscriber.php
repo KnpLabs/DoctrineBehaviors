@@ -13,10 +13,9 @@ use Doctrine\DBAL\Types\Type;
 use Doctrine\ORM\Event\LifecycleEventArgs;
 use Doctrine\ORM\Event\LoadClassMetadataEventArgs;
 use Doctrine\ORM\Events;
-
-use Knp\DoctrineBehaviors\ORM\AbstractSubscriber,
-    Knp\DoctrineBehaviors\ORM\Geocodable\Type\Point,
-    Knp\DoctrineBehaviors\Reflection\ClassAnalyzer;
+use Knp\DoctrineBehaviors\ORM\AbstractSubscriber;
+use Knp\DoctrineBehaviors\ORM\Geocodable\Type\Point;
+use Knp\DoctrineBehaviors\Reflection\ClassAnalyzer;
 
 /**
  * GeocodableSubscriber handle Geocodable entites
@@ -32,7 +31,6 @@ class GeocodableSubscriber extends AbstractSubscriber
     private $geocodableTrait;
 
     /**
-     * @param \Knp\DoctrineBehaviors\Reflection\ClassAnalyzer $classAnalyzer
      * @param                                                 $isRecursive
      * @param                                                 $geocodableTrait
      * @param callable                                        $geolocationCallable

@@ -5,19 +5,12 @@ declare(strict_types=1);
 namespace Knp\DoctrineBehaviors\ORM\Blameable;
 
 use Doctrine\Common\Persistence\Mapping\ClassMetadata;
-
 use Doctrine\ORM\Event\LifecycleEventArgs;
 use Doctrine\ORM\Event\LoadClassMetadataEventArgs;
+use Doctrine\ORM\Events;
+use Knp\DoctrineBehaviors\ORM\AbstractSubscriber;
+use Knp\DoctrineBehaviors\Reflection\ClassAnalyzer;
 
-use Doctrine\ORM\Events,
-    Knp\DoctrineBehaviors\ORM\AbstractSubscriber,
-    Knp\DoctrineBehaviors\Reflection\ClassAnalyzer;
-
-/**
- * BlameableSubscriber handle Blameable entites
- * Adds class metadata depending of user type (entity or string)
- * Listens to prePersist and PreUpdate lifecycle events
- */
 class BlameableSubscriber extends AbstractSubscriber
 {
     /**

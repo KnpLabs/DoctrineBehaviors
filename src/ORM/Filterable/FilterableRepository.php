@@ -6,11 +6,6 @@ namespace Knp\DoctrineBehaviors\ORM\Filterable;
 
 use Doctrine\ORM\QueryBuilder;
 
-/**
- * Filterable trait.
- *
- * Should be used inside entity repository, that needs to be filterable
- */
 trait FilterableRepository
 {
     /**

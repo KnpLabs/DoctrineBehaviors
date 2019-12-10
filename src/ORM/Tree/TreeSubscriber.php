@@ -5,18 +5,11 @@ declare(strict_types=1);
 namespace Knp\DoctrineBehaviors\ORM\Tree;
 
 use Doctrine\ORM\Event\LoadClassMetadataEventArgs;
-
 use Doctrine\ORM\Events;
+use Doctrine\ORM\Mapping\ClassMetadata;
+use Knp\DoctrineBehaviors\ORM\AbstractSubscriber;
+use Knp\DoctrineBehaviors\Reflection\ClassAnalyzer;
 
-use Doctrine\ORM\Mapping\ClassMetadata,
-    Knp\DoctrineBehaviors\ORM\AbstractSubscriber,
-    Knp\DoctrineBehaviors\Reflection\ClassAnalyzer;
-
-/**
- * Tree subscriber.
- *
- * Adds mapping to the tree entities.
- */
 class TreeSubscriber extends AbstractSubscriber
 {
     private $nodeTrait;

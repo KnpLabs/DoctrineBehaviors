@@ -5,18 +5,14 @@ declare(strict_types=1);
 namespace Knp\DoctrineBehaviors\ORM\SoftDeletable;
 
 use Doctrine\Common\Persistence\Mapping\ClassMetadata;
-
-use Doctrine\ORM\Event\LoadClassMetadataEventArgs,
-    Doctrine\ORM\Event\OnFlushEventArgs,
-    Doctrine\ORM\Events,
-    Knp\DoctrineBehaviors\ORM\AbstractSubscriber,
-    Knp\DoctrineBehaviors\Reflection\ClassAnalyzer;
+use Doctrine\ORM\Event\LoadClassMetadataEventArgs;
+use Doctrine\ORM\Event\OnFlushEventArgs;
+use Doctrine\ORM\Events;
+use Knp\DoctrineBehaviors\ORM\AbstractSubscriber;
+use Knp\DoctrineBehaviors\Reflection\ClassAnalyzer;
 
 /**
- * SoftDeletable Doctrine2 subscriber.
- *
- * Listens to onFlush event and marks SoftDeletable entities
- * as deleted instead of really removing them.
+ * Listens to onFlush event and marks SoftDeletable entities as deleted instead of really removing them.
  */
 class SoftDeletableSubscriber extends AbstractSubscriber
 {

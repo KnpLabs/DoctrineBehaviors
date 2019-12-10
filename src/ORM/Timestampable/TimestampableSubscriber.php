@@ -5,18 +5,11 @@ declare(strict_types=1);
 namespace Knp\DoctrineBehaviors\ORM\Timestampable;
 
 use Doctrine\ORM\Event\LoadClassMetadataEventArgs;
-
 use Doctrine\ORM\Events;
+use Doctrine\ORM\Mapping\ClassMetadata;
+use Knp\DoctrineBehaviors\ORM\AbstractSubscriber;
+use Knp\DoctrineBehaviors\Reflection\ClassAnalyzer;
 
-use Doctrine\ORM\Mapping\ClassMetadata,
-    Knp\DoctrineBehaviors\ORM\AbstractSubscriber,
-    Knp\DoctrineBehaviors\Reflection\ClassAnalyzer;
-
-/**
- * Timestampable subscriber.
- *
- * Adds mapping to the timestampable entites.
- */
 class TimestampableSubscriber extends AbstractSubscriber
 {
     private $timestampableTrait;

@@ -18,11 +18,6 @@ use Doctrine\ORM\ORMException;
 use Knp\DoctrineBehaviors\ORM\AbstractSubscriber;
 use Knp\DoctrineBehaviors\Reflection\ClassAnalyzer;
 
-/**
- * Translatable Doctrine2 subscriber.
- *
- * Provides mapping for translatable entities and their translations.
- */
 class TranslatableSubscriber extends AbstractSubscriber
 {
     private $currentLocaleCallable;

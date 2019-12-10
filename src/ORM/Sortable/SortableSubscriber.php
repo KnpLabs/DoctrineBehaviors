@@ -5,18 +5,11 @@ declare(strict_types=1);
 namespace Knp\DoctrineBehaviors\ORM\Sortable;
 
 use Doctrine\ORM\Event\LoadClassMetadataEventArgs;
-
 use Doctrine\ORM\Events;
+use Doctrine\ORM\Mapping\ClassMetadata;
+use Knp\DoctrineBehaviors\ORM\AbstractSubscriber;
+use Knp\DoctrineBehaviors\Reflection\ClassAnalyzer;
 
-use Doctrine\ORM\Mapping\ClassMetadata,
-    Knp\DoctrineBehaviors\ORM\AbstractSubscriber,
-    Knp\DoctrineBehaviors\Reflection\ClassAnalyzer;
-
-/**
- * Sortable subscriber.
- *
- * Adds mapping to the sortable entities.
- */
 class SortableSubscriber extends AbstractSubscriber
 {
     private $sortableTrait;

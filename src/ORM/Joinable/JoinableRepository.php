@@ -6,11 +6,6 @@ namespace Knp\DoctrineBehaviors\ORM\Joinable;
 
 use Doctrine\ORM\QueryBuilder;
 
-/**
- * Joinable trait.
- *
- * Should be used inside entity repository, that needs to easily make joined queries
- */
 trait JoinableRepository
 {
     public function getJoinAllQueryBuilder($alias = null, ?QueryBuilder $qb = null)
