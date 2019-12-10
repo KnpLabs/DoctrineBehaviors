@@ -4,13 +4,13 @@ declare(strict_types=1);
 
 namespace Knp\DoctrineBehaviors\ORM\Translatable;
 
-use Symfony\Component\DependencyInjection\Container;
+use Psr\Container\ContainerInterface;
 
 final class CurrentLocaleCallable
 {
     private $container;
 
-    public function __construct(Container $container)
+    public function __construct(ContainerInterface $container)
     {
         $this->container = $container;
     }

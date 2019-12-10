@@ -18,9 +18,6 @@ final class LoggableSubscriber extends AbstractSubscriber
      */
     private $loggerCallable;
 
-    /**
-     * @param callable $classAnalyzer
-     */
     public function __construct(ClassAnalyzer $classAnalyzer, bool $isRecursive, callable $loggerCallable)
     {
         parent::__construct($classAnalyzer, $isRecursive);

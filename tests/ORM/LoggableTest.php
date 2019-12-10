@@ -124,6 +124,7 @@ final class LoggableTest extends TestCase
         $loggerCallback = function ($message): void {
             $this->logs[] = $message;
         };
+
         $this->subscriber = new LoggableSubscriber(new ClassAnalyzer(), false, $loggerCallback);
 
         $eventManager->addEventSubscriber($this->subscriber);
