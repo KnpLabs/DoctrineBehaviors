@@ -14,7 +14,8 @@
         "doctrine/common": "^2.7",
         "doctrine/dbal": "^2.9",
         "doctrine/orm": "^2.6",
-        "behat/transliterator": "^1.2"
+        "behat/transliterator": "^1.2",
+        "symfony/dependency-injection": "^4.4|^5.0"
     },
     "require-dev": {
         "ext-pdo_sqlite": "*",
