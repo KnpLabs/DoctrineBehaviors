@@ -3,4 +3,4 @@ parameters:
 
     ignoreErrors:
         # traits
-        - '#Access to an undefined property BehaviorFixtures\\ORM\\TreeNodeEntity::\$parentNodePath#'
+        - '#Access to an undefined property Knp\\DoctrineBehaviors\\Tests\\Fixtures\\ORM\\TreeNodeEntity::\$parentNodePath#'

@@ -34,8 +34,7 @@
     },
     "autoload-dev": {
         "psr-4": {
-            "BehaviorFixtures\\": "tests/Fixtures/BehaviorFixtures",
-            "Tests\\Knp\\DoctrineBehaviors\\": "tests/Knp/DoctrineBehaviors"
+            "Knp\\DoctrineBehaviors\\Tests\\": "tests"
         }
     },
     "scripts": {

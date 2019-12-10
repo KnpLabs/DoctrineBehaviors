@@ -21,7 +21,7 @@ parameters:
         Symplify\CodingStandard\Fixer\ControlStructure\PregDelimiterFixer: null
 
         SlevomatCodingStandard\Sniffs\Namespaces\ReferenceUsedNamesOnlySniff.PartialUse:
-            - 'tests/Fixtures/BehaviorFixtures/ORM/FilterableRepository.php'
+            - 'tests/Fixtures/ORM/FilterableRepository.php'
 
         SlevomatCodingStandard\Sniffs\Namespaces\ReferenceUsedNamesOnlySniff.ReferenceViaFullyQualifiedName:
             - 'src/Model/Sluggable/Transliterator.php'
