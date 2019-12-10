@@ -14,7 +14,7 @@ use PHPUnit\Framework\TestCase;
 
 require_once __DIR__ . '/EntityManagerProvider.php';
 
-class GeocodableTest extends TestCase
+final class GeocodableTest extends TestCase
 {
     use EntityManagerProvider;
 

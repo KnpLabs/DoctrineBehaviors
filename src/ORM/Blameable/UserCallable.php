@@ -6,7 +6,7 @@ namespace Knp\DoctrineBehaviors\ORM\Blameable;
 
 use Symfony\Component\DependencyInjection\Container;
 
-class UserCallable
+final class UserCallable
 {
     /**
      * @var Container

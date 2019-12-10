@@ -7,7 +7,7 @@ namespace Knp\DoctrineBehaviors\Tests\Fixtures\ORM;
 use Doctrine\ORM\EntityRepository;
 use Knp\DoctrineBehaviors\ORM\Filterable;
 
-class FilterableRepository extends EntityRepository
+final class FilterableRepository extends EntityRepository
 {
     use Filterable\FilterableRepository;
 

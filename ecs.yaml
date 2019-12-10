@@ -27,6 +27,8 @@ parameters:
             - 'src/Model/Sluggable/Transliterator.php'
 
 services:
+    PhpCsFixer\Fixer\ClassNotation\FinalClassFixer: ~
+
     # see single LICENSE.txt file in the root directory
     PhpCsFixer\Fixer\Comment\HeaderCommentFixer:
         header: ''

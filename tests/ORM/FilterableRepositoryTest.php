@@ -10,7 +10,7 @@ use PHPUnit\Framework\TestCase;
 
 require_once __DIR__ . '/EntityManagerProvider.php';
 
-class FilterableRepositoryTest extends TestCase
+final class FilterableRepositoryTest extends TestCase
 {
     use EntityManagerProvider;
 

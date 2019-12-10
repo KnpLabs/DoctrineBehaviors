@@ -14,7 +14,7 @@ use Doctrine\ORM\Query\SqlWalker;
  *
  * DISTANCE(entity.point, :latitude, :longitude)
  */
-class DistanceFunction extends FunctionNode
+final class DistanceFunction extends FunctionNode
 {
     private $entityLocation;
 

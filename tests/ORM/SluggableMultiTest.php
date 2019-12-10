@@ -14,7 +14,7 @@ use PHPUnit\Framework\TestCase;
 
 require_once __DIR__ . '/EntityManagerProvider.php';
 
-class SluggableMultiTest extends TestCase
+final class SluggableMultiTest extends TestCase
 {
     use EntityManagerProvider;
 

@@ -21,7 +21,7 @@ use Doctrine\ORM\ORMException;
 use Knp\DoctrineBehaviors\ORM\AbstractSubscriber;
 use Knp\DoctrineBehaviors\Reflection\ClassAnalyzer;
 
-class TranslatableSubscriber extends AbstractSubscriber
+final class TranslatableSubscriber extends AbstractSubscriber
 {
     private $currentLocaleCallable;
 

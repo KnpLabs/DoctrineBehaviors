@@ -14,7 +14,7 @@ use Knp\DoctrineBehaviors\Tests\Fixtures\ORM\TranslatableEntity;
 use PHPUnit\Framework\TestCase;
 use ReflectionClass;
 
-class ClassAnalyserTest extends TestCase
+final class ClassAnalyserTest extends TestCase
 {
     /**
      * @var ClassAnalyzer

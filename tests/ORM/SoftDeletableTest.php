@@ -15,7 +15,7 @@ use PHPUnit\Framework\TestCase;
 
 require_once __DIR__ . '/EntityManagerProvider.php';
 
-class SoftDeletableTest extends TestCase
+final class SoftDeletableTest extends TestCase
 {
     use EntityManagerProvider;
 

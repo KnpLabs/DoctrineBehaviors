@@ -14,7 +14,7 @@ use PHPUnit\Framework\TestCase;
 
 require_once __DIR__ . '/EntityManagerProvider.php';
 
-class TimestampableTest extends TestCase
+final class TimestampableTest extends TestCase
 {
     use EntityManagerProvider;
 

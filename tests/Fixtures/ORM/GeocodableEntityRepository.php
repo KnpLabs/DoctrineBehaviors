@@ -7,7 +7,7 @@ namespace Knp\DoctrineBehaviors\Tests\Fixtures\ORM;
 use Doctrine\ORM\EntityRepository;
 use Knp\DoctrineBehaviors\ORM\Geocodable\GeocodableRepository;
 
-class GeocodableEntityRepository extends EntityRepository
+final class GeocodableEntityRepository extends EntityRepository
 {
     use GeocodableRepository;
 }

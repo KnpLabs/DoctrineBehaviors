@@ -15,7 +15,7 @@ use PHPUnit\Framework\TestCase;
 
 require_once __DIR__ . '/../EntityManagerProvider.php';
 
-class NodeTest extends TestCase
+final class NodeTest extends TestCase
 {
     use EntityManagerProvider;
 

@@ -18,7 +18,7 @@ use PHPUnit\Framework\TestCase;
 
 require_once __DIR__ . '/EntityManagerProvider.php';
 
-class TranslatableTest extends TestCase
+final class TranslatableTest extends TestCase
 {
     use EntityManagerProvider;
 

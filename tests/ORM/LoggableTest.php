@@ -13,7 +13,7 @@ use PHPUnit\Framework\TestCase;
 
 require_once __DIR__ . '/EntityManagerProvider.php';
 
-class LoggableTest extends TestCase
+final class LoggableTest extends TestCase
 {
     use EntityManagerProvider;
 

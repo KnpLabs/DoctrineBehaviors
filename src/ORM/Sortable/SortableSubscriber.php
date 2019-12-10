@@ -10,7 +10,7 @@ use Doctrine\ORM\Mapping\ClassMetadata;
 use Knp\DoctrineBehaviors\ORM\AbstractSubscriber;
 use Knp\DoctrineBehaviors\Reflection\ClassAnalyzer;
 
-class SortableSubscriber extends AbstractSubscriber
+final class SortableSubscriber extends AbstractSubscriber
 {
     /**
      * @var string
