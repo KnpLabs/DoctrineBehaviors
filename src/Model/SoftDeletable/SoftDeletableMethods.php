@@ -49,7 +49,7 @@ trait SoftDeletableMethods
         return $this->deletedAt;
     }
 
-    public function setDeletedAt(DateTime $date)
+    public function setDeletedAt(?DateTime $date)
     {
         $this->deletedAt = $date;
 

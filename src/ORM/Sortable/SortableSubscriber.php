@@ -10,11 +10,14 @@ use Doctrine\ORM\Mapping\ClassMetadata;
 use Knp\DoctrineBehaviors\ORM\AbstractSubscriber;
 use Knp\DoctrineBehaviors\Reflection\ClassAnalyzer;
 
-class SortableSubscriber extends AbstractSubscriber
+final class SortableSubscriber extends AbstractSubscriber
 {
+    /**
+     * @var string
+     */
     private $sortableTrait;
 
-    public function __construct(ClassAnalyzer $classAnalyzer, $isRecursive, $sortableTrait)
+    public function __construct(ClassAnalyzer $classAnalyzer, bool $isRecursive, string $sortableTrait)
     {
         parent::__construct($classAnalyzer, $isRecursive);
 
@@ -29,29 +32,29 @@ class SortableSubscriber extends AbstractSubscriber
             return;
         }
 
-        if ($this->isSortable($classMetadata)) {
-            if (! $classMetadata->hasField('sort')) {
-                $classMetadata->mapField([
-                    'fieldName' => 'sort',
-                    'type' => 'integer',
-                ]);
-            }
+        if (! $this->isSortable($classMetadata)) {
+            return;
         }
+
+        if ($classMetadata->hasField('sort')) {
+            return;
+        }
+
+        $classMetadata->mapField([
+            'fieldName' => 'sort',
+            'type' => 'integer',
+        ]);
     }
 
+    /**
+     * @return string[]
+     */
     public function getSubscribedEvents()
     {
         return [Events::loadClassMetadata];
     }
 
-    /**
-     * Checks if entity is a sortable
-     *
-     * @param ClassMetadata $classMetadata The metadata
-     *
-     * @return boolean
-     */
-    private function isSortable(ClassMetadata $classMetadata)
+    private function isSortable(ClassMetadata $classMetadata): bool
     {
         return $this->getClassAnalyzer()->hasTrait(
             $classMetadata->reflClass,

@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace Knp\DoctrineBehaviors\ORM\Translatable;
 
-class DefaultLocaleCallable
+final class DefaultLocaleCallable
 {
     private $locale;
 

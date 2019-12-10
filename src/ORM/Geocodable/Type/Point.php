@@ -7,7 +7,7 @@ namespace Knp\DoctrineBehaviors\ORM\Geocodable\Type;
 /**
  * Point object for spatial mapping
  */
-class Point
+final class Point
 {
     private $latitude;
 

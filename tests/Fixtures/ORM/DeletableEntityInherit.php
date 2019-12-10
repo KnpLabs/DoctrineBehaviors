@@ -1,0 +1,28 @@
+<?php
+
+declare(strict_types=1);
+
+namespace Knp\DoctrineBehaviors\Tests\Fixtures\ORM;
+
+use Doctrine\ORM\Mapping as ORM;
+
+/**
+ * @ORM\Entity
+ */
+class DeletableEntityInherit extends DeletableEntity
+{
+    /**
+     * @ORM\Column(type="string")
+     */
+    private $name;
+
+    /**
+     * Returns object name.
+     *
+     * @return string
+     */
+    public function getName()
+    {
+        return $this->name;
+    }
+}

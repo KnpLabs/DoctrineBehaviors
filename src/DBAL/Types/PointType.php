@@ -12,7 +12,7 @@ use Knp\DoctrineBehaviors\ORM\Geocodable\Type\Point;
 /**
  * Mapping type for spatial POINT objects
  */
-class PointType extends Type
+final class PointType extends Type
 {
     /**
      * Gets the name of this type.

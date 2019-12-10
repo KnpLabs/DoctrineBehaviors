@@ -6,7 +6,7 @@ namespace Knp\DoctrineBehaviors\ORM\Translatable;
 
 use Symfony\Component\DependencyInjection\Container;
 
-class CurrentLocaleCallable
+final class CurrentLocaleCallable
 {
     private $container;
 

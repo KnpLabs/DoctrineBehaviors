@@ -11,25 +11,20 @@ use Doctrine\ORM\Events;
 use Knp\DoctrineBehaviors\ORM\AbstractSubscriber;
 use Knp\DoctrineBehaviors\Reflection\ClassAnalyzer;
 
-/**
- * Listens to onFlush event and marks SoftDeletable entities as deleted instead of really removing them.
- */
-class SoftDeletableSubscriber extends AbstractSubscriber
+final class SoftDeletableSubscriber extends AbstractSubscriber
 {
+    /**
+     * @var string
+     */
     private $softDeletableTrait;
 
-    public function __construct(ClassAnalyzer $classAnalyzer, $isRecursive, $softDeletableTrait)
+    public function __construct(ClassAnalyzer $classAnalyzer, bool $isRecursive, string $softDeletableTrait)
     {
         parent::__construct($classAnalyzer, $isRecursive);
 
         $this->softDeletableTrait = $softDeletableTrait;
     }
 
-    /**
-     * Listens to onFlush event.
-     *
-     * @param OnFlushEventArgs $onFlushEventArgs The event arguments
-     */
     public function onFlush(OnFlushEventArgs $onFlushEventArgs): void
     {
         $entityManager = $onFlushEventArgs->getEntityManager();
@@ -52,9 +47,7 @@ class SoftDeletableSubscriber extends AbstractSubscriber
     }
 
     /**
-     * Returns list of events, that this subscriber is listening to.
-     *
-     * @return array
+     * @return string[]
      */
     public function getSubscribedEvents()
     {
@@ -69,25 +62,22 @@ class SoftDeletableSubscriber extends AbstractSubscriber
             return;
         }
 
-        if ($this->isSoftDeletable($classMetadata)) {
-            if (! $classMetadata->hasField('deletedAt')) {
-                $classMetadata->mapField([
-                    'fieldName' => 'deletedAt',
-                    'type' => 'datetime',
-                    'nullable' => true,
-                ]);
-            }
+        if (! $this->isSoftDeletable($classMetadata)) {
+            return;
         }
+
+        if ($classMetadata->hasField('deletedAt')) {
+            return;
+        }
+
+        $classMetadata->mapField([
+            'fieldName' => 'deletedAt',
+            'type' => 'datetime',
+            'nullable' => true,
+        ]);
     }
 
-    /**
-     * Checks if entity is softDeletable
-     *
-     * @param ClassMetadata $classMetadata The metadata
-     *
-     * @return boolean
-     */
-    private function isSoftDeletable(ClassMetadata $classMetadata)
+    private function isSoftDeletable(ClassMetadata $classMetadata): bool
     {
         return $this->getClassAnalyzer()->hasTrait(
             $classMetadata->reflClass,

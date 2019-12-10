@@ -21,12 +21,14 @@ parameters:
         Symplify\CodingStandard\Fixer\ControlStructure\PregDelimiterFixer: null
 
         SlevomatCodingStandard\Sniffs\Namespaces\ReferenceUsedNamesOnlySniff.PartialUse:
-            - 'tests/Fixtures/BehaviorFixtures/ORM/FilterableRepository.php'
+            - 'tests/Fixtures/ORM/FilterableRepository.php'
 
         SlevomatCodingStandard\Sniffs\Namespaces\ReferenceUsedNamesOnlySniff.ReferenceViaFullyQualifiedName:
             - 'src/Model/Sluggable/Transliterator.php'
 
 services:
+    PhpCsFixer\Fixer\ClassNotation\FinalClassFixer: ~
+
     # see single LICENSE.txt file in the root directory
     PhpCsFixer\Fixer\Comment\HeaderCommentFixer:
         header: ''
@@ -38,3 +40,6 @@ services:
             - 'license'
             - 'link'
             - 'abstract'
+
+    # every property should have @var annotation
+    # SlevomatCodingStandard\Sniffs\TypeHints\PropertyTypeHintSniff: ~

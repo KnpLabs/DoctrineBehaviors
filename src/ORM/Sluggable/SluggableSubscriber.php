@@ -11,11 +11,14 @@ use Doctrine\ORM\Mapping\ClassMetadata;
 use Knp\DoctrineBehaviors\ORM\AbstractSubscriber;
 use Knp\DoctrineBehaviors\Reflection\ClassAnalyzer;
 
-class SluggableSubscriber extends AbstractSubscriber
+final class SluggableSubscriber extends AbstractSubscriber
 {
+    /**
+     * @var string
+     */
     private $sluggableTrait;
 
-    public function __construct(ClassAnalyzer $classAnalyzer, $isRecursive, $sluggableTrait)
+    public function __construct(ClassAnalyzer $classAnalyzer, bool $isRecursive, string $sluggableTrait)
     {
         parent::__construct($classAnalyzer, $isRecursive);
 
@@ -25,20 +28,23 @@ class SluggableSubscriber extends AbstractSubscriber
     public function loadClassMetadata(LoadClassMetadataEventArgs $loadClassMetadataEventArgs): void
     {
         $classMetadata = $loadClassMetadataEventArgs->getClassMetadata();
-
         if ($classMetadata->reflClass === null) {
             return;
         }
 
-        if ($this->isSluggable($classMetadata)) {
-            if (! $classMetadata->hasField('slug')) {
-                $classMetadata->mapField([
-                    'fieldName' => 'slug',
-                    'type' => 'string',
-                    'nullable' => true,
-                ]);
-            }
+        if (! $this->isSluggable($classMetadata)) {
+            return;
         }
+
+        if ($classMetadata->hasField('slug')) {
+            return;
+        }
+
+        $classMetadata->mapField([
+            'fieldName' => 'slug',
+            'type' => 'string',
+            'nullable' => true,
+        ]);
     }
 
     public function prePersist(LifecycleEventArgs $lifecycleEventArgs): void
@@ -63,19 +69,15 @@ class SluggableSubscriber extends AbstractSubscriber
         }
     }
 
+    /**
+     * @return string[]
+     */
     public function getSubscribedEvents()
     {
         return [Events::loadClassMetadata, Events::prePersist, Events::preUpdate];
     }
 
-    /**
-     * Checks if entity is sluggable
-     *
-     * @param ClassMetadata $classMetadata The metadata
-     *
-     * @return boolean
-     */
-    private function isSluggable(ClassMetadata $classMetadata)
+    private function isSluggable(ClassMetadata $classMetadata): bool
     {
         return $this->getClassAnalyzer()->hasTrait(
             $classMetadata->reflClass,

@@ -9,7 +9,7 @@ use Symfony\Component\DependencyInjection\ContainerBuilder;
 use Symfony\Component\DependencyInjection\Extension\Extension;
 use Symfony\Component\DependencyInjection\Loader\YamlFileLoader;
 
-class DoctrineBehaviorsExtension extends Extension
+final class DoctrineBehaviorsExtension extends Extension
 {
     public function load(array $configs, ContainerBuilder $containerBuilder): void
     {

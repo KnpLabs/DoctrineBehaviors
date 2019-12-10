@@ -11,7 +11,7 @@ use Doctrine\ORM\Events;
 use Knp\DoctrineBehaviors\ORM\AbstractSubscriber;
 use Knp\DoctrineBehaviors\Reflection\ClassAnalyzer;
 
-class BlameableSubscriber extends AbstractSubscriber
+final class BlameableSubscriber extends AbstractSubscriber
 {
     /**
      * @var callable
@@ -23,6 +23,9 @@ class BlameableSubscriber extends AbstractSubscriber
      */
     private $userEntity;
 
+    /**
+     * @var string
+     */
     private $blameableTrait;
 
     /**
@@ -31,7 +34,6 @@ class BlameableSubscriber extends AbstractSubscriber
     private $user;
 
     /**
-     * @param callable $classAnalyzer
      * @param string $userEntity
      */
     public function __construct(
@@ -191,14 +193,7 @@ class BlameableSubscriber extends AbstractSubscriber
         $this->userCallable = $callable;
     }
 
-    /**
-     * Checks if entity is blameable
-     *
-     * @param ClassMetadata $classMetadata The metadata
-     *
-     * @return boolean
-     */
-    private function isBlameable(ClassMetadata $classMetadata)
+    private function isBlameable(ClassMetadata $classMetadata): bool
     {
         return $this->getClassAnalyzer()->hasTrait(
             $classMetadata->reflClass,
@@ -216,7 +211,7 @@ class BlameableSubscriber extends AbstractSubscriber
         }
     }
 
-    private function isValidUser($user)
+    private function isValidUser($user): bool
     {
         if ($this->userEntity) {
             return $user instanceof $this->userEntity;
@@ -240,6 +235,7 @@ class BlameableSubscriber extends AbstractSubscriber
                 ]],
             ]);
         }
+
         if (! $classMetadata->hasAssociation('updatedBy')) {
             $classMetadata->mapManyToOne([
                 'fieldName' => 'updatedBy',
@@ -249,6 +245,7 @@ class BlameableSubscriber extends AbstractSubscriber
                 ]],
             ]);
         }
+
         if (! $classMetadata->hasAssociation('deletedBy')) {
             $classMetadata->mapManyToOne([
                 'fieldName' => 'deletedBy',

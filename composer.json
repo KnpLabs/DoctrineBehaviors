@@ -1,6 +1,5 @@
 {
     "name": "knplabs/doctrine-behaviors",
-    "type": "library",
     "description": "Doctrine2 behavior traits",
     "keywords": [
         "behaviors", "doctrine2", "timestampable", "translatable", "filterable", "blameable", "softdeletable", "tree"
@@ -13,18 +12,22 @@
     "require": {
         "php": "^7.2",
         "doctrine/common": "^2.7",
+        "doctrine/dbal": "^2.9",
+        "doctrine/orm": "^2.6",
         "behat/transliterator": "^1.2"
     },
     "require-dev": {
         "ext-pdo_sqlite": "*",
         "ext-pdo_mysql": "*",
         "ext-pdo_pgsql": "*",
-        "doctrine/orm": "^2.6",
         "phpunit/phpunit": "^8.5",
         "jakub-onderka/php-parallel-lint": "^1.0",
         "symplify/easy-coding-standard": "^7.1",
         "phpstan/phpstan": "^0.12.2",
-        "doctrine/annotations": "^1.8"
+        "doctrine/annotations": "^1.8",
+        "symfony/http-kernel": "^4.4|^5.0",
+        "symplify/package-builder": "^7.1",
+        "rector/rector": "^0.6.1"
     },
     "autoload": {
         "psr-4": {
@@ -33,12 +36,8 @@
     },
     "autoload-dev": {
         "psr-4": {
-            "BehaviorFixtures\\": "tests/Fixtures/BehaviorFixtures",
-            "Tests\\Knp\\DoctrineBehaviors\\": "tests/Knp/DoctrineBehaviors"
+            "Knp\\DoctrineBehaviors\\Tests\\": "tests"
         }
-    },
-    "suggest": {
-        "symfony/framework-bundle": "To be able to use it as a bundle"
     },
     "scripts": {
         "check-cs": "ecs check src tests --ansi",

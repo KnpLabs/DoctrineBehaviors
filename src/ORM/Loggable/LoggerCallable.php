@@ -6,7 +6,7 @@ namespace Knp\DoctrineBehaviors\ORM\Loggable;
 
 use Psr\Log\LoggerInterface;
 
-class LoggerCallable
+final class LoggerCallable
 {
     /**
      * @var LoggerInterface
