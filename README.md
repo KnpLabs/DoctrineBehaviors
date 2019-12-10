@@ -1,101 +1,46 @@
-# Doctrine2 Behaviors
+# Doctrine Behaviors
 
 [![Build Status](https://img.shields.io/travis/KnpLabs/DoctrineBehaviors/master.svg?style=flat-square)](https://travis-ci.org/KnpLabs/DoctrineBehaviors)
 [![Downloads](https://img.shields.io/packagist/dt/knplabs/doctrine-behaviors.svg?style=flat-square)](https://packagist.org/packages/knplabs/doctrine-behaviors)
-
 
 This PHP library is a collection of traits and interfaces that add behaviors to Doctrine entities and repositories.
 
 It currently handles:
 
- * [blameable](#blameable)
- * [filterable](#filterable)
- * [geocodable](#geocodable)
+ * [Blameable](#blameable)
+ * [Filterable](#filterable)
+ * [Geocodable](#geocodable)
  * joinable
- * [loggable](#loggable)
- * [sluggable](#sluggable)
- * [softDeletable](#softDeletable)
+ * [Loggable](#loggable)
+ * [Sluggable](#sluggable)
+ * [SoftDeletable](#softDeletable)
  * sortable
- * [timestampable](#timestampable)
- * [translatable](#translatable)
- * [tree](#tree)
+ * [Timestampable](#timestampable)
+ * [Translatable](#translatable)
+ * [Tree](#tree)
 
-## This project is looking for maintainers
-
-We realize we don't have so much time anymore to maintain this project as it should be maintained.
-Therefore we are looking for maintainers. Open an issue if you want to keep working on this.
-
-## Notice:
-
-Some behaviors (translatable, timestampable, softDeletable, blameable, geocodable) need Doctrine subscribers in order to work.
-Make sure to activate them by reading the [Subscribers](#subscribers) section.
-
-## Installation
+## Install
 
 ```bash
 composer require knplabs/doctrine-behaviors
 ```
 
-## Configuration
-
-By default, when integrated with Symfony, all subscribers are enabled (if you don't specify any configuration for the bundle).
-But you can enable behaviors you need in a whitelist manner:
-
-```yaml
-knp_doctrine_behaviors:
-    blameable:      false
-    geocodable:     ~     # Here null is converted to false
-    loggable:       ~
-    sluggable:      true
-    soft_deletable: true
-    # All others behaviors are disabled
-```
-
 ## Subscribers
 
-If you use symfony2, you can easily register them in:
-
-- *Recommended way:*
-
-Add to AppKernel
+Register bundle in `AppKernel`:
 
 ```php
-class AppKernel
+final class AppKernel extends Kernel
 {
-    function registerBundles()
+    public function registerBundles(): array
     {
-        $bundles = array(
+        return [
             //...
             new Knp\DoctrineBehaviors\Bundle\DoctrineBehaviorsBundle(),
             //...
-        );
-
-        //...
-
-        return $bundles;
+        ];
     }
 }
-
-```
-
-- *Deprecated way:*
-Importing a service definition file:
-
-``` yaml
-# app/config/config.yml
-imports:
-    - { resource: ../../vendor/knplabs/doctrine-behaviors/config/orm-services.yml }
-```
-
-You can also register them using doctrine2 api:
-
-
-```php
-<?php
-
-$em->getEventManager()->addEventSubscriber(new \Knp\DoctrineBehaviors\ORM\Translatable\TranslatableSubscriber);
-// register more if needed
-
 ```
 
 ## Usage
@@ -106,23 +51,30 @@ All you have to do is to define a Doctrine2 entity and use traits:
 <?php
 
 use Doctrine\ORM\Mapping as ORM;
-use Knp\DoctrineBehaviors\Model as ORMBehaviors;
+use Knp\DoctrineBehaviors\Model\Blameable\Blameable;
+use Knp\DoctrineBehaviors\Model\Geocodable\Geocodable;
+use Knp\DoctrineBehaviors\Model\Loggable\Loggable;
+use Knp\DoctrineBehaviors\Model\Sluggable\Sluggable;
+use Knp\DoctrineBehaviors\Model\SoftDeletable\SoftDeletable;
+use Knp\DoctrineBehaviors\Model\Sortable\Sortable;
+use Knp\DoctrineBehaviors\Model\Timestampable\Timestampable;
+use Knp\DoctrineBehaviors\Model\Translatable\Translatable;
+use Knp\DoctrineBehaviors\Model\Tree\Node;
 
 /**
  * @ORM\Entity(repositoryClass="CategoryRepository")
  */
-class Category implements ORMBehaviors\Tree\NodeInterface, \ArrayAccess
+class Category implements NodeInterface, \ArrayAccess
 {
-    use ORMBehaviors\Blameable\Blameable,
-        ORMBehaviors\Geocodable\Geocodable,
-        ORMBehaviors\Loggable\Loggable,
-        ORMBehaviors\Sluggable\Sluggable,
-        ORMBehaviors\SoftDeletable\SoftDeletable,
-        ORMBehaviors\Sortable\Sortable,
-        ORMBehaviors\Timestampable\Timestampable,
-        ORMBehaviors\Translatable\Translatable,
-        ORMBehaviors\Tree\Node
-    ;
+    use Blameable;
+    use Geocodable;
+    use Loggable;
+    use Sluggable;
+    use SoftDeletable;
+    use Sortable;
+    use Timestampable;
+    use Translatable;
+    use Node;
 
     /**
      * @ORM\Id
@@ -132,7 +84,6 @@ class Category implements ORMBehaviors\Tree\NodeInterface, \ArrayAccess
     protected $id;
 }
 ```
-
 
 For some behaviors like tree, you can use repository traits:
 
@@ -152,37 +103,36 @@ Voila!
 
 You now have a working `Category` that behaves like:
 
-<a name="tree" id="tree"></a>
-### tree:
+### Tree
 
 ```php
 <?php
 
-    $category = new Category;
-    $category->setId(1); // tree nodes need an id to construct path.
-    $child = new Category;
-    $child->setId(2);
+$category = new Category;
+$category->setId(1); // tree nodes need an id to construct path.
+$child = new Category;
+$child->setId(2);
 
-    $child->setChildNodeOf($category);
+$child->setChildNodeOf($category);
 
-    $em->persist($child);
-    $em->persist($category);
-    $em->flush();
+$entityManager->persist($child);
+$entityManager->persist($category);
+$entityManager->flush();
 
-    $root = $em->getRepository('Category')->getTree();
+$categoryRepository = $entityManager->getRepository(Category::class);
 
-    $root->getParentNode(); // null
-    $root->getChildNodes(); // ArrayCollection
-    $root[0][1]; // node or null
-    $root->isLeafNode(); // boolean
-    $root->isRootNode(); // boolean
+$root = $categoryRepository->getTree();
 
+$root->getParentNode(); // null
+$root->getChildNodes(); // ArrayCollection
+$root[0][1]; // node or null
+$root->isLeafNode(); // boolean
+$root->isRootNode(); // boolean
 ```
 
-> it is possible to use another identifier than `id`, simply override `getNodeId` and return your custom identifier (works great in combination with `Sluggable`)
+> It is possible to use another identifier than `id`, simply override `getNodeId` and return your custom identifier (works great in combination with `Sluggable`)
 
-<a name="translatable" id="translatable"></a>
-### translatable:
+### Translatable
 
 If you're working on a `Category` entity, the `Translatable` behavior expects a **CategoryTranslation** entity in the
 same folder of Category entity by default.
@@ -196,14 +146,14 @@ In order to use the Translatable trait, you will have to create this `CategoryTr
 <?php
 
 use Doctrine\ORM\Mapping as ORM;
-use Knp\DoctrineBehaviors\Model as ORMBehaviors;
+use Knp\DoctrineBehaviors\Model\Translatable\Translation;
 
 /**
  * @ORM\Entity
  */
 class CategoryTranslation
 {
-    use ORMBehaviors\Translatable\Translation;
+    use Translation;
 
     /**
      * @ORM\Column(type="string", length=255)
@@ -274,7 +224,7 @@ class Category
 ```
 
 
-After updating the database, ie. with `./console doctrine:schema:update --force`,
+After updating the database, ie. with `bin/console doctrine:schema:update --force`,
 you can now work on translations using `translate` or `getTranslations` methods.
 
 ```php
@@ -306,6 +256,7 @@ then put overrided traits in that folder.
 
 ```php
 <?php
+
 namespace AppBundle\Entity\Translation;
 
 use Knp\DoctrineBehaviors\Model\Translatable\Translatable;
@@ -347,7 +298,7 @@ trait TranslationTrait
 
 If you use that way make sure you override trait parameters of DoctrineBehaviors :
 
-``` yaml
+```yaml
 parameters:
     knp.doctrine_behaviors.translatable_subscriber.translatable_trait: AppBundle\Entity\Translation\TranslatableTrait
     knp.doctrine_behaviors.translatable_subscriber.translation_trait: AppBundle\Entity\Translation\TranslationTrait
@@ -357,12 +308,12 @@ If you want to define a custom translation entity class name just for a single t
 Override the trait method `getTranslationEntityClass` in the translatable entity and `getTranslatableEntityClass`
 in the translation entity. If you override one, you also need to override the other to return the inverse class.
 
-#### guess the current locale
+#### Guess Current Locale
 
 You can configure the way the subscriber guesses the current locale, by giving a callable as its first argument.
 This library provides a callable object (`Knp\DoctrineBehaviors\ORM\Translatable\CurrentLocaleCallable`) that returns the current locale using Symfony2.
 
-#### proxy translations
+#### Proxy Translations
 
 An extra feature allows you to proxy translated fields of a translatable entity.
 
@@ -372,6 +323,8 @@ so that when you try to call `getName` (for example) it will return you the tran
 ```php
 <?php
 
+class SomeClass
+{
     public function __call($method, $arguments)
     {
         return $this->proxyCurrentLocaleTranslation($method, $arguments);
@@ -383,83 +336,88 @@ so that when you try to call `getName` (for example) it will return you the tran
     {
         return \Symfony\Component\PropertyAccess\PropertyAccess::createPropertyAccessor()->getValue($this->translate(), $method);
     }
+}
 ```
 
-
-### soft-deletable
+### Soft-deletable
 
 ```php
 <?php
 
-    $category = new Category;
-    $em->persist($category);
-    $em->flush();
+$category = new Category();
+$entityManager->persist($category);
+$entityManager->flush();
 
-    // get id
-    $id = $category->getId();
+// get id
+$id = $category->getId();
 
-    // now remove it
-    $em->remove($category);
-    $em->flush();
+// now remove it
+$entityManager->remove($category);
+$entityManager->flush();
 
-    // hey, I'm still here:
-    $category = $em->getRepository('Category')->findOneById($id);
+// hey, I'm still here:
+$categoryRepository = $entityManager->getRepository(Category::class)
+$category = $categoryRepository->findOneById($id);
 
-    // but I'm "deleted"
-    $category->isDeleted(); // === true
+// but I'm "deleted"
+$category->isDeleted(); // === true
 
-    // restore me
-    $category->restore();
+// restore me
+$category->restore();
 
-    //look ma, I am back
-    $category->isDeleted(); // === false
+//look ma, I am back
+$category->isDeleted(); // === false
 
-    //do not forget to call flush method to apply the change
-    $em->flush();
+//do not forget to call flush method to apply the change
+$em->flush();
 ```
 
 ```php
 <?php
 
-    $category = new Category;
-    $em->persist($category);
-    $em->flush();
+$category = new Category;
 
-    // I'll delete you tomorrow
-    $category->setDeletedAt((new \DateTime())->modify('+1 day'));
+$entityManager->persist($category);
+$entityManager->flush();
 
-    // OK, I'm here
-    $category->isDeleted(); // === false
+// I'll delete you tomorrow
+$category->setDeletedAt((new \DateTime())->modify('+1 day'));
 
-    /*
-     *  24 hours later...
-     */
+// OK, I'm here
+$category->isDeleted(); // === false
 
-    // OK, I'm deleted
-    $category->isDeleted(); // === true
+/*
+ *  24 hours later...
+ */
+
+// OK, I'm deleted
+$category->isDeleted(); // === true
 ```
 
-### timestampable
+### Timestampable
 
 ```php
 <?php
 
-    $category = new Category;
-    $em->persist($category);
-    $em->flush();
+$category = new Category;
+$entityManager->persist($category);
+$entityManager->flush();
 
-    $id = $category->getId();
-    $category = $em->getRepository('Category')->findOneById($id);
+$id = $category->getId();
 
-    $category->getCreatedAt();
-    $category->getUpdatedAt();
+$categoryRepository = $entityManager->getRepository(Category::class);
+
+$category = $categoryRepository->findOneById($id);
+
+$category->getCreatedAt();
+$category->getUpdatedAt();
 
 ```
 
 If you wish to change the doctrine type of the database fields that will be created for timestampable models you can
 set the following parameter like so:
 
-``` yaml
+```yaml
 parameters:
     knp.doctrine_behaviors.timestampable_subscriber.db_field_type: datetimetz
 ```
@@ -470,7 +428,7 @@ timezone issues. For more information on this see:
 
 The default type is `datetime`.
 
-### blameable
+### Blameable
 
 Blameable is able to track creators and updators of a given entity.
 A blameable [callable](#callables) is used to get the current user from your application.
@@ -481,22 +439,22 @@ to manage automatically the association between this user entity and your entite
 Using symfony2, all you have to do is to configure the DI parameter named `%knp.doctrine_behaviors.blameable_subscriber.user_entity%` with a fully qualified namespace,
 for example:
 
-    # app/config/config.yml
-    parameters:
-        knp.doctrine_behaviors.blameable_subscriber.user_entity: AppBundle\Entity\User
+```yaml
+# app/config/config.yml
+parameters:
+    knp.doctrine_behaviors.blameable_subscriber.user_entity: AppBundle\Entity\User
+```
 
 Then, you can use it like that:
 
 ```php
 <?php
 
-    $category = new Category;
-    $em->persist($category);
+$category = new Category;
+$entityManager->persist($category);
 
-    // instances of %knp.doctrine_behaviors.blameable_subscriber.user_entity%
-    $creator = $category->getCreatedBy();
-    $updater = $category->getUpdatedBy();
-
+$creator = $category->getCreatedBy();
+$updater = $category->getUpdatedBy();
 ```
 
 ### loggable
@@ -512,7 +470,7 @@ A loggable [callable](#callables) is used to get the logger from anywhere you wa
  */
 class Category
 {
-    use ORMBehaviors\Loggable\Loggable;
+    use Loggable;
 
     // you can override the default log messages defined in trait:
     public function getUpdateLogMessage(array $changeSets = [])
@@ -531,7 +489,6 @@ class Category
 These messages are then passed to the configured callable.
 You can define your own, by passing another callable to the LoggableSubscriber:
 
-
 ```php
 <?php
 
@@ -543,8 +500,6 @@ $em->getEventManager()->addEventSubscriber(
         }
     )
 );
-
-
 ```
 
 If you're using symfony, you can also configure which callable to use:
@@ -554,7 +509,7 @@ If you're using symfony, you can also configure which callable to use:
         knp.doctrine_behaviors.loggable_subscriber.logger_callable.class: Your\InvokableClass
 
 
-### geocodable
+### Geocodable
 
 Geocodable Provides extensions to PostgreSQL platform in order to work with cube and earthdistance extensions.
 
@@ -565,35 +520,35 @@ It also provides an easy entry point to use 3rd party libraries like the excelle
 ```php
 <?php
 
-    $geocoder = new \Geocoder\Geocoder;
-    // register geocoder providers
+$geocoder = new \Geocoder\Geocoder;
+// register geocoder providers
 
-    // $subscriber instanceof GeocodableSubscriber (add "knp.doctrine_behaviors.geocodable_subscriber" into your services.yml)
-    $subscriber->setGeolocationCallable(function($entity) use($geocoder) {
-        $location = $geocoder->geocode($entity->getAddress());
-        return new Point(
-            $location->getLatitude(),
-            $location->getLongitude()
-        ));
-    });
+// $subscriber instanceof GeocodableSubscriber (add "knp.doctrine_behaviors.geocodable_subscriber" into your services.yml)
+$subscriber->setGeolocationCallable(function($entity) use($geocoder) {
+    $location = $geocoder->geocode($entity->getAddress());
+    return new Point(
+        $location->getLatitude(),
+        $location->getLongitude()
+    ));
+});
 
-    $category = new Category;
-    $em->persist($category);
+$category = new Category;
+$em->persist($category);
 
-    $location = $category->getLocation(); // instanceof Point
+$location = $category->getLocation(); // instanceof Point
 
-    // find cities in a circle of 500 km around point 47 lon., 7 lat.
-    $nearCities = $repository->findByDistance(new Point(47, 7), 500);
-
+// find cities in a circle of 500 km around point 47 lon., 7 lat.
+$nearCities = $repository->findByDistance(new Point(47, 7), 500);
 ```
 
-### sluggable
+### Sluggable
 
 Sluggable generates slugs (uniqueness is not guaranteed) for an entity.
 Will automatically generate on update/persist (you can disable the on update generation by overriding `getRegenerateSlugOnUpdate` to return false.
 You can also override the slug delimiter from the default hyphen by overriding `getSlugDelimiter`.
 Slug generation algo can be changed by overriding `generateSlugValue`.
 Use cases include SEO (i.e. URLs like http://example.com/post/3/introduction-to-php)
+
 ```php
 <?php
 
@@ -624,7 +579,7 @@ class BlogPost
 }
 ```
 
-### filterable:
+### Filterable
 
 Filterable can be used at the Repository level
 
@@ -642,7 +597,6 @@ use Doctrine\ORM\Mapping as ORM;
  */
 class ProductEntity
 {
-
     /**
      * @ORM\Id
      * @ORM\Column(type="integer")
@@ -675,7 +629,7 @@ and repository:
 use Knp\DoctrineBehaviors\ORM\Filterable;
 use Doctrine\ORM\EntityRepository;
 
-class ProductRepository extends EntityRepository
+final class ProductRepository extends EntityRepository
 {
     use Filterable\FilterableRepository;
 
@@ -691,8 +645,7 @@ class ProductRepository extends EntityRepository
 
     protected function createFilterQueryBuilder()
     {
-        return $this
-            ->createQueryBuilder('e')
+        return $this->createQueryBuilder('e')
             ->leftJoin('e.orders', 'o');
     }
 }
@@ -701,7 +654,9 @@ class ProductRepository extends EntityRepository
 Now we can filtering using:
 
 ```php
-    $products = $em->getRepository('Product')->filterBy(['o:code' => '21']);
+$productRepository = $entityManager->getRepository(Product::class);
+
+$products = $productRepository->filterBy(['o:code' => '21']);
 ```
 
 ## callables
