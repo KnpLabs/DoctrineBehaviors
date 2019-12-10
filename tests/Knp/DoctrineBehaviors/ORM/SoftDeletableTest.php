@@ -4,32 +4,38 @@ declare(strict_types=1);
 
 namespace Tests\Knp\DoctrineBehaviors\ORM;
 
+use BehaviorFixtures\ORM\DeletableEntity;
+use BehaviorFixtures\ORM\DeletableEntityInherit;
+use DateTime;
 use Doctrine\Common\EventManager;
+use Knp\DoctrineBehaviors\Model\SoftDeletable\SoftDeletable;
+use Knp\DoctrineBehaviors\ORM\SoftDeletable\SoftDeletableSubscriber;
 use Knp\DoctrineBehaviors\Reflection\ClassAnalyzer;
+use PHPUnit\Framework\TestCase;
 
-require_once 'EntityManagerProvider.php';
+require_once __DIR__ . '/EntityManagerProvider.php';
 
-class SoftDeletableTest extends \PHPUnit\Framework\TestCase
+class SoftDeletableTest extends TestCase
 {
     use EntityManagerProvider;
 
     public function testDelete(): void
     {
-        $em = $this->getEntityManager();
+        $entityManager = $this->getEntityManager();
 
-        $entity = new \BehaviorFixtures\ORM\DeletableEntity();
+        $entity = new DeletableEntity();
 
-        $em->persist($entity);
-        $em->flush();
+        $entityManager->persist($entity);
+        $entityManager->flush();
 
         $this->assertNotNull($id = $entity->getId());
         $this->assertFalse($entity->isDeleted());
 
-        $em->remove($entity);
-        $em->flush();
-        $em->clear();
+        $entityManager->remove($entity);
+        $entityManager->flush();
+        $entityManager->clear();
 
-        $entity = $em->getRepository('BehaviorFixtures\ORM\DeletableEntity')->find($id);
+        $entity = $entityManager->getRepository(DeletableEntity::class)->find($id);
 
         $this->assertNotNull($entity);
         $this->assertTrue($entity->isDeleted());
@@ -37,34 +43,34 @@ class SoftDeletableTest extends \PHPUnit\Framework\TestCase
 
     public function testPostDelete(): void
     {
-        $em = $this->getEntityManager();
+        $entityManager = $this->getEntityManager();
 
-        $entity = new \BehaviorFixtures\ORM\DeletableEntity();
+        $entity = new DeletableEntity();
 
-        $em->persist($entity);
-        $em->flush();
+        $entityManager->persist($entity);
+        $entityManager->flush();
 
         $this->assertNotNull($id = $entity->getId());
 
-        $entity->setDeletedAt((new \DateTime())->modify('+1 day'));
+        $entity->setDeletedAt((new DateTime())->modify('+1 day'));
 
-        $em->flush();
-        $em->clear();
+        $entityManager->flush();
+        $entityManager->clear();
 
-        $entity = $em->getRepository('BehaviorFixtures\ORM\DeletableEntity')->find($id);
+        $entity = $entityManager->getRepository(DeletableEntity::class)->find($id);
 
         $this->assertNotNull($entity);
         $this->assertFalse($entity->isDeleted());
         $this->assertTrue($entity->willBeDeleted());
-        $this->assertTrue($entity->willBeDeleted((new \DateTime())->modify('+2 day')));
-        $this->assertFalse($entity->willBeDeleted((new \DateTime())->modify('+12 hour')));
+        $this->assertTrue($entity->willBeDeleted((new DateTime())->modify('+2 day')));
+        $this->assertFalse($entity->willBeDeleted((new DateTime())->modify('+12 hour')));
 
-        $entity->setDeletedAt((new \DateTime())->modify('-1 day'));
+        $entity->setDeletedAt((new DateTime())->modify('-1 day'));
 
-        $em->flush();
-        $em->clear();
+        $entityManager->flush();
+        $entityManager->clear();
 
-        $entity = $em->getRepository('BehaviorFixtures\ORM\DeletableEntity')->find($id);
+        $entity = $entityManager->getRepository(DeletableEntity::class)->find($id);
 
         $this->assertNotNull($entity);
         $this->assertTrue($entity->isDeleted());
@@ -72,30 +78,30 @@ class SoftDeletableTest extends \PHPUnit\Framework\TestCase
 
     public function testDeleteInheritance(): void
     {
-        $em = $this->getEntityManager();
+        $entityManager = $this->getEntityManager();
 
-        $entity = new \BehaviorFixtures\ORM\DeletableEntityInherit();
+        $entity = new DeletableEntityInherit();
 
-        $em->persist($entity);
-        $em->flush();
+        $entityManager->persist($entity);
+        $entityManager->flush();
 
-        $em->remove($entity);
-        $em->flush();
+        $entityManager->remove($entity);
+        $entityManager->flush();
 
         $this->assertTrue($entity->isDeleted());
     }
 
     public function testRestore(): void
     {
-        $em = $this->getEntityManager();
+        $entityManager = $this->getEntityManager();
 
-        $entity = new \BehaviorFixtures\ORM\DeletableEntityInherit();
+        $entity = new DeletableEntityInherit();
 
-        $em->persist($entity);
-        $em->flush();
+        $entityManager->persist($entity);
+        $entityManager->flush();
 
-        $em->remove($entity);
-        $em->flush();
+        $entityManager->remove($entity);
+        $entityManager->flush();
 
         $this->assertTrue($entity->isDeleted());
 
@@ -106,23 +112,15 @@ class SoftDeletableTest extends \PHPUnit\Framework\TestCase
 
     protected function getUsedEntityFixtures()
     {
-        return [
-            'BehaviorFixtures\\ORM\\DeletableEntity',
-        ];
+        return [DeletableEntity::class];
     }
 
-    protected function getEventManager()
+    protected function getEventManager(): EventManager
     {
-        $em = new EventManager();
+        $eventManager = new EventManager();
 
-        $em->addEventSubscriber(
-            new \Knp\DoctrineBehaviors\ORM\SoftDeletable\SoftDeletableSubscriber(
-                new ClassAnalyzer(),
-                true,
-                'Knp\DoctrineBehaviors\Model\SoftDeletable\SoftDeletable'
-            )
-        );
+        $eventManager->addEventSubscriber(new SoftDeletableSubscriber(new ClassAnalyzer(), true, SoftDeletable::class));
 
-        return $em;
+        return $eventManager;
     }
 }

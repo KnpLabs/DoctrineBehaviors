@@ -6,12 +6,15 @@ namespace Tests\Knp\DoctrineBehaviors\ORM;
 
 use BehaviorFixtures\ORM\GeocodableEntity;
 use Doctrine\Common\EventManager;
+use Knp\DoctrineBehaviors\Model\Geocodable\Geocodable;
+use Knp\DoctrineBehaviors\ORM\Geocodable\GeocodableSubscriber;
 use Knp\DoctrineBehaviors\ORM\Geocodable\Type\Point;
 use Knp\DoctrineBehaviors\Reflection\ClassAnalyzer;
+use PHPUnit\Framework\TestCase;
 
-require_once 'EntityManagerProvider.php';
+require_once __DIR__ . '/EntityManagerProvider.php';
 
-class GeocodableTest extends \PHPUnit\Framework\TestCase
+class GeocodableTest extends TestCase
 {
     use EntityManagerProvider;
 
@@ -22,17 +25,17 @@ class GeocodableTest extends \PHPUnit\Framework\TestCase
 
     protected function setUp(): void
     {
-        $em = $this->getDBEngineEntityManager();
+        $entityManager = $this->getDBEngineEntityManager();
 
         $cities = $this->dataSetCities();
 
         foreach ($cities as $city) {
             $entity = new GeocodableEntity($city[1][0], $city[1][1]);
             $entity->setTitle($city[0]);
-            $em->persist($entity);
+            $entityManager->persist($entity);
         }
 
-        $em->flush();
+        $entityManager->flush();
     }
 
     /**
@@ -40,9 +43,9 @@ class GeocodableTest extends \PHPUnit\Framework\TestCase
      */
     public function testInsertLocation($city, array $location): void
     {
-        $em = $this->getDBEngineEntityManager();
+        $entityManager = $this->getDBEngineEntityManager();
 
-        $repository = $em->getRepository('BehaviorFixtures\ORM\GeocodableEntity');
+        $repository = $entityManager->getRepository(GeocodableEntity::class);
 
         $entity = $repository->findOneByTitle($city);
 
@@ -54,9 +57,9 @@ class GeocodableTest extends \PHPUnit\Framework\TestCase
      */
     public function testUpdateWithEditLocation($city, array $location, array $newLocation): void
     {
-        $em = $this->getDBEngineEntityManager();
+        $entityManager = $this->getDBEngineEntityManager();
 
-        $repository = $em->getRepository('BehaviorFixtures\ORM\GeocodableEntity');
+        $repository = $entityManager->getRepository(GeocodableEntity::class);
 
         /** @var GeocodableEntity $entity */
         $entity = $repository->findOneByTitle($city);
@@ -67,7 +70,7 @@ class GeocodableTest extends \PHPUnit\Framework\TestCase
 
         $entity->setTitle($newTitle);
 
-        $em->flush();
+        $entityManager->flush();
 
         /** @var GeocodableEntity $entity */
         $entity = $repository->findOneByTitle($newTitle);
@@ -82,14 +85,14 @@ class GeocodableTest extends \PHPUnit\Framework\TestCase
      */
     public function testUpdateWithoutEditLocation($city, array $location): void
     {
-        $em = $this->getDBEngineEntityManager();
+        $entityManager = $this->getDBEngineEntityManager();
 
-        $repository = $em->getRepository('BehaviorFixtures\ORM\GeocodableEntity');
+        $repository = $entityManager->getRepository(GeocodableEntity::class);
 
         /** @var GeocodableEntity $entity */
         $entity = $repository->findOneByTitle($city);
 
-        $em->flush();
+        $entityManager->flush();
 
         $this->assertLocation($location, $entity->getLocation());
     }
@@ -106,14 +109,14 @@ class GeocodableTest extends \PHPUnit\Framework\TestCase
 
     public function testGetLocation(): void
     {
-        $em = $this->getEntityManager();
+        $entityManager = $this->getEntityManager();
 
-        $entity = new \BehaviorFixtures\ORM\GeocodableEntity();
+        $entity = new GeocodableEntity();
 
-        $em->persist($entity);
-        $em->flush();
+        $entityManager->persist($entity);
+        $entityManager->flush();
 
-        $this->assertInstanceOf('Knp\DoctrineBehaviors\ORM\Geocodable\Type\Point', $entity->getLocation());
+        $this->assertInstanceOf(Point::class, $entity->getLocation());
     }
 
     /**
@@ -135,77 +138,35 @@ class GeocodableTest extends \PHPUnit\Framework\TestCase
             return null;
         }
 
-        $em = $this->getDBEngineEntityManager();
+        $entityManager = $this->getDBEngineEntityManager();
 
-        $repo = $em->getRepository('BehaviorFixtures\ORM\GeocodableEntity');
+        $repository = $entityManager->getRepository(GeocodableEntity::class);
 
-        $cities = $repo->findByDistance(new Point($location[0], $location[1]), $distance);
+        $cities = $repository->findByDistance(new Point($location[0], $location[1]), $distance);
 
         $this->assertCount($result, $cities, $text);
     }
 
-    /**
-     * @return array
-     */
-    public function dataSetCities()
+    public function dataSetCities(): array
     {
         return [
-            [
-                'New-York',
-                [40.742786, -73.989272],
-                [40.742787, -73.989273],
-            ],
-            [
-                'Paris',
-                [48.858842, 2.355194],
-                [48.858843, 2.355195],
-            ],
-            [
-                'Nantes',
-                [47.218635, -1.544266],
-                [47.218636, -1.544267],
-            ],
+            ['New-York', [40.742786, -73.989272], [40.742787, -73.989273]],
+            ['Paris', [48.858842, 2.355194], [48.858843, 2.355195]],
+            ['Nantes', [47.218635, -1.544266], [47.218636, -1.544267]],
         ];
     }
 
     /**
      * From 'Reguisheim' (47.896319, 7.352943)
-     *
-     * @return array
      */
-    public function dataSetCitiesDistances()
+    public function dataSetCitiesDistances(): array
     {
         return [
-            [
-                [47.896319, 7.352943],
-                384000,
-                0,
-                'Paris is more than 384 km far from Reguisheim',
-            ],
-            [
-                [47.896319, 7.352943],
-                385000,
-                1,
-                'Paris is less than 385 km far from Reguisheim',
-            ],
-            [
-                [47.896319, 7.352943],
-                672000,
-                1,
-                'Nantes is more than 672 km far from Reguisheim',
-            ],
-            [
-                [47.896319, 7.352943],
-                673000,
-                2,
-                'Paris and Nantes are less than 673 km far from Reguisheim',
-            ],
-            [
-                [47.896319, 7.352943],
-                6222000,
-                2,
-                'New-York is more than 6222 km far from Reguisheim',
-            ],
+            [[47.896319, 7.352943], 384000, 0, 'Paris is more than 384 km far from Reguisheim'],
+            [[47.896319, 7.352943], 385000, 1, 'Paris is less than 385 km far from Reguisheim'],
+            [[47.896319, 7.352943], 672000, 1, 'Nantes is more than 672 km far from Reguisheim'],
+            [[47.896319, 7.352943], 673000, 2, 'Paris and Nantes are less than 673 km far from Reguisheim'],
+            [[47.896319, 7.352943], 6222000, 2, 'New-York is more than 6222 km far from Reguisheim'],
             [
                 [47.896319, 7.352943],
                 6223000,
@@ -215,19 +176,17 @@ class GeocodableTest extends \PHPUnit\Framework\TestCase
         ];
     }
 
-    protected function getUsedEntityFixtures()
+    /**
+     * @return string[]
+     */
+    protected function getUsedEntityFixtures(): array
     {
-        return [
-            'BehaviorFixtures\\ORM\\GeocodableEntity',
-        ];
+        return [GeocodableEntity::class];
     }
 
-    /**
-     * @return \Doctrine\Common\EventManager
-     */
-    protected function getEventManager()
+    protected function getEventManager(): EventManager
     {
-        $em = new EventManager();
+        $eventManager = new EventManager();
 
         if ($this->callable === false) {
             $callable = function ($entity) {
@@ -236,34 +195,27 @@ class GeocodableTest extends \PHPUnit\Framework\TestCase
                     return $location;
                 }
 
-                return Point::fromArray(
-                    [
-                        'longitude' => 47.7,
-                        'latitude' => 7.9,
-                    ]
-                );
+                return Point::fromArray([
+                    'longitude' => 47.7,
+                    'latitude' => 7.9,
+                ]);
             };
         } else {
             $callable = $this->callable;
         }
 
-        $em->addEventSubscriber(
-            new \Knp\DoctrineBehaviors\ORM\Geocodable\GeocodableSubscriber(
-                new ClassAnalyzer(),
-                false,
-                'Knp\DoctrineBehaviors\Model\Geocodable\Geocodable',
-                $callable
-            )
+        $eventManager->addEventSubscriber(
+            new GeocodableSubscriber(new ClassAnalyzer(), false, Geocodable::class, $callable)
         );
 
-        return $em;
+        return $eventManager;
     }
 
-    private function assertLocation(array $expected, ?Point $given = null, $message = null): void
+    private function assertLocation(array $expected, ?Point $point = null, $message = null): void
     {
-        $this->assertInstanceOf('Knp\DoctrineBehaviors\ORM\Geocodable\Type\Point', $given, $message);
+        $this->assertInstanceOf(Point::class, $point, $message);
 
-        $this->assertSame($expected[0], $given->getLatitude(), $message);
-        $this->assertSame($expected[1], $given->getLongitude(), $message);
+        $this->assertSame($expected[0], $point->getLatitude(), $message);
+        $this->assertSame($expected[1], $point->getLongitude(), $message);
     }
 }

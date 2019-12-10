@@ -4,21 +4,22 @@ declare(strict_types=1);
 
 namespace Knp\DoctrineBehaviors\Reflection;
 
+use ReflectionClass;
+
 class ClassAnalyzer
 {
     /**
      * Return TRUE if the given object use the given trait, FALSE if not
-     * @param ReflectionClass $class
      * @param string $traitName
      * @param boolean $isRecursive
      */
-    public function hasTrait(\ReflectionClass $class, $traitName, $isRecursive = false)
+    public function hasTrait(ReflectionClass $reflectionClass, $traitName, $isRecursive = false)
     {
-        if (in_array($traitName, $class->getTraitNames(), true)) {
+        if (in_array($traitName, $reflectionClass->getTraitNames(), true)) {
             return true;
         }
 
-        $parentClass = $class->getParentClass();
+        $parentClass = $reflectionClass->getParentClass();
 
         if (($isRecursive === false) || ($parentClass === false) || ($parentClass === null)) {
             return false;
@@ -29,26 +30,24 @@ class ClassAnalyzer
 
     /**
      * Return TRUE if the given object has the given method, FALSE if not
-     * @param ReflectionClass $class
      * @param string $methodName
      */
-    public function hasMethod(\ReflectionClass $class, $methodName)
+    public function hasMethod(ReflectionClass $reflectionClass, $methodName)
     {
-        return $class->hasMethod($methodName);
+        return $reflectionClass->hasMethod($methodName);
     }
 
     /**
      * Return TRUE if the given object has the given property, FALSE if not
-     * @param ReflectionClass $class
      * @param string $propertyName
      */
-    public function hasProperty(\ReflectionClass $class, $propertyName)
+    public function hasProperty(ReflectionClass $reflectionClass, $propertyName)
     {
-        if ($class->hasProperty($propertyName)) {
+        if ($reflectionClass->hasProperty($propertyName)) {
             return true;
         }
 
-        $parentClass = $class->getParentClass();
+        $parentClass = $reflectionClass->getParentClass();
 
         if ($parentClass === false) {
             return false;

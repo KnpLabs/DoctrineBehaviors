@@ -5,18 +5,20 @@ declare(strict_types=1);
 namespace Tests\Knp\DoctrineBehaviors\ORM;
 
 use BehaviorFixtures\ORM\FilterableEntity;
+use BehaviorFixtures\ORM\FilterableRepository;
+use PHPUnit\Framework\TestCase;
 
-require_once 'EntityManagerProvider.php';
+require_once __DIR__ . '/EntityManagerProvider.php';
 
-class FilterableRepositoryTest extends \PHPUnit\Framework\TestCase
+class FilterableRepositoryTest extends TestCase
 {
     use EntityManagerProvider;
 
     public function testShouldFilterByNameUsingLike(): void
     {
         $this->createEntities();
-        /** @var \BehaviorFixtures\ORM\FilterableRepository $repository */
-        $repository = $this->getEntityManager()->getRepository('BehaviorFixtures\ORM\FilterableEntity');
+        /** @var FilterableRepository $repository */
+        $repository = $this->getEntityManager()->getRepository(FilterableEntity::class);
 
         $collection = $repository->filterBy(['e:name' => 'name'])->getQuery()->execute();
 
@@ -29,7 +31,7 @@ class FilterableRepositoryTest extends \PHPUnit\Framework\TestCase
     {
         $this->createEntities();
 
-        $repository = $this->getEntityManager()->getRepository('BehaviorFixtures\ORM\FilterableEntity');
+        $repository = $this->getEntityManager()->getRepository(FilterableEntity::class);
 
         $collection = $repository->filterBy(['e:code' => '2'])->getQuery()->execute();
 
@@ -39,22 +41,24 @@ class FilterableRepositoryTest extends \PHPUnit\Framework\TestCase
 
     protected function getUsedEntityFixtures()
     {
-        return [
-            'BehaviorFixtures\\ORM\\FilterableEntity',
-        ];
+        return [FilterableEntity::class];
     }
 
     private function createEntities(): void
     {
-        $em = $this->getEntityManager();
+        $entityManager = $this->getEntityManager();
 
-        foreach ([2 => 'name1', 20 => 'name2', 40 => 'otherValue'] as $code => $name) {
+        foreach ([
+            2 => 'name1',
+            20 => 'name2',
+            40 => 'otherValue',
+        ] as $code => $name) {
             $entity = new FilterableEntity();
             $entity->setCode($code);
             $entity->setName($name);
 
-            $em->persist($entity);
+            $entityManager->persist($entity);
         }
-        $em->flush();
+        $entityManager->flush();
     }
 }

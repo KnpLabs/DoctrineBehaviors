@@ -4,19 +4,21 @@ declare(strict_types=1);
 
 namespace Knp\DoctrineBehaviors\Model\Tree;
 
+use Closure;
 use Doctrine\Common\Collections\ArrayCollection;
+use LogicException;
 
-/*
- * @author     Florian Klein <florian.klein@free.fr>
- */
 trait Node
 {
+    /**
+     * @var string
+     */
     protected $materializedPath = '';
 
     /**
-     * @var ArrayCollection the children in the tree
+     * @var ArrayCollection|NodeInterface[]
      */
-    private $childNodes;
+    private $childNodes = [];
 
     /**
      * @var NodeInterface the parent in the tree
@@ -116,7 +118,7 @@ trait Node
     {
         $id = $this->getNodeId();
         if (empty($id)) {
-            throw new \LogicException('You must provide an id for this node if you want it to be part of a tree.');
+            throw new LogicException('You must provide an id for this node if you want it to be part of a tree.');
         }
 
         $path = $node !== null
@@ -177,11 +179,11 @@ trait Node
     }
 
     /**
-     * @param \Closure $prepare a function to prepare the node before putting into the result
+     * @param Closure $prepare a function to prepare the node before putting into the result
      *
      * @return string the json representation of the hierarchical result
      **/
-    public function toJson(?\Closure $prepare = null)
+    public function toJson(?Closure $prepare = null)
     {
         $tree = $this->toArray($prepare);
 
@@ -189,12 +191,12 @@ trait Node
     }
 
     /**
-     * @param \Closure $prepare a function to prepare the node before putting into the result
+     * @param Closure $prepare a function to prepare the node before putting into the result
      * @param array    $tree    a reference to an array, used internally for recursion
      *
      * @return array the hierarchical result
      **/
-    public function toArray(?\Closure $prepare = null, ?array &$tree = null)
+    public function toArray(?Closure $prepare = null, ?array &$tree = null)
     {
         if ($prepare === null) {
             $prepare = function (NodeInterface $node) {
@@ -202,11 +204,19 @@ trait Node
             };
         }
         if ($tree === null) {
-            $tree = [$this->getNodeId() => ['node' => $prepare($this), 'children' => []]];
+            $tree = [
+                $this->getNodeId() => [
+                    'node' => $prepare($this),
+                    'children' => [],
+                ],
+            ];
         }
 
         foreach ($this->getChildNodes() as $node) {
-            $tree[$this->getNodeId()]['children'][$node->getNodeId()] = ['node' => $prepare($node), 'children' => []];
+            $tree[$this->getNodeId()]['children'][$node->getNodeId()] = [
+                'node' => $prepare($node),
+                'children' => [],
+            ];
             $node->toArray($prepare, $tree[$this->getNodeId()]['children']);
         }
 
@@ -214,12 +224,12 @@ trait Node
     }
 
     /**
-     * @param \Closure $prepare a function to prepare the node before putting into the result
+     * @param Closure $prepare a function to prepare the node before putting into the result
      * @param array    $tree    a reference to an array, used internally for recursion
      *
      * @return array the flatten result
      **/
-    public function toFlatArray(?\Closure $prepare = null, ?array &$tree = null)
+    public function toFlatArray(?Closure $prepare = null, ?array &$tree = null)
     {
         if ($prepare === null) {
             $prepare = function (NodeInterface $node) {

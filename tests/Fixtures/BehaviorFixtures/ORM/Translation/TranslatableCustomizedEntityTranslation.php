@@ -4,8 +4,9 @@ declare(strict_types=1);
 
 namespace BehaviorFixtures\ORM\Translation;
 
+use BehaviorFixtures\ORM\TranslatableCustomizedEntity;
 use Doctrine\ORM\Mapping as ORM;
-use Knp\DoctrineBehaviors\Model;
+use Knp\DoctrineBehaviors\Model\Translatable\Translation;
 
 /**
  * @ORM\Entity
@@ -13,7 +14,7 @@ use Knp\DoctrineBehaviors\Model;
  */
 class TranslatableCustomizedEntityTranslation
 {
-    use Model\Translatable\Translation;
+    use Translation;
 
     /**
      * @ORM\Column(type="string")
@@ -22,7 +23,7 @@ class TranslatableCustomizedEntityTranslation
 
     public static function getTranslatableEntityClass()
     {
-        return '\BehaviorFixtures\ORM\TranslatableCustomizedEntity';
+        return TranslatableCustomizedEntity::class;
     }
 
     public function getTitle()

@@ -5,14 +5,14 @@ declare(strict_types=1);
 namespace BehaviorFixtures\ORM;
 
 use Doctrine\ORM\Mapping as ORM;
-use Knp\DoctrineBehaviors\Model;
+use Knp\DoctrineBehaviors\Model\Translatable\Translatable;
 
 /**
  * @ORM\Entity
  */
 class TranslatableEntity
 {
-    use Model\Translatable\Translatable;
+    use Translatable;
 
     /**
      * @ORM\Id

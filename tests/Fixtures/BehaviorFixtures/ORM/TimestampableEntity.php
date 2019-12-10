@@ -5,14 +5,14 @@ declare(strict_types=1);
 namespace BehaviorFixtures\ORM;
 
 use Doctrine\ORM\Mapping as ORM;
-use Knp\DoctrineBehaviors\Model;
+use Knp\DoctrineBehaviors\Model\Timestampable\Timestampable;
 
 /**
  * @ORM\Entity
  */
 class TimestampableEntity
 {
-    use Model\Timestampable\Timestampable;
+    use Timestampable;
 
     /**
      * @ORM\Id

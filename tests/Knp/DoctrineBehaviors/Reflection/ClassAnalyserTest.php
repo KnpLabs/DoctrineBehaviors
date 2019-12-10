@@ -8,9 +8,13 @@ use BehaviorFixtures\ORM\DeletableEntity;
 use BehaviorFixtures\ORM\DeletableEntityInherit;
 use BehaviorFixtures\ORM\GeocodableEntity;
 use BehaviorFixtures\ORM\TranslatableEntity;
+use Knp\DoctrineBehaviors\Model\Blameable\Blameable;
+use Knp\DoctrineBehaviors\Model\SoftDeletable\SoftDeletable;
 use Knp\DoctrineBehaviors\Reflection\ClassAnalyzer;
+use PHPUnit\Framework\TestCase;
+use ReflectionClass;
 
-class ClassAnalyserTest extends \PHPUnit\Framework\TestCase
+class ClassAnalyserTest extends TestCase
 {
     public function testItShouldTestIfObjectUseTrait(): void
     {
@@ -18,11 +22,7 @@ class ClassAnalyserTest extends \PHPUnit\Framework\TestCase
 
         $object = new DeletableEntity();
 
-        $use = $analyser->hasTrait(
-            new \ReflectionClass($object),
-            'Knp\DoctrineBehaviors\Model\SoftDeletable\SoftDeletable',
-            false
-        );
+        $use = $analyser->hasTrait(new ReflectionClass($object), SoftDeletable::class, false);
 
         $this->assertTrue($use);
     }
@@ -33,11 +33,7 @@ class ClassAnalyserTest extends \PHPUnit\Framework\TestCase
 
         $object = new DeletableEntity();
 
-        $use = $analyser->hasTrait(
-            new \ReflectionClass($object),
-            'Knp\DoctrineBehaviors\Model\Blameable\Blameable',
-            false
-        );
+        $use = $analyser->hasTrait(new ReflectionClass($object), Blameable::class, false);
 
         $this->assertFalse($use);
     }
@@ -48,19 +44,11 @@ class ClassAnalyserTest extends \PHPUnit\Framework\TestCase
 
         $object = new DeletableEntityInherit();
 
-        $use = $analyser->hasTrait(
-            new \ReflectionClass($object),
-            'Knp\DoctrineBehaviors\Model\SoftDeletable\SoftDeletable',
-            false
-        );
+        $use = $analyser->hasTrait(new ReflectionClass($object), SoftDeletable::class, false);
 
         $this->assertFalse($use);
 
-        $useInherit = $analyser->hasTrait(
-            new \ReflectionClass($object),
-            'Knp\DoctrineBehaviors\Model\SoftDeletable\SoftDeletable',
-            true
-        );
+        $useInherit = $analyser->hasTrait(new ReflectionClass($object), SoftDeletable::class, true);
 
         $this->assertTrue($useInherit);
     }
@@ -71,10 +59,7 @@ class ClassAnalyserTest extends \PHPUnit\Framework\TestCase
 
         $object = new GeocodableEntity();
 
-        $use = $analyser->hasMethod(
-            new \ReflectionClass($object),
-            'getLocation'
-        );
+        $use = $analyser->hasMethod(new ReflectionClass($object), 'getLocation');
 
         $this->assertTrue($use);
     }
@@ -85,10 +70,7 @@ class ClassAnalyserTest extends \PHPUnit\Framework\TestCase
 
         $object = new DeletableEntity();
 
-        $use = $analyser->hasMethod(
-            new \ReflectionClass($object),
-            'getLocation'
-        );
+        $use = $analyser->hasMethod(new ReflectionClass($object), 'getLocation');
 
         $this->assertFalse($use);
     }
@@ -99,10 +81,7 @@ class ClassAnalyserTest extends \PHPUnit\Framework\TestCase
 
         $object = new TranslatableEntity();
 
-        $use = $analyser->hasProperty(
-            new \ReflectionClass($object),
-            'translations'
-        );
+        $use = $analyser->hasProperty(new ReflectionClass($object), 'translations');
 
         $this->assertTrue($use);
     }
@@ -113,10 +92,7 @@ class ClassAnalyserTest extends \PHPUnit\Framework\TestCase
 
         $object = new DeletableEntity();
 
-        $use = $analyser->hasProperty(
-            new \ReflectionClass($object),
-            'translations'
-        );
+        $use = $analyser->hasProperty(new ReflectionClass($object), 'translations');
 
         $this->assertFalse($use);
     }
@@ -127,10 +103,7 @@ class ClassAnalyserTest extends \PHPUnit\Framework\TestCase
 
         $object = new DeletableEntityInherit();
 
-        $use = $analyser->hasProperty(
-            new \ReflectionClass($object),
-            'deletedAt'
-        );
+        $use = $analyser->hasProperty(new ReflectionClass($object), 'deletedAt');
 
         $this->assertTrue($use);
     }

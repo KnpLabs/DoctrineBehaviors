@@ -30,8 +30,6 @@ trait Sortable
      * Set sort.
      *
      * @param int $sort Sort the value to set
-     *
-     * @return $this
      */
     public function setSort($sort)
     {
@@ -49,9 +47,6 @@ trait Sortable
         return $this->reordered;
     }
 
-    /**
-     * @return $this
-     */
     public function setReordered()
     {
         $this->reordered = true;

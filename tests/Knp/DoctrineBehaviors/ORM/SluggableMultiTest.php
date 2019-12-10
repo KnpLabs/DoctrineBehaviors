@@ -4,33 +4,38 @@ declare(strict_types=1);
 
 namespace Tests\Knp\DoctrineBehaviors\ORM;
 
+use BehaviorFixtures\ORM\SluggableMultiEntity;
+use DateTime;
 use Doctrine\Common\EventManager;
+use Knp\DoctrineBehaviors\Model\Sluggable\Sluggable;
+use Knp\DoctrineBehaviors\ORM\Sluggable\SluggableSubscriber;
 use Knp\DoctrineBehaviors\Reflection\ClassAnalyzer;
+use PHPUnit\Framework\TestCase;
 
-require_once 'EntityManagerProvider.php';
+require_once __DIR__ . '/EntityManagerProvider.php';
 
-class SluggableMultiTest extends \PHPUnit\Framework\TestCase
+class SluggableMultiTest extends TestCase
 {
     use EntityManagerProvider;
 
     public function testSlugLoading(): void
     {
-        $em = $this->getEntityManager();
+        $entityManager = $this->getEntityManager();
 
-        $entity = new \BehaviorFixtures\ORM\SluggableMultiEntity();
+        $entity = new SluggableMultiEntity();
 
         $expected = 'the+name+title';
 
         $entity->setName('The name');
 
-        $em->persist($entity);
-        $em->flush();
+        $entityManager->persist($entity);
+        $entityManager->flush();
 
         $this->assertNotNull($id = $entity->getId());
 
-        $em->clear();
+        $entityManager->clear();
 
-        $entity = $em->getRepository('BehaviorFixtures\ORM\SluggableMultiEntity')->find($id);
+        $entity = $entityManager->getRepository(SluggableMultiEntity::class)->find($id);
 
         $this->assertNotNull($entity);
         $this->assertSame($entity->getSlug(), $expected);
@@ -38,37 +43,37 @@ class SluggableMultiTest extends \PHPUnit\Framework\TestCase
 
     public function testNotUpdatedSlug(): void
     {
-        $em = $this->getEntityManager();
+        $entityManager = $this->getEntityManager();
 
-        $entity = new \BehaviorFixtures\ORM\SluggableMultiEntity();
+        $entity = new SluggableMultiEntity();
 
         $expected = 'the+name+title';
 
         $entity->setName('The name');
 
-        $em->persist($entity);
-        $em->flush();
+        $entityManager->persist($entity);
+        $entityManager->flush();
 
-        $entity->setDate(new \DateTime());
+        $entity->setDate(new DateTime());
 
-        $em->persist($entity);
-        $em->flush();
+        $entityManager->persist($entity);
+        $entityManager->flush();
 
         $this->assertSame($entity->getSlug(), $expected);
     }
 
     public function testUpdatedSlug(): void
     {
-        $em = $this->getEntityManager();
+        $entityManager = $this->getEntityManager();
 
-        $entity = new \BehaviorFixtures\ORM\SluggableMultiEntity();
+        $entity = new SluggableMultiEntity();
 
         $expected = 'the+name+title';
 
         $entity->setName('The name');
 
-        $em->persist($entity);
-        $em->flush();
+        $entityManager->persist($entity);
+        $entityManager->flush();
 
         $this->assertSame($entity->getSlug(), $expected);
 
@@ -76,31 +81,23 @@ class SluggableMultiTest extends \PHPUnit\Framework\TestCase
 
         $entity->setName('The name 2');
 
-        $em->persist($entity);
-        $em->flush();
+        $entityManager->persist($entity);
+        $entityManager->flush();
 
         $this->assertSame($entity->getSlug(), $expected);
     }
 
     protected function getUsedEntityFixtures()
     {
-        return [
-            'BehaviorFixtures\\ORM\\SluggableMultiEntity',
-        ];
+        return [SluggableMultiEntity::class];
     }
 
-    protected function getEventManager()
+    protected function getEventManager(): EventManager
     {
-        $em = new EventManager();
+        $eventManager = new EventManager();
 
-        $em->addEventSubscriber(
-            new \Knp\DoctrineBehaviors\ORM\Sluggable\SluggableSubscriber(
-                new ClassAnalyzer(),
-                false,
-                'Knp\DoctrineBehaviors\Model\Sluggable\Sluggable'
-            )
-        );
+        $eventManager->addEventSubscriber(new SluggableSubscriber(new ClassAnalyzer(), false, Sluggable::class));
 
-        return $em;
+        return $eventManager;
     }
 }

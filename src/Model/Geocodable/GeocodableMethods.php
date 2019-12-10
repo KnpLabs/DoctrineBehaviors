@@ -8,26 +8,14 @@ use Knp\DoctrineBehaviors\ORM\Geocodable\Type\Point;
 
 trait GeocodableMethods
 {
-    /**
-     * Get location.
-     *
-     * @return Point.
-     */
-    public function getLocation()
+    public function getLocation(): Point
     {
         return $this->location;
     }
 
-    /**
-     * Set location.
-     *
-     * @param Point|null $location the value to set.
-     *
-     * @return $this
-     */
-    public function setLocation(?Point $location = null)
+    public function setLocation(?Point $point = null)
     {
-        $this->location = $location;
+        $this->location = $point;
 
         return $this;
     }

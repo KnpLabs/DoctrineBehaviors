@@ -13,7 +13,9 @@ use Doctrine\DBAL\Types\Type;
 use Doctrine\ORM\Event\LifecycleEventArgs;
 use Doctrine\ORM\Event\LoadClassMetadataEventArgs;
 use Doctrine\ORM\Events;
+use Knp\DoctrineBehaviors\DBAL\Types\PointType;
 use Knp\DoctrineBehaviors\ORM\AbstractSubscriber;
+use Knp\DoctrineBehaviors\ORM\Geocodable\Query\AST\Functions\DistanceFunction;
 use Knp\DoctrineBehaviors\ORM\Geocodable\Type\Point;
 use Knp\DoctrineBehaviors\Reflection\ClassAnalyzer;
 
@@ -50,9 +52,9 @@ class GeocodableSubscriber extends AbstractSubscriber
     /**
      * Adds doctrine point type
      */
-    public function loadClassMetadata(LoadClassMetadataEventArgs $eventArgs): void
+    public function loadClassMetadata(LoadClassMetadataEventArgs $loadClassMetadataEventArgs): void
     {
-        $classMetadata = $eventArgs->getClassMetadata();
+        $classMetadata = $loadClassMetadataEventArgs->getClassMetadata();
 
         if ($classMetadata->reflClass === null) {
             return;
@@ -60,49 +62,44 @@ class GeocodableSubscriber extends AbstractSubscriber
 
         if ($this->isGeocodable($classMetadata)) {
             if (! Type::hasType('point')) {
-                Type::addType('point', 'Knp\DoctrineBehaviors\DBAL\Types\PointType');
+                Type::addType('point', PointType::class);
             }
 
-            $em = $eventArgs->getEntityManager();
-            $con = $em->getConnection();
+            $entityManager = $loadClassMetadataEventArgs->getEntityManager();
+            $connection = $entityManager->getConnection();
 
             // skip non-postgres platforms
-            if (! $con->getDatabasePlatform() instanceof PostgreSqlPlatform &&
-                ! $con->getDatabasePlatform() instanceof MySqlPlatform
+            if (! $connection->getDatabasePlatform() instanceof PostgreSqlPlatform &&
+                ! $connection->getDatabasePlatform() instanceof MySqlPlatform
             ) {
                 return;
             }
 
             // skip platforms with registerd stuff
-            if (! $con->getDatabasePlatform()->hasDoctrineTypeMappingFor('point')) {
-                $con->getDatabasePlatform()->registerDoctrineTypeMapping('point', 'point');
+            if (! $connection->getDatabasePlatform()->hasDoctrineTypeMappingFor('point')) {
+                $connection->getDatabasePlatform()->registerDoctrineTypeMapping('point', 'point');
 
-                if ($con->getDatabasePlatform() instanceof PostgreSqlPlatform) {
-                    $em->getConfiguration()->addCustomNumericFunction(
-                        'DISTANCE',
-                        'Knp\DoctrineBehaviors\ORM\Geocodable\Query\AST\Functions\DistanceFunction'
-                    );
+                if ($connection->getDatabasePlatform() instanceof PostgreSqlPlatform) {
+                    $entityManager->getConfiguration()->addCustomNumericFunction('DISTANCE', DistanceFunction::class);
                 }
             }
 
-            $classMetadata->mapField(
-                [
-                    'fieldName' => 'location',
-                    'type' => 'point',
-                    'nullable' => true,
-                ]
-            );
+            $classMetadata->mapField([
+                'fieldName' => 'location',
+                'type' => 'point',
+                'nullable' => true,
+            ]);
         }
     }
 
-    public function prePersist(LifecycleEventArgs $eventArgs): void
+    public function prePersist(LifecycleEventArgs $lifecycleEventArgs): void
     {
-        $this->updateLocation($eventArgs, false);
+        $this->updateLocation($lifecycleEventArgs, false);
     }
 
-    public function preUpdate(LifecycleEventArgs $eventArgs): void
+    public function preUpdate(LifecycleEventArgs $lifecycleEventArgs): void
     {
-        $this->updateLocation($eventArgs, true);
+        $this->updateLocation($lifecycleEventArgs, true);
     }
 
     /**
@@ -121,43 +118,12 @@ class GeocodableSubscriber extends AbstractSubscriber
 
     public function getSubscribedEvents()
     {
-        return [
-            Events::prePersist,
-            Events::preUpdate,
-            Events::loadClassMetadata,
-        ];
+        return [Events::prePersist, Events::preUpdate, Events::loadClassMetadata];
     }
 
     public function setGeolocationCallable(callable $callable): void
     {
         $this->geolocationCallable = $callable;
-    }
-
-    private function updateLocation(LifecycleEventArgs $eventArgs, $override = false): void
-    {
-        $em = $eventArgs->getEntityManager();
-        $uow = $em->getUnitOfWork();
-        $entity = $eventArgs->getEntity();
-
-        $classMetadata = $em->getClassMetadata(get_class($entity));
-        if ($this->isGeocodable($classMetadata)) {
-            $oldValue = $entity->getLocation();
-            if (! $oldValue instanceof Point || $override) {
-                $newLocation = $this->getLocation($entity);
-
-                if ($newLocation !== false) {
-                    $entity->setLocation($newLocation);
-                }
-
-                $uow->propertyChanged($entity, 'location', $oldValue, $entity->getLocation());
-                $uow->scheduleExtraUpdate(
-                    $entity,
-                    [
-                        'location' => [$oldValue, $entity->getLocation()],
-                    ]
-                );
-            }
-        }
     }
 
     /**
@@ -174,5 +140,29 @@ class GeocodableSubscriber extends AbstractSubscriber
             $this->geocodableTrait,
             $this->isRecursive
         );
+    }
+
+    private function updateLocation(LifecycleEventArgs $lifecycleEventArgs, $override = false): void
+    {
+        $entityManager = $lifecycleEventArgs->getEntityManager();
+        $unitOfWork = $entityManager->getUnitOfWork();
+        $entity = $lifecycleEventArgs->getEntity();
+
+        $classMetadata = $entityManager->getClassMetadata(get_class($entity));
+        if ($this->isGeocodable($classMetadata)) {
+            $oldValue = $entity->getLocation();
+            if (! $oldValue instanceof Point || $override) {
+                $newLocation = $this->getLocation($entity);
+
+                if ($newLocation !== false) {
+                    $entity->setLocation($newLocation);
+                }
+
+                $unitOfWork->propertyChanged($entity, 'location', $oldValue, $entity->getLocation());
+                $unitOfWork->scheduleExtraUpdate($entity, [
+                    'location' => [$oldValue, $entity->getLocation()],
+                ]);
+            }
+        }
     }
 }

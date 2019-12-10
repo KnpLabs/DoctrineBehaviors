@@ -30,7 +30,7 @@ trait SortableRepository
         ;
     }
 
-    protected function addSortingScope(QueryBuilder $qb, $entity): void
+    protected function addSortingScope(QueryBuilder $queryBuilder, $entity): void
     {
     }
 }

@@ -24,9 +24,9 @@ class TimestampableSubscriber extends AbstractSubscriber
         $this->dbFieldType = $dbFieldType;
     }
 
-    public function loadClassMetadata(LoadClassMetadataEventArgs $eventArgs): void
+    public function loadClassMetadata(LoadClassMetadataEventArgs $loadClassMetadataEventArgs): void
     {
-        $classMetadata = $eventArgs->getClassMetadata();
+        $classMetadata = $loadClassMetadataEventArgs->getClassMetadata();
 
         if ($classMetadata->reflClass === null) {
             return;

@@ -4,12 +4,17 @@ declare(strict_types=1);
 
 namespace Tests\Knp\DoctrineBehaviors\ORM;
 
+use BehaviorFixtures\ORM\BlameableEntity;
+use BehaviorFixtures\ORM\UserEntity;
 use Doctrine\Common\EventManager;
+use Knp\DoctrineBehaviors\Model\Blameable\Blameable;
+use Knp\DoctrineBehaviors\ORM\Blameable\BlameableSubscriber;
 use Knp\DoctrineBehaviors\Reflection\ClassAnalyzer;
+use PHPUnit\Framework\TestCase;
 
-require_once 'EntityManagerProvider.php';
+require_once __DIR__ . '/EntityManagerProvider.php';
 
-class BlameableTest extends \PHPUnit\Framework\TestCase
+class BlameableTest extends TestCase
 {
     use EntityManagerProvider;
 
@@ -17,12 +22,12 @@ class BlameableTest extends \PHPUnit\Framework\TestCase
 
     public function testCreate(): void
     {
-        $em = $this->getEntityManager($this->getEventManager('user'));
+        $entityManager = $this->getEntityManager($this->getEventManager('user'));
 
-        $entity = new \BehaviorFixtures\ORM\BlameableEntity();
+        $entity = new BlameableEntity();
 
-        $em->persist($entity);
-        $em->flush();
+        $entityManager->persist($entity);
+        $entityManager->flush();
 
         $this->assertSame('user', $entity->getCreatedBy());
         $this->assertSame('user', $entity->getUpdatedBy());
@@ -31,26 +36,26 @@ class BlameableTest extends \PHPUnit\Framework\TestCase
 
     public function testUpdate(): void
     {
-        $em = $this->getEntityManager($this->getEventManager('user'));
+        $entityManager = $this->getEntityManager($this->getEventManager('user'));
 
-        $entity = new \BehaviorFixtures\ORM\BlameableEntity();
+        $entity = new BlameableEntity();
 
-        $em->persist($entity);
-        $em->flush();
+        $entityManager->persist($entity);
+        $entityManager->flush();
         $id = $entity->getId();
         $createdBy = $entity->getCreatedBy();
-        $em->clear();
+        $entityManager->clear();
 
-        $subscribers = $em->getEventManager()->getListeners()['preUpdate'];
+        $subscribers = $entityManager->getEventManager()->getListeners()['preUpdate'];
         $subscriber = array_pop($subscribers);
         $subscriber->setUser('user2');
 
-        $entity = $em->getRepository('BehaviorFixtures\ORM\BlameableEntity')->find($id);
+        $entity = $entityManager->getRepository(BlameableEntity::class)->find($id);
         $entity->setTitle('test'); // need to modify at least one column to trigger onUpdate
-        $em->flush();
-        $em->clear();
+        $entityManager->flush();
+        $entityManager->clear();
 
-        //$entity = $em->getRepository('BehaviorFixtures\ORM\BlameableEntity')->find($id);
+        //$entity = $entityManager->getRepository('BehaviorFixtures\ORM\BlameableEntity')->find($id);
         $this->assertSame($createdBy, $entity->getCreatedBy(), 'createdBy is constant');
         $this->assertSame('user2', $entity->getUpdatedBy());
 
@@ -63,58 +68,58 @@ class BlameableTest extends \PHPUnit\Framework\TestCase
 
     public function testRemove(): void
     {
-        $em = $this->getEntityManager($this->getEventManager('user'));
+        $entityManager = $this->getEntityManager($this->getEventManager('user'));
 
-        $entity = new \BehaviorFixtures\ORM\BlameableEntity();
+        $entity = new BlameableEntity();
 
-        $em->persist($entity);
-        $em->flush();
+        $entityManager->persist($entity);
+        $entityManager->flush();
         $id = $entity->getId();
-        $em->clear();
+        $entityManager->clear();
 
-        $subscribers = $em->getEventManager()->getListeners()['preRemove'];
+        $subscribers = $entityManager->getEventManager()->getListeners()['preRemove'];
         $subscriber = array_pop($subscribers);
         $subscriber->setUser('user3');
 
-        $entity = $em->getRepository('BehaviorFixtures\ORM\BlameableEntity')->find($id);
-        $em->remove($entity);
-        $em->flush();
-        $em->clear();
+        $entity = $entityManager->getRepository(BlameableEntity::class)->find($id);
+        $entityManager->remove($entity);
+        $entityManager->flush();
+        $entityManager->clear();
 
         $this->assertSame('user3', $entity->getDeletedBy());
     }
 
     public function testSubscriberWithUserCallback(): void
     {
-        $user = new \BehaviorFixtures\ORM\UserEntity();
+        $user = new UserEntity();
         $user->setUsername('user');
 
-        $user2 = new \BehaviorFixtures\ORM\UserEntity();
+        $user2 = new UserEntity();
         $user2->setUsername('user2');
 
         $userCallback = function () use ($user) {
             return $user;
         };
 
-        $em = $this->getEntityManager($this->getEventManager(null, $userCallback, get_class($user)));
-        $em->persist($user);
-        $em->persist($user2);
-        $em->flush();
+        $entityManager = $this->getEntityManager($this->getEventManager(null, $userCallback, get_class($user)));
+        $entityManager->persist($user);
+        $entityManager->persist($user2);
+        $entityManager->flush();
 
-        $entity = new \BehaviorFixtures\ORM\BlameableEntity();
+        $entity = new BlameableEntity();
 
-        $em->persist($entity);
-        $em->flush();
+        $entityManager->persist($entity);
+        $entityManager->flush();
         $id = $entity->getId();
         $createdBy = $entity->getCreatedBy();
         $this->subscriber->setUser($user2); // switch user for update
 
-        $entity = $em->getRepository('BehaviorFixtures\ORM\BlameableEntity')->find($id);
+        $entity = $entityManager->getRepository(BlameableEntity::class)->find($id);
         $entity->setTitle('test'); // need to modify at least one column to trigger onUpdate
-        $em->flush();
-        $em->clear();
+        $entityManager->flush();
+        $entityManager->clear();
 
-        $this->assertInstanceOf('BehaviorFixtures\\ORM\\UserEntity', $entity->getCreatedBy(), 'createdBy is a user object');
+        $this->assertInstanceOf(UserEntity::class, $entity->getCreatedBy(), 'createdBy is a user object');
         $this->assertSame($createdBy->getUsername(), $entity->getCreatedBy()->getUsername(), 'createdBy is constant');
         $this->assertSame($user2->getUsername(), $entity->getUpdatedBy()->getUsername());
 
@@ -127,21 +132,21 @@ class BlameableTest extends \PHPUnit\Framework\TestCase
 
     public function testShouldOnlyPersistUserEntity(): void
     {
-        $user = new \BehaviorFixtures\ORM\UserEntity();
+        $user = new UserEntity();
         $user->setUsername('user');
 
         $userCallback = function () use ($user) {
             return $user;
         };
 
-        $em = $this->getEntityManager($this->getEventManager('anon.', $userCallback, get_class($user)));
-        $em->persist($user);
-        $em->flush();
+        $entityManager = $this->getEntityManager($this->getEventManager('anon.', $userCallback, get_class($user)));
+        $entityManager->persist($user);
+        $entityManager->flush();
 
-        $entity = new \BehaviorFixtures\ORM\BlameableEntity();
+        $entity = new BlameableEntity();
 
-        $em->persist($entity);
-        $em->flush();
+        $entityManager->persist($entity);
+        $entityManager->flush();
 
         $this->assertNull($entity->getCreatedBy(), 'createdBy is a not updated because not a user entity object');
         $this->assertNull($entity->getUpdatedBy(), 'updatedBy is a not updated because not a user entity object');
@@ -149,13 +154,13 @@ class BlameableTest extends \PHPUnit\Framework\TestCase
 
     public function testShouldOnlyPersistUserString(): void
     {
-        $user = new \BehaviorFixtures\ORM\UserEntity();
-        $em = $this->getEntityManager($this->getEventManager($user));
+        $user = new UserEntity();
+        $entityManager = $this->getEntityManager($this->getEventManager($user));
 
-        $entity = new \BehaviorFixtures\ORM\BlameableEntity();
+        $entity = new BlameableEntity();
 
-        $em->persist($entity);
-        $em->flush();
+        $entityManager->persist($entity);
+        $entityManager->flush();
 
         $this->assertNull($entity->getCreatedBy(), 'createdBy is a not updated because not a user entity object');
         $this->assertNull($entity->getUpdatedBy(), 'updatedBy is a not updated because not a user entity object');
@@ -163,27 +168,24 @@ class BlameableTest extends \PHPUnit\Framework\TestCase
 
     protected function getUsedEntityFixtures()
     {
-        return [
-            'BehaviorFixtures\\ORM\\BlameableEntity',
-            'BehaviorFixtures\\ORM\\UserEntity',
-        ];
+        return [BlameableEntity::class, UserEntity::class];
     }
 
     protected function getEventManager($user = null, $userCallback = null, $userEntity = null)
     {
-        $em = new EventManager();
+        $eventManager = new EventManager();
 
-        $this->subscriber = new \Knp\DoctrineBehaviors\ORM\Blameable\BlameableSubscriber(
+        $this->subscriber = new BlameableSubscriber(
             new ClassAnalyzer(),
             false,
-            'Knp\DoctrineBehaviors\Model\Blameable\Blameable',
+            Blameable::class,
             $userCallback,
             $userEntity
         );
         $this->subscriber->setUser($user);
 
-        $em->addEventSubscriber($this->subscriber);
+        $eventManager->addEventSubscriber($this->subscriber);
 
-        return $em;
+        return $eventManager;
     }
 }

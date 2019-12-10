@@ -4,33 +4,38 @@ declare(strict_types=1);
 
 namespace Tests\Knp\DoctrineBehaviors\ORM;
 
+use BehaviorFixtures\ORM\SluggableEntity;
+use DateTime;
 use Doctrine\Common\EventManager;
+use Knp\DoctrineBehaviors\Model\Sluggable\Sluggable;
+use Knp\DoctrineBehaviors\ORM\Sluggable\SluggableSubscriber;
 use Knp\DoctrineBehaviors\Reflection\ClassAnalyzer;
+use PHPUnit\Framework\TestCase;
 
-require_once 'EntityManagerProvider.php';
+require_once __DIR__ . '/EntityManagerProvider.php';
 
-class SluggableTest extends \PHPUnit\Framework\TestCase
+class SluggableTest extends TestCase
 {
     use EntityManagerProvider;
 
     public function testSlugLoading(): void
     {
-        $em = $this->getEntityManager();
+        $entityManager = $this->getEntityManager();
 
-        $entity = new \BehaviorFixtures\ORM\SluggableEntity();
+        $entity = new SluggableEntity();
 
         $expected = 'the-name';
 
         $entity->setName('The name');
 
-        $em->persist($entity);
-        $em->flush();
+        $entityManager->persist($entity);
+        $entityManager->flush();
 
         $this->assertNotNull($id = $entity->getId());
 
-        $em->clear();
+        $entityManager->clear();
 
-        $entity = $em->getRepository('BehaviorFixtures\ORM\SluggableEntity')->find($id);
+        $entity = $entityManager->getRepository(SluggableEntity::class)->find($id);
 
         $this->assertNotNull($entity);
         $this->assertSame($expected, $entity->getSlug());
@@ -38,7 +43,7 @@ class SluggableTest extends \PHPUnit\Framework\TestCase
 
     public function testNotUpdatedSlug(): void
     {
-        $em = $this->getEntityManager();
+        $entityManager = $this->getEntityManager();
 
         $data = [
             [
@@ -64,17 +69,17 @@ class SluggableTest extends \PHPUnit\Framework\TestCase
         ];
 
         foreach ($data as $row) {
-            $entity = new \BehaviorFixtures\ORM\SluggableEntity();
+            $entity = new SluggableEntity();
 
             $entity->setName($row['name']);
 
-            $em->persist($entity);
-            $em->flush();
+            $entityManager->persist($entity);
+            $entityManager->flush();
 
-            $entity->setDate(new \DateTime());
+            $entity->setDate(new DateTime());
 
-            $em->persist($entity);
-            $em->flush();
+            $entityManager->persist($entity);
+            $entityManager->flush();
 
             $this->assertSame($row['slug'], $entity->getSlug());
         }
@@ -82,16 +87,16 @@ class SluggableTest extends \PHPUnit\Framework\TestCase
 
     public function testUpdatedSlug(): void
     {
-        $em = $this->getEntityManager();
+        $entityManager = $this->getEntityManager();
 
-        $entity = new \BehaviorFixtures\ORM\SluggableEntity();
+        $entity = new SluggableEntity();
 
         $expected = 'the-name';
 
         $entity->setName('The name');
 
-        $em->persist($entity);
-        $em->flush();
+        $entityManager->persist($entity);
+        $entityManager->flush();
 
         $this->assertSame($entity->getSlug(), $expected);
 
@@ -99,31 +104,23 @@ class SluggableTest extends \PHPUnit\Framework\TestCase
 
         $entity->setName('The name 2');
 
-        $em->persist($entity);
-        $em->flush();
+        $entityManager->persist($entity);
+        $entityManager->flush();
 
         $this->assertSame($expected, $entity->getSlug());
     }
 
     protected function getUsedEntityFixtures()
     {
-        return [
-            'BehaviorFixtures\\ORM\\SluggableEntity',
-        ];
+        return [SluggableEntity::class];
     }
 
-    protected function getEventManager()
+    protected function getEventManager(): EventManager
     {
-        $em = new EventManager();
+        $eventManager = new EventManager();
 
-        $em->addEventSubscriber(
-            new \Knp\DoctrineBehaviors\ORM\Sluggable\SluggableSubscriber(
-                new ClassAnalyzer(),
-                false,
-                'Knp\DoctrineBehaviors\Model\Sluggable\Sluggable'
-            )
-        );
+        $eventManager->addEventSubscriber(new SluggableSubscriber(new ClassAnalyzer(), false, Sluggable::class));
 
-        return $em;
+        return $eventManager;
     }
 }

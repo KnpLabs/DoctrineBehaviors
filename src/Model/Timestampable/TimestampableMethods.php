@@ -4,12 +4,15 @@ declare(strict_types=1);
 
 namespace Knp\DoctrineBehaviors\Model\Timestampable;
 
+use DateTime;
+use DateTimeZone;
+
 trait TimestampableMethods
 {
     /**
      * Returns createdAt value.
      *
-     * @return \DateTime
+     * @return DateTime
      */
     public function getCreatedAt()
     {
@@ -19,27 +22,21 @@ trait TimestampableMethods
     /**
      * Returns updatedAt value.
      *
-     * @return \DateTime
+     * @return DateTime
      */
     public function getUpdatedAt()
     {
         return $this->updatedAt;
     }
 
-    /**
-     * @return $this
-     */
-    public function setCreatedAt(\DateTime $createdAt)
+    public function setCreatedAt(DateTime $createdAt)
     {
         $this->createdAt = $createdAt;
 
         return $this;
     }
 
-    /**
-     * @return $this
-     */
-    public function setUpdatedAt(\DateTime $updatedAt)
+    public function setUpdatedAt(DateTime $updatedAt)
     {
         $this->updatedAt = $updatedAt;
 
@@ -52,8 +49,8 @@ trait TimestampableMethods
     public function updateTimestamps(): void
     {
         // Create a datetime with microseconds
-        $dateTime = \DateTime::createFromFormat('U.u', sprintf('%.6F', microtime(true)));
-        $dateTime->setTimezone(new \DateTimeZone(date_default_timezone_get()));
+        $dateTime = DateTime::createFromFormat('U.u', sprintf('%.6F', microtime(true)));
+        $dateTime->setTimezone(new DateTimeZone(date_default_timezone_get()));
 
         if ($this->createdAt === null) {
             $this->createdAt = $dateTime;

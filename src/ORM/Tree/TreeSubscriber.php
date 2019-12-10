@@ -21,9 +21,9 @@ class TreeSubscriber extends AbstractSubscriber
         $this->nodeTrait = $nodeTrait;
     }
 
-    public function loadClassMetadata(LoadClassMetadataEventArgs $eventArgs): void
+    public function loadClassMetadata(LoadClassMetadataEventArgs $loadClassMetadataEventArgs): void
     {
-        $classMetadata = $eventArgs->getClassMetadata();
+        $classMetadata = $loadClassMetadataEventArgs->getClassMetadata();
 
         if ($classMetadata->reflClass === null) {
             return;
@@ -54,10 +54,6 @@ class TreeSubscriber extends AbstractSubscriber
      */
     private function isTreeNode(ClassMetadata $classMetadata)
     {
-        return $this->getClassAnalyzer()->hasTrait(
-            $classMetadata->reflClass,
-            $this->nodeTrait,
-            $this->isRecursive
-        );
+        return $this->getClassAnalyzer()->hasTrait($classMetadata->reflClass, $this->nodeTrait, $this->isRecursive);
     }
 }

@@ -22,9 +22,9 @@ class SluggableSubscriber extends AbstractSubscriber
         $this->sluggableTrait = $sluggableTrait;
     }
 
-    public function loadClassMetadata(LoadClassMetadataEventArgs $eventArgs): void
+    public function loadClassMetadata(LoadClassMetadataEventArgs $loadClassMetadataEventArgs): void
     {
-        $classMetadata = $eventArgs->getClassMetadata();
+        $classMetadata = $loadClassMetadataEventArgs->getClassMetadata();
 
         if ($classMetadata->reflClass === null) {
             return;
@@ -41,22 +41,22 @@ class SluggableSubscriber extends AbstractSubscriber
         }
     }
 
-    public function prePersist(LifecycleEventArgs $eventArgs): void
+    public function prePersist(LifecycleEventArgs $lifecycleEventArgs): void
     {
-        $entity = $eventArgs->getEntity();
-        $em = $eventArgs->getEntityManager();
-        $classMetadata = $em->getClassMetadata(get_class($entity));
+        $entity = $lifecycleEventArgs->getEntity();
+        $entityManager = $lifecycleEventArgs->getEntityManager();
+        $classMetadata = $entityManager->getClassMetadata(get_class($entity));
 
         if ($this->isSluggable($classMetadata)) {
             $entity->generateSlug();
         }
     }
 
-    public function preUpdate(LifecycleEventArgs $eventArgs): void
+    public function preUpdate(LifecycleEventArgs $lifecycleEventArgs): void
     {
-        $entity = $eventArgs->getEntity();
-        $em = $eventArgs->getEntityManager();
-        $classMetadata = $em->getClassMetadata(get_class($entity));
+        $entity = $lifecycleEventArgs->getEntity();
+        $entityManager = $lifecycleEventArgs->getEntityManager();
+        $classMetadata = $entityManager->getClassMetadata(get_class($entity));
 
         if ($this->isSluggable($classMetadata)) {
             $entity->generateSlug();

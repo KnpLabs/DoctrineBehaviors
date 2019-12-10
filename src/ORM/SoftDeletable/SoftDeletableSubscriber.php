@@ -28,23 +28,23 @@ class SoftDeletableSubscriber extends AbstractSubscriber
     /**
      * Listens to onFlush event.
      *
-     * @param OnFlushEventArgs $args The event arguments
+     * @param OnFlushEventArgs $onFlushEventArgs The event arguments
      */
-    public function onFlush(OnFlushEventArgs $args): void
+    public function onFlush(OnFlushEventArgs $onFlushEventArgs): void
     {
-        $em = $args->getEntityManager();
-        $uow = $em->getUnitOfWork();
+        $entityManager = $onFlushEventArgs->getEntityManager();
+        $unitOfWork = $entityManager->getUnitOfWork();
 
-        foreach ($uow->getScheduledEntityDeletions() as $entity) {
-            $classMetadata = $em->getClassMetadata(get_class($entity));
+        foreach ($unitOfWork->getScheduledEntityDeletions() as $entity) {
+            $classMetadata = $entityManager->getClassMetadata(get_class($entity));
             if ($this->isSoftDeletable($classMetadata)) {
                 $oldValue = $entity->getDeletedAt();
 
                 $entity->delete();
-                $em->persist($entity);
+                $entityManager->persist($entity);
 
-                $uow->propertyChanged($entity, 'deletedAt', $oldValue, $entity->getDeletedAt());
-                $uow->scheduleExtraUpdate($entity, [
+                $unitOfWork->propertyChanged($entity, 'deletedAt', $oldValue, $entity->getDeletedAt());
+                $unitOfWork->scheduleExtraUpdate($entity, [
                     'deletedAt' => [$oldValue, $entity->getDeletedAt()],
                 ]);
             }
@@ -61,9 +61,9 @@ class SoftDeletableSubscriber extends AbstractSubscriber
         return [Events::onFlush, Events::loadClassMetadata];
     }
 
-    public function loadClassMetadata(LoadClassMetadataEventArgs $eventArgs): void
+    public function loadClassMetadata(LoadClassMetadataEventArgs $loadClassMetadataEventArgs): void
     {
-        $classMetadata = $eventArgs->getClassMetadata();
+        $classMetadata = $loadClassMetadataEventArgs->getClassMetadata();
 
         if ($classMetadata->reflClass === null) {
             return;
@@ -89,6 +89,10 @@ class SoftDeletableSubscriber extends AbstractSubscriber
      */
     private function isSoftDeletable(ClassMetadata $classMetadata)
     {
-        return $this->getClassAnalyzer()->hasTrait($classMetadata->reflClass, $this->softDeletableTrait, $this->isRecursive);
+        return $this->getClassAnalyzer()->hasTrait(
+            $classMetadata->reflClass,
+            $this->softDeletableTrait,
+            $this->isRecursive
+        );
     }
 }
