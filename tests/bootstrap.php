@@ -2,11 +2,6 @@
 
 declare(strict_types=1);
 
-/**
- * This is bootstrap for phpUnit unit tests,
- * use README.md for more details
- */
-
 define('DB_ENGINE', getenv('DB') ?: 'pgsql');
 define('DB_HOST', getenv('DB_HOST') ?: 'localhost');
 define('DB_NAME', getenv('DB_NAME') ?: 'orm_behaviors_test');

@@ -315,9 +315,6 @@ trait TranslatableTrait
 {
     use Translatable;
 
-    /**
-     * @inheritdoc
-     */
     public static function getTranslationEntityClass()
     {
         $explodedNamespace = explode('\\', __CLASS__);
@@ -337,9 +334,6 @@ trait TranslationTrait
 {
     use Translation;
 
-    /**
-     * @inheritdoc
-     */
     public static function getTranslatableEntityClass()
     {
         $explodedNamespace = explode('\\', __CLASS__);

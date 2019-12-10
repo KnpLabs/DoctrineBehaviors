@@ -11,6 +11,10 @@ parameters:
         PhpCsFixer\Fixer\Operator\UnaryOperatorSpacesFixer: null
 
 services:
+    # see single LICENSE.txt file in the root directory
+    PhpCsFixer\Fixer\Comment\HeaderCommentFixer:
+        header: ''
+
     PhpCsFixer\Fixer\Phpdoc\GeneralPhpdocAnnotationRemoveFixer:
         annotations:
             - 'author'
