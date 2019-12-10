@@ -4,18 +4,22 @@ declare(strict_types=1);
 
 namespace BehaviorFixtures\ORM;
 
+use ArrayAccess;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\ORM\Mapping as ORM;
-
-use Knp\DoctrineBehaviors\Model\Tree;
+use Knp\DoctrineBehaviors\Model\Tree\Node;
+use Knp\DoctrineBehaviors\Model\Tree\NodeInterface;
 
 /**
  * @ORM\Entity(repositoryClass="BehaviorFixtures\ORM\TreeNodeEntityRepository")
  */
-class TreeNodeEntity implements Tree\NodeInterface, \ArrayAccess
+class TreeNodeEntity implements NodeInterface, ArrayAccess
 {
-    use Tree\Node;
+    use Node;
 
+    /**
+     * @var string
+     */
     public const PATH_SEPARATOR = '/';
 
     /**

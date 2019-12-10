@@ -4,171 +4,143 @@ declare(strict_types=1);
 
 namespace Tests\Knp\DoctrineBehaviors\ORM;
 
+use BehaviorFixtures\ORM\TranslatableCustomizedEntity;
+use BehaviorFixtures\ORM\TranslatableEntity;
+use BehaviorFixtures\ORM\TranslatableEntityTranslation;
+use BehaviorFixtures\ORM\Translation\TranslatableCustomizedEntityTranslation;
 use Doctrine\Common\EventManager;
 use Doctrine\ORM\Mapping\ClassMetadataInfo;
+use Knp\DoctrineBehaviors\Model\Translatable\Translatable;
+use Knp\DoctrineBehaviors\Model\Translatable\Translation;
+use Knp\DoctrineBehaviors\ORM\Translatable\TranslatableSubscriber;
 use Knp\DoctrineBehaviors\Reflection\ClassAnalyzer;
+use PHPUnit\Framework\TestCase;
 
-require_once 'EntityManagerProvider.php';
+require_once __DIR__ . '/EntityManagerProvider.php';
 
-class TranslatableTest extends \PHPUnit\Framework\TestCase
+class TranslatableTest extends TestCase
 {
     use EntityManagerProvider;
 
     public function testShouldPersistTranslations(): void
     {
-        $em = $this->getEntityManager();
+        $entityManager = $this->getEntityManager();
 
-        $entity = new \BehaviorFixtures\ORM\TranslatableEntity();
+        $entity = new TranslatableEntity();
         $entity->translate('fr')->setTitle('fabuleux');
         $entity->translate('en')->setTitle('awesome');
         $entity->translate('ru')->setTitle('удивительный');
         $entity->mergeNewTranslations();
 
-        $em->persist($entity);
-        $em->flush();
+        $entityManager->persist($entity);
+        $entityManager->flush();
         $id = $entity->getId();
-        $em->clear();
+        $entityManager->clear();
 
-        $entity = $em
-            ->getRepository('BehaviorFixtures\ORM\TranslatableEntity')
+        $entity = $entityManager
+            ->getRepository(TranslatableEntity::class)
             ->find($id)
         ;
 
-        $this->assertSame(
-            'fabuleux',
-            $entity->translate('fr')->getTitle()
-        );
+        $this->assertSame('fabuleux', $entity->translate('fr')->getTitle());
 
-        $this->assertSame(
-            'awesome',
-            $entity->translate('en')->getTitle()
-        );
+        $this->assertSame('awesome', $entity->translate('en')->getTitle());
 
-        $this->assertSame(
-            'удивительный',
-            $entity->translate('ru')->getTitle()
-        );
+        $this->assertSame('удивительный', $entity->translate('ru')->getTitle());
     }
 
     public function testShouldFallbackCountryLocaleToLanguageOnlyTranslation(): void
     {
-        $em = $this->getEntityManager();
+        $entityManager = $this->getEntityManager();
 
-        $entity = new \BehaviorFixtures\ORM\TranslatableEntity();
+        $entity = new TranslatableEntity();
         $entity->translate('en', false)->setTitle('plastic bag');
         $entity->translate('fr', false)->setTitle('sac plastique');
         $entity->translate('fr_CH', false)->setTitle('cornet');
         $entity->mergeNewTranslations();
 
-        $em->persist($entity);
-        $em->flush();
+        $entityManager->persist($entity);
+        $entityManager->flush();
         $id = $entity->getId();
-        $em->clear();
+        $entityManager->clear();
 
-        $entity = $em
-            ->getRepository('BehaviorFixtures\ORM\TranslatableEntity')
+        $entity = $entityManager
+            ->getRepository(TranslatableEntity::class)
             ->find($id)
         ;
 
-        $this->assertSame(
-            'plastic bag',
-            $entity->translate('de')->getTitle()
-        );
+        $this->assertSame('plastic bag', $entity->translate('de')->getTitle());
 
-        $this->assertSame(
-            'sac plastique',
-            $entity->translate('fr_FR')->getTitle()
-        );
+        $this->assertSame('sac plastique', $entity->translate('fr_FR')->getTitle());
 
-        $this->assertSame(
-            'cornet',
-            $entity->translate('fr_CH')->getTitle()
-        );
+        $this->assertSame('cornet', $entity->translate('fr_CH')->getTitle());
     }
 
     public function testShouldUpdateAndAddNewTranslations(): void
     {
-        $em = $this->getEntityManager();
+        $entityManager = $this->getEntityManager();
 
-        $entity = new \BehaviorFixtures\ORM\TranslatableEntity();
+        $entity = new TranslatableEntity();
         $entity->translate('en')->setTitle('awesome');
         $entity->translate('ru')->setTitle('удивительный');
         $entity->mergeNewTranslations();
 
-        $em->persist($entity);
-        $em->flush();
+        $entityManager->persist($entity);
+        $entityManager->flush();
         $id = $entity->getId();
-        $em->clear();
+        $entityManager->clear();
 
-        $entity = $em
-            ->getRepository('BehaviorFixtures\ORM\TranslatableEntity')
+        $entity = $entityManager
+            ->getRepository(TranslatableEntity::class)
             ->find($id)
         ;
 
-        $this->assertSame(
-            'awesome',
-            $entity->translate('en')->getTitle()
-        );
+        $this->assertSame('awesome', $entity->translate('en')->getTitle());
 
-        $this->assertSame(
-            'удивительный',
-            $entity->translate('ru')->getTitle()
-        );
+        $this->assertSame('удивительный', $entity->translate('ru')->getTitle());
 
         $entity->translate('en')->setTitle('great');
         $entity->translate('fr', false)->setTitle('fabuleux');
         $entity->mergeNewTranslations();
 
-        $em->persist($entity);
-        $em->flush();
-        $em->clear();
+        $entityManager->persist($entity);
+        $entityManager->flush();
+        $entityManager->clear();
 
-        $entity = $em
-            ->getRepository('BehaviorFixtures\ORM\TranslatableEntity')
+        $entity = $entityManager
+            ->getRepository(TranslatableEntity::class)
             ->find($id)
         ;
 
-        $this->assertSame(
-            'great',
-            $entity->translate('en')->getTitle()
-        );
+        $this->assertSame('great', $entity->translate('en')->getTitle());
 
-        $this->assertSame(
-            'fabuleux',
-            $entity->translate('fr')->getTitle()
-        );
+        $this->assertSame('fabuleux', $entity->translate('fr')->getTitle());
 
-        $this->assertSame(
-            'удивительный',
-            $entity->translate('ru')->getTitle()
-        );
+        $this->assertSame('удивительный', $entity->translate('ru')->getTitle());
     }
 
     public function testTranslateMethodShouldAlwaysReturnTranslationObject(): void
     {
         $this->getEntityManager();
 
-        $entity = new \BehaviorFixtures\ORM\TranslatableEntity();
+        $entity = new TranslatableEntity();
 
-        $this->assertInstanceOf(
-            'BehaviorFixtures\ORM\TranslatableEntityTranslation',
-            $entity->translate('fr')
-        );
+        $this->assertInstanceOf(TranslatableEntityTranslation::class, $entity->translate('fr'));
     }
 
     public function testSubscriberShouldConfigureEntityWithCurrentLocale(): void
     {
-        $em = $this->getEntityManager();
+        $entityManager = $this->getEntityManager();
 
-        $entity = new \BehaviorFixtures\ORM\TranslatableEntity();
+        $entity = new TranslatableEntity();
         $entity->setTitle('test'); // magic method
         $entity->mergeNewTranslations();
-        $em->persist($entity);
-        $em->flush();
+        $entityManager->persist($entity);
+        $entityManager->flush();
         $id = $entity->getId();
-        $em->clear();
+        $entityManager->clear();
 
-        $entity = $em->getRepository('BehaviorFixtures\ORM\TranslatableEntity')->find($id);
+        $entity = $entityManager->getRepository(TranslatableEntity::class)->find($id);
 
         $this->assertSame('en', $entity->getCurrentLocale());
         $this->assertSame('test', $entity->getTitle());
@@ -177,17 +149,17 @@ class TranslatableTest extends \PHPUnit\Framework\TestCase
 
     public function testSubscriberShouldConfigureEntityWithDefaultLocale(): void
     {
-        $em = $this->getEntityManager();
+        $entityManager = $this->getEntityManager();
 
-        $entity = new \BehaviorFixtures\ORM\TranslatableEntity();
+        $entity = new TranslatableEntity();
         $entity->setTitle('test'); // magic method
         $entity->mergeNewTranslations();
-        $em->persist($entity);
-        $em->flush();
+        $entityManager->persist($entity);
+        $entityManager->flush();
         $id = $entity->getId();
-        $em->clear();
+        $entityManager->clear();
 
-        $entity = $em->getRepository('BehaviorFixtures\ORM\TranslatableEntity')->find($id);
+        $entity = $entityManager->getRepository(TranslatableEntity::class)->find($id);
 
         $this->assertSame('en', $entity->getDefaultLocale());
         $this->assertSame('test', $entity->getTitle());
@@ -197,17 +169,14 @@ class TranslatableTest extends \PHPUnit\Framework\TestCase
 
     public function testShouldHaveOneToManyRelation(): void
     {
-        $this->assertTranslationsOneToManyMapped(
-            'BehaviorFixtures\ORM\TranslatableEntity',
-            'BehaviorFixtures\ORM\TranslatableEntityTranslation'
-        );
+        $this->assertTranslationsOneToManyMapped(TranslatableEntity::class, TranslatableEntityTranslation::class);
     }
 
     public function testShouldHaveOneToManyRelationWhenTranslationClassNameIsCustom(): void
     {
         $this->assertTranslationsOneToManyMapped(
-            'BehaviorFixtures\ORM\TranslatableCustomizedEntity',
-            'BehaviorFixtures\ORM\Translation\TranslatableCustomizedEntityTranslation'
+            TranslatableCustomizedEntity::class,
+            TranslatableCustomizedEntityTranslation::class
         );
     }
 
@@ -215,7 +184,7 @@ class TranslatableTest extends \PHPUnit\Framework\TestCase
     {
         $this->getEntityManager();
 
-        $entity = new \BehaviorFixtures\ORM\TranslatableEntity();
+        $entity = new TranslatableEntity();
         $translation = $entity->translate('fr');
         $translation->setTitle('fabuleux');
         $entity->translate('fr')->setTitle('fabuleux2');
@@ -227,36 +196,33 @@ class TranslatableTest extends \PHPUnit\Framework\TestCase
 
     public function testShouldRemoveTranslation(): void
     {
-        $em = $this->getEntityManager();
+        $entityManager = $this->getEntityManager();
 
-        $entity = new \BehaviorFixtures\ORM\TranslatableEntity();
+        $entity = new TranslatableEntity();
         $entity->translate('en')->setTitle('Hello');
         $entity->translate('nl')->setTitle('Hallo');
         $entity->mergeNewTranslations();
-        $em->persist($entity);
-        $em->flush();
+        $entityManager->persist($entity);
+        $entityManager->flush();
 
         $nlTranslation = $entity->translate('nl');
         $entity->removeTranslation($nlTranslation);
-        $em->flush();
+        $entityManager->flush();
 
-        $em->refresh($entity);
+        $entityManager->refresh($entity);
         $this->assertNotSame('Hallo', $entity->translate('nl')->getTitle());
     }
 
     protected function getUsedEntityFixtures()
     {
-        return [
-            'BehaviorFixtures\\ORM\\TranslatableEntity',
-            'BehaviorFixtures\\ORM\\TranslatableEntityTranslation',
-        ];
+        return [TranslatableEntity::class, TranslatableEntityTranslation::class];
     }
 
     protected function getEventManager()
     {
-        $em = new EventManager();
+        $eventManager = new EventManager();
 
-        $em->addEventSubscriber(new \Knp\DoctrineBehaviors\ORM\Translatable\TranslatableSubscriber(
+        $eventManager->addEventSubscriber(new TranslatableSubscriber(
             new ClassAnalyzer(),
             function () {
                 return 'en';
@@ -264,13 +230,13 @@ class TranslatableTest extends \PHPUnit\Framework\TestCase
             function () {
                 return 'en';
             },
-            'Knp\DoctrineBehaviors\Model\Translatable\Translatable',
-            'Knp\DoctrineBehaviors\Model\Translatable\Translation',
+            Translatable::class,
+            Translation::class,
             'LAZY',
             'LAZY'
         ));
 
-        return $em;
+        return $eventManager;
     }
 
     /**
@@ -281,19 +247,16 @@ class TranslatableTest extends \PHPUnit\Framework\TestCase
      */
     private function assertTranslationsOneToManyMapped($translatableClass, $translationClass): void
     {
-        $em = $this->getEntityManager();
+        $entityManager = $this->getEntityManager();
 
-        $meta = $em->getClassMetadata($translationClass);
+        $meta = $entityManager->getClassMetadata($translationClass);
         $this->assertSame($translatableClass, $meta->getAssociationTargetClass('translatable'));
 
-        $meta = $em->getClassMetadata($translatableClass);
+        $meta = $entityManager->getClassMetadata($translatableClass);
         $this->assertSame($translationClass, $meta->getAssociationTargetClass('translations'));
 
         $this->assertTrue($meta->isAssociationInverseSide('translations'));
 
-        $this->assertSame(
-            ClassMetadataInfo::ONE_TO_MANY,
-            $meta->getAssociationMapping('translations')['type']
-        );
+        $this->assertSame(ClassMetadataInfo::ONE_TO_MANY, $meta->getAssociationMapping('translations')['type']);
     }
 }

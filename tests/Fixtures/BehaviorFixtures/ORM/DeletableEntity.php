@@ -5,7 +5,7 @@ declare(strict_types=1);
 namespace BehaviorFixtures\ORM;
 
 use Doctrine\ORM\Mapping as ORM;
-use Knp\DoctrineBehaviors\Model;
+use Knp\DoctrineBehaviors\Model\SoftDeletable\SoftDeletable;
 
 /**
  * @ORM\Entity
@@ -17,7 +17,7 @@ use Knp\DoctrineBehaviors\Model;
  */
 class DeletableEntity
 {
-    use Model\SoftDeletable\SoftDeletable;
+    use SoftDeletable;
 
     /**
      * @ORM\Id

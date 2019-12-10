@@ -48,17 +48,17 @@ trait FilterableRepository
      * Filter values
      *
      * @param  array                      $filters - array like ['e:name' => 'nameValue'] where "e" is entity alias query, so we can filter using joins.
-     * @param \Doctrine\ORM\QueryBuilder $qb
-     * @return \Doctrine\ORM\QueryBuilder
+     * @param QueryBuilder $queryBuilder
+     * @return QueryBuilder
      */
-    public function filterBy(array $filters, ?QueryBuilder $qb = null)
+    public function filterBy(array $filters, ?QueryBuilder $queryBuilder = null)
     {
         $filters = array_filter($filters, function ($filter) {
             return ! empty($filter);
         });
 
-        if ($qb === null) {
-            $qb = $this->createFilterQueryBuilder();
+        if ($queryBuilder === null) {
+            $queryBuilder = $this->createFilterQueryBuilder();
         }
 
         foreach ($filters as $col => $value) {
@@ -66,35 +66,35 @@ trait FilterableRepository
                 $compare = $this->getWhereOperator($col) . 'Where';
 
                 if (in_array($col, $this->getLikeFilterColumns(), true)) {
-                    $qb
+                    $queryBuilder
                         ->{$compare}(sprintf('%s LIKE :%s', $colName, $colParam))
                         ->setParameter($colParam, '%' . $value . '%')
                     ;
                 }
 
                 if (in_array($col, $this->getILikeFilterColumns(), true)) {
-                    $qb
+                    $queryBuilder
                         ->{$compare}(sprintf('LOWER(%s) LIKE :%s', $colName, $colParam))
                         ->setParameter($colParam, '%' . strtolower($value) . '%')
                     ;
                 }
 
                 if (in_array($col, $this->getEqualFilterColumns(), true)) {
-                    $qb
+                    $queryBuilder
                         ->{$compare}(sprintf('%s = :%s', $colName, $colParam))
                         ->setParameter($colParam, $value)
                     ;
                 }
 
                 if (in_array($col, $this->getInFilterColumns(), true)) {
-                    $qb
-                        ->{$compare}($qb->expr()->in(sprintf('%s', $colName), (array) $value))
+                    $queryBuilder
+                        ->{$compare}($queryBuilder->expr()->in(sprintf('%s', $colName), (array) $value))
                     ;
                 }
             }
         }
 
-        return $qb;
+        return $queryBuilder;
     }
 
     protected function getColumnParameters($col)

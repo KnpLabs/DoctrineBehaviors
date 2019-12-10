@@ -5,14 +5,14 @@ declare(strict_types=1);
 namespace BehaviorFixtures\ORM;
 
 use Doctrine\ORM\Mapping as ORM;
-use Knp\DoctrineBehaviors\Model;
+use Knp\DoctrineBehaviors\Model\Blameable\Blameable;
 
 /**
  * @ORM\Entity
  */
 class BlameableEntity
 {
-    use Model\Blameable\Blameable;
+    use Blameable;
 
     /**
      * @ORM\Id

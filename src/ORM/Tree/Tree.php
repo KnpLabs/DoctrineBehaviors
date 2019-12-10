@@ -60,13 +60,13 @@ trait Tree
         return $this->buildTree($results);
     }
 
-    public function getTreeExceptNodeAndItsChildrenQB(NodeInterface $entity, $rootAlias = 't')
+    public function getTreeExceptNodeAndItsChildrenQB(NodeInterface $node, $rootAlias = 't')
     {
         return $this->getFlatTreeQB('', $rootAlias)
             ->andWhere($rootAlias . '.materializedPath NOT LIKE :except_path')
             ->andWhere($rootAlias . '.id != :id')
-            ->setParameter('except_path', $entity->getRealMaterializedPath() . '%')
-            ->setParameter('id', $entity->getId())
+            ->setParameter('except_path', $node->getRealMaterializedPath() . '%')
+            ->setParameter('id', $node->getId())
         ;
     }
 
@@ -143,7 +143,7 @@ trait Tree
      *
      * @param array        $extraParams
      */
-    protected function addFlatTreeConditions(QueryBuilder $qb, $extraParams): void
+    protected function addFlatTreeConditions(QueryBuilder $queryBuilder, $extraParams): void
     {
     }
 }

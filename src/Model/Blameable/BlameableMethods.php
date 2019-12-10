@@ -8,7 +8,6 @@ trait BlameableMethods
 {
     /**
      * @param mixed $user the user representation
-     * @return $this
      */
     public function setCreatedBy($user)
     {
@@ -19,7 +18,6 @@ trait BlameableMethods
 
     /**
      * @param mixed $user the user representation
-     * @return $this
      */
     public function setUpdatedBy($user)
     {
@@ -30,7 +28,6 @@ trait BlameableMethods
 
     /**
      * @param mixed $user the user representation
-     * @return $this
      */
     public function setDeletedBy($user)
     {

@@ -48,11 +48,6 @@ class FilterableEntity
         return $this->name;
     }
 
-    /**
-     * Set name.
-     *
-     * @param the $name value to set.
-     */
     public function setName($name): void
     {
         $this->name = $name;

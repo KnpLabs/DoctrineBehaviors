@@ -115,7 +115,7 @@ class PointType extends Type
 
     /**
      * @param string                                    $sqlExpr
-     * @param \Doctrine\DBAL\Platforms\AbstractPlatform $platform
+     * @param AbstractPlatform $platform
      *
      * @return string
      */

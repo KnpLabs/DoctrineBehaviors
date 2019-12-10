@@ -11,9 +11,9 @@ use Symfony\Component\DependencyInjection\Loader\YamlFileLoader;
 
 class DoctrineBehaviorsExtension extends Extension
 {
-    public function load(array $configs, ContainerBuilder $container): void
+    public function load(array $configs, ContainerBuilder $containerBuilder): void
     {
-        $loader = new YamlFileLoader($container, new FileLocator(__DIR__ . '/../../../config'));
+        $loader = new YamlFileLoader($containerBuilder, new FileLocator(__DIR__ . '/../../../config'));
         $loader->load('orm-services.yml');
 
         $configuration = new Configuration();
@@ -25,7 +25,7 @@ class DoctrineBehaviorsExtension extends Extension
 
         foreach ($config as $behavior => $enabled) {
             if (! $enabled) {
-                $container->removeDefinition(sprintf('knp.doctrine_behaviors.%s_subscriber', $behavior));
+                $containerBuilder->removeDefinition(sprintf('knp.doctrine_behaviors.%s_subscriber', $behavior));
             }
         }
     }

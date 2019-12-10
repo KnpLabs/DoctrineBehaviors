@@ -3,12 +3,28 @@ parameters:
         - 'psr12'
         - 'php70'
         - 'php71'
-#        - 'symplify'
+        - 'symplify'
         - 'common'
         - 'clean-code'
 
     skip:
         PhpCsFixer\Fixer\Operator\UnaryOperatorSpacesFixer: null
+        Symplify\CodingStandard\Sniffs\ControlStructure\SprintfOverContactSniff: null
+        Symplify\CodingStandard\Sniffs\Naming\TraitNameSniff: null
+        Symplify\CodingStandard\Sniffs\CleanCode\ForbiddenStaticFunctionSniff: null
+        Symplify\CodingStandard\Sniffs\CleanCode\CognitiveComplexitySniff: null
+        Symplify\CodingStandard\Sniffs\CleanCode\ForbiddenReferenceSniff: null
+        Symplify\CodingStandard\Sniffs\Architecture\ExplicitExceptionSniff: null
+        Symplify\CodingStandard\Sniffs\Architecture\DuplicatedClassShortNameSniff: null
+
+        # buggy
+        Symplify\CodingStandard\Fixer\ControlStructure\PregDelimiterFixer: null
+
+        SlevomatCodingStandard\Sniffs\Namespaces\ReferenceUsedNamesOnlySniff.PartialUse:
+            - 'tests/Fixtures/BehaviorFixtures/ORM/FilterableRepository.php'
+
+        SlevomatCodingStandard\Sniffs\Namespaces\ReferenceUsedNamesOnlySniff.ReferenceViaFullyQualifiedName:
+            - 'src/Model/Sluggable/Transliterator.php'
 
 services:
     # see single LICENSE.txt file in the root directory

@@ -4,6 +4,8 @@ declare(strict_types=1);
 
 namespace Knp\DoctrineBehaviors\Model\Sluggable;
 
+use UnexpectedValueException;
+
 trait SluggableMethods
 {
     /**
@@ -17,7 +19,6 @@ trait SluggableMethods
      * Sets the entity's slug.
      *
      * @param $slug
-     * @return $this
      */
     public function setSlug($slug)
     {
@@ -98,8 +99,11 @@ trait SluggableMethods
         }
 
         if (count($usableValues) < 1) {
-            throw new \UnexpectedValueException(
-                'Sluggable expects to have at least one usable (non-empty) field from the following: [ ' . implode(array_keys($values), ',') . ' ]'
+            throw new UnexpectedValueException(
+                'Sluggable expects to have at least one usable (non-empty) field from the following: [ ' . implode(
+                    array_keys($values),
+                    ','
+                ) . ' ]'
             );
         }
 
@@ -109,7 +113,9 @@ trait SluggableMethods
         $transliterator = new Transliterator();
         $sluggableText = $transliterator->transliterate($sluggableText, $this->getSlugDelimiter());
 
-        $urlized = strtolower(trim(preg_replace("/[^a-zA-Z0-9\/_|+ -]/", '', $sluggableText), $this->getSlugDelimiter()));
+        $urlized = strtolower(
+            trim(preg_replace("/[^a-zA-Z0-9\/_|+ -]/", '', $sluggableText), $this->getSlugDelimiter())
+        );
         return preg_replace("/[\/_|+ -]+/", $this->getSlugDelimiter(), $urlized);
     }
 }

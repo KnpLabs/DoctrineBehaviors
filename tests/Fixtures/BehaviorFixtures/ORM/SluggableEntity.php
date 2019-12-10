@@ -4,15 +4,16 @@ declare(strict_types=1);
 
 namespace BehaviorFixtures\ORM;
 
+use DateTime;
 use Doctrine\ORM\Mapping as ORM;
-use Knp\DoctrineBehaviors\Model;
+use Knp\DoctrineBehaviors\Model\Sluggable\Sluggable;
 
 /**
  * @ORM\Entity
  */
 class SluggableEntity
 {
-    use Model\Sluggable\Sluggable;
+    use Sluggable;
 
     /**
      * @ORM\Column(type="string")
@@ -33,7 +34,7 @@ class SluggableEntity
 
     public function __construct()
     {
-        $this->date = (new \DateTime())->modify('-1 year');
+        $this->date = (new DateTime())->modify('-1 year');
     }
 
     /**

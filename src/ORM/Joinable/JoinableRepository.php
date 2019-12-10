@@ -8,37 +8,41 @@ use Doctrine\ORM\QueryBuilder;
 
 trait JoinableRepository
 {
-    public function getJoinAllQueryBuilder($alias = null, ?QueryBuilder $qb = null)
+    public function getJoinAllQueryBuilder($alias = null, ?QueryBuilder $queryBuilder = null)
     {
         if ($alias === null) {
             $alias = $this->getAlias($this->getClassName());
         }
 
-        if ($qb === null) {
-            $qb = $this->createQueryBuilder($alias);
+        if ($queryBuilder === null) {
+            $queryBuilder = $this->createQueryBuilder($alias);
         }
 
         $className = $this->getClassName();
 
-        $this->addJoinsToQueryBuilder($alias, $qb, $className);
+        $this->addJoinsToQueryBuilder($alias, $queryBuilder, $className);
 
-        return $qb;
+        return $queryBuilder;
     }
 
-    private function addJoinsToQueryBuilder($alias, QueryBuilder $qb, $className, $recursive = true): void
+    private function addJoinsToQueryBuilder($alias, QueryBuilder $queryBuilder, $className, $recursive = true): void
     {
         foreach ($this->getEntityManager()->getClassMetadata($className)->getAssociationMappings() as $assoc) {
-            if (in_array($assoc['targetEntity'], $qb->getRootEntities(), true) || $className === $assoc['targetEntity']) {
+            if (in_array(
+                $assoc['targetEntity'],
+                $queryBuilder->getRootEntities(),
+                true
+            ) || $className === $assoc['targetEntity']) {
                 continue;
             }
 
-            $uniqueJoinAlias = $this->getUniqueAlias($assoc['targetEntity'], $qb);
-            $qb
+            $uniqueJoinAlias = $this->getUniqueAlias($assoc['targetEntity'], $queryBuilder);
+            $queryBuilder
                 ->addSelect($uniqueJoinAlias)
                 ->leftJoin(sprintf('%s.%s', $alias, $assoc['fieldName']), $uniqueJoinAlias)
             ;
             if ($recursive) {
-                $this->addJoinsToQueryBuilder($uniqueJoinAlias, $qb, $assoc['targetEntity']);
+                $this->addJoinsToQueryBuilder($uniqueJoinAlias, $queryBuilder, $assoc['targetEntity']);
             }
         }
     }
@@ -49,13 +53,13 @@ trait JoinableRepository
         return strtolower(substr($shortName, 0, 1));
     }
 
-    private function getUniqueAlias($className, QueryBuilder $qb)
+    private function getUniqueAlias($className, QueryBuilder $queryBuilder)
     {
         $alias = $this->getAlias($className);
 
         $i = 1;
         $firstAlias = $alias;
-        while ($this->aliasExists($alias, $qb)) {
+        while ($this->aliasExists($alias, $queryBuilder)) {
             $alias = $firstAlias . $i;
             $i++;
         }
@@ -63,16 +67,16 @@ trait JoinableRepository
         return $alias;
     }
 
-    private function aliasExists($alias, QueryBuilder $qb)
+    private function aliasExists($alias, QueryBuilder $queryBuilder)
     {
         $aliases = [];
-        foreach ($qb->getDqlPart('join') as $joins) {
+        foreach ($queryBuilder->getDqlPart('join') as $joins) {
             foreach ($joins as $join) {
                 $aliases[] = $join->getAlias();
             }
         }
 
-        $aliases[] = $qb->getRootAlias();
+        $aliases[] = $queryBuilder->getRootAlias();
 
         return in_array($alias, $aliases, true);
     }

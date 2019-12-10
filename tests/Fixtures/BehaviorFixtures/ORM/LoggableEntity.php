@@ -5,14 +5,24 @@ declare(strict_types=1);
 namespace BehaviorFixtures\ORM;
 
 use Doctrine\ORM\Mapping as ORM;
-use Knp\DoctrineBehaviors\Model;
+use Knp\DoctrineBehaviors\Model\Loggable\Loggable;
 
 /**
  * @ORM\Entity
  */
 class LoggableEntity
 {
-    use Model\Loggable\Loggable;
+    use Loggable;
+
+    /**
+     * @ORM\Column(type="array", nullable=true)
+     */
+    private $roles;
+
+    /**
+     * @ORM\Column(type="date", nullable=true)
+     */
+    private $date;
 
     /**
      * @ORM\Id
@@ -27,16 +37,6 @@ class LoggableEntity
      * @var string
      */
     private $title;
-
-    /**
-     * @ORM\Column(type="array", nullable=true)
-     */
-    private $roles;
-
-    /**
-     * @ORM\Column(type="date", nullable=true)
-     */
-    private $date;
 
     public function getId(): int
     {

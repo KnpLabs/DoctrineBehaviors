@@ -30,8 +30,6 @@ trait TranslatableMethods
      * Adds new translation.
      *
      * @param Translation $translation The translation
-     *
-     * @return $this
      */
     public function addTranslation($translation)
     {
@@ -88,9 +86,6 @@ trait TranslatableMethods
         $this->currentLocale = $locale;
     }
 
-    /**
-     * @return Returns the current locale
-     */
     public function getCurrentLocale()
     {
         return $this->currentLocale ?: $this->getDefaultLocale();
@@ -104,9 +99,6 @@ trait TranslatableMethods
         $this->defaultLocale = $locale;
     }
 
-    /**
-     * @return Returns the default locale
-     */
     public function getDefaultLocale()
     {
         return $this->defaultLocale;
@@ -179,10 +171,7 @@ trait TranslatableMethods
      */
     protected function proxyCurrentLocaleTranslation($method, array $arguments = [])
     {
-        return call_user_func_array(
-            [$this->translate($this->getCurrentLocale()), $method],
-            $arguments
-        );
+        return call_user_func_array([$this->translate($this->getCurrentLocale()), $method], $arguments);
     }
 
     /**

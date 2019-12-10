@@ -4,12 +4,16 @@ declare(strict_types=1);
 
 namespace Tests\Knp\DoctrineBehaviors\ORM;
 
+use BehaviorFixtures\ORM\LoggableEntity;
+use DateTime;
 use Doctrine\Common\EventManager;
+use Knp\DoctrineBehaviors\ORM\Loggable\LoggableSubscriber;
 use Knp\DoctrineBehaviors\Reflection\ClassAnalyzer;
+use PHPUnit\Framework\TestCase;
 
-require_once 'EntityManagerProvider.php';
+require_once __DIR__ . '/EntityManagerProvider.php';
 
-class LoggableTest extends \PHPUnit\Framework\TestCase
+class LoggableTest extends TestCase
 {
     use EntityManagerProvider;
 
@@ -22,22 +26,19 @@ class LoggableTest extends \PHPUnit\Framework\TestCase
      */
     public function testShouldLogChangesetMessageWhenCreated($field, $value, $expected): void
     {
-        $em = $this->getEntityManager($this->getEventManager());
+        $entityManager = $this->getEntityManager($this->getEventManager());
 
-        $entity = new \BehaviorFixtures\ORM\LoggableEntity();
+        $entity = new LoggableEntity();
 
         $set = 'set' . ucfirst($field);
 
         $entity->{$set}($value);
 
-        $em->persist($entity);
-        $em->flush();
+        $entityManager->persist($entity);
+        $entityManager->flush();
 
         $this->assertCount(2, $this->logs);
-        $this->assertSame(
-            $this->logs[0],
-            'BehaviorFixtures\ORM\LoggableEntity #1 created'
-        );
+        $this->assertSame($this->logs[0], 'BehaviorFixtures\ORM\LoggableEntity #1 created');
 
         $this->assertSame(
             $this->logs[1],
@@ -50,17 +51,17 @@ class LoggableTest extends \PHPUnit\Framework\TestCase
      */
     public function testShouldLogChangesetMessageWhenUpdated($field, $value, $expected): void
     {
-        $em = $this->getEntityManager($this->getEventManager());
+        $entityManager = $this->getEntityManager($this->getEventManager());
 
-        $entity = new \BehaviorFixtures\ORM\LoggableEntity();
+        $entity = new LoggableEntity();
 
-        $em->persist($entity);
-        $em->flush();
+        $entityManager->persist($entity);
+        $entityManager->flush();
 
         $set = 'set' . ucfirst($field);
 
         $entity->{$set}($value);
-        $em->flush();
+        $entityManager->flush();
 
         $this->assertCount(3, $this->logs);
         $this->assertSame(
@@ -71,75 +72,62 @@ class LoggableTest extends \PHPUnit\Framework\TestCase
 
     public function testShouldNotLogChangesetMessageWhenNoChange(): void
     {
-        $em = $this->getEntityManager($this->getEventManager());
+        $entityManager = $this->getEntityManager($this->getEventManager());
 
-        $entity = new \BehaviorFixtures\ORM\LoggableEntity();
+        $entity = new LoggableEntity();
 
-        $em->persist($entity);
-        $em->flush();
+        $entityManager->persist($entity);
+        $entityManager->flush();
 
         $entity->setTitle('test2');
         $entity->setTitle(null);
-        $em->flush();
+        $entityManager->flush();
 
         $this->assertCount(2, $this->logs);
     }
 
     public function testShouldLogRemovalMessageWhenDeleted(): void
     {
-        $em = $this->getEntityManager($this->getEventManager());
+        $entityManager = $this->getEntityManager($this->getEventManager());
 
-        $entity = new \BehaviorFixtures\ORM\LoggableEntity();
+        $entity = new LoggableEntity();
 
-        $em->persist($entity);
-        $em->flush();
+        $entityManager->persist($entity);
+        $entityManager->flush();
 
-        $em->remove($entity);
-        $em->flush();
+        $entityManager->remove($entity);
+        $entityManager->flush();
 
         $this->assertCount(3, $this->logs);
-        $this->assertSame(
-            $this->logs[2],
-            'BehaviorFixtures\ORM\LoggableEntity #1 removed'
-        );
+        $this->assertSame($this->logs[2], 'BehaviorFixtures\ORM\LoggableEntity #1 removed');
     }
 
     public function dataProviderValues()
     {
         return [
-            [
-                'title', 'test', 'test',
-            ],
+            ['title', 'test', 'test'],
             [
                 'roles', ['x' => 'y'], 'an array',
             ],
-            [
-                'date', new \DateTime('2014-02-02 12:20:30.000010'), '2014-02-02 12:20:30.000010',
-            ],
+            ['date', new DateTime('2014-02-02 12:20:30.000010'), '2014-02-02 12:20:30.000010'],
         ];
     }
 
     protected function getUsedEntityFixtures()
     {
-        return [
-            'BehaviorFixtures\\ORM\\LoggableEntity',
-        ];
+        return [LoggableEntity::class];
     }
 
-    protected function getEventManager()
+    protected function getEventManager(): EventManager
     {
-        $em = new EventManager();
+        $eventManager = new EventManager();
         $loggerCallback = function ($message): void {
             $this->logs[] = $message;
         };
-        $this->subscriber = new \Knp\DoctrineBehaviors\ORM\Loggable\LoggableSubscriber(
-            new ClassAnalyzer(),
-            false,
-            $loggerCallback
-        );
+        $this->subscriber = new LoggableSubscriber(new ClassAnalyzer(), false, $loggerCallback);
 
-        $em->addEventSubscriber($this->subscriber);
+        $eventManager->addEventSubscriber($this->subscriber);
 
-        return $em;
+        return $eventManager;
     }
 }

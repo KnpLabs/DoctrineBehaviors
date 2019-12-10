@@ -7,11 +7,15 @@ namespace Tests\Knp\DoctrineBehaviors\ORM;
 use Doctrine\Common\EventManager;
 use Doctrine\ORM\Configuration;
 use Doctrine\ORM\EntityManager;
+use Doctrine\ORM\EntityRepository;
+use Doctrine\ORM\Mapping\ClassMetadataFactory;
 use Doctrine\ORM\Mapping\DefaultQuoteStrategy;
 use Doctrine\ORM\Mapping\Driver\AnnotationDriver;
+use Doctrine\ORM\Mapping\Driver\Driver;
 use Doctrine\ORM\Repository\DefaultRepositoryFactory;
 use Doctrine\ORM\Tools\SchemaTool;
 use PHPUnit\Framework\MockObject\MockBuilder;
+use ReflectionClass;
 
 /**
  * @property-read $this \PHPUnit\Framework\TestCase
@@ -27,11 +31,14 @@ trait EntityManagerProvider
      * annotation mapping driver and pdo_sqlite
      * database in memory
      *
-     * @param  EventManager  $evm
+     * @param  EventManager  $eventManager
      * @return EntityManager
      */
-    protected function getEntityManager(?EventManager $evm = null, ?Configuration $config = null, array $conn = [])
-    {
+    protected function getEntityManager(
+        ?EventManager $eventManager = null,
+        ?Configuration $configuration = null,
+        array $conn = []
+    ) {
         if ($this->em !== null) {
             return $this->em;
         }
@@ -41,18 +48,18 @@ trait EntityManagerProvider
             'memory' => true,
         ], $conn);
 
-        $config = $config === null ? $this->getAnnotatedConfig() : $config;
-        $em = EntityManager::create($conn, $config, $evm ?: $this->getEventManager());
+        $configuration = $configuration === null ? $this->getAnnotatedConfig() : $configuration;
+        $entityManager = EntityManager::create($conn, $configuration, $eventManager ?: $this->getEventManager());
 
-        $schema = array_map(function ($class) use ($em) {
-            return $em->getClassMetadata($class);
+        $schema = array_map(function ($class) use ($entityManager) {
+            return $entityManager->getClassMetadata($class);
         }, (array) $this->getUsedEntityFixtures());
 
-        $schemaTool = new SchemaTool($em);
+        $schemaTool = new SchemaTool($entityManager);
         $schemaTool->dropSchema($schema);
         $schemaTool->createSchema($schema);
 
-        return $this->em = $em;
+        return $this->em = $entityManager;
     }
 
     /**
@@ -60,10 +67,8 @@ trait EntityManagerProvider
      * annotation mapping driver and engine given
      * by DB_ENGINE (pdo_mysql or pdo_pgsql)
      * database in memory
-     *
-     * @return \Doctrine\ORM\EntityManager
      */
-    protected function getDBEngineEntityManager()
+    protected function getDBEngineEntityManager(): EntityManager
     {
         if (DB_ENGINE === 'pgsql') {
             return $this->getEntityManager(
@@ -91,23 +96,22 @@ trait EntityManagerProvider
             );
     }
 
-    /**
-     * Get annotation mapping configuration
-     *
-     * @return \Doctrine\ORM\Configuration
-     */
-    protected function getAnnotatedConfig()
+    protected function getAnnotatedConfig(): Configuration
     {
         // We need to mock every method except the ones which
         // handle the filters
-        $configurationClass = 'Doctrine\ORM\Configuration';
-        $refl = new \ReflectionClass($configurationClass);
+        $configurationClass = Configuration::class;
+        $refl = new ReflectionClass($configurationClass);
         $methods = $refl->getMethods();
 
         $mockMethods = [];
 
         foreach ($methods as $method) {
-            if (! in_array($method->name, ['addFilter', 'getFilterClassName', 'addCustomNumericFunction', 'getCustomNumericFunction'], true)) {
+            if (! in_array(
+                $method->name,
+                ['addFilter', 'getFilterClassName', 'addCustomNumericFunction', 'getCustomNumericFunction'],
+                true
+            )) {
                 $mockMethods[] = $method->name;
             }
         }
@@ -139,7 +143,7 @@ trait EntityManagerProvider
         $config
             ->expects($this->once())
             ->method('getClassMetadataFactoryName')
-            ->will($this->returnValue('Doctrine\\ORM\\Mapping\\ClassMetadataFactory'))
+            ->will($this->returnValue(ClassMetadataFactory::class))
         ;
 
         $mappingDriver = $this->getMetadataDriverImplementation();
@@ -153,10 +157,10 @@ trait EntityManagerProvider
         $config
             ->expects($this->any())
             ->method('getDefaultRepositoryClassName')
-            ->will($this->returnValue('Doctrine\\ORM\\EntityRepository'))
+            ->will($this->returnValue(EntityRepository::class))
         ;
 
-        if (class_exists('Doctrine\ORM\Mapping\DefaultQuoteStrategy')) {
+        if (class_exists(DefaultQuoteStrategy::class)) {
             $config
                 ->expects($this->any())
                 ->method('getQuoteStrategy')
@@ -164,7 +168,7 @@ trait EntityManagerProvider
             ;
         }
 
-        if (class_exists('Doctrine\ORM\Repository\DefaultRepositoryFactory')) {
+        if (class_exists(DefaultRepositoryFactory::class)) {
             $config
                 ->expects($this->any())
                 ->method('getRepositoryFactory')
@@ -181,22 +185,12 @@ trait EntityManagerProvider
         return $config;
     }
 
-    /**
-     * Creates default mapping driver
-     *
-     * @return \Doctrine\ORM\Mapping\Driver\Driver
-     */
-    protected function getMetadataDriverImplementation()
+    protected function getMetadataDriverImplementation(): AnnotationDriver
     {
         return new AnnotationDriver($_ENV['annotation_reader']);
     }
 
-    /**
-     * Build event manager
-     *
-     * @return EventManager
-     */
-    protected function getEventManager()
+    protected function getEventManager(): EventManager
     {
         return new EventManager();
     }
