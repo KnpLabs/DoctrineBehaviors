@@ -13,14 +13,8 @@ declare(strict_types=1);
 
 namespace Knp\DoctrineBehaviors\Model\Translatable;
 
-/**
- * Translation trait.
- *
- * Should be used inside translation entity.
- */
 trait Translation
 {
     use TranslationProperties;
-    use TranslationMethods
-    ;
+    use TranslationMethods;
 }

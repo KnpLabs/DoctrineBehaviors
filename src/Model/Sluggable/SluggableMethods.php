@@ -2,24 +2,13 @@
 
 declare(strict_types=1);
 
-/**
- * @author Lusitanian
- * Freely released with no restrictions, re-license however you'd like!
- */
-
 namespace Knp\DoctrineBehaviors\Model\Sluggable;
 
-/**
- * Sluggable trait.
- *
- * Should be used inside entities for which slugs should automatically be generated on creation for SEO/permalinks.
- */
 trait SluggableMethods
 {
     /**
      * Returns an array of the fields used to generate the slug.
      *
-     * @abstract
      * @return array
      */
     abstract public function getSluggableFields();

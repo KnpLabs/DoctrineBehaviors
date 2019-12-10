@@ -13,14 +13,8 @@ declare(strict_types=1);
 
 namespace Knp\DoctrineBehaviors\Model\Geocodable;
 
-/**
- * Geocodable trait.
- *
- * Should be used inside entity where you need to manipulate geographical information
- */
 trait Geocodable
 {
     use GeocodableProperties;
-    use GeocodableMethods
-    ;
+    use GeocodableMethods;
 }

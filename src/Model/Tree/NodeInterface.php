@@ -9,8 +9,6 @@ use Doctrine\Common\Collections\Collection;
 /**
  * Tree\Node defines a set of needed methods
  * to work with materialized path tree nodes
- *
- * @author     Florian Klein <florian.klein@free.fr>
  */
 interface NodeInterface
 {

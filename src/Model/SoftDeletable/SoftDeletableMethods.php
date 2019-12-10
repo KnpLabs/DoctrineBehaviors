@@ -13,11 +13,6 @@ declare(strict_types=1);
 
 namespace Knp\DoctrineBehaviors\Model\SoftDeletable;
 
-/**
- * SoftDeletable trait.
- *
- * Should be used inside entity, that needs to be self-deleted.
- */
 trait SoftDeletableMethods
 {
     /**

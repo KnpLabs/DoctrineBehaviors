@@ -13,11 +13,6 @@ declare(strict_types=1);
 
 namespace Knp\DoctrineBehaviors\Model\Loggable;
 
-/**
- * Loggable trait.
- *
- * Should be used inside entity where you need to track modifications log
- */
 trait Loggable
 {
     /**

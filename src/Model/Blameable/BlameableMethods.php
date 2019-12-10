@@ -13,11 +13,6 @@ declare(strict_types=1);
 
 namespace Knp\DoctrineBehaviors\Model\Blameable;
 
-/**
- * Blameable trait.
- *
- * Should be used inside entity where you need to track which user created or updated it
- */
 trait BlameableMethods
 {
     /**

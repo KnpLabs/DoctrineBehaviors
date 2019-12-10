@@ -9,3 +9,12 @@ parameters:
 
     skip:
         PhpCsFixer\Fixer\Operator\UnaryOperatorSpacesFixer: null
+
+services:
+    PhpCsFixer\Fixer\Phpdoc\GeneralPhpdocAnnotationRemoveFixer:
+        annotations:
+            - 'author'
+            - 'package'
+            - 'license'
+            - 'link'
+            - 'abstract'

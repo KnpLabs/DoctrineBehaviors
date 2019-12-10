@@ -15,11 +15,6 @@ namespace Knp\DoctrineBehaviors\Model\Geocodable;
 
 use Knp\DoctrineBehaviors\ORM\Geocodable\Type\Point;
 
-/**
- * Geocodable trait.
- *
- * Should be used inside entity where you need to manipulate geographical information
- */
 trait GeocodableMethods
 {
     /**

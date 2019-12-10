@@ -13,16 +13,9 @@ declare(strict_types=1);
 
 namespace Knp\DoctrineBehaviors\Model\Translatable;
 
-/**
- * Translation trait.
- *
- * Should be used inside translation entity.
- */
 trait TranslationMethods
 {
     /**
-     * Returns the translatable entity class name.
-     *
      * @return string
      */
     public static function getTranslatableEntityClass()
@@ -31,9 +24,6 @@ trait TranslationMethods
         return substr(self::class, 0, -11);
     }
 
-    /**
-     * Returns object id.
-     */
     public function getId()
     {
         return $this->id;

@@ -15,16 +15,9 @@ namespace Knp\DoctrineBehaviors\Model\Translatable;
 
 use Doctrine\Common\Collections\ArrayCollection;
 
-/**
- * Translatable trait.
- *
- * Should be used inside entity, that needs to be translated.
- */
 trait TranslatableMethods
 {
     /**
-     * Returns collection of translations.
-     *
      * @return ArrayCollection
      */
     public function getTranslations()
