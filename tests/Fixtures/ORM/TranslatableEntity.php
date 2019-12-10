@@ -18,6 +18,7 @@ class TranslatableEntity
      * @ORM\Id
      * @ORM\Column(type="integer")
      * @ORM\GeneratedValue(strategy="AUTO")
+     * @var int
      */
     private $id;
 
@@ -26,12 +27,7 @@ class TranslatableEntity
         return $this->proxyCurrentLocaleTranslation($method, $arguments);
     }
 
-    /**
-     * Returns object id.
-     *
-     * @return integer
-     */
-    public function getId()
+    public function getId(): int
     {
         return $this->id;
     }

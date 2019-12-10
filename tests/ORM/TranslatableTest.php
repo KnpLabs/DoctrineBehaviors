@@ -241,11 +241,8 @@ final class TranslatableTest extends TestCase
 
     /**
      * Asserts that the one to many relationship between translatable and translations is mapped correctly.
-     *
-     * @param string $translatableClass The class name of the translatable entity
-     * @param string $translationClass  The class name of the translation entity
      */
-    private function assertTranslationsOneToManyMapped($translatableClass, $translationClass): void
+    private function assertTranslationsOneToManyMapped(string $translatableClass, string $translationClass): void
     {
         $entityManager = $this->getEntityManager();
 

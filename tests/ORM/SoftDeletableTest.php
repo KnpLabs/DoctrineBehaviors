@@ -9,13 +9,14 @@ use Doctrine\Common\EventManager;
 use Knp\DoctrineBehaviors\Model\SoftDeletable\SoftDeletable;
 use Knp\DoctrineBehaviors\ORM\SoftDeletable\SoftDeletableSubscriber;
 use Knp\DoctrineBehaviors\Reflection\ClassAnalyzer;
+use Knp\DoctrineBehaviors\Tests\AbstractEntityManagerTestCase;
 use Knp\DoctrineBehaviors\Tests\Fixtures\ORM\DeletableEntity;
 use Knp\DoctrineBehaviors\Tests\Fixtures\ORM\DeletableEntityInherit;
 use PHPUnit\Framework\TestCase;
 
 require_once __DIR__ . '/EntityManagerProvider.php';
 
-final class SoftDeletableTest extends TestCase
+final class SoftDeletableTest extends AbstractEntityManagerTestCase
 {
     use EntityManagerProvider;
 
