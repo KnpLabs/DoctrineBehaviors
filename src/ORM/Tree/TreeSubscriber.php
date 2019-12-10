@@ -8,7 +8,6 @@ use Doctrine\ORM\Event\LoadClassMetadataEventArgs;
 use Doctrine\ORM\Events;
 use Doctrine\ORM\Mapping\ClassMetadata;
 use Knp\DoctrineBehaviors\ORM\AbstractSubscriber;
-use Knp\DoctrineBehaviors\Reflection\ClassAnalyzer;
 
 final class TreeSubscriber extends AbstractSubscriber
 {
@@ -17,9 +16,9 @@ final class TreeSubscriber extends AbstractSubscriber
      */
     private $nodeTrait;
 
-    public function __construct(ClassAnalyzer $classAnalyzer, bool $isRecursive, string $nodeTrait)
+    public function __construct(bool $isRecursive, string $nodeTrait)
     {
-        parent::__construct($classAnalyzer, $isRecursive);
+        parent::__construct($isRecursive);
 
         $this->nodeTrait = $nodeTrait;
     }

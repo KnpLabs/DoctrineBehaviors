@@ -9,7 +9,6 @@ use Doctrine\ORM\Event\LoadClassMetadataEventArgs;
 use Doctrine\ORM\Events;
 use Doctrine\ORM\Mapping\ClassMetadata;
 use Knp\DoctrineBehaviors\ORM\AbstractSubscriber;
-use Knp\DoctrineBehaviors\Reflection\ClassAnalyzer;
 
 final class SluggableSubscriber extends AbstractSubscriber
 {
@@ -18,9 +17,9 @@ final class SluggableSubscriber extends AbstractSubscriber
      */
     private $sluggableTrait;
 
-    public function __construct(ClassAnalyzer $classAnalyzer, bool $isRecursive, string $sluggableTrait)
+    public function __construct(bool $isRecursive, string $sluggableTrait)
     {
-        parent::__construct($classAnalyzer, $isRecursive);
+        parent::__construct($isRecursive);
 
         $this->sluggableTrait = $sluggableTrait;
     }

@@ -19,7 +19,6 @@ use Doctrine\ORM\Mapping\ClassMetadata;
 use Doctrine\ORM\Mapping\ClassMetadataInfo;
 use Doctrine\ORM\ORMException;
 use Knp\DoctrineBehaviors\ORM\AbstractSubscriber;
-use Knp\DoctrineBehaviors\Reflection\ClassAnalyzer;
 
 final class TranslatableSubscriber extends AbstractSubscriber
 {
@@ -48,7 +47,6 @@ final class TranslatableSubscriber extends AbstractSubscriber
     private $translationFetchMode;
 
     public function __construct(
-        ClassAnalyzer $classAnalyzer,
         ?callable $currentLocaleCallable = null,
         ?callable $defaultLocaleCallable = null,
         string $translatableTrait,
@@ -57,7 +55,7 @@ final class TranslatableSubscriber extends AbstractSubscriber
         $translationFetchMode,
         $isRecursive
     ) {
-        parent::__construct($classAnalyzer, $isRecursive);
+        parent::__construct($isRecursive);
 
         $this->currentLocaleCallable = $currentLocaleCallable;
         $this->defaultLocaleCallable = $defaultLocaleCallable;

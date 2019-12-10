@@ -16,21 +16,11 @@ final class DoctrineBehaviorsExtension extends Extension
         $loader = new YamlFileLoader($containerBuilder, new FileLocator(__DIR__ . '/../../../config'));
         $loader->load('orm-services.yml');
 
-        $configuration = new Configuration();
-        $config = $this->processConfiguration($configuration, $configs);
-
-        // Don't rename in Configuration for BC reasons
-        $config['softdeletable'] = $config['soft_deletable'];
-        unset($config['soft_deletable']);
-
-        foreach ($config as $behavior => $enabled) {
-            if (! $enabled) {
-                $containerBuilder->removeDefinition(sprintf('knp.doctrine_behaviors.%s_subscriber', $behavior));
-            }
-        }
+        $containerBuilder->registerForAutoconfiguration(\Doctrine\Common\EventSubscriber::class)
+            ->addTag('');
     }
 
-    public function getAlias()
+    public function getAlias(): string
     {
         return 'knp_doctrine_behaviors';
     }

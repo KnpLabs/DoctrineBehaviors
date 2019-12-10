@@ -8,7 +8,6 @@ use Doctrine\ORM\Event\LoadClassMetadataEventArgs;
 use Doctrine\ORM\Events;
 use Doctrine\ORM\Mapping\ClassMetadata;
 use Knp\DoctrineBehaviors\ORM\AbstractSubscriber;
-use Knp\DoctrineBehaviors\Reflection\ClassAnalyzer;
 
 final class TimestampableSubscriber extends AbstractSubscriber
 {
@@ -19,13 +18,9 @@ final class TimestampableSubscriber extends AbstractSubscriber
      */
     private $timestampableTrait;
 
-    public function __construct(
-        ClassAnalyzer $classAnalyzer,
-        bool $isRecursive,
-        string $timestampableTrait,
-        $dbFieldType
-    ) {
-        parent::__construct($classAnalyzer, $isRecursive);
+    public function __construct(bool $isRecursive, string $timestampableTrait, $dbFieldType)
+    {
+        parent::__construct($isRecursive);
 
         $this->timestampableTrait = $timestampableTrait;
         $this->dbFieldType = $dbFieldType;

@@ -1,0 +1,11 @@
+doctrine:
+    dbal:
+        dbname: "orm_behaviors_test"
+        host: "localhost"
+        user: null
+        password: null
+        driver: "pdo_pgsql"
+
+    # creates Doctrine\ORM\EntityManager services
+    orm:
+        auto_mapping: true

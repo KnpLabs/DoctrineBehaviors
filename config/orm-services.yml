@@ -7,7 +7,6 @@ parameters:
     knp.doctrine_behaviors.translatable_subscriber.translation_trait: Knp\DoctrineBehaviors\Model\Translatable\Translation
     knp.doctrine_behaviors.translatable_subscriber.translatable_fetch_method: LAZY
     knp.doctrine_behaviors.translatable_subscriber.translation_fetch_method: LAZY
-    knp.doctrine_behaviors.translatable_subscriber.is_recursive: false
 
     knp.doctrine_behaviors.softdeletable_subscriber.softdeletable_trait: Knp\DoctrineBehaviors\Model\SoftDeletable\SoftDeletable
     knp.doctrine_behaviors.timestampable_subscriber.timestampable_trait: Knp\DoctrineBehaviors\Model\Timestampable\Timestampable
@@ -24,7 +23,8 @@ services:
         public: true
         autowire: true
         bind:
-            $loggerCallable: Knp\DoctrineBehaviors\ORM\Loggable\LoggerCallable
+            $loggerCallable: '@Knp\DoctrineBehaviors\ORM\Loggable\LoggerCallable'
+            $isRecursive: "%knp.doctrine_behaviors.reflection.is_recursive%"
 
     Knp\DoctrineBehaviors\Reflection\ClassAnalyzer: ~
 
@@ -34,9 +34,6 @@ services:
             $translationTrait: "%knp.doctrine_behaviors.translatable_subscriber.translation_trait%"
             $translatableFetchMode: "%knp.doctrine_behaviors.translatable_subscriber.translatable_fetch_method%"
             $translationFetchMode: "%knp.doctrine_behaviors.translatable_subscriber.translation_fetch_method%"
-            $isRecursive: "%knp.doctrine_behaviors.translatable_subscriber.is_recursive%"
-        tags:
-            - { name: doctrine.event_subscriber }
 
     Knp\DoctrineBehaviors\ORM\Translatable\CurrentLocaleCallable: null
 
@@ -46,63 +43,37 @@ services:
 
     Knp\DoctrineBehaviors\ORM\SoftDeletable\SoftDeletableSubscriber:
         arguments:
-            $isRecursive: "%knp.doctrine_behaviors.reflection.is_recursive%"
             $softDeletableTrait: "%knp.doctrine_behaviors.softdeletable_subscriber.softdeletable_trait%"
-        tags:
-            - { name: doctrine.event_subscriber }
 
     Knp\DoctrineBehaviors\ORM\Timestampable\TimestampableSubscriber:
         arguments:
-            $isRecursive: "%knp.doctrine_behaviors.reflection.is_recursive%"
             $timestampableTrait: "%knp.doctrine_behaviors.timestampable_subscriber.timestampable_trait%"
             $dbFieldType: "%knp.doctrine_behaviors.timestampable_subscriber.db_field_type%"
-        tags:
-            - { name: doctrine.event_subscriber }
 
     Knp\DoctrineBehaviors\ORM\Tree\TreeSubscriber:
         arguments:
-            $isRecursive: "%knp.doctrine_behaviors.reflection.is_recursive%"
             $nodeTrait: "%knp.doctrine_behaviors.tree_subscriber.tree_trait%"
-        tags:
-            - { name: doctrine.event_subscriber }
 
     Knp\DoctrineBehaviors\ORM\Sortable\SortableSubscriber:
         arguments:
-            $isRecursive: "%knp.doctrine_behaviors.reflection.is_recursive%"
             $sortableTrait: "%knp.doctrine_behaviors.sortable_subscriber.sortable_trait%"
-        tags:
-            - { name: doctrine.event_subscriber }
 
     Knp\DoctrineBehaviors\ORM\Blameable\BlameableSubscriber:
         arguments:
-            $isRecursive: "%knp.doctrine_behaviors.reflection.is_recursive%"
             $blameableTrait: "%knp.doctrine_behaviors.blameable_subscriber.blameable_trait%"
             $userEntity: "%knp.doctrine_behaviors.blameable_subscriber.user_entity%"
-        tags:
-            - { name: doctrine.event_subscriber }
 
     Knp\DoctrineBehaviors\ORM\Blameable\UserCallable:
         arguments:
             - "@service_container" # because of circular dep
 
-    Knp\DoctrineBehaviors\ORM\Loggable\LoggableSubscriber:
-        arguments:
-            $isRecursive: "%knp.doctrine_behaviors.reflection.is_recursive%"
-        tags:
-            - { name: doctrine.event_subscriber }
-
-    Knp\DoctrineBehaviors\ORM\Loggable\LoggerCallable: ~
+    Knp\DoctrineBehaviors\ORM\Loggable\LoggableSubscriber: null
+    Knp\DoctrineBehaviors\ORM\Loggable\LoggerCallable: null
 
     Knp\DoctrineBehaviors\ORM\Geocodable\GeocodableSubscriber:
         arguments:
-            $isRecursive: "%knp.doctrine_behaviors.reflection.is_recursive%"
             $geocodableTrait: "%knp.doctrine_behaviors.geocodable_subscriber.geocodable_trait%"
-        tags:
-            - { name: doctrine.event_subscriber }
 
     Knp\DoctrineBehaviors\ORM\Sluggable\SluggableSubscriber:
         arguments:
-            $isRecursive: "%knp.doctrine_behaviors.reflection.is_recursive%"
             $sluggableTrait: "%knp.doctrine_behaviors.sluggable_subscriber.sluggable_trait%"
-        tags:
-            - { name: doctrine.event_subscriber }

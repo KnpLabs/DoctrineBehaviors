@@ -9,7 +9,6 @@ use Doctrine\ORM\Event\LoadClassMetadataEventArgs;
 use Doctrine\ORM\Event\OnFlushEventArgs;
 use Doctrine\ORM\Events;
 use Knp\DoctrineBehaviors\ORM\AbstractSubscriber;
-use Knp\DoctrineBehaviors\Reflection\ClassAnalyzer;
 
 final class SoftDeletableSubscriber extends AbstractSubscriber
 {
@@ -18,9 +17,9 @@ final class SoftDeletableSubscriber extends AbstractSubscriber
      */
     private $softDeletableTrait;
 
-    public function __construct(ClassAnalyzer $classAnalyzer, bool $isRecursive, string $softDeletableTrait)
+    public function __construct(bool $isRecursive, string $softDeletableTrait)
     {
-        parent::__construct($classAnalyzer, $isRecursive);
+        parent::__construct($isRecursive);
 
         $this->softDeletableTrait = $softDeletableTrait;
     }

@@ -32,5 +32,6 @@ final class DoctrineBehaviorsKernel extends Kernel
 
     public function registerContainerConfiguration(LoaderInterface $loader): void
     {
+        $loader->load(__DIR__ . '/../config/config_pgsql.yaml');
     }
 }

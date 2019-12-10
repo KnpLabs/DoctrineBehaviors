@@ -17,21 +17,23 @@ abstract class AbstractSubscriber implements EventSubscriber
     /**
      * @var ClassAnalyzer
      */
-    private $classAnalyzer;
+    protected $classAnalyzer;
 
-    public function __construct(ClassAnalyzer $classAnalyzer, bool $isRecursive)
+    public function __construct(bool $isRecursive)
+    {
+        $this->isRecursive = (bool) $isRecursive;
+    }
+
+    /**
+     * @required
+     */
+    public function autowireAbstractSubscriber(ClassAnalyzer $classAnalyzer): void
     {
         $this->classAnalyzer = $classAnalyzer;
-        $this->isRecursive = (bool) $isRecursive;
     }
 
     /**
      * @return string[]
      */
     abstract public function getSubscribedEvents();
-
-    protected function getClassAnalyzer(): ClassAnalyzer
-    {
-        return $this->classAnalyzer;
-    }
 }

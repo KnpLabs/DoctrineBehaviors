@@ -5,9 +5,7 @@ declare(strict_types=1);
 namespace Knp\DoctrineBehaviors\ORM\Geocodable;
 
 use Doctrine\Common\Persistence\Mapping\ClassMetadata;
-
 use Doctrine\DBAL\Platforms\MySqlPlatform;
-
 use Doctrine\DBAL\Platforms\PostgreSqlPlatform;
 use Doctrine\DBAL\Types\Type;
 use Doctrine\ORM\Event\LifecycleEventArgs;
@@ -17,7 +15,6 @@ use Knp\DoctrineBehaviors\DBAL\Types\PointType;
 use Knp\DoctrineBehaviors\ORM\AbstractSubscriber;
 use Knp\DoctrineBehaviors\ORM\Geocodable\Query\AST\Functions\DistanceFunction;
 use Knp\DoctrineBehaviors\ORM\Geocodable\Type\Point;
-use Knp\DoctrineBehaviors\Reflection\ClassAnalyzer;
 
 final class GeocodableSubscriber extends AbstractSubscriber
 {
@@ -32,12 +29,11 @@ final class GeocodableSubscriber extends AbstractSubscriber
     private $geocodableTrait;
 
     public function __construct(
-        ClassAnalyzer $classAnalyzer,
         bool $isRecursive,
         string $geocodableTrait,
         ?callable $geolocationCallable = null
     ) {
-        parent::__construct($classAnalyzer, $isRecursive);
+        parent::__construct($isRecursive);
 
         $this->geocodableTrait = $geocodableTrait;
         $this->geolocationCallable = $geolocationCallable;

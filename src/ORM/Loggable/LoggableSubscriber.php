@@ -8,7 +8,6 @@ use Doctrine\ORM\Event\LifecycleEventArgs;
 use Doctrine\ORM\Events;
 use Knp\DoctrineBehaviors\Model\Loggable\Loggable;
 use Knp\DoctrineBehaviors\ORM\AbstractSubscriber;
-use Knp\DoctrineBehaviors\Reflection\ClassAnalyzer;
 use ReflectionClass;
 
 final class LoggableSubscriber extends AbstractSubscriber
@@ -18,9 +17,9 @@ final class LoggableSubscriber extends AbstractSubscriber
      */
     private $loggerCallable;
 
-    public function __construct(ClassAnalyzer $classAnalyzer, bool $isRecursive, callable $loggerCallable)
+    public function __construct(bool $isRecursive, callable $loggerCallable)
     {
-        parent::__construct($classAnalyzer, $isRecursive);
+        parent::__construct($isRecursive);
         $this->loggerCallable = $loggerCallable;
     }
 

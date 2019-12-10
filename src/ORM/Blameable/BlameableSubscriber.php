@@ -9,7 +9,6 @@ use Doctrine\ORM\Event\LifecycleEventArgs;
 use Doctrine\ORM\Event\LoadClassMetadataEventArgs;
 use Doctrine\ORM\Events;
 use Knp\DoctrineBehaviors\ORM\AbstractSubscriber;
-use Knp\DoctrineBehaviors\Reflection\ClassAnalyzer;
 
 final class BlameableSubscriber extends AbstractSubscriber
 {
@@ -36,14 +35,9 @@ final class BlameableSubscriber extends AbstractSubscriber
     /**
      * @param string $userEntity
      */
-    public function __construct(
-        ClassAnalyzer $classAnalyzer,
-        $isRecursive,
-        $blameableTrait,
-        ?callable $userCallable = null,
-        $userEntity = null
-    ) {
-        parent::__construct($classAnalyzer, $isRecursive);
+    public function __construct($isRecursive, $blameableTrait, ?callable $userCallable = null, $userEntity = null)
+    {
+        parent::__construct($isRecursive);
 
         $this->blameableTrait = $blameableTrait;
         $this->userCallable = $userCallable;
