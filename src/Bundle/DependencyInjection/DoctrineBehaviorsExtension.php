@@ -12,6 +12,9 @@ use Symfony\Component\DependencyInjection\Loader\YamlFileLoader;
 
 final class DoctrineBehaviorsExtension extends Extension
 {
+    /**
+     * @param string[] $configs
+     */
     public function load(array $configs, ContainerBuilder $containerBuilder): void
     {
         $loader = new YamlFileLoader($containerBuilder, new FileLocator(__DIR__ . '/../../../config'));
@@ -20,10 +23,5 @@ final class DoctrineBehaviorsExtension extends Extension
         // @see https://github.com/doctrine/DoctrineBundle/issues/674
         $containerBuilder->registerForAutoconfiguration(EventSubscriber::class)
             ->addTag('doctrine.event_subscriber');
-    }
-
-    public function getAlias(): string
-    {
-        return 'knp_doctrine_behaviors';
     }
 }
