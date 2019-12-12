@@ -6,10 +6,13 @@ parameters:
     sets:
         - 'dead-code'
         - 'code-quality'
-#        - 'coding-style'
+        - 'coding-style'
 #        - 'nette-utils-code-quality'
 #        - 'type-declaration'
 
     exclude_rectors:
         - 'Rector\DeadCode\Rector\Class_\RemoveUnusedDoctrineEntityMethodAndPropertyRector'
         - 'Rector\SOLID\Rector\ClassMethod\UseInterfaceOverImplementationInConstructorRector'
+
+    exclude_paths:
+        - 'src/Model/Translatable/TranslatableMethodsTrait.php'

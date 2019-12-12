@@ -71,10 +71,10 @@ trait SluggableMethodsTrait
         $sluggableText = Transliterator::transliterate($sluggableText, $this->getSlugDelimiter());
 
         $urlized = strtolower(
-            trim(preg_replace("/[^a-zA-Z0-9\/_|+ -]/", '', $sluggableText), $this->getSlugDelimiter())
+            trim(preg_replace('#[^a-zA-Z0-9\\/_|+ -]#', '', $sluggableText), $this->getSlugDelimiter())
         );
 
-        return preg_replace("/[\/_|+ -]+/", $this->getSlugDelimiter(), $urlized);
+        return preg_replace('#[\\/_|+ -]+#', $this->getSlugDelimiter(), $urlized);
     }
 
     private function ensureAtLeastOneUsableValue(array $values, array $usableValues): void
@@ -85,7 +85,7 @@ trait SluggableMethodsTrait
 
         throw new UnexpectedValueException(sprintf(
             'Sluggable expects to have at least one non-empty field from the following: ["%s"]',
-            implode(array_keys($values), '", "')
+            implode('", "', array_keys($values))
         ));
     }
 
