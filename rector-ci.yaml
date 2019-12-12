@@ -7,8 +7,7 @@ parameters:
         - 'dead-code'
         - 'code-quality'
         - 'coding-style'
-#        - 'nette-utils-code-quality'
-#        - 'type-declaration'
+        - 'nette-utils-code-quality'
 
     exclude_rectors:
         - 'Rector\DeadCode\Rector\Class_\RemoveUnusedDoctrineEntityMethodAndPropertyRector'

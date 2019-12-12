@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace Knp\DoctrineBehaviors\Model\Sluggable;
 
 use Behat\Transliterator\Transliterator;
+use Nette\Utils\Strings;
 use UnexpectedValueException;
 
 trait SluggableMethodsTrait
@@ -71,10 +72,13 @@ trait SluggableMethodsTrait
         $sluggableText = Transliterator::transliterate($sluggableText, $this->getSlugDelimiter());
 
         $urlized = strtolower(
-            trim(preg_replace('#[^a-zA-Z0-9\\/_|+ -]#', '', $sluggableText), $this->getSlugDelimiter())
+            trim(
+                $sluggableText = Strings::replace($sluggableText, '#[^a-zA-Z0-9\\/_|+ -]#', ''),
+                $this->getSlugDelimiter()
+            )
         );
 
-        return preg_replace('#[\\/_|+ -]+#', $this->getSlugDelimiter(), $urlized);
+        return Strings::replace($urlized, '#[\\/_|+ -]+#', $this->getSlugDelimiter());
     }
 
     private function ensureAtLeastOneUsableValue(array $values, array $usableValues): void
