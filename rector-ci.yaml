@@ -4,7 +4,12 @@ parameters:
         - "tests"
 
     sets:
-        - "dead-code"
+        - 'dead-code'
+        - 'code-quality'
+#        - 'coding-style'
+#        - 'nette-utils-code-quality'
+#        - 'type-declaration'
 
     exclude_rectors:
         - 'Rector\DeadCode\Rector\Class_\RemoveUnusedDoctrineEntityMethodAndPropertyRector'
+        - 'Rector\SOLID\Rector\ClassMethod\UseInterfaceOverImplementationInConstructorRector'

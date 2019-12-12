@@ -54,7 +54,7 @@ trait TreeTrait
      */
     public function buildTree(array $results)
     {
-        if (! count($results)) {
+        if (count($results) === 0) {
             return null;
         }
 

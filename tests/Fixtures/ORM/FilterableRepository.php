@@ -4,9 +4,8 @@ declare(strict_types=1);
 
 namespace Knp\DoctrineBehaviors\Tests\Fixtures\ORM;
 
-use Knp\DoctrineBehaviors\ORM\Filterable\FilterableRepositoryTrait;
 use Doctrine\ORM\EntityRepository;
-use Knp\DoctrineBehaviors\ORM\Filterable;
+use Knp\DoctrineBehaviors\ORM\Filterable\FilterableRepositoryTrait;
 
 final class FilterableRepository extends EntityRepository
 {

@@ -40,7 +40,7 @@ final class PointType extends Type
      */
     public function convertToPHPValue($value, AbstractPlatform $platform): ?Point
     {
-        if (! $value) {
+        if ($value === '') {
             return null;
         }
 
@@ -64,11 +64,7 @@ final class PointType extends Type
             return null;
         }
 
-        if ($platform instanceof MySqlPlatform) {
-            $format = 'POINT(%F %F)';
-        } else {
-            $format = '(%F, %F)';
-        }
+        $format = $platform instanceof MySqlPlatform ? 'POINT(%F %F)' : '(%F, %F)';
 
         return sprintf($format, $value->getLatitude(), $value->getLongitude());
     }

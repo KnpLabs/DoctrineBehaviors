@@ -5,7 +5,6 @@ declare(strict_types=1);
 namespace Knp\DoctrineBehaviors\ORM\Translatable;
 
 use Doctrine\Common\EventSubscriber;
-use Doctrine\ORM\EntityManager;
 use Doctrine\ORM\EntityManagerInterface;
 use Doctrine\ORM\Event\LifecycleEventArgs;
 use Doctrine\ORM\Event\LoadClassMetadataEventArgs;
@@ -163,7 +162,7 @@ final class TranslatableSubscriber implements EventSubscriber
             ];
         }
 
-        if (! ($classMetadataInfo->hasField('locale') || $classMetadataInfo->hasAssociation('locale'))) {
+        if (! $classMetadataInfo->hasField('locale') && ! $classMetadataInfo->hasAssociation('locale')) {
             $classMetadataInfo->mapField([
                 'fieldName' => 'locale',
                 'type' => 'string',
