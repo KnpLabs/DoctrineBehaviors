@@ -58,6 +58,10 @@ final class TranslatableSubscriber implements EventSubscriber
     {
         $classMetadata = $loadClassMetadataEventArgs->getClassMetadata();
 
+        if ($classMetadata->isMappedSuperclass) {
+            return;
+        }
+
         if ($this->isTranslatable($classMetadata)) {
             $this->mapTranslatable($classMetadata);
         }
