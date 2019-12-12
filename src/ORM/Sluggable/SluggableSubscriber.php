@@ -10,9 +10,20 @@ use Doctrine\ORM\Event\LoadClassMetadataEventArgs;
 use Doctrine\ORM\Events;
 use Doctrine\ORM\Mapping\ClassMetadataInfo;
 use Knp\DoctrineBehaviors\Contract\Entity\SluggableInterface;
+use Knp\DoctrineBehaviors\Repository\DefaultSluggableRepository;
 
 final class SluggableSubscriber implements EventSubscriber
 {
+    /**
+     * @var DefaultSluggableRepository
+     */
+    private $defaultSluggableRepository;
+
+    public function __construct(DefaultSluggableRepository $defaultSluggableRepository)
+    {
+        $this->defaultSluggableRepository = $defaultSluggableRepository;
+    }
+
     public function loadClassMetadata(LoadClassMetadataEventArgs $loadClassMetadataEventArgs): void
     {
         $classMetadata = $loadClassMetadataEventArgs->getClassMetadata();
@@ -61,5 +72,23 @@ final class SluggableSubscriber implements EventSubscriber
         }
 
         $entity->generateSlug();
+
+        if ($entity->shouldGenerateUniqueSlugs()) {
+            $this->generateUniqueSlugFor($entity);
+        }
+    }
+
+    private function generateUniqueSlugFor(SluggableInterface $sluggable): void
+    {
+        $i = 0;
+        $slug = $sluggable->getSlug();
+
+        $uniqueSlug = $slug;
+
+        while (! $this->defaultSluggableRepository->isSlugUniqueFor($sluggable, $uniqueSlug)) {
+            $uniqueSlug = $slug . '-' . ++$i;
+        }
+
+        $sluggable->setSlug($uniqueSlug);
     }
 }
