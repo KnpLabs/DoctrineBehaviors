@@ -12,46 +12,36 @@ use Doctrine\Common\Collections\Collection;
  */
 interface NodeInterface
 {
+    public function __toString(): string;
+
     /**
-     * @return string the field that will represent the node in the path
-     **/
+     * @return string|int|null The field that will represent the node in the path
+     */
     public function getNodeId();
 
     /**
-     * @return string the materialized path,
-     * eg the representation of path from all ancestors
-     **/
-    public function getMaterializedPath();
-
-    /**
-     * @return string the real materialized path,
-     * eg the representation of path from all ancestors + current node
-     **/
-    public function getRealMaterializedPath();
-
-    /**
-     * @return string the materialized path from the parent, eg: the representation of path from all parent ancestors
-     **/
-    public function getParentMaterializedPath();
-
-    /**
-     * Set parent path.
-     *
-     * @param string $path the value to set.
+     * @return string The representation of path from all ancestors
      */
-    public function setParentMaterializedPath($path);
+    public function getMaterializedPath(): string;
 
     /**
-     * @return NodeInterface the parent node
-     **/
-    public function getParentNode();
+     * @return string The representation of path from all ancestors + current node
+     */
+    public function getRealMaterializedPath(): string;
+
+    /**
+     * @return string The representation of path from all parent ancestors
+     */
+    public function getParentMaterializedPath(): string;
+
+    public function setParentMaterializedPath(string $path): void;
+
+    public function getParentNode(): ?self;
 
     /**
      * @param string $path the materialized path, eg: the the materialized path to its parent
-     *
-     * @return NodeInterface $this Fluent interface
-     **/
-    public function setMaterializedPath($path);
+     */
+    public function setMaterializedPath(string $path): void;
 
     /**
      * Used to build the hierarchical tree.
@@ -60,56 +50,25 @@ interface NodeInterface
      *    - Add the this node to the children of the new parent
      *    - Remove the this node from the children of the old parent
      *    - Modify the materialized path of this node and all its children, recursively
-     *
-     * @param NodeInterface | null $node The node to use as a parent
-     *
-     * @return NodeInterface $this Fluent interface
-     **/
-    public function setChildNodeOf(?self $node = null);
+     */
+    public function setChildNodeOf(?self $node = null): void;
 
-    /**
-     * @param NodeInterface $node the node to append to the children collection
-     *
-     * @return NodeInterface $this Fluent interface
-     **/
-    public function addChildNode(self $node);
+    public function addChildNode(self $node): void;
 
-    /**
-     * @return Collection the children collection
-     **/
-    public function getChildNodes();
+    public function getChildNodes(): Collection;
 
-    /**
-     * @return bool if the node is a leaf (i.e has no children)
-     **/
-    public function isLeafNode();
+    public function isLeafNode(): bool;
 
-    /**
-     * @return bool if the node is a root (i.e has no parent)
-     **/
-    public function isRootNode();
+    public function isRootNode(): bool;
 
-    /**
-     * @return NodeInterface
-     **/
-    public function getRootNode();
+    public function getRootNode(): self;
 
-    /**
-     * Tells if this node is a child of another node
-     * @param NodeInterface $node the node to compare with
-     *
-     * @return boolean true if this node is a direct child of $node
-     **/
-    public function isChildNodeOf(self $node);
+    public function isChildNodeOf(self $node): bool;
 
-    /**
-     * @return integer the level of this node, eg: the depth compared to root node
-     **/
-    public function getNodeLevel();
+    public function getNodeLevel(): int;
 
     /**
      * Builds a hierarchical tree from a flat collection of NodeInterface elements
-     *
-     **/
+     */
     public function buildTree(array $nodes): void;
 }

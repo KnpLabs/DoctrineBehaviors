@@ -4,25 +4,30 @@ declare(strict_types=1);
 
 namespace Knp\DoctrineBehaviors\Model\Translatable;
 
+use Doctrine\Common\Collections\Collection;
+use Knp\DoctrineBehaviors\Contract\Entity\TranslationInterface;
+
 trait TranslatableProperties
 {
     /**
-     * Will be mapped to translatable entity
-     * by TranslatableSubscriber
+     * @var TranslationInterface[]|Collection
      */
     protected $translations;
 
     /**
-     * Will be merged with persisted translations on mergeNewTranslations call
-     *
      * @see mergeNewTranslations
+     * @var TranslationInterface[]|Collection
      */
     protected $newTranslations;
 
     /**
      * currentLocale is a non persisted field configured during postLoad event
+     * @var string|null
      */
     protected $currentLocale;
 
+    /**
+     * @var string
+     */
     protected $defaultLocale = 'en';
 }

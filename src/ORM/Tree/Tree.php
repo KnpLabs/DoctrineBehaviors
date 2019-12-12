@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace Knp\DoctrineBehaviors\ORM\Tree;
 
+use ArrayAccess;
 use Doctrine\ORM\QueryBuilder;
 use Knp\DoctrineBehaviors\Model\Tree\NodeInterface;
 
@@ -11,76 +12,50 @@ trait Tree
 {
     /**
      * Constructs a query builder to get all root nodes
-     *
-     * @param string $rootAlias
-     *
-     * @return QueryBuilder
      */
-    public function getRootNodesQB($rootAlias = 't')
+    public function getRootNodesQB(string $rootAlias = 't'): QueryBuilder
     {
         return $this->createQueryBuilder($rootAlias)
             ->andWhere($rootAlias . '.materializedPath = :empty')
-            ->setParameter('empty', '')
-        ;
+            ->setParameter('empty', '');
     }
 
-    /**
-     * Returns all root nodes
-     *
-     * @api
-     *
-     * @param string $rootAlias
-     *
-     * @return array
-     */
-    public function getRootNodes($rootAlias = 't')
+    public function getRootNodes(string $rootAlias = 't'): array
     {
-        return $this
-            ->getRootNodesQB($rootAlias)
+        return $this->getRootNodesQB($rootAlias)
             ->getQuery()
-            ->execute()
-        ;
+            ->execute();
     }
 
     /**
      * Returns a node hydrated with its children and parents
      *
-     * @api
-     *
-     * @param string $path
-     * @param string $rootAlias
-     * @param array  $extraParams To be used in addFlatTreeConditions
-     *
-     * @return NodeInterface a node
+     * @return NodeInterface[]|ArrayAccess|null
      */
-    public function getTree($path = '', $rootAlias = 't', $extraParams = [])
+    public function getTree(string $path = '', string $rootAlias = 't', array $extraParams = [])
     {
         $results = $this->getFlatTree($path, $rootAlias, $extraParams);
 
         return $this->buildTree($results);
     }
 
-    public function getTreeExceptNodeAndItsChildrenQB(NodeInterface $node, $rootAlias = 't')
+    public function getTreeExceptNodeAndItsChildrenQB(NodeInterface $node, string $rootAlias = 't')
     {
         return $this->getFlatTreeQB('', $rootAlias)
             ->andWhere($rootAlias . '.materializedPath NOT LIKE :except_path')
             ->andWhere($rootAlias . '.id != :id')
             ->setParameter('except_path', $node->getRealMaterializedPath() . '%')
-            ->setParameter('id', $node->getId())
-        ;
+            ->setParameter('id', $node->getId());
     }
 
     /**
      * Extracts the root node and constructs a tree using flat resultset
-     *
-     * @param iterable|array $results a flat resultset
-     *
-     * @return NodeInterface
+     * @return ArrayAccess|NodeInterface|null
      */
-    public function buildTree($results)
+    public function buildTree(array $results)
     {
         if (! count($results)) {
-            return;
+            return null;
         }
 
         $root = $results[0];
@@ -91,59 +66,37 @@ trait Tree
 
     /**
      * Constructs a query builder to get a flat tree, starting from a given path
-     *
-     * @param string $path
-     * @param string $rootAlias
-     * @param array  $extraParams To be used in addFlatTreeConditions
-     *
-     * @return QueryBuilder
      */
-    public function getFlatTreeQB($path = '', $rootAlias = 't', $extraParams = [])
+    public function getFlatTreeQB(string $path = '', string $rootAlias = 't', array $extraParams = []): QueryBuilder
     {
-        $qb = $this->createQueryBuilder($rootAlias)
+        $queryBuilder = $this->createQueryBuilder($rootAlias)
             ->andWhere($rootAlias . '.materializedPath LIKE :path')
             ->addOrderBy($rootAlias . '.materializedPath', 'ASC')
-            ->setParameter('path', $path . '%')
-        ;
+            ->setParameter('path', $path . '%');
 
         $parentId = basename($path);
         if ($parentId) {
-            $qb
-                ->orWhere($rootAlias . '.id = :parent')
-                ->setParameter('parent', $parentId)
-            ;
+            $queryBuilder->orWhere($rootAlias . '.id = :parent')
+                ->setParameter('parent', $parentId);
         }
 
-        $this->addFlatTreeConditions($qb, $extraParams);
+        $this->addFlatTreeConditions($queryBuilder, $extraParams);
 
-        return $qb;
+        return $queryBuilder;
     }
 
-    /**
-     * Executes the flat tree query builder
-     *
-     * @param string $path
-     * @param string $rootAlias
-     * @param array  $extraParams To be used in addFlatTreeConditions
-     *
-     * @return array the flat resultset
-     */
-    public function getFlatTree($path, $rootAlias = 't', $extraParams = [])
+    public function getFlatTree(string $path, string $rootAlias = 't', array $extraParams = []): array
     {
-        return $this
-            ->getFlatTreeQB($path, $rootAlias, $extraParams)
+        return $this->getFlatTreeQB($path, $rootAlias, $extraParams)
             ->getQuery()
-            ->execute()
-        ;
+            ->execute();
     }
 
     /**
-     * manipulates the flat tree query builder before executing it.
+     * Manipulates the flat tree query builder before executing it.
      * Override this method to customize the tree query
-     *
-     * @param array        $extraParams
      */
-    protected function addFlatTreeConditions(QueryBuilder $queryBuilder, $extraParams): void
+    protected function addFlatTreeConditions(QueryBuilder $queryBuilder, array $extraParams): void
     {
     }
 }

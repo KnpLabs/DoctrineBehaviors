@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace Knp\DoctrineBehaviors\Tests\Fixtures\ORM;
 
 use Doctrine\ORM\Mapping as ORM;
+use Knp\DoctrineBehaviors\Contract\Entity\TranslatableInterface;
 use Knp\DoctrineBehaviors\Model\Translatable\Translatable;
 use Knp\DoctrineBehaviors\Tests\Fixtures\ORM\Translation\TranslatableCustomizedEntityTranslation;
 
@@ -12,7 +13,7 @@ use Knp\DoctrineBehaviors\Tests\Fixtures\ORM\Translation\TranslatableCustomizedE
  * @ORM\Entity
  * Used to test translation classes which declare custom translatable classes.
  */
-class TranslatableCustomizedEntity
+class TranslatableCustomizedEntity implements TranslatableInterface
 {
     use Translatable;
 
@@ -20,6 +21,7 @@ class TranslatableCustomizedEntity
      * @ORM\Id
      * @ORM\Column(type="integer")
      * @ORM\GeneratedValue(strategy="AUTO")
+     * @var int
      */
     private $id;
 
@@ -28,17 +30,12 @@ class TranslatableCustomizedEntity
         return $this->proxyCurrentLocaleTranslation($method, $arguments);
     }
 
-    public static function getTranslationEntityClass()
+    public static function getTranslationEntityClass(): string
     {
         return TranslatableCustomizedEntityTranslation::class;
     }
 
-    /**
-     * Returns object id.
-     *
-     * @return integer
-     */
-    public function getId()
+    public function getId(): int
     {
         return $this->id;
     }

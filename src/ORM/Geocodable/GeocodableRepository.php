@@ -8,7 +8,7 @@ use Knp\DoctrineBehaviors\ORM\Geocodable\Type\Point;
 
 trait GeocodableRepository
 {
-    public function findByDistanceQB(Point $point, $distanceMax)
+    public function findByDistanceQB(Point $point, int $distanceMax)
     {
         return $this->createQueryBuilder('e')
             ->andWhere('DISTANCE(e.location, :latitude, :longitude) <= :distanceMax')
@@ -18,7 +18,7 @@ trait GeocodableRepository
         ;
     }
 
-    public function findByDistance(Point $point, $distanceMax)
+    public function findByDistance(Point $point, int $distanceMax)
     {
         return $this->findByDistanceQB($point, $distanceMax)
             ->getQuery()

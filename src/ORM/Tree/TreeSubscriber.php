@@ -4,35 +4,18 @@ declare(strict_types=1);
 
 namespace Knp\DoctrineBehaviors\ORM\Tree;
 
+use Doctrine\Common\EventSubscriber;
 use Doctrine\ORM\Event\LoadClassMetadataEventArgs;
 use Doctrine\ORM\Events;
-use Doctrine\ORM\Mapping\ClassMetadata;
-use Knp\DoctrineBehaviors\ORM\AbstractSubscriber;
-use Knp\DoctrineBehaviors\Reflection\ClassAnalyzer;
+use Knp\DoctrineBehaviors\Model\Tree\NodeInterface;
 
-final class TreeSubscriber extends AbstractSubscriber
+final class TreeSubscriber implements EventSubscriber
 {
-    /**
-     * @var string
-     */
-    private $nodeTrait;
-
-    public function __construct(ClassAnalyzer $classAnalyzer, bool $isRecursive, string $nodeTrait)
-    {
-        parent::__construct($classAnalyzer, $isRecursive);
-
-        $this->nodeTrait = $nodeTrait;
-    }
-
     public function loadClassMetadata(LoadClassMetadataEventArgs $loadClassMetadataEventArgs): void
     {
         $classMetadata = $loadClassMetadataEventArgs->getClassMetadata();
 
-        if ($classMetadata->reflClass === null) {
-            return;
-        }
-
-        if (! $this->isTreeNode($classMetadata)) {
+        if (! is_a($classMetadata->reflClass->getName(), NodeInterface::class, true)) {
             return;
         }
 
@@ -50,13 +33,8 @@ final class TreeSubscriber extends AbstractSubscriber
     /**
      * @return string[]
      */
-    public function getSubscribedEvents()
+    public function getSubscribedEvents(): array
     {
         return [Events::loadClassMetadata];
-    }
-
-    private function isTreeNode(ClassMetadata $classMetadata): bool
-    {
-        return $this->getClassAnalyzer()->hasTrait($classMetadata->reflClass, $this->nodeTrait, $this->isRecursive);
     }
 }

@@ -5,46 +5,44 @@ declare(strict_types=1);
 namespace Knp\DoctrineBehaviors\Model\Translatable;
 
 use Doctrine\Common\Collections\ArrayCollection;
+use Doctrine\Common\Collections\Collection;
+use Knp\DoctrineBehaviors\Contract\Entity\TranslationInterface;
 
 trait TranslatableMethods
 {
     /**
-     * @return ArrayCollection
+     * @return Collection|TranslationInterface[]
      */
     public function getTranslations()
     {
-        return $this->translations = $this->translations ?: new ArrayCollection();
+        // initialize collection, usually in ctor
+        if ($this->translations === null) {
+            $this->translations = new ArrayCollection();
+        }
+
+        return $this->translations;
     }
 
     /**
-     * Returns collection of new translations.
-     *
-     * @return ArrayCollection
+     * @return Collection|TranslationInterface[]
      */
     public function getNewTranslations()
     {
-        return $this->newTranslations = $this->newTranslations ?: new ArrayCollection();
+        // initialize collection, usually in ctor
+        if ($this->newTranslations === null) {
+            $this->newTranslations = new ArrayCollection();
+        }
+
+        return $this->newTranslations;
     }
 
-    /**
-     * Adds new translation.
-     *
-     * @param Translation $translation The translation
-     */
-    public function addTranslation($translation)
+    public function addTranslation(TranslationInterface $translation): void
     {
         $this->getTranslations()->set((string) $translation->getLocale(), $translation);
         $translation->setTranslatable($this);
-
-        return $this;
     }
 
-    /**
-     * Removes specific translation.
-     *
-     * @param Translation $translation The translation
-     */
-    public function removeTranslation($translation): void
+    public function removeTranslation(TranslationInterface $translation): void
     {
         $this->getTranslations()->removeElement($translation);
     }
@@ -56,11 +54,8 @@ trait TranslatableMethods
      * In order to persist new translations, call mergeNewTranslations method, before flush
      *
      * @param string $locale The locale (en, ru, fr) | null If null, will try with current locale
-     * @param bool $fallbackToDefault Whether fallback to default locale
-     *
-     * @return Translation
      */
-    public function translate($locale = null, $fallbackToDefault = true)
+    public function translate(?string $locale = null, bool $fallbackToDefault = true): TranslationInterface
     {
         return $this->doTranslate($locale, $fallbackToDefault);
     }
@@ -78,15 +73,12 @@ trait TranslatableMethods
         }
     }
 
-    /**
-     * @param mixed $locale the current locale
-     */
-    public function setCurrentLocale($locale): void
+    public function setCurrentLocale(string $locale): void
     {
         $this->currentLocale = $locale;
     }
 
-    public function getCurrentLocale()
+    public function getCurrentLocale(): string
     {
         return $this->currentLocale ?: $this->getDefaultLocale();
     }
@@ -99,17 +91,12 @@ trait TranslatableMethods
         $this->defaultLocale = $locale;
     }
 
-    public function getDefaultLocale()
+    public function getDefaultLocale(): string
     {
         return $this->defaultLocale;
     }
 
-    /**
-     * Returns translation entity class name.
-     *
-     * @return string
-     */
-    public static function getTranslationEntityClass()
+    public static function getTranslationEntityClass(): string
     {
         return self::class . 'Translation';
     }
@@ -121,11 +108,8 @@ trait TranslatableMethods
      * In order to persist new translations, call mergeNewTranslations method, before flush
      *
      * @param string $locale The locale (en, ru, fr) | null If null, will try with current locale
-     * @param bool $fallbackToDefault Whether fallback to default locale
-     *
-     * @return Translation
      */
-    protected function doTranslate($locale = null, $fallbackToDefault = true)
+    protected function doTranslate(?string $locale = null, bool $fallbackToDefault = true): TranslationInterface
     {
         if ($locale === null) {
             $locale = $this->getCurrentLocale();
@@ -153,6 +137,8 @@ trait TranslatableMethods
         }
 
         $class = static::getTranslationEntityClass();
+
+        /** @var TranslationInterface $translation */
         $translation = new $class();
         $translation->setLocale($locale);
 
@@ -165,29 +151,24 @@ trait TranslatableMethods
     /**
      * An extra feature allows you to proxy translated fields of a translatable entity.
      *
-     * @param string $method
-     *
      * @return mixed The translated value of the field for current locale
      */
-    protected function proxyCurrentLocaleTranslation($method, array $arguments = [])
+    protected function proxyCurrentLocaleTranslation(string $method, array $arguments = [])
     {
         // allow $entity->name call $entity->getName() in templates
         if (! method_exists(self::getTranslationEntityClass(), $method)) {
             $method = 'get' . ucfirst($method);
         }
 
-        return call_user_func_array([$this->translate($this->getCurrentLocale()), $method], $arguments);
+        $translation = $this->translate($this->getCurrentLocale());
+
+        return call_user_func_array([$translation, $method], $arguments);
     }
 
     /**
      * Finds specific translation in collection by its locale.
-     *
-     * @param string $locale              The locale (en, ru, fr)
-     * @param bool   $withNewTranslations searched in new translations too
-     *
-     * @return Translation|null
      */
-    protected function findTranslationByLocale($locale, $withNewTranslations = true)
+    protected function findTranslationByLocale(string $locale, bool $withNewTranslations = true): ?TranslationInterface
     {
         $translation = $this->getTranslations()->get($locale);
 
@@ -198,8 +179,13 @@ trait TranslatableMethods
         if ($withNewTranslations) {
             return $this->getNewTranslations()->get($locale);
         }
+
+        return null;
     }
 
+    /**
+     * @return false|string
+     */
     protected function computeFallbackLocale($locale)
     {
         if (strrchr($locale, '_') !== false) {

@@ -8,10 +8,7 @@ use DateTime;
 
 trait Loggable
 {
-    /**
-     * @return string some log informations
-     */
-    public function getUpdateLogMessage(array $changeSets = [])
+    public function getUpdateLogMessage(array $changeSets = []): string
     {
         $message = [];
         foreach ($changeSets as $property => $changeSet) {
@@ -36,12 +33,12 @@ trait Loggable
         return implode("\n", $message);
     }
 
-    public function getCreateLogMessage()
+    public function getCreateLogMessage(): string
     {
         return sprintf('%s #%d created', self::class, $this->getId());
     }
 
-    public function getRemoveLogMessage()
+    public function getRemoveLogMessage(): string
     {
         return sprintf('%s #%d removed', self::class, $this->getId());
     }

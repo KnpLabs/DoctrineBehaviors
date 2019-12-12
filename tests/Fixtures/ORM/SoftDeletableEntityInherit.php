@@ -9,19 +9,15 @@ use Doctrine\ORM\Mapping as ORM;
 /**
  * @ORM\Entity
  */
-class DeletableEntityInherit extends DeletableEntity
+class SoftDeletableEntityInherit extends SoftDeletableEntity
 {
     /**
      * @ORM\Column(type="string")
+     * @var string
      */
     private $name;
 
-    /**
-     * Returns object name.
-     *
-     * @return string
-     */
-    public function getName()
+    public function getName(): string
     {
         return $this->name;
     }

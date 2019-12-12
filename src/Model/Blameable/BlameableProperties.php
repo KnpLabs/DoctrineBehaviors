@@ -7,20 +7,17 @@ namespace Knp\DoctrineBehaviors\Model\Blameable;
 trait BlameableProperties
 {
     /**
-     * Will be mapped to either string or user entity
-     * by BlameableSubscriber
+     * @var string|int|object
      */
     protected $createdBy;
 
     /**
-     * Will be mapped to either string or user entity
-     * by BlameableSubscriber
+     * @var string|int|object
      */
     protected $updatedBy;
 
     /**
-     * Will be mapped to either string or user entity
-     * by BlameableSubscriber
+     * @var string|int|object
      */
     protected $deletedBy;
 }

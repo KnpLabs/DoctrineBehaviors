@@ -1,0 +1,7 @@
+services:
+    _defaults:
+        public: true
+        autowire: true
+
+    Knp\DoctrineBehaviors\Tests\Provider\EntityUserProvider: null
+    Knp\DoctrineBehaviors\Contract\Provider\UserProviderInterface: '@Knp\DoctrineBehaviors\Tests\Provider\EntityUserProvider'

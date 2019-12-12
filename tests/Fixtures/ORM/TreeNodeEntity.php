@@ -23,56 +23,46 @@ class TreeNodeEntity implements NodeInterface, ArrayAccess
     public const PATH_SEPARATOR = '/';
 
     /**
-     * @ORM\Id
-     * @ORM\Column(type="integer")
-     * @ORM\GeneratedValue(strategy="NONE")
-     */
-    protected $id;
-
-    /**
      * @ORM\Column(type="string", length=255, nullable=true)
+     * @var string
      */
     protected $name;
 
-    public function __construct($id = null)
-    {
-        $this->childNodes = new ArrayCollection();
-        $this->id = $id;
-    }
-
-    public function __toString()
-    {
-        return (string) $this->name;
-    }
-
     /**
-     * @return string
+     * @ORM\Id
+     * @ORM\Column(type="integer")
+     * @ORM\GeneratedValue(strategy="NONE")
+     * @var int
      */
-    public function getId()
+    protected $id;
+
+    public function __construct(?int $id = null)
+    {
+        $this->id = $id;
+        $this->childNodes = new ArrayCollection();
+    }
+
+    public function __toString(): string
+    {
+        return (string) $this->getName();
+    }
+
+    public function getId(): ?int
     {
         return $this->id;
     }
 
-    /**
-     * @param  string $id
-     */
-    public function setId($id): void
+    public function setId(int $id): void
     {
         $this->id = $id;
     }
 
-    /**
-     * @return string
-     */
-    public function getName()
+    public function getName(): ?string
     {
         return $this->name;
     }
 
-    /**
-     * @param  string $name
-     */
-    public function setName($name): void
+    public function setName(string $name): void
     {
         $this->name = $name;
     }

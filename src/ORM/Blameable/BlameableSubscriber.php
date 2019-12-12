@@ -4,50 +4,47 @@ declare(strict_types=1);
 
 namespace Knp\DoctrineBehaviors\ORM\Blameable;
 
-use Doctrine\Common\Persistence\Mapping\ClassMetadata;
+use Doctrine\Common\EventSubscriber;
+use Doctrine\ORM\EntityManagerInterface;
 use Doctrine\ORM\Event\LifecycleEventArgs;
 use Doctrine\ORM\Event\LoadClassMetadataEventArgs;
 use Doctrine\ORM\Events;
-use Knp\DoctrineBehaviors\ORM\AbstractSubscriber;
-use Knp\DoctrineBehaviors\Reflection\ClassAnalyzer;
+use Doctrine\ORM\Mapping\ClassMetadataInfo;
+use Doctrine\ORM\UnitOfWork;
+use Knp\DoctrineBehaviors\Contract\Entity\BlameableInterface;
+use Knp\DoctrineBehaviors\Contract\Provider\UserProviderInterface;
 
-final class BlameableSubscriber extends AbstractSubscriber
+final class BlameableSubscriber implements EventSubscriber
 {
     /**
-     * @var callable
+     * @var string
      */
-    private $userCallable;
-
-    /**
-     * userEntity name
-     */
-    private $userEntity;
+    private const DELETED_BY = 'deletedBy';
 
     /**
      * @var string
      */
-    private $blameableTrait;
+    private const UPDATED_BY = 'updatedBy';
 
     /**
-     * @var mixed
+     * @var string
      */
-    private $user;
+    private const CREATED_BY = 'createdBy';
 
     /**
-     * @param string $userEntity
+     * @var UserProviderInterface
      */
-    public function __construct(
-        ClassAnalyzer $classAnalyzer,
-        $isRecursive,
-        $blameableTrait,
-        ?callable $userCallable = null,
-        $userEntity = null
-    ) {
-        parent::__construct($classAnalyzer, $isRecursive);
+    private $userProvider;
 
-        $this->blameableTrait = $blameableTrait;
-        $this->userCallable = $userCallable;
-        $this->userEntity = $userEntity;
+    /**
+     * @var UnitOfWork
+     */
+    private $unitOfWork;
+
+    public function __construct(UserProviderInterface $userProvider, EntityManagerInterface $entityManager)
+    {
+        $this->userProvider = $userProvider;
+        $this->unitOfWork = $entityManager->getUnitOfWork();
     }
 
     /**
@@ -57,13 +54,11 @@ final class BlameableSubscriber extends AbstractSubscriber
     {
         $classMetadata = $loadClassMetadataEventArgs->getClassMetadata();
 
-        if ($classMetadata->reflClass === null) {
+        if (! is_a($classMetadata->reflClass->getName(), BlameableInterface::class, true)) {
             return;
         }
 
-        if ($this->isBlameable($classMetadata)) {
-            $this->mapEntity($classMetadata);
-        }
+        $this->mapEntity($classMetadata);
     }
 
     /**
@@ -71,33 +66,32 @@ final class BlameableSubscriber extends AbstractSubscriber
      */
     public function prePersist(LifecycleEventArgs $lifecycleEventArgs): void
     {
-        $entityManager = $lifecycleEventArgs->getEntityManager();
-        $unitOfWork = $entityManager->getUnitOfWork();
         $entity = $lifecycleEventArgs->getEntity();
+        if (! $entity instanceof BlameableInterface) {
+            return;
+        }
 
-        $classMetadata = $entityManager->getClassMetadata(get_class($entity));
-        if ($this->isBlameable($classMetadata)) {
-            if (! $entity->getCreatedBy()) {
-                $user = $this->getUser();
-                if ($this->isValidUser($user)) {
-                    $entity->setCreatedBy($user);
+        if (! $entity->getCreatedBy()) {
+            $user = $this->userProvider->provideUser();
+            if ($this->isValidUser($user)) {
+                $entity->setCreatedBy($user);
 
-                    $unitOfWork->propertyChanged($entity, 'createdBy', null, $user);
-                    $unitOfWork->scheduleExtraUpdate($entity, [
-                        'createdBy' => [null, $user],
-                    ]);
-                }
+                $this->unitOfWork->propertyChanged($entity, self::CREATED_BY, null, $user);
+                $this->unitOfWork->scheduleExtraUpdate($entity, [
+                    self::CREATED_BY => [null, $user],
+                ]);
             }
-            if (! $entity->getUpdatedBy()) {
-                $user = $this->getUser();
-                if ($this->isValidUser($user)) {
-                    $entity->setUpdatedBy($user);
-                    $unitOfWork->propertyChanged($entity, 'updatedBy', null, $user);
+        }
 
-                    $unitOfWork->scheduleExtraUpdate($entity, [
-                        'updatedBy' => [null, $user],
-                    ]);
-                }
+        if (! $entity->getUpdatedBy()) {
+            $user = $this->userProvider->provideUser();
+            if ($this->isValidUser($user)) {
+                $entity->setUpdatedBy($user);
+
+                $this->unitOfWork->propertyChanged($entity, self::UPDATED_BY, null, $user);
+                $this->unitOfWork->scheduleExtraUpdate($entity, [
+                    self::UPDATED_BY => [null, $user],
+                ]);
             }
         }
     }
@@ -107,26 +101,23 @@ final class BlameableSubscriber extends AbstractSubscriber
      */
     public function preUpdate(LifecycleEventArgs $lifecycleEventArgs): void
     {
-        $entityManager = $lifecycleEventArgs->getEntityManager();
-        $unitOfWork = $entityManager->getUnitOfWork();
         $entity = $lifecycleEventArgs->getEntity();
-
-        $classMetadata = $entityManager->getClassMetadata(get_class($entity));
-        if ($this->isBlameable($classMetadata)) {
-            if (! $entity->isBlameable()) {
-                return;
-            }
-            $user = $this->getUser();
-            if ($this->isValidUser($user)) {
-                $oldValue = $entity->getUpdatedBy();
-                $entity->setUpdatedBy($user);
-                $unitOfWork->propertyChanged($entity, 'updatedBy', $oldValue, $user);
-
-                $unitOfWork->scheduleExtraUpdate($entity, [
-                    'updatedBy' => [$oldValue, $user],
-                ]);
-            }
+        if (! $entity instanceof BlameableInterface) {
+            return;
         }
+
+        $user = $this->userProvider->provideUser();
+        if (! $this->isValidUser($user)) {
+            return;
+        }
+
+        $oldValue = $entity->getUpdatedBy();
+        $entity->setUpdatedBy($user);
+
+        $this->unitOfWork->propertyChanged($entity, self::UPDATED_BY, $oldValue, $user);
+        $this->unitOfWork->scheduleExtraUpdate($entity, [
+            self::UPDATED_BY => [$oldValue, $user],
+        ]);
     }
 
     /**
@@ -134,53 +125,21 @@ final class BlameableSubscriber extends AbstractSubscriber
      */
     public function preRemove(LifecycleEventArgs $lifecycleEventArgs): void
     {
-        $entityManager = $lifecycleEventArgs->getEntityManager();
-        $unitOfWork = $entityManager->getUnitOfWork();
         $entity = $lifecycleEventArgs->getEntity();
-
-        $classMetadata = $entityManager->getClassMetadata(get_class($entity));
-        if ($this->isBlameable($classMetadata)) {
-            if (! $entity->isBlameable()) {
-                return;
-            }
-            $user = $this->getUser();
-            if ($this->isValidUser($user)) {
-                $oldValue = $entity->getDeletedBy();
-                $entity->setDeletedBy($user);
-                $unitOfWork->propertyChanged($entity, 'deletedBy', $oldValue, $user);
-
-                $unitOfWork->scheduleExtraUpdate($entity, [
-                    'deletedBy' => [$oldValue, $user],
-                ]);
-            }
-        }
-    }
-
-    /**
-     * set a custome representation of current user
-     */
-    public function setUser($user): void
-    {
-        $this->user = $user;
-    }
-
-    /**
-     * get current user, either if $this->user is present or from userCallable
-     *
-     * @return mixed The user reprensentation
-     */
-    public function getUser()
-    {
-        if ($this->user !== null) {
-            return $this->user;
-        }
-        if ($this->userCallable === null) {
+        if (! $entity instanceof BlameableInterface) {
             return;
         }
 
-        $callable = $this->userCallable;
+        $user = $this->userProvider->provideUser();
+        if ($this->isValidUser($user)) {
+            $oldValue = $entity->getDeletedBy();
+            $entity->setDeletedBy($user);
 
-        return $callable();
+            $this->unitOfWork->propertyChanged($entity, self::DELETED_BY, $oldValue, $user);
+            $this->unitOfWork->scheduleExtraUpdate($entity, [
+                self::DELETED_BY => [$oldValue, $user],
+            ]);
+        }
     }
 
     public function getSubscribedEvents()
@@ -188,33 +147,23 @@ final class BlameableSubscriber extends AbstractSubscriber
         return [Events::prePersist, Events::preUpdate, Events::preRemove, Events::loadClassMetadata];
     }
 
-    public function setUserCallable(callable $callable): void
+    private function mapEntity(ClassMetadataInfo $classMetadataInfo): void
     {
-        $this->userCallable = $callable;
-    }
-
-    private function isBlameable(ClassMetadata $classMetadata): bool
-    {
-        return $this->getClassAnalyzer()->hasTrait(
-            $classMetadata->reflClass,
-            $this->blameableTrait,
-            $this->isRecursive
-        );
-    }
-
-    private function mapEntity(ClassMetadata $classMetadata): void
-    {
-        if ($this->userEntity) {
-            $this->mapManyToOneUser($classMetadata);
+        if ($this->userProvider->provideUserEntity()) {
+            $this->mapManyToOneUser($classMetadataInfo);
         } else {
-            $this->mapStringUser($classMetadata);
+            $this->mapStringUser($classMetadataInfo);
         }
     }
 
+    /**
+     * @todo decouple to validator
+     */
     private function isValidUser($user): bool
     {
-        if ($this->userEntity) {
-            return $user instanceof $this->userEntity;
+        $userEntity = $this->userProvider->provideUserEntity();
+        if ($userEntity !== null) {
+            return is_a($user, $userEntity);
         }
 
         if (is_object($user)) {
@@ -224,32 +173,35 @@ final class BlameableSubscriber extends AbstractSubscriber
         return is_string($user);
     }
 
-    private function mapManyToOneUser(classMetadata $classMetadata): void
+    private function mapManyToOneUser(ClassMetadataInfo $classMetadataInfo): void
     {
-        if (! $classMetadata->hasAssociation('createdBy')) {
-            $classMetadata->mapManyToOne([
-                'fieldName' => 'createdBy',
-                'targetEntity' => $this->userEntity,
+        /** @var string $userEntity */
+        $userEntity = $this->userProvider->provideUserEntity();
+
+        if (! $classMetadataInfo->hasAssociation(self::CREATED_BY)) {
+            $classMetadataInfo->mapManyToOne([
+                'fieldName' => self::CREATED_BY,
+                'targetEntity' => $userEntity,
                 'joinColumns' => [[
                     'onDelete' => 'SET NULL',
                 ]],
             ]);
         }
 
-        if (! $classMetadata->hasAssociation('updatedBy')) {
-            $classMetadata->mapManyToOne([
-                'fieldName' => 'updatedBy',
-                'targetEntity' => $this->userEntity,
+        if (! $classMetadataInfo->hasAssociation(self::UPDATED_BY)) {
+            $classMetadataInfo->mapManyToOne([
+                'fieldName' => self::UPDATED_BY,
+                'targetEntity' => $userEntity,
                 'joinColumns' => [[
                     'onDelete' => 'SET NULL',
                 ]],
             ]);
         }
 
-        if (! $classMetadata->hasAssociation('deletedBy')) {
-            $classMetadata->mapManyToOne([
-                'fieldName' => 'deletedBy',
-                'targetEntity' => $this->userEntity,
+        if (! $classMetadataInfo->hasAssociation(self::DELETED_BY)) {
+            $classMetadataInfo->mapManyToOne([
+                'fieldName' => self::DELETED_BY,
+                'targetEntity' => $userEntity,
                 'joinColumns' => [[
                     'onDelete' => 'SET NULL',
                 ]],
@@ -257,27 +209,27 @@ final class BlameableSubscriber extends AbstractSubscriber
         }
     }
 
-    private function mapStringUser(ClassMetadata $classMetadata): void
+    private function mapStringUser(ClassMetadataInfo $classMetadataInfo): void
     {
-        if (! $classMetadata->hasField('createdBy')) {
-            $classMetadata->mapField([
-                'fieldName' => 'createdBy',
+        if (! $classMetadataInfo->hasField(self::CREATED_BY)) {
+            $classMetadataInfo->mapField([
+                'fieldName' => self::CREATED_BY,
                 'type' => 'string',
                 'nullable' => true,
             ]);
         }
 
-        if (! $classMetadata->hasField('updatedBy')) {
-            $classMetadata->mapField([
-                'fieldName' => 'updatedBy',
+        if (! $classMetadataInfo->hasField(self::UPDATED_BY)) {
+            $classMetadataInfo->mapField([
+                'fieldName' => self::UPDATED_BY,
                 'type' => 'string',
                 'nullable' => true,
             ]);
         }
 
-        if (! $classMetadata->hasField('deletedBy')) {
-            $classMetadata->mapField([
-                'fieldName' => 'deletedBy',
+        if (! $classMetadataInfo->hasField(self::DELETED_BY)) {
+            $classMetadataInfo->mapField([
+                'fieldName' => self::DELETED_BY,
                 'type' => 'string',
                 'nullable' => true,
             ]);

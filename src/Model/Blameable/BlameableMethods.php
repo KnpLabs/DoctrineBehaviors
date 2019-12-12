@@ -6,62 +6,33 @@ namespace Knp\DoctrineBehaviors\Model\Blameable;
 
 trait BlameableMethods
 {
-    /**
-     * @param mixed $user the user representation
-     */
-    public function setCreatedBy($user)
+    public function setCreatedBy($user): void
     {
         $this->createdBy = $user;
-
-        return $this;
     }
 
-    /**
-     * @param mixed $user the user representation
-     */
-    public function setUpdatedBy($user)
+    public function setUpdatedBy($user): void
     {
         $this->updatedBy = $user;
-
-        return $this;
     }
 
-    /**
-     * @param mixed $user the user representation
-     */
-    public function setDeletedBy($user)
+    public function setDeletedBy($user): void
     {
         $this->deletedBy = $user;
-
-        return $this;
     }
 
-    /**
-     * @return mixed the user who created entity
-     */
     public function getCreatedBy()
     {
         return $this->createdBy;
     }
 
-    /**
-     * @return mixed the user who last updated entity
-     */
     public function getUpdatedBy()
     {
         return $this->updatedBy;
     }
 
-    /**
-     * @return mixed the user who removed entity
-     */
     public function getDeletedBy()
     {
         return $this->deletedBy;
-    }
-
-    public function isBlameable()
-    {
-        return true;
     }
 }

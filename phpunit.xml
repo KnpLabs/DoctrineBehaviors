@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<phpunit
+     colors="true"
+     bootstrap="tests/bootstrap.php"
+>
+
+    <testsuites>
+        <testsuite name="Knp Doctrine2 Behaviors">
+            <directory>tests</directory>
+        </testsuite>
+    </testsuites>
+</phpunit>

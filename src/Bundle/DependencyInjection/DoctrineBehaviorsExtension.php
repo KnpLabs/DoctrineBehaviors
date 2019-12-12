@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace Knp\DoctrineBehaviors\Bundle\DependencyInjection;
 
+use Doctrine\Common\EventSubscriber;
 use Symfony\Component\Config\FileLocator;
 use Symfony\Component\DependencyInjection\ContainerBuilder;
 use Symfony\Component\DependencyInjection\Extension\Extension;
@@ -16,21 +17,12 @@ final class DoctrineBehaviorsExtension extends Extension
         $loader = new YamlFileLoader($containerBuilder, new FileLocator(__DIR__ . '/../../../config'));
         $loader->load('orm-services.yml');
 
-        $configuration = new Configuration();
-        $config = $this->processConfiguration($configuration, $configs);
-
-        // Don't rename in Configuration for BC reasons
-        $config['softdeletable'] = $config['soft_deletable'];
-        unset($config['soft_deletable']);
-
-        foreach ($config as $behavior => $enabled) {
-            if (! $enabled) {
-                $containerBuilder->removeDefinition(sprintf('knp.doctrine_behaviors.%s_subscriber', $behavior));
-            }
-        }
+        // @see https://github.com/doctrine/DoctrineBundle/issues/674
+        $containerBuilder->registerForAutoconfiguration(EventSubscriber::class)
+            ->addTag('doctrine.event_subscriber');
     }
 
-    public function getAlias()
+    public function getAlias(): string
     {
         return 'knp_doctrine_behaviors';
     }

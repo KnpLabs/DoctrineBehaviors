@@ -5,27 +5,30 @@ declare(strict_types=1);
 namespace Knp\DoctrineBehaviors\Tests\ORM;
 
 use Datetime;
-use Doctrine\Common\EventManager;
-use Knp\DoctrineBehaviors\Model\Timestampable\Timestampable;
-use Knp\DoctrineBehaviors\ORM\Timestampable\TimestampableSubscriber;
-use Knp\DoctrineBehaviors\Reflection\ClassAnalyzer;
+use Doctrine\Common\Persistence\ObjectRepository;
+use Doctrine\ORM\EntityRepository;
+use Knp\DoctrineBehaviors\Tests\AbstractBehaviorTestCase;
 use Knp\DoctrineBehaviors\Tests\Fixtures\ORM\TimestampableEntity;
-use PHPUnit\Framework\TestCase;
 
-require_once __DIR__ . '/EntityManagerProvider.php';
-
-final class TimestampableTest extends TestCase
+final class TimestampableTest extends AbstractBehaviorTestCase
 {
-    use EntityManagerProvider;
+    /**
+     * @var ObjectRepository|EntityRepository
+     */
+    private $timestampableRepository;
+
+    protected function setUp(): void
+    {
+        parent::setUp();
+        $this->timestampableRepository = $this->entityManager->getRepository(TimestampableEntity::class);
+    }
 
     public function testItShouldInitializeCreateAndUpdateDatetimeWhenCreated(): void
     {
-        $entityManager = $this->getEntityManager();
-
         $entity = new TimestampableEntity();
 
-        $entityManager->persist($entity);
-        $entityManager->flush();
+        $this->entityManager->persist($entity);
+        $this->entityManager->flush();
 
         $this->assertInstanceOf(Datetime::class, $entity->getCreatedAt());
         $this->assertInstanceOf(Datetime::class, $entity->getUpdatedAt());
@@ -39,27 +42,28 @@ final class TimestampableTest extends TestCase
 
     public function testItShouldModifyUpdateDatetimeWhenUpdatedButNotTheCreationDatetime(): void
     {
-        $entityManager = $this->getEntityManager();
-
         $entity = new TimestampableEntity();
 
-        $entityManager->persist($entity);
-        $entityManager->flush();
-        $entityManager->refresh($entity);
+        $this->entityManager->persist($entity);
+        $this->entityManager->flush();
+        $this->entityManager->refresh($entity);
         $id = $entity->getId();
         $createdAt = $entity->getCreatedAt();
-        $entityManager->clear();
+        $this->entityManager->clear();
 
         // wait for a second:
         sleep(1);
 
-        $entity = $entityManager->getRepository(TimestampableEntity::class)->find($id);
-        $entity->setTitle('test');
-        $entityManager->flush();
-        $entityManager->clear();
+        /** @var TimestampableEntity $entity */
+        $entity = $this->timestampableRepository->find($id);
 
-        $entity = $entityManager->getRepository(TimestampableEntity::class)->find($id);
-        $this->assertSame($createdAt, $entity->getCreatedAt(), 'createdAt is constant');
+        $entity->setTitle('test');
+        $this->entityManager->flush();
+        $this->entityManager->clear();
+
+        /** @var TimestampableEntity $entity */
+        $entity = $this->timestampableRepository->find($id);
+        $this->assertEquals($createdAt, $entity->getCreatedAt(), 'createdAt is constant');
 
         $this->assertNotSame(
             $entity->getCreatedAt(),
@@ -70,72 +74,60 @@ final class TimestampableTest extends TestCase
 
     public function testItShouldReturnTheSameDatetimeWhenNotUpdated(): void
     {
-        $entityManager = $this->getEntityManager();
-
         $entity = new TimestampableEntity();
 
-        $entityManager->persist($entity);
-        $entityManager->flush();
-        $entityManager->refresh($entity);
+        $this->entityManager->persist($entity);
+        $this->entityManager->flush();
+        $this->entityManager->refresh($entity);
+
         $id = $entity->getId();
+
         $createdAt = $entity->getCreatedAt();
         $updatedAt = $entity->getUpdatedAt();
-        $entityManager->clear();
+
+        $this->entityManager->clear();
 
         sleep(1);
 
-        $entity = $entityManager->getRepository(TimestampableEntity::class)->find($id);
-        $entityManager->persist($entity);
-        $entityManager->flush();
-        $entityManager->clear();
+        /** @var TimestampableEntity $entity */
+        $entity = $this->timestampableRepository->find($id);
 
-        $this->assertSame($entity->getCreatedAt(), $createdAt, 'Creation timestamp has changed');
+        $this->entityManager->persist($entity);
+        $this->entityManager->flush();
+        $this->entityManager->clear();
 
-        $this->assertSame($entity->getUpdatedAt(), $updatedAt, 'Update timestamp has changed');
+        $this->assertEquals($entity->getCreatedAt(), $createdAt, 'Creation timestamp has changed');
+        $this->assertEquals($entity->getUpdatedAt(), $updatedAt, 'Update timestamp has changed');
     }
 
     public function testItShouldModifyUpdateDatetimeOnlyOnce(): void
     {
-        $entityManager = $this->getEntityManager();
-
         $entity = new TimestampableEntity();
 
-        $entityManager->persist($entity);
-        $entityManager->flush();
-        $entityManager->refresh($entity);
+        $this->entityManager->persist($entity);
+        $this->entityManager->flush();
+        $this->entityManager->refresh($entity);
+
         $id = $entity->getId();
         $createdAt = $entity->getCreatedAt();
-        $entityManager->clear();
+
+        $this->entityManager->clear();
 
         sleep(1);
 
-        $entity = $entityManager->getRepository(TimestampableEntity::class)->find($id);
+        /** @var TimestampableEntity $entity */
+        $entity = $this->timestampableRepository->find($id);
+
         $entity->setTitle('test');
-        $entityManager->flush();
+        $this->entityManager->flush();
         $updatedAt = $entity->getUpdatedAt();
 
         sleep(1);
 
-        $entityManager->flush();
+        $this->entityManager->flush();
 
-        $this->assertSame($entity->getCreatedAt(), $createdAt, 'Creation timestamp has changed');
-
-        $this->assertSame($entity->getUpdatedAt(), $updatedAt, 'Update timestamp has changed');
-    }
-
-    protected function getUsedEntityFixtures()
-    {
-        return [TimestampableEntity::class];
-    }
-
-    protected function getEventManager(): EventManager
-    {
-        $eventManager = new EventManager();
-
-        $eventManager->addEventSubscriber(
-            new TimestampableSubscriber(new ClassAnalyzer(), false, Timestampable::class, 'datetime')
-        );
-
-        return $eventManager;
+        // different object, but values are the same
+        $this->assertEquals($entity->getCreatedAt(), $createdAt, 'Creation timestamp has changed');
+        $this->assertEquals($entity->getUpdatedAt(), $updatedAt, 'Update timestamp has changed');
     }
 }

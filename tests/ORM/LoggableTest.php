@@ -4,130 +4,138 @@ declare(strict_types=1);
 
 namespace Knp\DoctrineBehaviors\Tests\ORM;
 
-use DateTime;
-use Doctrine\Common\EventManager;
-use Knp\DoctrineBehaviors\ORM\Loggable\LoggableSubscriber;
-use Knp\DoctrineBehaviors\Reflection\ClassAnalyzer;
+use Iterator;
+use Knp\DoctrineBehaviors\Tests\AbstractBehaviorTestCase;
 use Knp\DoctrineBehaviors\Tests\Fixtures\ORM\LoggableEntity;
-use PHPUnit\Framework\TestCase;
+use Psr\Log\Test\TestLogger;
 
-require_once __DIR__ . '/EntityManagerProvider.php';
-
-final class LoggableTest extends TestCase
+final class LoggableTest extends AbstractBehaviorTestCase
 {
-    use EntityManagerProvider;
-
-    private $subscriber;
-
-    private $logs = [];
-
     /**
-     * @dataProvider dataProviderValues
+     * @var TestLogger
      */
-    public function testShouldLogChangesetMessageWhenCreated($field, $value, $expected): void
+    private $testLogger;
+
+    protected function setUp(): void
     {
-        $entityManager = $this->getEntityManager($this->getEventManager());
+        parent::setUp();
+        $this->testLogger = static::$container->get(TestLogger::class);
 
+        // reset for every run
+        $this->testLogger->records = [];
+        $this->testLogger->recordsByLevel = [];
+    }
+
+    public function testCreated(): void
+    {
         $entity = new LoggableEntity();
+        $this->entityManager->persist($entity);
+        $this->entityManager->flush();
 
-        $set = 'set' . ucfirst($field);
-
-        $entity->{$set}($value);
-
-        $entityManager->persist($entity);
-        $entityManager->flush();
-
-        $this->assertCount(2, $this->logs);
-        $this->assertSame($this->logs[0], 'Knp\DoctrineBehaviors\Tests\Fixtures\ORM\LoggableEntity #1 created');
+        $expectedRecordCount = $this->isPostgreSql() ? 2 : 1;
+        $this->assertCount($expectedRecordCount, $this->testLogger->records);
 
         $this->assertSame(
-            $this->logs[1],
-            'Knp\DoctrineBehaviors\Tests\Fixtures\ORM\LoggableEntity #1 : property "' . $field . '" changed from "" to "' . $expected . '"'
+            sprintf('%s #1 created', LoggableEntity::class),
+            $this->testLogger->records[0]['message']
         );
     }
 
     /**
-     * @dataProvider dataProviderValues
+     * @dataProvider dataProviderValues()
+     */
+    public function testShouldLogChangesetMessageWhenCreated(string $field, $value, string $expected): void
+    {
+        $entity = new LoggableEntity();
+
+        $setterMethodName = 'set' . ucfirst($field);
+        $entity->{$setterMethodName}($value);
+
+        $this->entityManager->persist($entity);
+        $this->entityManager->flush();
+
+        $this->assertCount(2, $this->testLogger->records);
+
+        $this->assertSame(
+            sprintf('%s #1 created', LoggableEntity::class),
+            $this->testLogger->records[0]['message']
+        );
+
+        $expectedMessage = sprintf(
+            '%s #1 : property "%s" changed from "" to "%s"',
+            LoggableEntity::class,
+            $field,
+            $expected
+        );
+
+        $this->assertStringContainsString($expectedMessage, $this->testLogger->records[1]['message']);
+    }
+
+    /**
+     * @dataProvider dataProviderValues()
      */
     public function testShouldLogChangesetMessageWhenUpdated($field, $value, $expected): void
     {
-        $entityManager = $this->getEntityManager($this->getEventManager());
-
         $entity = new LoggableEntity();
 
-        $entityManager->persist($entity);
-        $entityManager->flush();
+        $this->entityManager->persist($entity);
+        $this->entityManager->flush();
 
         $set = 'set' . ucfirst($field);
 
         $entity->{$set}($value);
-        $entityManager->flush();
+        $this->entityManager->flush();
 
-        $this->assertCount(3, $this->logs);
-        $this->assertSame(
-            $this->logs[2],
-            'Knp\DoctrineBehaviors\Tests\Fixtures\ORM\LoggableEntity #1 : property "' . $field . '" changed from "" to "' . $expected . '"'
+        $expectedRecordCount = $this->isPostgreSql() ? 3 : 2;
+        $this->assertCount($expectedRecordCount, $this->testLogger->records);
+
+        $lastRecord = array_pop($this->testLogger->records);
+
+        $expectedMessage = sprintf(
+            '%s #1 : property "%s" changed from "" to "%s"',
+            LoggableEntity::class,
+            $field,
+            $expected
         );
+
+        $this->assertSame($expectedMessage, $lastRecord['message']);
     }
 
     public function testShouldNotLogChangesetMessageWhenNoChange(): void
     {
-        $entityManager = $this->getEntityManager($this->getEventManager());
-
         $entity = new LoggableEntity();
 
-        $entityManager->persist($entity);
-        $entityManager->flush();
+        $this->entityManager->persist($entity);
+        $this->entityManager->flush();
 
         $entity->setTitle('test2');
         $entity->setTitle(null);
-        $entityManager->flush();
+        $this->entityManager->flush();
 
-        $this->assertCount(2, $this->logs);
+        $expectedRecordCount = $this->isPostgreSql() ? 2 : 1;
+        $this->assertCount($expectedRecordCount, $this->testLogger->records);
     }
 
     public function testShouldLogRemovalMessageWhenDeleted(): void
     {
-        $entityManager = $this->getEntityManager($this->getEventManager());
-
         $entity = new LoggableEntity();
 
-        $entityManager->persist($entity);
-        $entityManager->flush();
+        $this->entityManager->persist($entity);
+        $this->entityManager->flush();
 
-        $entityManager->remove($entity);
-        $entityManager->flush();
+        $this->entityManager->remove($entity);
+        $this->entityManager->flush();
 
-        $this->assertCount(3, $this->logs);
-        $this->assertSame($this->logs[2], 'Knp\DoctrineBehaviors\Tests\Fixtures\ORM\LoggableEntity #1 removed');
+        $expectedRecordCount = $this->isPostgreSql() ? 3 : 2;
+        $this->assertCount($expectedRecordCount, $this->testLogger->records);
+
+        $lastRecord = array_pop($this->testLogger->records);
+        $this->assertSame(sprintf('%s #1 removed', LoggableEntity::class), $lastRecord['message']);
     }
 
-    public function dataProviderValues()
+    public function dataProviderValues(): Iterator
     {
-        return [
-            ['title', 'test', 'test'],
-            [
-                'roles', ['x' => 'y'], 'an array',
-            ],
-            ['date', new DateTime('2014-02-02 12:20:30.000010'), '2014-02-02 12:20:30.000010'],
-        ];
-    }
-
-    protected function getUsedEntityFixtures()
-    {
-        return [LoggableEntity::class];
-    }
-
-    protected function getEventManager(): EventManager
-    {
-        $eventManager = new EventManager();
-        $loggerCallback = function ($message): void {
-            $this->logs[] = $message;
-        };
-        $this->subscriber = new LoggableSubscriber(new ClassAnalyzer(), false, $loggerCallback);
-
-        $eventManager->addEventSubscriber($this->subscriber);
-
-        return $eventManager;
+        yield ['title', 'test', 'test'];
+        yield ['roles', ['x' => 'y'], 'an array'];
     }
 }

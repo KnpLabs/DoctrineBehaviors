@@ -6,7 +6,7 @@ namespace Knp\DoctrineBehaviors\ORM\Joinable;
 
 use Doctrine\ORM\QueryBuilder;
 
-trait JoinableRepository
+trait JoinableRepositoryTrait
 {
     public function getJoinAllQueryBuilder($alias = null, ?QueryBuilder $queryBuilder = null)
     {

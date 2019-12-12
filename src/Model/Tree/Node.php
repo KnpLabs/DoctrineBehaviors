@@ -6,7 +6,9 @@ namespace Knp\DoctrineBehaviors\Model\Tree;
 
 use Closure;
 use Doctrine\Common\Collections\ArrayCollection;
+use Doctrine\Common\Collections\Collection;
 use LogicException;
+use Nette\Utils\Json;
 
 trait Node
 {
@@ -16,49 +18,45 @@ trait Node
     protected $materializedPath = '';
 
     /**
-     * @var ArrayCollection|NodeInterface[]
+     * @var Collection|NodeInterface[]
      */
-    private $childNodes = [];
+    private $childNodes;
 
     /**
-     * @var NodeInterface the parent in the tree
+     * @var NodeInterface|null
      */
     private $parentNode;
 
+    /**
+     * @return string|int|null
+     */
     public function getNodeId()
     {
         return $this->getId();
     }
 
-    /**
-     * Returns path separator for entity's materialized path.
-     *
-     * @return string "/" by default
-     */
-    public static function getMaterializedPathSeparator()
+    public static function getMaterializedPathSeparator(): string
     {
         return '/';
     }
 
-    public function getRealMaterializedPath()
+    public function getRealMaterializedPath(): string
     {
         return $this->getMaterializedPath() . self::getMaterializedPathSeparator() . $this->getNodeId();
     }
 
-    public function getMaterializedPath()
+    public function getMaterializedPath(): string
     {
         return $this->materializedPath;
     }
 
-    public function setMaterializedPath($path)
+    public function setMaterializedPath(string $path): void
     {
         $this->materializedPath = $path;
         $this->setParentMaterializedPath($this->getParentMaterializedPath());
-
-        return $this;
     }
 
-    public function getParentMaterializedPath()
+    public function getParentMaterializedPath(): string
     {
         $path = $this->getExplodedPath();
         array_pop($path);
@@ -71,31 +69,36 @@ trait Node
         $this->parentNodePath = $path;
     }
 
-    public function getRootMaterializedPath()
+    public function getRootMaterializedPath(): string
     {
         $explodedPath = $this->getExplodedPath();
 
         return static::getMaterializedPathSeparator() . array_shift($explodedPath);
     }
 
-    public function getNodeLevel()
+    public function getNodeLevel(): int
     {
         return count($this->getExplodedPath());
     }
 
-    public function isRootNode()
+    public function isRootNode(): bool
     {
         return self::getMaterializedPathSeparator() === $this->getParentMaterializedPath();
     }
 
-    public function isLeafNode()
+    public function isLeafNode(): bool
     {
         return $this->getChildNodes()->count() === 0;
     }
 
-    public function getChildNodes()
+    public function getChildNodes(): Collection
     {
-        return $this->childNodes = $this->childNodes ?: new ArrayCollection();
+        // set default value as in entity constructors
+        if ($this->childNodes === null) {
+            $this->childNodes = new ArrayCollection();
+        }
+
+        return $this->childNodes;
     }
 
     public function addChildNode(NodeInterface $node): void
@@ -103,18 +106,18 @@ trait Node
         $this->getChildNodes()->add($node);
     }
 
-    public function isIndirectChildNodeOf(NodeInterface $node)
+    public function isIndirectChildNodeOf(NodeInterface $node): bool
     {
         return $this->getRealMaterializedPath() !== $node->getRealMaterializedPath()
             && strpos($this->getRealMaterializedPath(), $node->getRealMaterializedPath()) === 0;
     }
 
-    public function isChildNodeOf(NodeInterface $node)
+    public function isChildNodeOf(NodeInterface $node): bool
     {
         return $this->getParentMaterializedPath() === $node->getRealMaterializedPath();
     }
 
-    public function setChildNodeOf(?NodeInterface $node = null)
+    public function setChildNodeOf(?NodeInterface $node = null): void
     {
         $id = $this->getNodeId();
         if (empty($id)) {
@@ -140,24 +143,20 @@ trait Node
         foreach ($this->getChildNodes() as $child) {
             $child->setChildNodeOf($this);
         }
-
-        return $this;
     }
 
-    public function getParentNode()
+    public function getParentNode(): ?NodeInterface
     {
         return $this->parentNode;
     }
 
-    public function setParentNode(NodeInterface $node)
+    public function setParentNode(NodeInterface $node): void
     {
         $this->parentNode = $node;
         $this->setChildNodeOf($this->parentNode);
-
-        return $this;
     }
 
-    public function getRootNode()
+    public function getRootNode(): NodeInterface
     {
         $parent = $this;
         while ($parent->getParentNode() !== null) {
@@ -180,23 +179,18 @@ trait Node
 
     /**
      * @param Closure $prepare a function to prepare the node before putting into the result
-     *
-     * @return string the json representation of the hierarchical result
-     **/
-    public function toJson(?Closure $prepare = null)
+     */
+    public function toJson(?Closure $prepare = null): string
     {
         $tree = $this->toArray($prepare);
 
-        return json_encode($tree);
+        return Json::encode($tree);
     }
 
     /**
      * @param Closure $prepare a function to prepare the node before putting into the result
-     * @param array    $tree    a reference to an array, used internally for recursion
-     *
-     * @return array the hierarchical result
-     **/
-    public function toArray(?Closure $prepare = null, ?array &$tree = null)
+     */
+    public function toArray(?Closure $prepare = null, ?array &$tree = null): array
     {
         if ($prepare === null) {
             $prepare = function (NodeInterface $node) {
@@ -226,10 +220,8 @@ trait Node
     /**
      * @param Closure $prepare a function to prepare the node before putting into the result
      * @param array    $tree    a reference to an array, used internally for recursion
-     *
-     * @return array the flatten result
-     **/
-    public function toFlatArray(?Closure $prepare = null, ?array &$tree = null)
+     */
+    public function toFlatArray(?Closure $prepare = null, ?array &$tree = null): array
     {
         if ($prepare === null) {
             $prepare = function (NodeInterface $node) {
@@ -250,11 +242,9 @@ trait Node
         return $tree;
     }
 
-    public function offsetSet($offset, $node)
+    public function offsetSet($offset, $node): void
     {
         $node->setChildNodeOf($this);
-
-        return $this;
     }
 
     public function offsetExists($offset)
@@ -272,7 +262,10 @@ trait Node
         return $this->getChildNodes()[$offset];
     }
 
-    protected function getExplodedPath()
+    /**
+     * @return string[]
+     */
+    protected function getExplodedPath(): array
     {
         $path = explode(static::getMaterializedPathSeparator(), $this->getRealMaterializedPath());
 

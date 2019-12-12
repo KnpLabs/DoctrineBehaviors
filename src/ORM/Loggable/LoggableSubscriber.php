@@ -4,97 +4,85 @@ declare(strict_types=1);
 
 namespace Knp\DoctrineBehaviors\ORM\Loggable;
 
+use Doctrine\Common\EventSubscriber;
 use Doctrine\ORM\Event\LifecycleEventArgs;
 use Doctrine\ORM\Events;
-use Knp\DoctrineBehaviors\Model\Loggable\Loggable;
-use Knp\DoctrineBehaviors\ORM\AbstractSubscriber;
-use Knp\DoctrineBehaviors\Reflection\ClassAnalyzer;
-use ReflectionClass;
+use Knp\DoctrineBehaviors\Contract\Entity\LoggableInterface;
+use Psr\Log\LoggerInterface;
+use Psr\Log\LogLevel;
 
-final class LoggableSubscriber extends AbstractSubscriber
+final class LoggableSubscriber implements EventSubscriber
 {
     /**
-     * @var callable
+     * @var LoggerInterface
      */
-    private $loggerCallable;
+    private $logger;
 
-    /**
-     * @param callable $classAnalyzer
-     */
-    public function __construct(ClassAnalyzer $classAnalyzer, bool $isRecursive, callable $loggerCallable)
+    public function __construct(LoggerInterface $logger)
     {
-        parent::__construct($classAnalyzer, $isRecursive);
-        $this->loggerCallable = $loggerCallable;
+        $this->logger = $logger;
     }
 
     public function postPersist(LifecycleEventArgs $lifecycleEventArgs): void
     {
-        $entityManager = $lifecycleEventArgs->getEntityManager();
         $entity = $lifecycleEventArgs->getEntity();
-        $classMetadata = $entityManager->getClassMetadata(get_class($entity));
-
-        if ($this->isEntitySupported($classMetadata->reflClass)) {
-            $message = $entity->getCreateLogMessage();
-            $loggerCallable = $this->loggerCallable;
-            $loggerCallable($message);
+        if (! $entity instanceof LoggableInterface) {
+            return;
         }
+
+        $message = $entity->getCreateLogMessage();
+        $this->logger->log(LogLevel::INFO, $message);
 
         $this->logChangeSet($lifecycleEventArgs);
     }
 
     public function postUpdate(LifecycleEventArgs $lifecycleEventArgs): void
     {
+        $entity = $lifecycleEventArgs->getEntity();
+        if (! $entity instanceof LoggableInterface) {
+            return;
+        }
+
         $this->logChangeSet($lifecycleEventArgs);
+    }
+
+    public function preRemove(LifecycleEventArgs $lifecycleEventArgs): void
+    {
+        $entity = $lifecycleEventArgs->getEntity();
+
+        if ($entity instanceof LoggableInterface) {
+            $this->logger->log(LogLevel::INFO, $entity->getRemoveLogMessage());
+        }
+    }
+
+    /**
+     * @return string[]
+     */
+    public function getSubscribedEvents(): array
+    {
+        return [Events::postPersist, Events::postUpdate, Events::preRemove];
     }
 
     /**
      * Logs entity changeset
      */
-    public function logChangeSet(LifecycleEventArgs $lifecycleEventArgs): void
+    private function logChangeSet(LifecycleEventArgs $lifecycleEventArgs): void
     {
         $entityManager = $lifecycleEventArgs->getEntityManager();
         $unitOfWork = $entityManager->getUnitOfWork();
         $entity = $lifecycleEventArgs->getEntity();
         $classMetadata = $entityManager->getClassMetadata(get_class($entity));
 
-        if ($this->isEntitySupported($classMetadata->reflClass)) {
-            $unitOfWork->computeChangeSet($classMetadata, $entity);
-            $changeSet = $unitOfWork->getEntityChangeSet($entity);
+        /** @var LoggableInterface $entity */
+        $unitOfWork->computeChangeSet($classMetadata, $entity);
+        $changeSet = $unitOfWork->getEntityChangeSet($entity);
 
-            $message = $entity->getUpdateLogMessage($changeSet);
-            $loggerCallable = $this->loggerCallable;
-            $loggerCallable($message);
+        $message = $entity->getUpdateLogMessage($changeSet);
+
+        if ($message === '') {
+            return;
         }
-    }
 
-    public function preRemove(LifecycleEventArgs $lifecycleEventArgs): void
-    {
-        $entityManager = $lifecycleEventArgs->getEntityManager();
-        $entity = $lifecycleEventArgs->getEntity();
-        $classMetadata = $entityManager->getClassMetadata(get_class($entity));
-
-        if ($this->isEntitySupported($classMetadata->reflClass)) {
-            $message = $entity->getRemoveLogMessage();
-            $loggerCallable = $this->loggerCallable;
-            $loggerCallable($message);
-        }
-    }
-
-    public function setLoggerCallable(callable $callable): void
-    {
-        $this->loggerCallable = $callable;
-    }
-
-    /**
-     * @return string[]
-     */
-    public function getSubscribedEvents()
-    {
-        return [Events::postPersist, Events::postUpdate, Events::preRemove];
-    }
-
-    protected function isEntitySupported(ReflectionClass $reflectionClass): bool
-    {
-        return $this->getClassAnalyzer()->hasTrait($reflectionClass, Loggable::class, $this->isRecursive);
+        $this->logger->log(LogLevel::INFO, $message);
     }
 }
