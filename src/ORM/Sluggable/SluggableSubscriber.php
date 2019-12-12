@@ -50,12 +50,7 @@ final class SluggableSubscriber implements EventSubscriber
         if (! is_a($classMetadataInfo->getName(), SluggableInterface::class, true)) {
             return true;
         }
-
-        if ($classMetadataInfo->hasField('slug')) {
-            return true;
-        }
-
-        return false;
+        return $classMetadataInfo->hasField('slug');
     }
 
     private function processLifecycleEventArgs(LifecycleEventArgs $lifecycleEventArgs): void

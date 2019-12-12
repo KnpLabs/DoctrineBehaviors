@@ -37,6 +37,7 @@ final class TranslatableTest extends AbstractBehaviorTestCase
 
         $this->entityManager->persist($entity);
         $this->entityManager->flush();
+
         $id = $entity->getId();
         $this->entityManager->clear();
 
@@ -58,6 +59,7 @@ final class TranslatableTest extends AbstractBehaviorTestCase
 
         $this->entityManager->persist($entity);
         $this->entityManager->flush();
+
         $id = $entity->getId();
         $this->entityManager->clear();
 
@@ -78,6 +80,7 @@ final class TranslatableTest extends AbstractBehaviorTestCase
 
         $this->entityManager->persist($entity);
         $this->entityManager->flush();
+
         $id = $entity->getId();
         $this->entityManager->clear();
 
@@ -120,6 +123,7 @@ final class TranslatableTest extends AbstractBehaviorTestCase
         $entity->mergeNewTranslations();
         $this->entityManager->persist($entity);
         $this->entityManager->flush();
+
         $id = $entity->getId();
         $this->entityManager->clear();
 
@@ -138,6 +142,7 @@ final class TranslatableTest extends AbstractBehaviorTestCase
         $entity->mergeNewTranslations();
         $this->entityManager->persist($entity);
         $this->entityManager->flush();
+
         $id = $entity->getId();
         $this->entityManager->clear();
 

@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace Knp\DoctrineBehaviors\ORM\Joinable;
 
 use Doctrine\ORM\QueryBuilder;
+use Nette\Utils\Strings;
 
 trait JoinableRepositoryTrait
 {
@@ -50,7 +51,7 @@ trait JoinableRepositoryTrait
     private function getAlias($className)
     {
         $shortName = $this->getEntityManager()->getClassMetadata($className)->reflClass->getShortName();
-        return strtolower(substr($shortName, 0, 1));
+        return strtolower(Strings::substring($shortName, 0, 1));
     }
 
     private function getUniqueAlias($className, QueryBuilder $queryBuilder)

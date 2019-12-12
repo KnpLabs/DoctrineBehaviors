@@ -53,7 +53,7 @@ final class GeocodableSubscriber implements EventSubscriber
 
     public function prePersist(LifecycleEventArgs $lifecycleEventArgs): void
     {
-        $this->updateLocation($lifecycleEventArgs, false);
+        $this->updateLocation($lifecycleEventArgs);
     }
 
     public function preUpdate(LifecycleEventArgs $lifecycleEventArgs): void

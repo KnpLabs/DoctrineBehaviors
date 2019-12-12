@@ -10,6 +10,7 @@ use Knp\DoctrineBehaviors\Tests\AbstractBehaviorTestCase;
 use Knp\DoctrineBehaviors\Tests\Fixtures\ORM\TreeNodeEntity;
 use Knp\DoctrineBehaviors\Tests\Fixtures\ORM\TreeNodeEntityRepository;
 use LogicException;
+use Nette\Utils\Json;
 
 final class NodeTest extends AbstractBehaviorTestCase
 {
@@ -164,7 +165,7 @@ final class NodeTest extends AbstractBehaviorTestCase
     {
         $expected = $this->provideToArray();
         $tree = $this->buildTree();
-        $this->assertSame(json_encode($expected), $tree->toJson());
+        $this->assertSame(Json::encode($expected), $tree->toJson());
     }
 
     public function testToFlatArray(): void

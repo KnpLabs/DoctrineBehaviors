@@ -107,6 +107,13 @@ jobs:
             script:
                 - composer phpstan
 
+        -
+            stage: test
+            name: "Rector"
+            php: '7.2'
+            script:
+                - composer rector
+
 cache:
     directories:
         - $HOME/.composer/cache

@@ -120,6 +120,7 @@ final class TimestampableTest extends AbstractBehaviorTestCase
 
         $entity->setTitle('test');
         $this->entityManager->flush();
+
         $updatedAt = $entity->getUpdatedAt();
 
         sleep(1);
