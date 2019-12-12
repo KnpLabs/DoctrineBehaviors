@@ -7,8 +7,6 @@ namespace Knp\DoctrineBehaviors\Model\Translatable;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Knp\DoctrineBehaviors\Contract\Entity\TranslationInterface;
-use Knp\DoctrineBehaviors\Exception\ShouldNotHappenException;
-use ReflectionClass;
 
 trait TranslatableMethodsTrait
 {
@@ -100,7 +98,7 @@ trait TranslatableMethodsTrait
 
     public static function getTranslationEntityClass(): string
     {
-        return self::class . 'Translation';
+        return static::class . 'Translation';
     }
 
     /**
@@ -143,14 +141,6 @@ trait TranslatableMethodsTrait
         }
 
         $class = static::getTranslationEntityClass();
-
-        $reflectionClass = new ReflectionClass($class);
-        if ($reflectionClass->isAbstract()) {
-            throw new ShouldNotHappenException(sprintf(
-                'Abstract class "%s" cannot be Translatable, use child class instead.',
-                self::class
-            ));
-        }
 
         /** @var TranslationInterface $translation */
         $translation = new $class();

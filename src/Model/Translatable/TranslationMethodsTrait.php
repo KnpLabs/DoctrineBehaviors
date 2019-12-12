@@ -12,7 +12,7 @@ trait TranslationMethodsTrait
     public static function getTranslatableEntityClass(): string
     {
         // By default, the translatable class has the same name but without the "Translation" suffix
-        return Strings::substring(self::class, 0, -11);
+        return Strings::substring(static::class, 0, -11);
     }
 
     /**

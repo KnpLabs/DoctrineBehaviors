@@ -15,6 +15,8 @@ use Knp\DoctrineBehaviors\Tests\Fixtures\ORM\SluggableEntity;
 use Knp\DoctrineBehaviors\Tests\Fixtures\ORM\SluggableMultiEntity;
 use Knp\DoctrineBehaviors\Tests\Fixtures\ORM\SoftDeletableEntity;
 use Knp\DoctrineBehaviors\Tests\Fixtures\ORM\TimestampableEntity;
+use Knp\DoctrineBehaviors\Tests\Fixtures\ORM\Translatable\ExtendedTranslatableEntity;
+use Knp\DoctrineBehaviors\Tests\Fixtures\ORM\Translatable\ExtendedTranslatableEntityTranslation;
 use Knp\DoctrineBehaviors\Tests\Fixtures\ORM\TranslatableEntity;
 use Knp\DoctrineBehaviors\Tests\Fixtures\ORM\TranslatableEntityTranslation;
 use Knp\DoctrineBehaviors\Tests\Fixtures\ORM\TreeNodeEntity;
@@ -50,6 +52,9 @@ final class DatabaseLoader
             BlameableEntity::class,
             UserEntity::class,
             TreeNodeEntity::class,
+            // translatable
+            ExtendedTranslatableEntity::class,
+            ExtendedTranslatableEntityTranslation::class,
         ];
 
         $this->reloadEntityClasses($entityClasses);
