@@ -10,7 +10,7 @@ use Doctrine\Common\Collections\Collection;
 use LogicException;
 use Nette\Utils\Json;
 
-trait Node
+trait NodeTrait
 {
     /**
      * @var string

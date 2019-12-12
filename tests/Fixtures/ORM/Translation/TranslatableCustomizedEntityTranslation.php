@@ -6,7 +6,7 @@ namespace Knp\DoctrineBehaviors\Tests\Fixtures\ORM\Translation;
 
 use Doctrine\ORM\Mapping as ORM;
 use Knp\DoctrineBehaviors\Contract\Entity\TranslationInterface;
-use Knp\DoctrineBehaviors\Model\Translatable\Translation;
+use Knp\DoctrineBehaviors\Model\Translatable\TranslationTrait;
 use Knp\DoctrineBehaviors\Tests\Fixtures\ORM\TranslatableCustomizedEntity;
 
 /**
@@ -15,7 +15,7 @@ use Knp\DoctrineBehaviors\Tests\Fixtures\ORM\TranslatableCustomizedEntity;
  */
 class TranslatableCustomizedEntityTranslation implements TranslationInterface
 {
-    use Translation;
+    use TranslationTrait;
 
     /**
      * @ORM\Id

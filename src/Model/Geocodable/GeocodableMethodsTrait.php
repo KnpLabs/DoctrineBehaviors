@@ -6,7 +6,7 @@ namespace Knp\DoctrineBehaviors\Model\Geocodable;
 
 use Knp\DoctrineBehaviors\ORM\Geocodable\Type\Point;
 
-trait GeocodableMethods
+trait GeocodableMethodsTrait
 {
     public function getLocation(): Point
     {

@@ -7,7 +7,7 @@ namespace Knp\DoctrineBehaviors\Model\Sluggable;
 use Behat\Transliterator\Transliterator;
 use UnexpectedValueException;
 
-trait SluggableMethods
+trait SluggableMethodsTrait
 {
     /**
      * @return string[]

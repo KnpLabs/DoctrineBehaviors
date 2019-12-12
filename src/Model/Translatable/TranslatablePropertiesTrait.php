@@ -7,7 +7,7 @@ namespace Knp\DoctrineBehaviors\Model\Translatable;
 use Doctrine\Common\Collections\Collection;
 use Knp\DoctrineBehaviors\Contract\Entity\TranslationInterface;
 
-trait TranslatableProperties
+trait TranslatablePropertiesTrait
 {
     /**
      * @var TranslationInterface[]|Collection

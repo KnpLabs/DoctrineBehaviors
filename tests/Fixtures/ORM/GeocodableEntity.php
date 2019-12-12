@@ -6,7 +6,7 @@ namespace Knp\DoctrineBehaviors\Tests\Fixtures\ORM;
 
 use Doctrine\ORM\Mapping as ORM;
 use Knp\DoctrineBehaviors\Contract\Entity\GeocodableInterface;
-use Knp\DoctrineBehaviors\Model\Geocodable\Geocodable;
+use Knp\DoctrineBehaviors\Model\Geocodable\GeocodableTrait;
 use Knp\DoctrineBehaviors\ORM\Geocodable\Type\Point;
 
 /**
@@ -14,7 +14,7 @@ use Knp\DoctrineBehaviors\ORM\Geocodable\Type\Point;
  */
 class GeocodableEntity implements GeocodableInterface
 {
-    use Geocodable;
+    use GeocodableTrait;
 
     /**
      * @ORM\Id

@@ -4,8 +4,10 @@ declare(strict_types=1);
 
 namespace Knp\DoctrineBehaviors\Model\Sluggable;
 
-trait Sluggable
+trait SluggablePropertiesTrait
 {
-    use SluggableProperties;
-    use SluggableMethods;
+    /**
+     * @var string
+     */
+    protected $slug;
 }

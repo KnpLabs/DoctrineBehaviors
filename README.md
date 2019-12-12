@@ -66,11 +66,11 @@ declare(strict_types=1);
 namespace App\Repository;  
 
 use Doctrine\ORM\EntityRepository;
-use Knp\DoctrineBehaviors\ORM\Tree\Tree;
+use Knp\DoctrineBehaviors\ORM\Tree\TreeTrait;
 
 final class CategoryRepository extends EntityRepository
 {
-    use Tree;
+    use TreeTrait;
 }
 ```
 

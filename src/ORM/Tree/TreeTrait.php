@@ -8,7 +8,7 @@ use ArrayAccess;
 use Doctrine\ORM\QueryBuilder;
 use Knp\DoctrineBehaviors\Model\Tree\NodeInterface;
 
-trait Tree
+trait TreeTrait
 {
     /**
      * Constructs a query builder to get all root nodes

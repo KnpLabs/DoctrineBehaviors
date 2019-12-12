@@ -6,7 +6,7 @@ namespace Knp\DoctrineBehaviors\Model\SoftDeletable;
 
 use DateTimeInterface;
 
-trait SoftDeletableProperties
+trait SoftDeletablePropertiesTrait
 {
     /**
      * @var DateTimeInterface|null

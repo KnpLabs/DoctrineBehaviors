@@ -6,7 +6,7 @@ namespace Knp\DoctrineBehaviors\ORM\Filterable;
 
 use Doctrine\ORM\QueryBuilder;
 
-trait FilterableRepository
+trait FilterableRepositoryTrait
 {
     /**
      * Retrieve field which will be sorted using LIKE

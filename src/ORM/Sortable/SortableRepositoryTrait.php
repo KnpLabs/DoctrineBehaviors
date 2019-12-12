@@ -6,7 +6,7 @@ namespace Knp\DoctrineBehaviors\ORM\Sortable;
 
 use Doctrine\ORM\QueryBuilder;
 
-trait SortableRepository
+trait SortableRepositoryTrait
 {
     public function reorderEntity($entity): void
     {

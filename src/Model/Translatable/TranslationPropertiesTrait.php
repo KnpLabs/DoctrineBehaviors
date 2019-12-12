@@ -6,7 +6,7 @@ namespace Knp\DoctrineBehaviors\Model\Translatable;
 
 use Knp\DoctrineBehaviors\Contract\Entity\TranslatableInterface;
 
-trait TranslationProperties
+trait TranslationPropertiesTrait
 {
     /**
      * @var string

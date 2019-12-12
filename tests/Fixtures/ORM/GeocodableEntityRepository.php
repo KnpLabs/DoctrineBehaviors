@@ -6,11 +6,11 @@ namespace Knp\DoctrineBehaviors\Tests\Fixtures\ORM;
 
 use Doctrine\ORM\EntityRepository;
 use Knp\DoctrineBehaviors\Contract\Entity\GeocodableInterface;
-use Knp\DoctrineBehaviors\ORM\Geocodable\GeocodableRepository;
+use Knp\DoctrineBehaviors\ORM\Geocodable\GeocodableRepositoryTrait;
 
 final class GeocodableEntityRepository extends EntityRepository
 {
-    use GeocodableRepository;
+    use GeocodableRepositoryTrait;
 
     public function findOneByTitle(string $title): GeocodableInterface
     {

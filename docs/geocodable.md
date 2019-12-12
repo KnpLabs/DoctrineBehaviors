@@ -17,14 +17,14 @@ namespace App\Entity;
 
 use Doctrine\ORM\Mapping as ORM;
 use Knp\DoctrineBehaviors\Contract\Entity\GeocodableInterface;
-use Knp\DoctrineBehaviors\Model\Geocodable\Geocodable;
+use Knp\DoctrineBehaviors\Model\Geocodable\GeocodableTrait;
 
 /**
  * @ORM\Entity
  */
 class Category implements GeocodableInterface
 {
-    use Geocodable;
+    use GeocodableTrait;
 }
 ```
 

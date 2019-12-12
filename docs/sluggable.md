@@ -19,14 +19,14 @@ namespace App\Entity;
 
 use Doctrine\ORM\Mapping as ORM;
 use Knp\DoctrineBehaviors\Contract\Entity\SluggableInterface;
-use Knp\DoctrineBehaviors\Model\Sluggable\Sluggable;
+use Knp\DoctrineBehaviors\Model\Sluggable\SluggableTrait;
 
 /**
  * @ORM\Entity
  */
 class BlogPost implements SluggableInterface
 {
-    use Sluggable;
+    use SluggableTrait;
 
     /**
      * @ORM\Column(type="string")

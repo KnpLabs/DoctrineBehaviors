@@ -48,7 +48,7 @@ use Doctrine\ORM\EntityRepository;
 
 final class ProductRepository extends EntityRepository
 {
-    use Filterable\FilterableRepository;
+    use Filterable\FilterableRepositoryTrait;
 
     public function getLikeFilterColumns()
     {

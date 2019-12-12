@@ -19,14 +19,14 @@ namespace App\Entity;
 
 use Doctrine\ORM\Mapping as ORM;
 use Knp\DoctrineBehaviors\Contract\Entity\TranslationInterface;
-use Knp\DoctrineBehaviors\Model\Translatable\Translation;
+use Knp\DoctrineBehaviors\Model\Translatable\TranslationTrait;
 
 /**
  * @ORM\Entity
  */
 class CategoryTranslation implements TranslationInterface
 {
-    use Translation;
+    use TranslationTrait;
 
     /**
      * @ORM\Column(type="string", length=255)
@@ -85,14 +85,14 @@ namespace App\Entity;
 
 use Doctrine\ORM\Mapping as ORM;
 use Knp\DoctrineBehaviors\Contract\Entity\TranslatableInterface;
-use Knp\DoctrineBehaviors\Model\Translatable\Translatable;
+use Knp\DoctrineBehaviors\Model\Translatable\TranslatableTrait;
 
 /**
  * @ORM\Entity
  */
 class Category implements TranslatableInterface
 {
-    use Translatable;
+    use TranslatableTrait;
 
     /**
      * @ORM\Column(type="string", length=255)
@@ -140,11 +140,11 @@ declare(strict_types=1);
 
 namespace AppBundle\Behavior;
 
-use Knp\DoctrineBehaviors\Model\Translatable\Translatable;
+use Knp\DoctrineBehaviors\Model\Translatable\TranslatableTrait;
 
 trait TranslatableTrait
 {
-    use Translatable;
+    use TranslatableTrait;
 
     public static function getTranslationEntityClass(): string
     {
@@ -163,11 +163,11 @@ declare(strict_types=1);
 
 namespace AppBundle\Behavior;
 
-use Knp\DoctrineBehaviors\Model\Translatable\Translation;
+use Knp\DoctrineBehaviors\Model\Translatable\TranslationTrait;
 
 trait TranslationTrait
 {
-    use Translation;
+    use TranslationTrait;
 
     public static function getTranslatableEntityClass(): string
     {

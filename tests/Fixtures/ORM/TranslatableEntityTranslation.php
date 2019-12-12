@@ -6,14 +6,14 @@ namespace Knp\DoctrineBehaviors\Tests\Fixtures\ORM;
 
 use Doctrine\ORM\Mapping as ORM;
 use Knp\DoctrineBehaviors\Contract\Entity\TranslationInterface;
-use Knp\DoctrineBehaviors\Model\Translatable\Translation;
+use Knp\DoctrineBehaviors\Model\Translatable\TranslationTrait;
 
 /**
  * @ORM\Entity
  */
 class TranslatableEntityTranslation implements TranslationInterface
 {
-    use Translation;
+    use TranslationTrait;
 
     /**
      * @ORM\Id
