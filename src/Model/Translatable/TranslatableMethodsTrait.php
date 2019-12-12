@@ -138,6 +138,10 @@ trait TranslatableMethodsTrait
             }
         }
 
+        if ($translation) {
+            return $translation;
+        }
+
         $class = static::getTranslationEntityClass();
 
         $reflectionClass = new ReflectionClass($class);
