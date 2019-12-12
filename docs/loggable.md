@@ -12,7 +12,7 @@ declare(strict_types=1);
 namespace App\Entity;
 
 use Doctrine\ORM\Mapping as ORM;
-use Knp\DoctrineBehaviors\Model\Loggable\Loggable;
+use Knp\DoctrineBehaviors\Model\Loggable\LoggableTrait;
 use Knp\DoctrineBehaviors\Contract\Entity\LoggableInterface;
 
 /**
@@ -20,7 +20,7 @@ use Knp\DoctrineBehaviors\Contract\Entity\LoggableInterface;
  */
 class Category implements LoggableInterface
 {
-    use Loggable;
+    use LoggableTrait;
 
     // you can override the default log messages defined in trait:
     public function getUpdateLogMessage(array $changeSets = []): string

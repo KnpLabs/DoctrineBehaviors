@@ -8,14 +8,14 @@ use DateTime;
 use DateTimeInterface;
 use Doctrine\ORM\Mapping as ORM;
 use Knp\DoctrineBehaviors\Contract\Entity\SluggableInterface;
-use Knp\DoctrineBehaviors\Model\Sluggable\Sluggable;
+use Knp\DoctrineBehaviors\Model\Sluggable\SluggableTrait;
 
 /**
  * @ORM\Entity
  */
 class SluggableMultiEntity implements SluggableInterface
 {
-    use Sluggable;
+    use SluggableTrait;
 
     /**
      * @ORM\Column(type="string")

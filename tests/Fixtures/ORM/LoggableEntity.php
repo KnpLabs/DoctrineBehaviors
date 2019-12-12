@@ -7,14 +7,14 @@ namespace Knp\DoctrineBehaviors\Tests\Fixtures\ORM;
 use DateTimeInterface;
 use Doctrine\ORM\Mapping as ORM;
 use Knp\DoctrineBehaviors\Contract\Entity\LoggableInterface;
-use Knp\DoctrineBehaviors\Model\Loggable\Loggable;
+use Knp\DoctrineBehaviors\Model\Loggable\LoggableTrait;
 
 /**
  * @ORM\Entity
  */
 class LoggableEntity implements LoggableInterface
 {
-    use Loggable;
+    use LoggableTrait;
 
     /**
      * @ORM\Column(type="string", nullable=true)

@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace Knp\DoctrineBehaviors\Model\Blameable;
 
-trait BlameableProperties
+trait BlameablePropertiesTrait
 {
     /**
      * @var string|int|object

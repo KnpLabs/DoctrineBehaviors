@@ -6,7 +6,7 @@ namespace Knp\DoctrineBehaviors\Model\Loggable;
 
 use DateTime;
 
-trait Loggable
+trait LoggableTrait
 {
     public function getUpdateLogMessage(array $changeSets = []): string
     {

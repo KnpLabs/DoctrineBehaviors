@@ -6,7 +6,7 @@ namespace Knp\DoctrineBehaviors\ORM\Geocodable;
 
 use Knp\DoctrineBehaviors\ORM\Geocodable\Type\Point;
 
-trait GeocodableRepository
+trait GeocodableRepositoryTrait
 {
     public function findByDistanceQB(Point $point, int $distanceMax)
     {

@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace Knp\DoctrineBehaviors\Model\Blameable;
 
-trait BlameableMethods
+trait BlameableMethodsTrait
 {
     public function setCreatedBy($user): void
     {

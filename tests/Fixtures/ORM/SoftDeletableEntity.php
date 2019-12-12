@@ -6,7 +6,7 @@ namespace Knp\DoctrineBehaviors\Tests\Fixtures\ORM;
 
 use Doctrine\ORM\Mapping as ORM;
 use Knp\DoctrineBehaviors\Contract\Entity\SoftDeletableInterface;
-use Knp\DoctrineBehaviors\Model\SoftDeletable\SoftDeletable;
+use Knp\DoctrineBehaviors\Model\SoftDeletable\SoftDeletableTrait;
 
 /**
  * @ORM\Entity
@@ -18,7 +18,7 @@ use Knp\DoctrineBehaviors\Model\SoftDeletable\SoftDeletable;
  */
 class SoftDeletableEntity implements SoftDeletableInterface
 {
-    use SoftDeletable;
+    use SoftDeletableTrait;
 
     /**
      * @ORM\Id

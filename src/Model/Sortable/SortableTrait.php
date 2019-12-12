@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace Knp\DoctrineBehaviors\Model\Sortable;
 
-trait Sortable
+trait SortableTrait
 {
     /**
      * @var int

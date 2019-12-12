@@ -11,14 +11,14 @@ namespace App\Entity;
 
 use Doctrine\ORM\Mapping as ORM;
 use Knp\DoctrineBehaviors\Model\Tree\NodeInterface;
-use Knp\DoctrineBehaviors\Model\Tree\Node;
+use Knp\DoctrineBehaviors\Model\Tree\NodeTrait;
 
 /**
  * @ORM\Entity
  */
 class Category implements NodeInterface
 {
-    use Node;
+    use NodeTrait;
 }
 ```
 

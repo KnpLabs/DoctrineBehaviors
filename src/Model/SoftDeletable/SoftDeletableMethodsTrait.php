@@ -9,7 +9,7 @@ use DateTimeInterface;
 use DateTimeZone;
 use Knp\DoctrineBehaviors\Exception\ShouldNotHappenException;
 
-trait SoftDeletableMethods
+trait SoftDeletableMethodsTrait
 {
     public function delete(): void
     {

@@ -6,14 +6,14 @@ namespace Knp\DoctrineBehaviors\Tests\Fixtures\ORM;
 
 use Doctrine\ORM\Mapping as ORM;
 use Knp\DoctrineBehaviors\Contract\Entity\BlameableInterface;
-use Knp\DoctrineBehaviors\Model\Blameable\Blameable;
+use Knp\DoctrineBehaviors\Model\Blameable\BlameableTrait;
 
 /**
  * @ORM\Entity
  */
 class BlameableEntity implements BlameableInterface
 {
-    use Blameable;
+    use BlameableTrait;
 
     /**
      * @ORM\Id

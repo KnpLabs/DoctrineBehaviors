@@ -9,7 +9,7 @@ use Knp\DoctrineBehaviors\ORM\Filterable;
 
 final class FilterableRepository extends EntityRepository
 {
-    use Filterable\FilterableRepository;
+    use Filterable\FilterableRepositoryTrait;
 
     public function getILikeFilterColumns()
     {

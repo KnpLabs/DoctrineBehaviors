@@ -10,7 +10,6 @@ parameters:
     skip:
         PhpCsFixer\Fixer\Operator\UnaryOperatorSpacesFixer: null
         Symplify\CodingStandard\Sniffs\ControlStructure\SprintfOverContactSniff: null
-        Symplify\CodingStandard\Sniffs\Naming\TraitNameSniff: null
         Symplify\CodingStandard\Sniffs\CleanCode\ForbiddenStaticFunctionSniff: null
         Symplify\CodingStandard\Sniffs\CleanCode\CognitiveComplexitySniff: null
         Symplify\CodingStandard\Sniffs\CleanCode\ForbiddenReferenceSniff: null
@@ -31,7 +30,7 @@ parameters:
 
         # weird naming
         Symplify\CodingStandard\Fixer\Naming\PropertyNameMatchingTypeFixer:
-            - "src/Model/Geocodable/GeocodableProperties.php"
+            - "src/Model/Geocodable/GeocodablePropertiesTrait.php"
 
 services:
     PhpCsFixer\Fixer\ClassNotation\FinalClassFixer: ~

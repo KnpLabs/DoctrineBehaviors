@@ -9,7 +9,7 @@ use DateTimeInterface;
 use DateTimeZone;
 use Knp\DoctrineBehaviors\Exception\ShouldNotHappenException;
 
-trait TimestampableMethods
+trait TimestampableMethodsTrait
 {
     public function getCreatedAt(): DateTimeInterface
     {

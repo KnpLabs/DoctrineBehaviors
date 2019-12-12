@@ -6,7 +6,7 @@ namespace Knp\DoctrineBehaviors\Model\Timestampable;
 
 use DateTimeInterface;
 
-trait TimestampableProperties
+trait TimestampablePropertiesTrait
 {
     /**
      * @var DateTimeInterface
