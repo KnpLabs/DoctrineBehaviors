@@ -4,12 +4,13 @@ declare(strict_types=1);
 
 namespace Knp\DoctrineBehaviors\Tests\Fixtures\ORM;
 
+use Knp\DoctrineBehaviors\ORM\Filterable\FilterableRepositoryTrait;
 use Doctrine\ORM\EntityRepository;
 use Knp\DoctrineBehaviors\ORM\Filterable;
 
 final class FilterableRepository extends EntityRepository
 {
-    use Filterable\FilterableRepositoryTrait;
+    use FilterableRepositoryTrait;
 
     public function getILikeFilterColumns()
     {

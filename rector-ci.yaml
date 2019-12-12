@@ -1,0 +1,10 @@
+parameters:
+    paths:
+        - "src"
+        - "tests"
+
+    sets:
+        - "dead-code"
+
+    exclude_rectors:
+        - 'Rector\DeadCode\Rector\Class_\RemoveUnusedDoctrineEntityMethodAndPropertyRector'

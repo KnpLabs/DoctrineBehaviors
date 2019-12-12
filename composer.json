@@ -48,6 +48,7 @@
     "scripts": {
         "check-cs": "ecs check src tests --ansi",
         "fix-cs": "ecs check src tests --fix --ansi",
-        "phpstan": "phpstan analyse src tests --ansi --error-format symplify"
+        "phpstan": "phpstan analyse src tests --ansi --error-format symplify",
+        "rector": "rector process --config rector-ci.yaml"
     }
 }

@@ -227,7 +227,7 @@ trait NodeTrait
             $prepare = function (NodeInterface $node) {
                 $pre = $node->getNodeLevel() > 1 ? implode('', array_fill(0, $node->getNodeLevel(), '--')) : '';
 
-                return $pre . (string) $node;
+                return $pre . $node;
             };
         }
         if ($tree === null) {

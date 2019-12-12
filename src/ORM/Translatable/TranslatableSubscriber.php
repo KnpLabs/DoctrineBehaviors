@@ -65,7 +65,7 @@ final class TranslatableSubscriber implements EventSubscriber
 
         if ($this->isTranslation($classMetadata)) {
             $this->mapTranslation($classMetadata);
-            $this->mapId($classMetadata, $loadClassMetadataEventArgs->getEntityManager());
+            $this->mapId($classMetadata);
         }
     }
 
@@ -178,7 +178,7 @@ final class TranslatableSubscriber implements EventSubscriber
      *
      * @see https://github.com/doctrine/doctrine2/blob/0bff6aadbc9f3fd8167a320d9f4f6cf269382da0/lib/Doctrine/ORM/Mapping/ClassMetadataFactory.php#L508
      */
-    private function mapId(ClassMetadataInfo $classMetadataInfo, EntityManager $entityManager): void
+    private function mapId(ClassMetadataInfo $classMetadataInfo): void
     {
         // skip if already has id property
         if ($classMetadataInfo->hasField('id')) {
