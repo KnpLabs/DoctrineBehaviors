@@ -37,16 +37,10 @@ trait FilterableRepositoryTrait
     abstract public function getInFilterColumns(): array;
 
     /**
-     * Filter values
-     *
-     * @param  array                      $filters - array like ['e:name' => 'nameValue'] where "e" is entity alias query, so we can filter using joins.
+     * @param array $filters - array like ['e:name' => 'nameValue'] where "e" is entity alias query, so we can filter using joins.
      */
     public function filterBy(array $filters, ?QueryBuilder $queryBuilder = null): QueryBuilder
     {
-        $filters = array_filter($filters, function ($filter) {
-            return ! empty($filter);
-        });
-
         if ($queryBuilder === null) {
             $queryBuilder = $this->createFilterQueryBuilder();
         }
