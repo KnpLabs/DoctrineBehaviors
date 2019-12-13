@@ -7,7 +7,7 @@ namespace Knp\DoctrineBehaviors\ORM\Tree;
 use Doctrine\Common\EventSubscriber;
 use Doctrine\ORM\Event\LoadClassMetadataEventArgs;
 use Doctrine\ORM\Events;
-use Knp\DoctrineBehaviors\Model\Tree\NodeInterface;
+use Knp\DoctrineBehaviors\Contract\Model\Tree\NodeInterface;
 
 final class TreeSubscriber implements EventSubscriber
 {

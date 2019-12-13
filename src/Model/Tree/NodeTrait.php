@@ -7,6 +7,7 @@ namespace Knp\DoctrineBehaviors\Model\Tree;
 use Closure;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
+use Knp\DoctrineBehaviors\Contract\Model\Tree\NodeInterface;
 use LogicException;
 use Nette\Utils\Json;
 

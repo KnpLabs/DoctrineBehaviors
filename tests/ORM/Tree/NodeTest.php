@@ -5,7 +5,7 @@ declare(strict_types=1);
 namespace Knp\DoctrineBehaviors\Tests\ORM\Tree;
 
 use Iterator;
-use Knp\DoctrineBehaviors\Model\Tree\NodeInterface;
+use Knp\DoctrineBehaviors\Contract\Model\Tree\NodeInterface;
 use Knp\DoctrineBehaviors\Tests\AbstractBehaviorTestCase;
 use Knp\DoctrineBehaviors\Tests\Fixtures\ORM\TreeNodeEntity;
 use Knp\DoctrineBehaviors\Tests\Fixtures\ORM\TreeNodeEntityRepository;

@@ -6,7 +6,7 @@ namespace Knp\DoctrineBehaviors\ORM\Tree;
 
 use ArrayAccess;
 use Doctrine\ORM\QueryBuilder;
-use Knp\DoctrineBehaviors\Model\Tree\NodeInterface;
+use Knp\DoctrineBehaviors\Contract\Model\Tree\NodeInterface;
 
 trait TreeTrait
 {
@@ -50,7 +50,7 @@ trait TreeTrait
 
     /**
      * Extracts the root node and constructs a tree using flat resultset
-     * @return ArrayAccess|NodeInterface|null
+     * @return ArrayAccess|NodeInterface[]|null
      */
     public function buildTree(array $results)
     {
