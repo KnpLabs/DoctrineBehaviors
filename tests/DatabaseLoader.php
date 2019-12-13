@@ -21,6 +21,7 @@ use Knp\DoctrineBehaviors\Tests\Fixtures\ORM\TranslatableEntity;
 use Knp\DoctrineBehaviors\Tests\Fixtures\ORM\TranslatableEntityTranslation;
 use Knp\DoctrineBehaviors\Tests\Fixtures\ORM\TreeNodeEntity;
 use Knp\DoctrineBehaviors\Tests\Fixtures\ORM\UserEntity;
+use Knp\DoctrineBehaviors\Tests\Fixtures\ORM\UuidableEntity;
 
 final class DatabaseLoader
 {
@@ -52,6 +53,7 @@ final class DatabaseLoader
             BlameableEntity::class,
             UserEntity::class,
             TreeNodeEntity::class,
+            UuidableEntity::class,
             // translatable
             ExtendedTranslatableEntity::class,
             ExtendedTranslatableEntityTranslation::class,

@@ -12,6 +12,8 @@ trait FilterableRepositoryTrait
      * Retrieve field which will be sorted using LIKE
      *
      * Example format: ['e:name', 'e:description']
+     *
+     * @return string[]
      */
     abstract public function getLikeFilterColumns(): array;
 
@@ -19,6 +21,8 @@ trait FilterableRepositoryTrait
      * Retrieve field which will be sorted using LOWER() LIKE
      *
      * Example format: ['e:name', 'e:description']
+     *
+     * @return string[]
      */
     abstract public function getILikeFilterColumns(): array;
 
@@ -26,6 +30,8 @@ trait FilterableRepositoryTrait
      * Retrieve field which will be sorted using EQUAL
      *
      * Example format: ['e:name', 'e:description']
+     *
+     * @return string[]
      */
     abstract public function getEqualFilterColumns(): array;
 
@@ -33,11 +39,13 @@ trait FilterableRepositoryTrait
      * Retrieve field which will be sorted using IN()
      *
      * Example format: ['e:group_id']
+     *
+     * @return string[]
      */
     abstract public function getInFilterColumns(): array;
 
     /**
-     * @param array $filters - array like ['e:name' => 'nameValue'] where "e" is entity alias query, so we can filter using joins.
+     * @param string[] $filters E.g. ['e:name' => 'nameValue'] where "e" is entity alias query, so we can filter using joins.
      */
     public function filterBy(array $filters, ?QueryBuilder $queryBuilder = null): QueryBuilder
     {

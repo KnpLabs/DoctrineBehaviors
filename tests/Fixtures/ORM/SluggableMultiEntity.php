@@ -18,18 +18,6 @@ class SluggableMultiEntity implements SluggableInterface
     use SluggableTrait;
 
     /**
-     * @ORM\Column(type="string")
-     * @var string
-     */
-    protected $name;
-
-    /**
-     * @ORM\Column(type="datetime")
-     * @var DateTimeInterface
-     */
-    protected $date;
-
-    /**
      * @ORM\Id
      * @ORM\Column(type="integer")
      * @ORM\GeneratedValue(strategy="AUTO")
@@ -37,41 +25,46 @@ class SluggableMultiEntity implements SluggableInterface
      */
     private $id;
 
+    /**
+     * @ORM\Column(type="string")
+     * @var string
+     */
+    private $name;
+
+    /**
+     * @ORM\Column(type="datetime")
+     * @var DateTimeInterface
+     */
+    private $date;
+
     public function __construct()
     {
         $this->date = (new DateTime())->modify('-1 year');
     }
 
-    /**
-     * Returns object id.
-     */
     public function getId(): int
     {
         return $this->id;
     }
 
-    public function getName()
+    public function getName(): string
     {
         return $this->name;
     }
 
-    public function setName($name)
+    public function setName(string $name): void
     {
         $this->name = $name;
-
-        return $this;
     }
 
-    public function getDate()
+    public function getDate(): DateTimeInterface
     {
         return $this->date;
     }
 
-    public function setDate($date)
+    public function setDate(DateTimeInterface $date): void
     {
         $this->date = $date;
-
-        return $this;
     }
 
     /**
@@ -82,7 +75,7 @@ class SluggableMultiEntity implements SluggableInterface
         return ['name', 'title'];
     }
 
-    public function getTitle()
+    public function getTitle(): string
     {
         return 'title';
     }

@@ -22,7 +22,7 @@ class Category implements TimestampableInterface
 }
 ```
 
-### Usage
+## Usage
 
 ```php
 <?php

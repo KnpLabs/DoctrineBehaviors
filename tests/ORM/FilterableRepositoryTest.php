@@ -10,10 +10,15 @@ use Knp\DoctrineBehaviors\Tests\Fixtures\ORM\FilterableRepository;
 
 final class FilterableRepositoryTest extends AbstractBehaviorTestCase
 {
+    protected function setUp(): void
+    {
+        parent::setUp();
+
+        $this->createEntities();
+    }
+
     public function testShouldFilterByNameUsingLike(): void
     {
-        $this->createEntities();
-
         /** @var FilterableRepository $repository */
         $repository = $this->entityManager->getRepository(FilterableEntity::class);
 
@@ -26,8 +31,6 @@ final class FilterableRepositoryTest extends AbstractBehaviorTestCase
 
     public function testShouldFilterByCodeUsingEqual(): void
     {
-        $this->createEntities();
-
         /** @var FilterableRepository $repository */
         $repository = $this->entityManager->getRepository(FilterableEntity::class);
 
@@ -39,11 +42,13 @@ final class FilterableRepositoryTest extends AbstractBehaviorTestCase
 
     private function createEntities(): void
     {
-        foreach ([
+        $codeAndName = [
             2 => 'name1',
             20 => 'name2',
             40 => 'otherValue',
-        ] as $code => $name) {
+        ];
+
+        foreach ($codeAndName as $code => $name) {
             $entity = new FilterableEntity();
             $entity->setCode($code);
             $entity->setName($name);

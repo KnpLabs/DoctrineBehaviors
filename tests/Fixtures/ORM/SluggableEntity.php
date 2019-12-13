@@ -21,13 +21,7 @@ class SluggableEntity implements SluggableInterface
      * @ORM\Column(type="string")
      * @var string
      */
-    protected $name;
-
-    /**
-     * @ORM\Column(type="datetime")
-     * @var DateTimeInterface
-     */
-    protected $date;
+    private $name;
 
     /**
      * @ORM\Id
@@ -36,6 +30,12 @@ class SluggableEntity implements SluggableInterface
      * @var int
      */
     private $id;
+
+    /**
+     * @ORM\Column(type="datetime")
+     * @var DateTimeInterface
+     */
+    private $date;
 
     public function __construct()
     {
@@ -57,16 +57,14 @@ class SluggableEntity implements SluggableInterface
         $this->name = $name;
     }
 
-    public function getDate()
+    public function getDate(): DateTimeInterface
     {
         return $this->date;
     }
 
-    public function setDate($date)
+    public function setDate(DateTimeInterface $date): void
     {
         $this->date = $date;
-
-        return $this;
     }
 
     /**
