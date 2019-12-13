@@ -2,7 +2,7 @@
     "name": "knplabs/doctrine-behaviors",
     "description": "Doctrine Behavior Traits",
     "keywords": [
-        "behaviors", "doctrine", "timestampable", "translatable", "filterable", "blameable", "softdeletable", "tree"
+        "behaviors", "doctrine", "timestampable", "translatable", "filterable", "blameable", "softdeletable", "tree", "uuid"
     ],
     "homepage": "http://knplabs.com",
     "license": "MIT",
@@ -19,7 +19,8 @@
         "symfony/dependency-injection": "^4.4|^5.0",
         "symfony/security-core": "^4.4|^5.0",
         "symfony/cache": "^4.4|^5.0",
-        "nette/utils": "^3.0"
+        "nette/utils": "^3.0",
+        "ramsey/uuid": "^3.9"
     },
     "require-dev": {
         "ext-pdo_sqlite": "*",

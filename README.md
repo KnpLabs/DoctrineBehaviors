@@ -9,15 +9,16 @@ It currently handles:
 
  * [Blameable](/docs/blameable.md)
  * [Filterable](/docs/filterable.md)
- * [Geocodable](#geocodable)
+ * [Geocodable](/docs/geocodable.md)
  * joinable
- * [Loggable](#loggable)
- * [Sluggable](#sluggable)
- * [SoftDeletable](#softDeletable)
+ * [Loggable](/docs/loggable.md)
+ * [Sluggable](/docs/sluggable.md)
+ * [SoftDeletable](/docs/soft-deletable.md)
  * sortable
- * [Timestampable](#timestampable)
- * [Translatable](#translatable)
- * [Tree](#tree)
+ * [Uuidable](/docs/uuidable.md)
+ * [Timestampable](/docs/timestampable.md)
+ * [Translatable](/docs/translatable.md)
+ * [Tree](/docs/tree.md)
 
 ## Install
 
