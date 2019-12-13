@@ -18,7 +18,7 @@ final class DoctrineBehaviorsExtension extends Extension
     public function load(array $configs, ContainerBuilder $containerBuilder): void
     {
         $loader = new YamlFileLoader($containerBuilder, new FileLocator(__DIR__ . '/../../../config'));
-        $loader->load('orm-services.yml');
+        $loader->load('services.yaml');
 
         // @see https://github.com/doctrine/DoctrineBundle/issues/674
         $containerBuilder->registerForAutoconfiguration(EventSubscriber::class)
