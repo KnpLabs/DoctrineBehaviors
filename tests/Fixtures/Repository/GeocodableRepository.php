@@ -2,13 +2,13 @@
 
 declare(strict_types=1);
 
-namespace Knp\DoctrineBehaviors\Tests\Fixtures\Entity;
+namespace Knp\DoctrineBehaviors\Tests\Fixtures\Repository;
 
 use Doctrine\ORM\EntityRepository;
 use Knp\DoctrineBehaviors\Contract\Entity\GeocodableInterface;
 use Knp\DoctrineBehaviors\ORM\Geocodable\GeocodableRepositoryTrait;
 
-final class GeocodableEntityRepository extends EntityRepository
+final class GeocodableRepository extends EntityRepository
 {
     use GeocodableRepositoryTrait;
 

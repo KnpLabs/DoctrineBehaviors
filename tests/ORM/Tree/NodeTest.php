@@ -8,7 +8,7 @@ use Iterator;
 use Knp\DoctrineBehaviors\Contract\Model\Tree\NodeInterface;
 use Knp\DoctrineBehaviors\Tests\AbstractBehaviorTestCase;
 use Knp\DoctrineBehaviors\Tests\Fixtures\Entity\TreeNodeEntity;
-use Knp\DoctrineBehaviors\Tests\Fixtures\Entity\TreeNodeEntityRepository;
+use Knp\DoctrineBehaviors\Tests\Fixtures\Repository\TreeNodeRepository;
 use LogicException;
 use Nette\Utils\Json;
 
@@ -270,7 +270,7 @@ final class NodeTest extends AbstractBehaviorTestCase
 
     public function testGetTree(): void
     {
-        /** @var TreeNodeEntityRepository $repository */
+        /** @var TreeNodeRepository $repository */
         $repository = $this->entityManager->getRepository(TreeNodeEntity::class);
 
         $entity = new TreeNodeEntity(1);

@@ -11,7 +11,7 @@ use Knp\DoctrineBehaviors\Contract\Model\Tree\NodeInterface;
 use Knp\DoctrineBehaviors\Model\Tree\NodeTrait;
 
 /**
- * @ORM\Entity(repositoryClass="Knp\DoctrineBehaviors\Tests\Fixtures\Entity\TreeNodeEntityRepository")
+ * @ORM\Entity(repositoryClass="Knp\DoctrineBehaviors\Tests\Fixtures\Repository\TreeNodeRepository")
  */
 class TreeNodeEntity implements NodeInterface, ArrayAccess
 {

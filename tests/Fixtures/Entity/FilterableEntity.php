@@ -7,7 +7,7 @@ namespace Knp\DoctrineBehaviors\Tests\Fixtures\Entity;
 use Doctrine\ORM\Mapping as ORM;
 
 /**
- * @ORM\Entity(repositoryClass="Knp\DoctrineBehaviors\Tests\Fixtures\Entity\FilterableRepository")
+ * @ORM\Entity(repositoryClass="Knp\DoctrineBehaviors\Tests\Fixtures\Repository\FilterableRepository")
  */
 class FilterableEntity
 {
