@@ -42,6 +42,11 @@ trait SluggableMethodsTrait
         $this->slug = $this->generateSlugValue($values);
     }
 
+    public function shouldGenerateUniqueSlugs(): bool
+    {
+        return false;
+    }
+
     private function getSlugDelimiter(): string
     {
         return '-';

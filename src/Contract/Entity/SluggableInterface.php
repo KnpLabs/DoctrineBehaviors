@@ -20,4 +20,6 @@ interface SluggableInterface
      * Generates and sets the entity's slug
      */
     public function generateSlug(): void;
+
+    public function shouldGenerateUniqueSlugs(): bool;
 }
