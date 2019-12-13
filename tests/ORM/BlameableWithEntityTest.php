@@ -5,8 +5,8 @@ declare(strict_types=1);
 namespace Knp\DoctrineBehaviors\Tests\ORM;
 
 use Knp\DoctrineBehaviors\Tests\AbstractBehaviorTestCase;
-use Knp\DoctrineBehaviors\Tests\Fixtures\ORM\BlameableEntity;
-use Knp\DoctrineBehaviors\Tests\Fixtures\ORM\UserEntity;
+use Knp\DoctrineBehaviors\Tests\Fixtures\Entity\BlameableEntity;
+use Knp\DoctrineBehaviors\Tests\Fixtures\Entity\UserEntity;
 
 final class BlameableWithEntityTest extends AbstractBehaviorTestCase
 {

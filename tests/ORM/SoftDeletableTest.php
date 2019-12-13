@@ -8,8 +8,8 @@ use DateTime;
 use Doctrine\Common\Persistence\ObjectRepository;
 use Doctrine\ORM\EntityRepository;
 use Knp\DoctrineBehaviors\Tests\AbstractBehaviorTestCase;
-use Knp\DoctrineBehaviors\Tests\Fixtures\ORM\SoftDeletableEntity;
-use Knp\DoctrineBehaviors\Tests\Fixtures\ORM\SoftDeletableEntityInherit;
+use Knp\DoctrineBehaviors\Tests\Fixtures\Entity\SoftDeletableEntity;
+use Knp\DoctrineBehaviors\Tests\Fixtures\Entity\SoftDeletableEntityInherit;
 
 final class SoftDeletableTest extends AbstractBehaviorTestCase
 {

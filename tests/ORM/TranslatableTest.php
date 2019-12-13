@@ -8,10 +8,10 @@ use Doctrine\Common\Persistence\ObjectRepository;
 use Doctrine\ORM\EntityRepository;
 use Doctrine\ORM\Mapping\ClassMetadataInfo;
 use Knp\DoctrineBehaviors\Tests\AbstractBehaviorTestCase;
-use Knp\DoctrineBehaviors\Tests\Fixtures\ORM\TranslatableCustomizedEntity;
-use Knp\DoctrineBehaviors\Tests\Fixtures\ORM\TranslatableEntity;
-use Knp\DoctrineBehaviors\Tests\Fixtures\ORM\TranslatableEntityTranslation;
-use Knp\DoctrineBehaviors\Tests\Fixtures\ORM\Translation\TranslatableCustomizedEntityTranslation;
+use Knp\DoctrineBehaviors\Tests\Fixtures\Entity\TranslatableCustomizedEntity;
+use Knp\DoctrineBehaviors\Tests\Fixtures\Entity\TranslatableEntity;
+use Knp\DoctrineBehaviors\Tests\Fixtures\Entity\TranslatableEntityTranslation;
+use Knp\DoctrineBehaviors\Tests\Fixtures\Entity\Translation\TranslatableCustomizedEntityTranslation;
 
 final class TranslatableTest extends AbstractBehaviorTestCase
 {

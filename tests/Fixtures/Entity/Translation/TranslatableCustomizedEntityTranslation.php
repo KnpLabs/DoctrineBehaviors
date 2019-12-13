@@ -2,12 +2,12 @@
 
 declare(strict_types=1);
 
-namespace Knp\DoctrineBehaviors\Tests\Fixtures\ORM\Translation;
+namespace Knp\DoctrineBehaviors\Tests\Fixtures\Entity\Translation;
 
 use Doctrine\ORM\Mapping as ORM;
 use Knp\DoctrineBehaviors\Contract\Entity\TranslationInterface;
 use Knp\DoctrineBehaviors\Model\Translatable\TranslationTrait;
-use Knp\DoctrineBehaviors\Tests\Fixtures\ORM\TranslatableCustomizedEntity;
+use Knp\DoctrineBehaviors\Tests\Fixtures\Entity\TranslatableCustomizedEntity;
 
 /**
  * @ORM\Entity

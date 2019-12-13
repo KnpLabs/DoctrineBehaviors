@@ -24,9 +24,9 @@ parameters:
         - '#has no typehint specified#'
 
         - '#Parameter \#1 \$input of function array_filter expects array, array<int, string\>\|false given#'
-        - '#Method Knp\\DoctrineBehaviors\\Tests\\Fixtures\\ORM\\GeocodableEntityRepository\:\:findOneByTitle\(\) should return Knp\\DoctrineBehaviors\\Contract\\Entity\\GeocodableInterface but returns object\|null#'
+        - '#Method Knp\\DoctrineBehaviors\\Tests\\Fixtures\\Repository\\GeocodableRepository\:\:findOneByTitle\(\) should return Knp\\DoctrineBehaviors\\Contract\\Entity\\GeocodableInterface but returns object\|null#'
 
-        - '#Method Knp\\DoctrineBehaviors\\Tests\\Fixtures\\ORM\\TreeNodeEntityRepository\:\:getTree\(\) should return array<Knp\\DoctrineBehaviors\\Contract\\Model\\Tree\\NodeInterface\>\|ArrayAccess\|null but returns ArrayAccess\|Knp\\DoctrineBehaviors\\Contract\\Model\\Tree\\NodeInterface\|null#'
+        - '#Method Knp\\DoctrineBehaviors\\Tests\\Fixtures\\Repository\\TreeNodeRepository\:\:getTree\(\) should return array<Knp\\DoctrineBehaviors\\Contract\\Model\\Tree\\NodeInterface\>\|ArrayAccess\|null but returns ArrayAccess\|Knp\\DoctrineBehaviors\\Contract\\Model\\Tree\\NodeInterface\|null#'
 
         -
             message: '#Property Knp\\DoctrineBehaviors\\Tests\\ORM\\GeocodableTest\:\:\$geocodableEntityRepository \(Knp\\DoctrineBehaviors\\Tests\\Fixtures\\ORM\\GeocodableEntityRepository\) does not accept Doctrine\\Persistence\\ObjectRepository#'
@@ -35,4 +35,5 @@ parameters:
         - '#Parameter \#1 \$argument of class ReflectionClass constructor expects class\-string<T of object\>\|T of object, string given#'
         - '#PHPDoc tag @var for variable \$entity has invalid type Knp\\DoctrineBehaviors\\Model\\Uuidable\\UuidableTrait#'
         # cache buggy
-        - '#Return typehint of method Knp\\DoctrineBehaviors\\Tests\\Fixtures\\ORM\\TreeNodeEntityRepository\:\:getTree\(\) has invalid type Knp\\DoctrineBehaviors\\Model\\Tree\\NodeInterface#'
+        - '#Return typehint of method Knp\\DoctrineBehaviors\\Tests\\Fixtures\\Entity\\TreeNodeRepository\:\:getTree\(\) has invalid type Knp\\DoctrineBehaviors\\Model\\Tree\\NodeInterface#'
+        - '#Access to an undefined property Knp\\DoctrineBehaviors\\Tests\\Fixtures\\Entity\\TreeNodeEntity\:\:\$parentNodePath#'

@@ -66,6 +66,6 @@ doctrine:
             -
                 name: "DoctrineBehaviors"
                 type: annotation
-                prefix: 'Knp\DoctrineBehaviors\Tests\Fixtures\ORM\'
-                dir: '%kernel.project_dir%/tests/Fixtures/ORM/'
+                prefix: 'Knp\DoctrineBehaviors\Tests\Fixtures\Entity\'
+                dir: '%kernel.project_dir%/tests/Fixtures/Entity/'
                 is_bundle: false

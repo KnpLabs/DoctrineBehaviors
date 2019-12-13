@@ -11,15 +11,15 @@ use Iterator;
 use Knp\DoctrineBehaviors\Contract\Provider\LocationProviderInterface;
 use Knp\DoctrineBehaviors\ORM\Geocodable\Type\Point;
 use Knp\DoctrineBehaviors\Tests\AbstractBehaviorTestCase;
-use Knp\DoctrineBehaviors\Tests\Fixtures\ORM\GeocodableEntity;
-use Knp\DoctrineBehaviors\Tests\Fixtures\ORM\GeocodableEntityRepository;
+use Knp\DoctrineBehaviors\Tests\Fixtures\Entity\GeocodableEntity;
+use Knp\DoctrineBehaviors\Tests\Fixtures\Repository\GeocodableRepository;
 
 final class GeocodableTest extends AbstractBehaviorTestCase
 {
     /**
-     * @var GeocodableEntityRepository
+     * @var GeocodableRepository
      */
-    private $geocodableEntityRepository;
+    private $geocodableRepository;
 
     /**
      * @var LocationProviderInterface
@@ -41,7 +41,7 @@ final class GeocodableTest extends AbstractBehaviorTestCase
         // load cities to database
         $this->loadEntitiesToDatabase();
 
-        $this->geocodableEntityRepository = $this->entityManager->getRepository(GeocodableEntity::class);
+        $this->geocodableRepository = $this->entityManager->getRepository(GeocodableEntity::class);
     }
 
     /**
@@ -49,7 +49,7 @@ final class GeocodableTest extends AbstractBehaviorTestCase
      */
     public function testInsertLocation($city, Point $expectedPoint): void
     {
-        $entity = $this->geocodableEntityRepository->findOneByTitle($city);
+        $entity = $this->geocodableRepository->findOneByTitle($city);
         $this->assertLocation($expectedPoint, $entity->getLocation());
     }
 
@@ -58,7 +58,7 @@ final class GeocodableTest extends AbstractBehaviorTestCase
      */
     public function testUpdateWithEditLocation($city, Point $expectedPoint, Point $newPoint): void
     {
-        $entity = $this->geocodableEntityRepository->findOneByTitle($city);
+        $entity = $this->geocodableRepository->findOneByTitle($city);
 
         $entity->setLocation($newPoint);
 
@@ -68,7 +68,7 @@ final class GeocodableTest extends AbstractBehaviorTestCase
         $this->entityManager->persist($entity);
         $this->entityManager->flush();
 
-        $entity = $this->geocodableEntityRepository->findOneByTitle($newTitle);
+        $entity = $this->geocodableRepository->findOneByTitle($newTitle);
         $this->assertSame($newTitle, $entity->getTitle());
 
         $providedPoint = $this->locationProvider->providePoint();
@@ -80,7 +80,7 @@ final class GeocodableTest extends AbstractBehaviorTestCase
      */
     public function testUpdateWithoutEditLocation(string $city, Point $expectedPoint): void
     {
-        $entity = $this->geocodableEntityRepository->findOneByTitle($city);
+        $entity = $this->geocodableRepository->findOneByTitle($city);
 
         $this->entityManager->flush();
 
@@ -120,7 +120,7 @@ final class GeocodableTest extends AbstractBehaviorTestCase
             $this->markTestSkipped('findByDistance does not work with MYSQL');
         }
 
-        $cities = $this->geocodableEntityRepository->findByDistance($point, $distance);
+        $cities = $this->geocodableRepository->findByDistance($point, $distance);
 
         $this->assertCount($result, $cities);
     }

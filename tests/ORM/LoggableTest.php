@@ -6,7 +6,7 @@ namespace Knp\DoctrineBehaviors\Tests\ORM;
 
 use Iterator;
 use Knp\DoctrineBehaviors\Tests\AbstractBehaviorTestCase;
-use Knp\DoctrineBehaviors\Tests\Fixtures\ORM\LoggableEntity;
+use Knp\DoctrineBehaviors\Tests\Fixtures\Entity\LoggableEntity;
 use Psr\Log\Test\TestLogger;
 
 final class LoggableTest extends AbstractBehaviorTestCase

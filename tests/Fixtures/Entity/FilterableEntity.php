@@ -2,12 +2,12 @@
 
 declare(strict_types=1);
 
-namespace Knp\DoctrineBehaviors\Tests\Fixtures\ORM;
+namespace Knp\DoctrineBehaviors\Tests\Fixtures\Entity;
 
 use Doctrine\ORM\Mapping as ORM;
 
 /**
- * @ORM\Entity(repositoryClass="Knp\DoctrineBehaviors\Tests\Fixtures\ORM\FilterableRepository")
+ * @ORM\Entity(repositoryClass="Knp\DoctrineBehaviors\Tests\Fixtures\Repository\FilterableRepository")
  */
 class FilterableEntity
 {

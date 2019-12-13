@@ -7,21 +7,21 @@ namespace Knp\DoctrineBehaviors\Tests;
 use Doctrine\DBAL\Connection;
 use Doctrine\ORM\EntityManagerInterface;
 use Doctrine\ORM\Tools\SchemaTool;
-use Knp\DoctrineBehaviors\Tests\Fixtures\ORM\BlameableEntity;
-use Knp\DoctrineBehaviors\Tests\Fixtures\ORM\FilterableEntity;
-use Knp\DoctrineBehaviors\Tests\Fixtures\ORM\GeocodableEntity;
-use Knp\DoctrineBehaviors\Tests\Fixtures\ORM\LoggableEntity;
-use Knp\DoctrineBehaviors\Tests\Fixtures\ORM\SluggableEntity;
-use Knp\DoctrineBehaviors\Tests\Fixtures\ORM\SluggableMultiEntity;
-use Knp\DoctrineBehaviors\Tests\Fixtures\ORM\SoftDeletableEntity;
-use Knp\DoctrineBehaviors\Tests\Fixtures\ORM\TimestampableEntity;
-use Knp\DoctrineBehaviors\Tests\Fixtures\ORM\Translatable\ExtendedTranslatableEntity;
-use Knp\DoctrineBehaviors\Tests\Fixtures\ORM\Translatable\ExtendedTranslatableEntityTranslation;
-use Knp\DoctrineBehaviors\Tests\Fixtures\ORM\TranslatableEntity;
-use Knp\DoctrineBehaviors\Tests\Fixtures\ORM\TranslatableEntityTranslation;
-use Knp\DoctrineBehaviors\Tests\Fixtures\ORM\TreeNodeEntity;
-use Knp\DoctrineBehaviors\Tests\Fixtures\ORM\UserEntity;
-use Knp\DoctrineBehaviors\Tests\Fixtures\ORM\UuidableEntity;
+use Knp\DoctrineBehaviors\Tests\Fixtures\Entity\BlameableEntity;
+use Knp\DoctrineBehaviors\Tests\Fixtures\Entity\FilterableEntity;
+use Knp\DoctrineBehaviors\Tests\Fixtures\Entity\GeocodableEntity;
+use Knp\DoctrineBehaviors\Tests\Fixtures\Entity\LoggableEntity;
+use Knp\DoctrineBehaviors\Tests\Fixtures\Entity\SluggableEntity;
+use Knp\DoctrineBehaviors\Tests\Fixtures\Entity\SluggableMultiEntity;
+use Knp\DoctrineBehaviors\Tests\Fixtures\Entity\SoftDeletableEntity;
+use Knp\DoctrineBehaviors\Tests\Fixtures\Entity\TimestampableEntity;
+use Knp\DoctrineBehaviors\Tests\Fixtures\Entity\Translatable\ExtendedTranslatableEntity;
+use Knp\DoctrineBehaviors\Tests\Fixtures\Entity\Translatable\ExtendedTranslatableEntityTranslation;
+use Knp\DoctrineBehaviors\Tests\Fixtures\Entity\TranslatableEntity;
+use Knp\DoctrineBehaviors\Tests\Fixtures\Entity\TranslatableEntityTranslation;
+use Knp\DoctrineBehaviors\Tests\Fixtures\Entity\TreeNodeEntity;
+use Knp\DoctrineBehaviors\Tests\Fixtures\Entity\UserEntity;
+use Knp\DoctrineBehaviors\Tests\Fixtures\Entity\UuidableEntity;
 
 final class DatabaseLoader
 {
