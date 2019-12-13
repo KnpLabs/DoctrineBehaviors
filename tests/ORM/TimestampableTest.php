@@ -8,7 +8,7 @@ use Datetime;
 use Doctrine\Common\Persistence\ObjectRepository;
 use Doctrine\ORM\EntityRepository;
 use Knp\DoctrineBehaviors\Tests\AbstractBehaviorTestCase;
-use Knp\DoctrineBehaviors\Tests\Fixtures\ORM\TimestampableEntity;
+use Knp\DoctrineBehaviors\Tests\Fixtures\Entity\TimestampableEntity;
 
 final class TimestampableTest extends AbstractBehaviorTestCase
 {

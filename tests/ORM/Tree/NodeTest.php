@@ -7,8 +7,8 @@ namespace Knp\DoctrineBehaviors\Tests\ORM\Tree;
 use Iterator;
 use Knp\DoctrineBehaviors\Contract\Model\Tree\NodeInterface;
 use Knp\DoctrineBehaviors\Tests\AbstractBehaviorTestCase;
-use Knp\DoctrineBehaviors\Tests\Fixtures\ORM\TreeNodeEntity;
-use Knp\DoctrineBehaviors\Tests\Fixtures\ORM\TreeNodeEntityRepository;
+use Knp\DoctrineBehaviors\Tests\Fixtures\Entity\TreeNodeEntity;
+use Knp\DoctrineBehaviors\Tests\Fixtures\Entity\TreeNodeEntityRepository;
 use LogicException;
 use Nette\Utils\Json;
 

@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace Knp\DoctrineBehaviors\Tests\Fixtures\ORM;
+namespace Knp\DoctrineBehaviors\Tests\Fixtures\Entity;
 
 use Doctrine\ORM\Mapping as ORM;
 use Knp\DoctrineBehaviors\Contract\Entity\GeocodableInterface;
@@ -10,7 +10,7 @@ use Knp\DoctrineBehaviors\Model\Geocodable\GeocodableTrait;
 use Knp\DoctrineBehaviors\ORM\Geocodable\Type\Point;
 
 /**
- * @ORM\Entity(repositoryClass="Knp\DoctrineBehaviors\Tests\Fixtures\ORM\GeocodableEntityRepository")
+ * @ORM\Entity(repositoryClass="Knp\DoctrineBehaviors\Tests\Fixtures\Entity\GeocodableEntityRepository")
  */
 class GeocodableEntity implements GeocodableInterface
 {

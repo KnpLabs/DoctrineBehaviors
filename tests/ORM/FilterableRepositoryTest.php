@@ -5,8 +5,8 @@ declare(strict_types=1);
 namespace Knp\DoctrineBehaviors\Tests\ORM;
 
 use Knp\DoctrineBehaviors\Tests\AbstractBehaviorTestCase;
-use Knp\DoctrineBehaviors\Tests\Fixtures\ORM\FilterableEntity;
-use Knp\DoctrineBehaviors\Tests\Fixtures\ORM\FilterableRepository;
+use Knp\DoctrineBehaviors\Tests\Fixtures\Entity\FilterableEntity;
+use Knp\DoctrineBehaviors\Tests\Fixtures\Entity\FilterableRepository;
 
 final class FilterableRepositoryTest extends AbstractBehaviorTestCase
 {

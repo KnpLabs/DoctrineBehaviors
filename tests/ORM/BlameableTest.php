@@ -8,7 +8,7 @@ use Doctrine\Common\Persistence\ObjectRepository;
 use Doctrine\ORM\EntityRepository;
 use Knp\DoctrineBehaviors\Contract\Provider\UserProviderInterface;
 use Knp\DoctrineBehaviors\Tests\AbstractBehaviorTestCase;
-use Knp\DoctrineBehaviors\Tests\Fixtures\ORM\BlameableEntity;
+use Knp\DoctrineBehaviors\Tests\Fixtures\Entity\BlameableEntity;
 
 final class BlameableTest extends AbstractBehaviorTestCase
 {

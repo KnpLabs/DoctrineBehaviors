@@ -8,7 +8,7 @@ use DateTime;
 use Doctrine\Common\Persistence\ObjectRepository;
 use Doctrine\ORM\EntityRepository;
 use Knp\DoctrineBehaviors\Tests\AbstractBehaviorTestCase;
-use Knp\DoctrineBehaviors\Tests\Fixtures\ORM\SluggableMultiEntity;
+use Knp\DoctrineBehaviors\Tests\Fixtures\Entity\SluggableMultiEntity;
 
 final class SluggableMultiTest extends AbstractBehaviorTestCase
 {

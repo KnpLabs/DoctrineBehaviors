@@ -11,8 +11,8 @@ use Iterator;
 use Knp\DoctrineBehaviors\Contract\Provider\LocationProviderInterface;
 use Knp\DoctrineBehaviors\ORM\Geocodable\Type\Point;
 use Knp\DoctrineBehaviors\Tests\AbstractBehaviorTestCase;
-use Knp\DoctrineBehaviors\Tests\Fixtures\ORM\GeocodableEntity;
-use Knp\DoctrineBehaviors\Tests\Fixtures\ORM\GeocodableEntityRepository;
+use Knp\DoctrineBehaviors\Tests\Fixtures\Entity\GeocodableEntity;
+use Knp\DoctrineBehaviors\Tests\Fixtures\Entity\GeocodableEntityRepository;
 
 final class GeocodableTest extends AbstractBehaviorTestCase
 {

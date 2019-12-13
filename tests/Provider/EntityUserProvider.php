@@ -6,7 +6,7 @@ namespace Knp\DoctrineBehaviors\Tests\Provider;
 
 use Doctrine\ORM\EntityManagerInterface;
 use Knp\DoctrineBehaviors\Contract\Provider\UserProviderInterface;
-use Knp\DoctrineBehaviors\Tests\Fixtures\ORM\UserEntity;
+use Knp\DoctrineBehaviors\Tests\Fixtures\Entity\UserEntity;
 
 final class EntityUserProvider implements UserProviderInterface
 {

@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace Knp\DoctrineBehaviors\Tests\Fixtures\ORM;
+namespace Knp\DoctrineBehaviors\Tests\Fixtures\Entity;
 
 use DateTime;
 use DateTimeInterface;

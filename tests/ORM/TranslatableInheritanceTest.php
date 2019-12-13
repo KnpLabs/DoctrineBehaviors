@@ -7,7 +7,7 @@ namespace Knp\DoctrineBehaviors\Tests\ORM;
 use Doctrine\ORM\EntityRepository;
 use Knp\DoctrineBehaviors\Contract\Entity\TranslatableInterface;
 use Knp\DoctrineBehaviors\Tests\AbstractBehaviorTestCase;
-use Knp\DoctrineBehaviors\Tests\Fixtures\ORM\Translatable\ExtendedTranslatableEntity;
+use Knp\DoctrineBehaviors\Tests\Fixtures\Entity\Translatable\ExtendedTranslatableEntity;
 
 final class TranslatableInheritanceTest extends AbstractBehaviorTestCase
 {

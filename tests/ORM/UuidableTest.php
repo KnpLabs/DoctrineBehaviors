@@ -6,7 +6,7 @@ namespace Knp\DoctrineBehaviors\Tests\ORM;
 
 use Knp\DoctrineBehaviors\Model\Uuidable\UuidableTrait;
 use Knp\DoctrineBehaviors\Tests\AbstractBehaviorTestCase;
-use Knp\DoctrineBehaviors\Tests\Fixtures\ORM\UuidableEntity;
+use Knp\DoctrineBehaviors\Tests\Fixtures\Entity\UuidableEntity;
 use Ramsey\Uuid\UuidInterface;
 
 final class UuidableTest extends AbstractBehaviorTestCase

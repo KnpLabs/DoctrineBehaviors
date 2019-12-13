@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace Knp\DoctrineBehaviors\Tests\Fixtures\ORM;
+namespace Knp\DoctrineBehaviors\Tests\Fixtures\Entity;
 
 use ArrayAccess;
 use Doctrine\Common\Collections\ArrayCollection;
@@ -11,7 +11,7 @@ use Knp\DoctrineBehaviors\Contract\Model\Tree\NodeInterface;
 use Knp\DoctrineBehaviors\Model\Tree\NodeTrait;
 
 /**
- * @ORM\Entity(repositoryClass="Knp\DoctrineBehaviors\Tests\Fixtures\ORM\TreeNodeEntityRepository")
+ * @ORM\Entity(repositoryClass="Knp\DoctrineBehaviors\Tests\Fixtures\Entity\TreeNodeEntityRepository")
  */
 class TreeNodeEntity implements NodeInterface, ArrayAccess
 {
