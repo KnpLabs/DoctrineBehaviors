@@ -10,7 +10,7 @@ use Knp\DoctrineBehaviors\Model\Geocodable\GeocodableTrait;
 use Knp\DoctrineBehaviors\ORM\Geocodable\Type\Point;
 
 /**
- * @ORM\Entity(repositoryClass="Knp\DoctrineBehaviors\Tests\Fixtures\Repository\GeocodableRepository")
+ * @ORM\Entity
  */
 class GeocodableEntity implements GeocodableInterface
 {
