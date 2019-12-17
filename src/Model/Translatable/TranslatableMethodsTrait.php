@@ -6,6 +6,7 @@ namespace Knp\DoctrineBehaviors\Model\Translatable;
 
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
+use InvalidArgumentException;
 use Knp\DoctrineBehaviors\Contract\Entity\TranslationInterface;
 
 trait TranslatableMethodsTrait
@@ -21,6 +22,18 @@ trait TranslatableMethodsTrait
         }
 
         return $this->translations;
+    }
+
+    /**
+     * @param Collection|TranslationInterface[] $translations
+     */
+    public function setTranslations(iterable $translations): void
+    {
+        $this->ensureIsIterableOrCollection($translations);
+
+        foreach ($translations as $translation) {
+            $this->addTranslation($translation);
+        }
     }
 
     /**
@@ -70,6 +83,14 @@ trait TranslatableMethodsTrait
                 $this->addTranslation($newTranslation);
                 $this->getNewTranslations()->removeElement($newTranslation);
             }
+        }
+
+        foreach ($this->getTranslations() as $translation) {
+            if (! $translation->isEmpty()) {
+                continue;
+            }
+
+            $this->removeTranslation($translation);
         }
     }
 
@@ -197,5 +218,20 @@ trait TranslatableMethodsTrait
         }
 
         return false;
+    }
+
+    private function ensureIsIterableOrCollection($translations): void
+    {
+        if ($translations instanceof Collection) {
+            return;
+        }
+
+        if (is_iterable($translations)) {
+            return;
+        }
+
+        throw new InvalidArgumentException(sprintf(
+            '$translations parameter must be iterable or %s', Collection::class)
+        );
     }
 }
