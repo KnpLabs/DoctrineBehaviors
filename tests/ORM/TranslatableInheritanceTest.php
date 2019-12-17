@@ -4,13 +4,25 @@ declare(strict_types=1);
 
 namespace Knp\DoctrineBehaviors\Tests\ORM;
 
-use Doctrine\ORM\EntityRepository;
+use Doctrine\Common\Persistence\ObjectRepository;
 use Knp\DoctrineBehaviors\Contract\Entity\TranslatableInterface;
 use Knp\DoctrineBehaviors\Tests\AbstractBehaviorTestCase;
 use Knp\DoctrineBehaviors\Tests\Fixtures\Entity\Translatable\ExtendedTranslatableEntity;
 
 final class TranslatableInheritanceTest extends AbstractBehaviorTestCase
 {
+    /**
+     * @var ObjectRepository
+     */
+    private $objectRepository;
+
+    protected function setUp(): void
+    {
+        parent::setUp();
+
+        $this->objectRepository = $this->entityManager->getRepository(ExtendedTranslatableEntity::class);
+    }
+
     public function testShouldPersistTranslationsWithInheritance(): void
     {
         $entity = new ExtendedTranslatableEntity();
@@ -31,22 +43,16 @@ final class TranslatableInheritanceTest extends AbstractBehaviorTestCase
 
         $this->entityManager->clear();
 
-        /** @var EntityRepository $translatableRepository */
-        $translatableRepository = $this->entityManager->getRepository(ExtendedTranslatableEntity::class);
-
         /** @var TranslatableInterface $entity */
-        $entity = $translatableRepository->find($id);
+        $entity = $this->objectRepository->find($id);
 
         $this->assertSame('fabuleux', $entity->translate('fr')->getTitle());
-
         $this->assertSame('fabuleux', $entity->translate('fr')->getExtendedTitle());
 
         $this->assertSame('awesome', $entity->translate('en')->getTitle());
-
         $this->assertSame('awesome', $entity->translate('en')->getExtendedTitle());
 
         $this->assertSame('удивительный', $entity->translate('ru')->getTitle());
-
         $this->assertSame('удивительный', $entity->translate('ru')->getExtendedTitle());
     }
 }

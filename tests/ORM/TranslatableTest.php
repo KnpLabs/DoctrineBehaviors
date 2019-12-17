@@ -199,6 +199,16 @@ final class TranslatableTest extends AbstractBehaviorTestCase
         $this->assertNotSame('Hallo', $entity->translate('nl')->getTitle());
     }
 
+    public function testSetTranslations(): void
+    {
+        $entity = new TranslatableEntity();
+        $translation = $entity->translate('en');
+
+        $entity->setTranslations([$translation]);
+
+        $this->assertCount(1, $entity->getTranslations());
+    }
+
     /**
      * Asserts that the one to many relationship between translatable and translations is mapped correctly.
      */

@@ -39,3 +39,5 @@ parameters:
         - '#Access to an undefined property Knp\\DoctrineBehaviors\\Tests\\Fixtures\\Entity\\TreeNodeEntity\:\:\$parentNodePath#'
 
         - '#Call to an undefined method Doctrine\\Common\\Persistence\\ObjectRepository\:\:createQueryBuilder\(\)#'
+
+        - '#Parameter \#1 \$translations of method Knp\\DoctrineBehaviors\\Tests\\Fixtures\\Entity\\TranslatableEntity\:\:setTranslations\(\) expects Doctrine\\Common\\Collections\\Collection&iterable<Knp\\DoctrineBehaviors\\Contract\\Entity\\TranslationInterface\>, array<int, Knp\\DoctrineBehaviors\\Contract\\Entity\\TranslationInterface\> given#'
