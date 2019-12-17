@@ -4,6 +4,10 @@ declare(strict_types=1);
 
 namespace Knp\DoctrineBehaviors\Tests\ORM;
 
+use Knp\DoctrineBehaviors\Tests\AbstractBehaviorTestCase;
+use Knp\DoctrineBehaviors\Tests\Fixtures\Repository\FilterableRepository;
+use Knp\DoctrineBehaviors\Tests\Fixtures\Entity\FilterableEntity;
+
 namespace Knp\DoctrineBehaviors\Tests\ORM;
 
 use Knp\DoctrineBehaviors\Tests\AbstractBehaviorTestCase;
