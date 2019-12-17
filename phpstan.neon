@@ -37,3 +37,5 @@ parameters:
         # cache buggy
         - '#Return typehint of method Knp\\DoctrineBehaviors\\Tests\\Fixtures\\Entity\\TreeNodeRepository\:\:getTree\(\) has invalid type Knp\\DoctrineBehaviors\\Model\\Tree\\NodeInterface#'
         - '#Access to an undefined property Knp\\DoctrineBehaviors\\Tests\\Fixtures\\Entity\\TreeNodeEntity\:\:\$parentNodePath#'
+
+        - '#Call to an undefined method Doctrine\\Common\\Persistence\\ObjectRepository\:\:createQueryBuilder\(\)#'

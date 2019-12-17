@@ -37,11 +37,10 @@ final class GeocodableTest extends AbstractBehaviorTestCase
 
         $this->locationProvider = static::$container->get(LocationProviderInterface::class);
         $this->connection = static::$container->get('doctrine.dbal.default_connection');
+        $this->geocodableRepository = static::$container->get(GeocodableRepository::class);
 
         // load cities to database
         $this->loadEntitiesToDatabase();
-
-        $this->geocodableRepository = $this->entityManager->getRepository(GeocodableEntity::class);
     }
 
     /**

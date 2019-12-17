@@ -26,8 +26,13 @@ services:
     # for geocodable
     Knp\DoctrineBehaviors\Tests\Provider\TestLocationProvider: null
     Knp\DoctrineBehaviors\Contract\Provider\LocationProviderInterface: '@Knp\DoctrineBehaviors\Tests\Provider\TestLocationProvider'
+    Knp\DoctrineBehaviors\Tests\Fixtures\Repository\GeocodableRepository: null
+
+    # for filterable
+    Knp\DoctrineBehaviors\Tests\Fixtures\Repository\FilterableRepository: null
 
     Knp\DoctrineBehaviors\Tests\DatabaseLoader:  null
+
 
     Knp\DoctrineBehaviors\ORM\Loggable\LoggableSubscriber:
         arguments:

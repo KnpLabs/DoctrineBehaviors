@@ -4,25 +4,31 @@ declare(strict_types=1);
 
 namespace Knp\DoctrineBehaviors\Tests\ORM;
 
+namespace Knp\DoctrineBehaviors\Tests\ORM;
+
 use Knp\DoctrineBehaviors\Tests\AbstractBehaviorTestCase;
 use Knp\DoctrineBehaviors\Tests\Fixtures\Entity\FilterableEntity;
 use Knp\DoctrineBehaviors\Tests\Fixtures\Repository\FilterableRepository;
 
 final class FilterableRepositoryTest extends AbstractBehaviorTestCase
 {
+    /**
+     * @var FilterableRepository
+     */
+    private $filterableRepository;
+
     protected function setUp(): void
     {
         parent::setUp();
+
+        $this->filterableRepository = static::$container->get(FilterableRepository::class);
 
         $this->createEntities();
     }
 
     public function testShouldFilterByNameUsingLike(): void
     {
-        /** @var FilterableRepository $repository */
-        $repository = $this->entityManager->getRepository(FilterableEntity::class);
-
-        $collection = $repository->filterBy(['e:name' => 'name'])->getQuery()->execute();
+        $collection = $this->filterableRepository->filterBy(['e:name' => 'name'])->getQuery()->execute();
 
         $this->assertCount(2, $collection);
         $this->assertSame('name1', $collection[0]->getName());
@@ -31,10 +37,7 @@ final class FilterableRepositoryTest extends AbstractBehaviorTestCase
 
     public function testShouldFilterByCodeUsingEqual(): void
     {
-        /** @var FilterableRepository $repository */
-        $repository = $this->entityManager->getRepository(FilterableEntity::class);
-
-        $collection = $repository->filterBy(['e:code' => '2'])->getQuery()->execute();
+        $collection = $this->filterableRepository->filterBy(['e:code' => '2'])->getQuery()->execute();
 
         $this->assertCount(1, $collection);
         $this->assertSame('name1', $collection[0]->getName());
@@ -52,7 +55,6 @@ final class FilterableRepositoryTest extends AbstractBehaviorTestCase
             $entity = new FilterableEntity();
             $entity->setCode($code);
             $entity->setName($name);
-
             $this->entityManager->persist($entity);
         }
 
