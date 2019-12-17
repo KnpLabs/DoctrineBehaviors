@@ -43,7 +43,7 @@ jobs:
 
         -
             <<: *POSTGRES_JOB
-            php: '7.4snapshot'
+            php: '7.4'
 
         -
             <<: *POSTGRES_JOB
@@ -77,7 +77,7 @@ jobs:
 
         -
             <<: *MYSQL_JOB
-            php: '7.4snapshot'
+            php: '7.4'
 
         -
             <<: *MYSQL_JOB
