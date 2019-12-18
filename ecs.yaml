@@ -32,6 +32,9 @@ parameters:
             - "*Repository.php"
 
 services:
+    Symplify\CodingStandard\Sniffs\CleanCode\CognitiveComplexitySniff:
+        max_cognitive_complexity: 8
+
     PhpCsFixer\Fixer\ClassNotation\FinalClassFixer: ~
 
     # see single LICENSE.txt file in the root directory
