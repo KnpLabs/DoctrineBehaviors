@@ -87,10 +87,6 @@ final class GeocodableSubscriber implements EventSubscriber
             }
 
             $unitOfWork->propertyChanged($entity, 'location', $oldValue, $entity->getLocation());
-
-            $unitOfWork->scheduleExtraUpdate($entity, [
-                'location' => [$oldValue, $entity->getLocation()],
-            ]);
         }
     }
 }

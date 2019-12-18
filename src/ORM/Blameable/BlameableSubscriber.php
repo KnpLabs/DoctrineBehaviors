@@ -77,9 +77,6 @@ final class BlameableSubscriber implements EventSubscriber
                 $entity->setCreatedBy($user);
 
                 $this->unitOfWork->propertyChanged($entity, self::CREATED_BY, null, $user);
-                $this->unitOfWork->scheduleExtraUpdate($entity, [
-                    self::CREATED_BY => [null, $user],
-                ]);
             }
         }
 
@@ -89,9 +86,6 @@ final class BlameableSubscriber implements EventSubscriber
                 $entity->setUpdatedBy($user);
 
                 $this->unitOfWork->propertyChanged($entity, self::UPDATED_BY, null, $user);
-                $this->unitOfWork->scheduleExtraUpdate($entity, [
-                    self::UPDATED_BY => [null, $user],
-                ]);
             }
         }
     }
@@ -115,9 +109,6 @@ final class BlameableSubscriber implements EventSubscriber
         $entity->setUpdatedBy($user);
 
         $this->unitOfWork->propertyChanged($entity, self::UPDATED_BY, $oldValue, $user);
-        $this->unitOfWork->scheduleExtraUpdate($entity, [
-            self::UPDATED_BY => [$oldValue, $user],
-        ]);
     }
 
     /**
@@ -136,9 +127,6 @@ final class BlameableSubscriber implements EventSubscriber
             $entity->setDeletedBy($user);
 
             $this->unitOfWork->propertyChanged($entity, self::DELETED_BY, $oldValue, $user);
-            $this->unitOfWork->scheduleExtraUpdate($entity, [
-                self::DELETED_BY => [$oldValue, $user],
-            ]);
         }
     }
 

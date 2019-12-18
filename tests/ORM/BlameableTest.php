@@ -57,9 +57,19 @@ final class BlameableTest extends AbstractBehaviorTestCase
         /** @var BlameableEntity $entity */
         $entity = $this->blameableRepository->find($id);
 
+        $this->enableDebugStackLogger();
+
         $entity->setTitle('test'); // need to modify at least one column to trigger onUpdate
         $this->entityManager->flush();
         $this->entityManager->clear();
+
+        $this->assertCount(3, $this->debugStack->queries);
+        $this->assertSame('"START TRANSACTION"', $this->debugStack->queries[1]['sql']);
+        $this->assertSame(
+            'UPDATE BlameableEntity SET title = ?, updatedBy = ? WHERE id = ?',
+            $this->debugStack->queries[2]['sql']
+        );
+        $this->assertSame('"COMMIT"', $this->debugStack->queries[3]['sql']);
 
         /** @var BlameableEntity $entity */
         $entity = $this->blameableRepository->find($id);
@@ -93,5 +103,36 @@ final class BlameableTest extends AbstractBehaviorTestCase
         $this->entityManager->clear();
 
         $this->assertSame('user3', $entity->getDeletedBy());
+    }
+
+    public function testExtraSqlCalls(): void
+    {
+        $entity = new BlameableEntity();
+
+        $this->enableDebugStackLogger();
+
+        $this->entityManager->persist($entity);
+        $this->entityManager->flush();
+
+        $expectedCount = $this->isPostgreSql() ? 4 : 3;
+        $startKey = $this->isPostgreSql() ? 2 : 1;
+
+        $this->assertCount($expectedCount, $this->debugStack->queries);
+        $this->assertSame('"START TRANSACTION"', $this->debugStack->queries[$startKey]['sql']);
+
+        $sql2 = $this->debugStack->queries[$startKey + 1]['sql'];
+        if ($this->isPostgreSql()) {
+            $this->assertSame(
+                'INSERT INTO BlameableEntity (id, title, createdBy, updatedBy, deletedBy) VALUES (?, ?, ?, ?, ?)',
+                $sql2
+            );
+        } else {
+            $this->assertSame(
+                'INSERT INTO BlameableEntity (title, createdBy, updatedBy, deletedBy) VALUES (?, ?, ?, ?)',
+                $sql2
+            );
+        }
+
+        $this->assertSame('"COMMIT"', $this->debugStack->queries[$startKey + 2]['sql']);
     }
 }

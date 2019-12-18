@@ -35,7 +35,7 @@
         "jakub-onderka/php-parallel-lint": "^1.0",
         "phpstan/phpstan": "^0.12.2",
         "phpunit/phpunit": "^8.5",
-        "rector/rector": "^0.6.1",
+        "rector/rector": "^0.6.2",
         "symplify/easy-coding-standard": "^7.1",
         "symplify/phpstan-extensions": "^7.1",
         "phpstan/phpstan-doctrine": "^0.12.4",
@@ -52,9 +52,9 @@
         }
     },
     "scripts": {
-        "check-cs": "ecs check src tests --ansi",
-        "fix-cs": "ecs check src tests --fix --ansi",
-        "phpstan": "phpstan analyse src tests --ansi --error-format symplify",
-        "rector": "rector process --config rector-ci.yaml"
+        "check-cs": "vendor/bin/ecs check src tests --ansi",
+        "fix-cs": "vendor/bin/ecs check src tests --fix --ansi",
+        "phpstan": "vendor/bin/phpstan analyse src tests --ansi --error-format symplify",
+        "rector": "vendor/bin/rector process --config rector-ci.yaml"
     }
 }

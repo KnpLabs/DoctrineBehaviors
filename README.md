@@ -9,11 +9,10 @@ It currently handles:
 
  * [Blameable](/docs/blameable.md)
  * [Geocodable](/docs/geocodable.md)
- * joinable
  * [Loggable](/docs/loggable.md)
  * [Sluggable](/docs/sluggable.md)
  * [SoftDeletable](/docs/soft-deletable.md)
- * sortable
+ * [Sortable](/docs/sortable.md)
  * [Uuidable](/docs/uuidable.md)
  * [Timestampable](/docs/timestampable.md)
  * [Translatable](/docs/translatable.md)

@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace Knp\DoctrineBehaviors\Tests;
 
 use Doctrine\DBAL\Connection;
+use Doctrine\DBAL\Logging\DebugStack;
 use Doctrine\DBAL\Platforms\PostgreSqlPlatform;
 use Doctrine\ORM\EntityManagerInterface;
 use Knp\DoctrineBehaviors\Tests\HttpKernel\DoctrineBehaviorsKernel;
@@ -16,6 +17,11 @@ abstract class AbstractBehaviorTestCase extends AbstractKernelTestCase
      * @var EntityManagerInterface
      */
     protected $entityManager;
+
+    /**
+     * @var DebugStack
+     */
+    protected $debugStack;
 
     protected function setUp(): void
     {
@@ -48,5 +54,14 @@ abstract class AbstractBehaviorTestCase extends AbstractKernelTestCase
     protected function provideCustomConfig(): ?string
     {
         return null;
+    }
+
+    protected function enableDebugStackLogger(): void
+    {
+        $this->debugStack = new DebugStack();
+
+        $this->entityManager->getConnection()
+            ->getConfiguration()
+            ->setSQLLogger($this->debugStack);
     }
 }
