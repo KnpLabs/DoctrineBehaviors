@@ -95,7 +95,21 @@ final class BlameableTest extends AbstractBehaviorTestCase
         $this->assertSame('user3', $entity->getDeletedBy());
     }
 
-    public function test(): void
+    public function testExtraSqlCalls(): void
     {
+        $entity = new BlameableEntity();
+
+        $this->enableDebugStackLogger();
+
+        $this->entityManager->persist($entity);
+        $this->entityManager->flush();
+
+        $this->assertCount(3, $this->debugStack->queries);
+        $this->assertSame('"START TRANSACTION"', $this->debugStack->queries[1]['sql']);
+        $this->assertSame(
+            'INSERT INTO BlameableEntity (title, createdBy, updatedBy, deletedBy) VALUES (?, ?, ?, ?)',
+            $this->debugStack->queries[2]['sql']
+        );
+        $this->assertSame('"COMMIT"', $this->debugStack->queries[3]['sql']);
     }
 }
