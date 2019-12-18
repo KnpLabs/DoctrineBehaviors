@@ -114,6 +114,9 @@ jobs:
             script:
                 - composer rector
 
+    allow_failures:
+        - name: "Rector"
+
 cache:
     directories:
         - $HOME/.composer/cache

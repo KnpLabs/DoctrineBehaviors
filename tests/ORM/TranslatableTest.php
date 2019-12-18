@@ -209,6 +209,57 @@ final class TranslatableTest extends AbstractBehaviorTestCase
         $this->assertCount(1, $entity->getTranslations());
     }
 
+    public function testShouldNotPersistNewEmptyTranslations(): void
+    {
+        $entity = new TranslatableEntity();
+        $entity->translate('fr')->setTitle('fabuleux');
+        $entity->translate('en')->setTitle('');
+        $entity->translate('ru')->setTitle('удивительный');
+        $entity->mergeNewTranslations();
+
+        $this->entityManager->persist($entity);
+        $this->entityManager->flush();
+
+        $id = $entity->getId();
+        $this->entityManager->clear();
+
+        $entity = $this->translatableRepository->find($id);
+
+        $this->assertSame('fabuleux', $entity->translate('fr')->getTitle());
+
+        // empty English translation
+        $this->assertNull($entity->translate('en')->getTitle());
+
+        $this->assertSame('удивительный', $entity->translate('ru')->getTitle());
+    }
+
+    public function testShouldRemoveTranslationsWhichBecomeEmpty(): void
+    {
+        $entity = new TranslatableEntity();
+        $entity->translate('fr')->setTitle('fabuleux');
+        $entity->translate('en')->setTitle('awesome');
+        $entity->translate('ru')->setTitle('удивительный');
+        $entity->mergeNewTranslations();
+
+        $this->entityManager->persist($entity);
+        $this->entityManager->flush();
+
+        $entity->translate('en')->setTitle('');
+        $entity->mergeNewTranslations();
+
+        $this->entityManager->persist($entity);
+        $this->entityManager->flush();
+
+        $id = $entity->getId();
+        $this->entityManager->clear();
+
+        $entity = $this->translatableRepository->find($id);
+
+        $this->assertSame('fabuleux', $entity->translate('fr')->getTitle());
+        $this->assertNull($entity->translate('en')->getTitle());
+        $this->assertSame('удивительный', $entity->translate('ru')->getTitle());
+    }
+
     /**
      * Asserts that the one to many relationship between translatable and translations is mapped correctly.
      */
