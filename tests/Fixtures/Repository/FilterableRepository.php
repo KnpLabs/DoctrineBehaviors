@@ -13,7 +13,7 @@ use Knp\DoctrineBehaviors\Tests\Fixtures\Entity\FilterableEntity;
 final class FilterableRepository
 {
     /**
-     * @var ObjectRepository|EntityRepository
+     * @var ObjectRepository&EntityRepository
      */
     private $repository;
 

@@ -14,7 +14,7 @@ use Knp\DoctrineBehaviors\Tests\Fixtures\Entity\GeocodableEntity;
 final class GeocodableRepository
 {
     /**
-     * @var ObjectRepository|EntityRepository
+     * @var ObjectRepository&EntityRepository
      */
     private $repository;
 

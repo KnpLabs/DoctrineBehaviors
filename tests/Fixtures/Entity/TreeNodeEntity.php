@@ -32,7 +32,7 @@ class TreeNodeEntity implements NodeInterface, ArrayAccess
      * @ORM\Id
      * @ORM\Column(type="integer")
      * @ORM\GeneratedValue(strategy="NONE")
-     * @var int
+     * @var int|null
      */
     protected $id;
 

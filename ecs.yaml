@@ -31,6 +31,8 @@ parameters:
         # weird naming
         Symplify\CodingStandard\Fixer\Naming\PropertyNameMatchingTypeFixer:
             - "src/Model/Geocodable/GeocodablePropertiesTrait.php"
+            # & bug
+            - "*Repository.php"
 
 services:
     PhpCsFixer\Fixer\ClassNotation\FinalClassFixer: ~

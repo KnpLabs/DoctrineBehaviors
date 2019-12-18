@@ -22,12 +22,12 @@ parameters:
         - '#return type has no value type specified#'
         - '#has parameter (.*?) with no (typehint|value type) specified#'
         - '#Parameter \#1 \$input of function array_filter expects array, array<int, string\>\|false given#'
-        - '#Method Knp\\DoctrineBehaviors\\Tests\\Fixtures\\Repository\\GeocodableRepository\:\:findOneByTitle\(\) should return Knp\\DoctrineBehaviors\\Contract\\Entity\\GeocodableInterface but returns object\|null#'
         - '#PHPDoc tag @var for variable \$entity has invalid type Knp\\DoctrineBehaviors\\Model\\Uuidable\\UuidableTrait#'
         # cache buggy
         - '#Access to an undefined property Knp\\DoctrineBehaviors\\Tests\\Fixtures\\Entity\\TreeNodeEntity\:\:\$parentNodePath#'
-        - '#Call to an undefined method Doctrine\\Common\\Persistence\\ObjectRepository\:\:createQueryBuilder\(\)#'
         - '#Property Knp\\DoctrineBehaviors\\Tests\\Fixtures\\Entity\\GeocodableEntity\:\:\$location has no typehint specified#'
 
         # tests
         - '#Offset 0 does not exist on array<Knp\\DoctrineBehaviors\\Contract\\Model\\Tree\\NodeInterface\>\|ArrayAccess\|null#'
+
+        - '#Cannot call method addChildNode\(\) on Knp\\DoctrineBehaviors\\Contract\\Model\\Tree\\NodeInterface\|null#'

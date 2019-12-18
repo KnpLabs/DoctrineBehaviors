@@ -127,8 +127,7 @@ trait NodeTrait
 
         $path = $node !== null
             ? rtrim($node->getRealMaterializedPath(), static::getMaterializedPathSeparator())
-            : static::getMaterializedPathSeparator()
-        ;
+            : static::getMaterializedPathSeparator();
         $this->setMaterializedPath($path);
 
         if ($this->parentNode !== null) {

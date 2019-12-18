@@ -14,7 +14,7 @@ trait UuidableMethodsTrait
         $this->uuid = $uuid;
     }
 
-    public function getUuid(): UuidInterface
+    public function getUuid(): ?UuidInterface
     {
         if (is_string($this->uuid)) {
             return Uuid::fromString($this->uuid);

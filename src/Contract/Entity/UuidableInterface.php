@@ -10,7 +10,7 @@ interface UuidableInterface
 {
     public function setUuid(UuidInterface $uuid): void;
 
-    public function getUuid(): UuidInterface;
+    public function getUuid(): ?UuidInterface;
 
     public function generateUuid(): void;
 }

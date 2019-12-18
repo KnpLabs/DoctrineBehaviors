@@ -9,7 +9,7 @@ use Knp\DoctrineBehaviors\ORM\Geocodable\Type\Point;
 trait GeocodablePropertiesTrait
 {
     /**
-     * @var Point
+     * @var Point|null
      */
     protected $location;
 }
