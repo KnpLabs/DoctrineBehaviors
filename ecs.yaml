@@ -22,9 +22,6 @@ parameters:
         # buggy
         Symplify\CodingStandard\Fixer\ControlStructure\PregDelimiterFixer: null
 
-        SlevomatCodingStandard\Sniffs\Namespaces\ReferenceUsedNamesOnlySniff.PartialUse:
-            - 'tests/Fixtures/ORM/FilterableRepository.php'
-
         PhpCsFixer\Fixer\PhpUnit\PhpUnitStrictFixer:
             - "tests/ORM/TimestampableTest.php"
 
