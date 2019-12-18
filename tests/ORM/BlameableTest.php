@@ -114,12 +114,15 @@ final class BlameableTest extends AbstractBehaviorTestCase
         $this->entityManager->persist($entity);
         $this->entityManager->flush();
 
-        $this->assertCount(3, $this->debugStack->queries);
-        $this->assertSame('"START TRANSACTION"', $this->debugStack->queries[1]['sql']);
+        $expectedCount = $this->isPostgreSql() ? 4 : 3;
+        $startKey = $this->isPostgreSql() ? 2 : 1;
+
+        $this->assertCount($expectedCount, $this->debugStack->queries);
+        $this->assertSame('"START TRANSACTION"', $this->debugStack->queries[$startKey]['sql']);
         $this->assertSame(
             'INSERT INTO BlameableEntity (title, createdBy, updatedBy, deletedBy) VALUES (?, ?, ?, ?)',
-            $this->debugStack->queries[2]['sql']
+            $this->debugStack->queries[$startKey + 1]['sql']
         );
-        $this->assertSame('"COMMIT"', $this->debugStack->queries[3]['sql']);
+        $this->assertSame('"COMMIT"', $this->debugStack->queries[$startKey + 2]['sql']);
     }
 }
