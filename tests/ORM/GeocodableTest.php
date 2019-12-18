@@ -71,6 +71,8 @@ final class GeocodableTest extends AbstractBehaviorTestCase
         $this->assertSame($newTitle, $entity->getTitle());
 
         $providedPoint = $this->locationProvider->providePoint();
+
+        $this->assertNotNull($providedPoint);
         $this->assertLocation($providedPoint, $entity->getLocation());
     }
 

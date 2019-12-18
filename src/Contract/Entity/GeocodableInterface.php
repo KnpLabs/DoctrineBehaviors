@@ -8,7 +8,7 @@ use Knp\DoctrineBehaviors\ORM\Geocodable\Type\Point;
 
 interface GeocodableInterface
 {
-    public function getLocation(): Point;
+    public function getLocation(): ?Point;
 
     public function setLocation(?Point $point = null): void;
 }

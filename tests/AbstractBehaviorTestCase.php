@@ -19,9 +19,8 @@ abstract class AbstractBehaviorTestCase extends AbstractKernelTestCase
 
     protected function setUp(): void
     {
-        if ($this->provideCustomConfig()) {
-            $customConfig = $this->provideCustomConfig();
-
+        $customConfig = $this->provideCustomConfig();
+        if ($customConfig !== null) {
             self::bootKernelWithConfigs(DoctrineBehaviorsKernel::class, [$customConfig]);
         } else {
             self::bootKernel(DoctrineBehaviorsKernel::class);
