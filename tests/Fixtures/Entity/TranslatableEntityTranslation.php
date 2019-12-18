@@ -25,7 +25,7 @@ class TranslatableEntityTranslation implements TranslationInterface
 
     /**
      * @ORM\Column(type="string")
-     * @var string
+     * @var string|null
      */
     private $title;
 
@@ -34,7 +34,7 @@ class TranslatableEntityTranslation implements TranslationInterface
         return $this->id;
     }
 
-    public function getTitle(): string
+    public function getTitle(): ?string
     {
         return $this->title;
     }
