@@ -2,7 +2,7 @@
     "name": "knplabs/doctrine-behaviors",
     "description": "Doctrine Behavior Traits",
     "keywords": [
-        "behaviors", "doctrine", "timestampable", "translatable", "filterable", "blameable", "softdeletable", "tree", "uuid"
+        "behaviors", "doctrine", "timestampable", "translatable", "blameable", "softdeletable", "tree", "uuid"
     ],
     "homepage": "http://knplabs.com",
     "license": "MIT",

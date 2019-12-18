@@ -8,7 +8,6 @@ This PHP library is a collection of traits and interfaces that add behaviors to 
 It currently handles:
 
  * [Blameable](/docs/blameable.md)
- * [Filterable](/docs/filterable.md)
  * [Geocodable](/docs/geocodable.md)
  * joinable
  * [Loggable](/docs/loggable.md)

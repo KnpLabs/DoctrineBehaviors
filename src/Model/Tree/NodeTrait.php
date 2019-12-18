@@ -92,6 +92,9 @@ trait NodeTrait
         return $this->getChildNodes()->count() === 0;
     }
 
+    /**
+     * @return Collection|NodeInterface[]
+     */
     public function getChildNodes(): Collection
     {
         // set default value as in entity constructors
@@ -141,6 +144,7 @@ trait NodeTrait
         }
 
         foreach ($this->getChildNodes() as $child) {
+            /** @var NodeInterface $this */
             $child->setChildNodeOf($this);
         }
     }
@@ -200,6 +204,7 @@ trait NodeTrait
         if ($tree === null) {
             $tree = [
                 $this->getNodeId() => [
+                    /** @var NodeInterface $this */
                     'node' => $prepare($this),
                     'children' => [],
                 ],
@@ -211,6 +216,7 @@ trait NodeTrait
                 'node' => $prepare($node),
                 'children' => [],
             ];
+
             $node->toArray($prepare, $tree[$this->getNodeId()]['children']);
         }
 
@@ -230,6 +236,7 @@ trait NodeTrait
                 return $pre . $node;
             };
         }
+
         if ($tree === null) {
             $tree = [$this->getNodeId() => $prepare($this)];
         }
@@ -242,8 +249,12 @@ trait NodeTrait
         return $tree;
     }
 
+    /**
+     * @param NodeInterface $node
+     */
     public function offsetSet($offset, $node): void
     {
+        /** @var NodeInterface $this */
         $node->setChildNodeOf($this);
     }
 
