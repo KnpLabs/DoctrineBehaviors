@@ -57,9 +57,19 @@ final class BlameableTest extends AbstractBehaviorTestCase
         /** @var BlameableEntity $entity */
         $entity = $this->blameableRepository->find($id);
 
+        $this->enableDebugStackLogger();
+
         $entity->setTitle('test'); // need to modify at least one column to trigger onUpdate
         $this->entityManager->flush();
         $this->entityManager->clear();
+
+        $this->assertCount(3, $this->debugStack->queries);
+        $this->assertSame('"START TRANSACTION"', $this->debugStack->queries[1]['sql']);
+        $this->assertSame(
+            'UPDATE BlameableEntity SET title = ?, updatedBy = ? WHERE id = ?',
+            $this->debugStack->queries[2]['sql']
+        );
+        $this->assertSame('"COMMIT"', $this->debugStack->queries[3]['sql']);
 
         /** @var BlameableEntity $entity */
         $entity = $this->blameableRepository->find($id);
