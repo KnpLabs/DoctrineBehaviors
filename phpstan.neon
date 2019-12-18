@@ -1,43 +1,33 @@
 includes:
     - vendor/symplify/phpstan-extensions/config/config.neon
+    - vendor/phpstan/phpstan-doctrine/extension.neon
+    - vendor/phpstan/phpstan-phpunit/extension.neon
 
 parameters:
-    level: 7
+    level: 8
     checkGenericClassInNonGenericObjectType: false
 
     # to allow installing with various phsptan versions without reporting old errors here
-    reportUnmatchedIgnoredErrors: false
+#    reportUnmatchedIgnoredErrors: false
 
     ignoreErrors:
         # traits
-        - '#Access to an undefined property Knp\\DoctrineBehaviors\\Tests\\Fixtures\\ORM\\TreeNodeEntity::\$parentNodePath#'
         - '#Call to an undefined method Knp\\DoctrineBehaviors(.*?)#'
 
         # buggy
-        - '#does not accept Doctrine\\Common\\Persistence\\ObjectRepository#'
         - '#of function call_user_func_array expects callable#'
 
         # mixed
         - '#has no return typehint specified#'
         - '#return type has no value type specified#'
         - '#has parameter (.*?) with no (typehint|value type) specified#'
-        - '#has no typehint specified#'
-
         - '#Parameter \#1 \$input of function array_filter expects array, array<int, string\>\|false given#'
         - '#Method Knp\\DoctrineBehaviors\\Tests\\Fixtures\\Repository\\GeocodableRepository\:\:findOneByTitle\(\) should return Knp\\DoctrineBehaviors\\Contract\\Entity\\GeocodableInterface but returns object\|null#'
-
-        - '#Method Knp\\DoctrineBehaviors\\Tests\\Fixtures\\Repository\\TreeNodeRepository\:\:getTree\(\) should return array<Knp\\DoctrineBehaviors\\Contract\\Model\\Tree\\NodeInterface\>\|ArrayAccess\|null but returns ArrayAccess\|Knp\\DoctrineBehaviors\\Contract\\Model\\Tree\\NodeInterface\|null#'
-
-        -
-            message: '#Property Knp\\DoctrineBehaviors\\Tests\\ORM\\GeocodableTest\:\:\$geocodableEntityRepository \(Knp\\DoctrineBehaviors\\Tests\\Fixtures\\ORM\\GeocodableEntityRepository\) does not accept Doctrine\\Persistence\\ObjectRepository#'
-            path: tests/ORM/GeocodableTest.php
-
-        - '#Parameter \#1 \$argument of class ReflectionClass constructor expects class\-string<T of object\>\|T of object, string given#'
         - '#PHPDoc tag @var for variable \$entity has invalid type Knp\\DoctrineBehaviors\\Model\\Uuidable\\UuidableTrait#'
         # cache buggy
-        - '#Return typehint of method Knp\\DoctrineBehaviors\\Tests\\Fixtures\\Entity\\TreeNodeRepository\:\:getTree\(\) has invalid type Knp\\DoctrineBehaviors\\Model\\Tree\\NodeInterface#'
         - '#Access to an undefined property Knp\\DoctrineBehaviors\\Tests\\Fixtures\\Entity\\TreeNodeEntity\:\:\$parentNodePath#'
-
         - '#Call to an undefined method Doctrine\\Common\\Persistence\\ObjectRepository\:\:createQueryBuilder\(\)#'
+        - '#Property Knp\\DoctrineBehaviors\\Tests\\Fixtures\\Entity\\GeocodableEntity\:\:\$location has no typehint specified#'
 
-        - '#Parameter \#1 \$translations of method Knp\\DoctrineBehaviors\\Tests\\Fixtures\\Entity\\TranslatableEntity\:\:setTranslations\(\) expects Doctrine\\Common\\Collections\\Collection&iterable<Knp\\DoctrineBehaviors\\Contract\\Entity\\TranslationInterface\>, array<int, Knp\\DoctrineBehaviors\\Contract\\Entity\\TranslationInterface\> given#'
+        # tests
+        - '#Offset 0 does not exist on array<Knp\\DoctrineBehaviors\\Contract\\Model\\Tree\\NodeInterface\>\|ArrayAccess\|null#'
