@@ -94,4 +94,8 @@ final class BlameableTest extends AbstractBehaviorTestCase
 
         $this->assertSame('user3', $entity->getDeletedBy());
     }
+
+    public function test(): void
+    {
+    }
 }
