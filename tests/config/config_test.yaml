@@ -23,11 +23,6 @@ services:
     Knp\DoctrineBehaviors\Tests\Provider\TestUserProvider: null
     Knp\DoctrineBehaviors\Contract\Provider\UserProviderInterface: '@Knp\DoctrineBehaviors\Tests\Provider\TestUserProvider'
 
-    # for geocodable
-    Knp\DoctrineBehaviors\Tests\Provider\TestLocationProvider: null
-    Knp\DoctrineBehaviors\Contract\Provider\LocationProviderInterface: '@Knp\DoctrineBehaviors\Tests\Provider\TestLocationProvider'
-    Knp\DoctrineBehaviors\Tests\Fixtures\Repository\GeocodableRepository: null
-
     Knp\DoctrineBehaviors\Tests\DatabaseLoader:  null
 
 
@@ -45,14 +40,6 @@ doctrine:
         password: "%env(DB_PASSWD)%"
         driver: "%env(DB_ENGINE)%"
         memory: "%env(bool:DB_MEMORY)%"
-
-        # required for Geocodable
-        types:
-            point: 'Knp\DoctrineBehaviors\DBAL\Types\PointType'
-
-        # see https://github.com/creof/doctrine2-spatial/issues/176#issuecomment-345974376
-        mapping_types:
-            point: point
 
     # creates Doctrine\ORM\EntityManager services
     orm:

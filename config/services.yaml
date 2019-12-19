@@ -7,10 +7,7 @@ services:
     Knp\DoctrineBehaviors\:
         resource: "../src"
         exclude:
-            - "../src/ORM/Geocodable/Query/*"
-            - "../src/ORM/Geocodable/Type/*"
             - "../src/Bundle/*"
-            - "../src/DBAL/Types/*"
             - "../src/Exception/*"
 
     Knp\DoctrineBehaviors\ORM\Translatable\TranslatableSubscriber:
