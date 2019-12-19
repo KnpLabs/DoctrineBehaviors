@@ -4,7 +4,6 @@ declare(strict_types=1);
 
 namespace Knp\DoctrineBehaviors\Model\Sluggable;
 
-use Behat\Transliterator\Transliterator;
 use Nette\Utils\Strings;
 use UnexpectedValueException;
 
@@ -73,8 +72,7 @@ trait SluggableMethodsTrait
 
         // generate the slug itself
         $sluggableText = implode(' ', $usableValues);
-
-        $sluggableText = Transliterator::transliterate($sluggableText, $this->getSlugDelimiter());
+        $sluggableText = Strings::webalize($sluggableText, $this->getSlugDelimiter());
 
         $urlized = strtolower(
             trim(

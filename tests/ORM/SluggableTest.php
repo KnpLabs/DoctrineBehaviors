@@ -68,7 +68,7 @@ final class SluggableTest extends AbstractBehaviorTestCase
     {
         yield ['The name', 'the-name'];
         yield ['Löic & René', 'loic-rene'];
-        yield ['Иван Иванович', 'ivan-ivanovich'];
+        yield ['Иван Иванович', 'ivan-ivanovic'];
         yield ['Châteauneuf du Pape', 'chateauneuf-du-pape'];
         yield ['Žluťoučký kůň', 'zlutoucky-kun'];
     }
