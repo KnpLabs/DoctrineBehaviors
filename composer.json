@@ -19,7 +19,6 @@
         "symfony/http-kernel": "^4.4|^5.0",
         "symfony/dependency-injection": "^4.4|^5.0",
         "symfony/security-core": "^4.4|^5.0",
-        "symfony/security": "^4.4|^5.0",
         "symfony/cache": "^4.4|^5.0",
         "symplify/package-builder": "^7.1",
         "nette/utils": "^3.0",
