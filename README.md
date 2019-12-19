@@ -76,15 +76,24 @@ Voilá!
 
 You now have a working `Category` that behaves like:
 
-## Testing
+### 3 Steps to Contribute
+
+- **1 feature per pull-request**
+- **New feature needs tests**
+- Tests and static analysis **must pass**:
+
+    ```bash
+    vendor/bin/phpunit
+    composer fix-cs
+    composer phpstan
+    ```
+ 
+## Upgrade 1.x to 2
+
+There have been many changes between 1 and 2, but don't worry. 
+This package uses [Rector](https://github.com/rectorphp/rector), that handles upgrade for you.
 
 ```bash
-vendor/bin/phpunit
-```
-
-Run coding standard fixes and check static analysis:
-
-```bash
-composer fix-cs
-composer phpstan
+composer require rector/rector --dev
+vendor/bin/rector process src --config vendor/knplabs/doctrine-behaviors/upgrade/rector/doctrine-behaviors-20.yaml
 ```
