@@ -4,8 +4,7 @@ declare(strict_types=1);
 
 namespace Knp\DoctrineBehaviors\Model\Sluggable;
 
-use Behat\Transliterator\Transliterator;
-use Nette\Utils\Strings;
+use Symfony\Component\String\Slugger\AsciiSlugger;
 use UnexpectedValueException;
 
 trait SluggableMethodsTrait
@@ -74,16 +73,9 @@ trait SluggableMethodsTrait
         // generate the slug itself
         $sluggableText = implode(' ', $usableValues);
 
-        $sluggableText = Transliterator::transliterate($sluggableText, $this->getSlugDelimiter());
+        $unicodeString = (new AsciiSlugger())->slug($sluggableText, $this->getSlugDelimiter());
 
-        $urlized = strtolower(
-            trim(
-                $sluggableText = Strings::replace($sluggableText, '#[^a-zA-Z0-9\\/_|+ -]#', ''),
-                $this->getSlugDelimiter()
-            )
-        );
-
-        return Strings::replace($urlized, '#[\\/_|+ -]+#', $this->getSlugDelimiter());
+        return strtolower($unicodeString->toString());
     }
 
     private function ensureAtLeastOneUsableValue(array $values, array $usableValues): void
