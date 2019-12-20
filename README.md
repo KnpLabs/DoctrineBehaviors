@@ -76,7 +76,7 @@ Voilá!
 
 You now have a working `Category` that behaves like:
 
-### 3 Steps to Contribute
+## 3 Steps to Contribute
 
 - **1 feature per pull-request**
 - **New feature needs tests**
