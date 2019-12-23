@@ -67,3 +67,7 @@ services:
 
     # @todo de-fluent method calls
     # add scalar types to trait methods
+    Rector\Doctrine\Rector\Class_\AddEntityIdByConditionRector:
+        $detectedTraits:
+            - 'Knp\DoctrineBehaviors\Model\Translatable\Translation'
+            - 'Knp\DoctrineBehaviors\Model\Translatable\TranslationTrait'
