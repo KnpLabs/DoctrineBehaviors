@@ -38,7 +38,8 @@
         "symplify/easy-coding-standard": "^7.1",
         "symplify/phpstan-extensions": "^7.1",
         "phpstan/phpstan-doctrine": "^0.12.4",
-        "phpstan/phpstan-phpunit": "^0.12.2"
+        "phpstan/phpstan-phpunit": "^0.12.2",
+        "symplify/changelog-linker": "^7.1"
     },
     "autoload": {
         "psr-4": {
