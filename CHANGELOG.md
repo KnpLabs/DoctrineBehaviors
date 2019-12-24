@@ -7,6 +7,76 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 
 PRs and issues are linked, so you can find more about it. Thanks to [ChangelogLinker](https://github.com/Symplify/ChangelogLinker).
 
+<!-- changelog-linker -->
+
+## [v2.0.0-alpha4]
+
+### Added
+
+- [#469] [Rector] Add Upgrade set for id property on translations
+
+## [v2.0.0-alpha3]
+
+### Changed
+
+- [#468] Use symfony/strings instead of transliterator
+
+### Removed
+
+- [#467] [Geocodable] Drop for very wide interface and limited usage
+- [#464] Remove scheduleExtraUpdate calls
+
+## [v2.0.0-alpha2]
+
+### Added
+
+- [#448] [Translation] add abstract class support
+- [#460] add setTranslations()
+- [#452] Add missing dependency symplify/package-builder, Thanks to [@webda2l]
+- [#447] add default location provider
+
+### Changed
+
+- [#458] Use PHP 7.4 instead of a snapshot on Travis, Thanks to [@andreybolonin]
+- [#459] composer: use the symfony/security for symfony 4.4
+- [#461] Various updates
+- [#449] make slug unique optionally [closes [#236]]
+- [#453] use entity list instead of explicit
+- [#450] [Uuidable] init
+- [#451] [tests] move entities and repositories to own namespaces
+
+### Removed
+
+- [#463] drop filterable, way to opinionated and limited, use custom implementation
+- [#457] remove repository traits, use custom methods in own repository instead
+
+## [v2.0.0-alpha1]
+
+### Added
+
+- [#435] [CI] Add + Apply Coding Standards: PSR12, PHP 7.0, PHP 7.1
+- [#445] [CI] Add Rector
+- [#436] Add static code analysis and PSR-4 for tests
+- [#443] Add code of conduct
+- [#425] Explicitly add maintainers in the README, Thanks to [@alexpozzi]
+
+### Changed
+
+- [#423] Do not specify version constraint - let Composer do this, Thanks to [@bocharsky-bw]
+- [#433] Travis: bump to min PHP 7.2, test stable doctrine/orm
+- [#389] Shrink locale columns to 5 chars, Thanks to [@NiR-]
+- [#442] Refactoring tests to dependency injection container based + use interfaces over traits for detection
+- [#390] Document master and v1 branches, Thanks to [@NiR-]
+- [#438] [cs] apply common set - unite MIT license to single file
+- [#444] [cs] use trait suffix for traits to prevent opening
+- [#439] [cs] apply symplify set
+- [#441] [tests] strict types for subscribers, various PR cherry-pick
+
+### Fixed
+
+- [#440] [Translatable] Fix property access on twig
+- [#411] Fix config deprecation, Thanks to [@martinprihoda]
+
 ## [1.6.0] - 2018-11-13
 
 ### Added
@@ -54,7 +124,7 @@ PRs and issues are linked, so you can find more about it. Thanks to [ChangelogLi
 - [#317] Fix interaction between translations & joined inheritance, Thanks to [@lemoinem]
 - [#316] Fixes for Symfony 3.1, Thanks to [@tarlepp]
 
-## Unreleased
+## Previous Versions
 
 ### Added
 
@@ -175,76 +245,6 @@ PRs and issues are linked, so you can find more about it. Thanks to [ChangelogLi
 - [#60] Remove [@constructor] annotations, Thanks to [@jankramer]
 - [#158] Removed Id from EnittyTranslation fixture., Thanks to [@kuczek]
 - [#142] remove unneeded dependency, Thanks to [@greg0ire]
-
-## [v2.0.0-alpha4]
-
-### Added
-
-- [#469] [Rector] Add Upgrade set for id property on translations
-
-## [v2.0.0-alpha3]
-
-### Changed
-
-- [#468] Use symfony/strings instead of transliterator
-
-### Removed
-
-- [#467] [Geocodable] Drop for very wide interface and limited usage
-- [#464] Remove scheduleExtraUpdate calls
-
-## [v2.0.0-alpha2]
-
-### Added
-
-- [#448] [Translation] add abstract class support
-- [#460] add setTranslations()
-- [#452] Add missing dependency symplify/package-builder, Thanks to [@webda2l]
-- [#447] add default location provider
-
-### Changed
-
-- [#458] Use PHP 7.4 instead of a snapshot on Travis, Thanks to [@andreybolonin]
-- [#459] composer: use the symfony/security for symfony 4.4
-- [#461] Various updates
-- [#449] make slug unique optionally [closes [#236]]
-- [#453] use entity list instead of explicit
-- [#450] [Uuidable] init
-- [#451] [tests] move entities and repositories to own namespaces
-
-### Removed
-
-- [#463] drop filterable, way to opinionated and limited, use custom implementation
-- [#457] remove repository traits, use custom methods in own repository instead
-
-## [v2.0.0-alpha1]
-
-### Added
-
-- [#435] [CI] Add + Apply Coding Standards: PSR12, PHP 7.0, PHP 7.1
-- [#445] [CI] Add Rector
-- [#436] Add static code analysis and PSR-4 for tests
-- [#443] Add code of conduct
-- [#425] Explicitly add maintainers in the README, Thanks to [@alexpozzi]
-
-### Changed
-
-- [#423] Do not specify version constraint - let Composer do this, Thanks to [@bocharsky-bw]
-- [#433] Travis: bump to min PHP 7.2, test stable doctrine/orm
-- [#389] Shrink locale columns to 5 chars, Thanks to [@NiR-]
-- [#442] Refactoring tests to dependency injection container based + use interfaces over traits for detection
-- [#390] Document master and v1 branches, Thanks to [@NiR-]
-- [#438] [cs] apply common set - unite MIT license to single file
-- [#444] [cs] use trait suffix for traits to prevent opening
-- [#439] [cs] apply symplify set
-- [#441] [tests] strict types for subscribers, various PR cherry-pick
-
-### Fixed
-
-- [#440] [Translatable] Fix property access on twig
-- [#411] Fix config deprecation, Thanks to [@martinprihoda]
-
-<!-- dumped content end -->
 
 [#469]: https://github.com/KnpLabs/DoctrineBehaviors/pull/469
 [#468]: https://github.com/KnpLabs/DoctrineBehaviors/pull/468
