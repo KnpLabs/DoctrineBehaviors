@@ -55,6 +55,11 @@
         "check-cs": "vendor/bin/ecs check src tests --ansi",
         "fix-cs": "vendor/bin/ecs check src tests --fix --ansi",
         "phpstan": "vendor/bin/phpstan analyse src tests --ansi --error-format symplify",
-        "rector": "vendor/bin/rector process --config rector-ci.yaml"
+        "rector": "vendor/bin/rector process --config rector-ci.yaml",
+        "changelog": [
+            "vendor/bin/changelog-linker dump-merges --in-categories --ansi",
+            "vendor/bin/changelog-linker link --ansi",
+            "vendor/bin/changelog-linker cleanup --ansi"
+        ]
     }
 }
