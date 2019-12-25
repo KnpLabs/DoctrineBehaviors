@@ -19,6 +19,11 @@ use Knp\DoctrineBehaviors\Model\Tree\NodeTrait;
 class Category implements NodeInterface
 {
     use NodeTrait;
+
+    public function __toString() : string
+    {
+        return $this->...;
+    }
 }
 ```
 
