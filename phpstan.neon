@@ -28,9 +28,9 @@ parameters:
         - '#Property Knp\\DoctrineBehaviors\\Tests\\Fixtures\\Entity\\GeocodableEntity\:\:\$location has no typehint specified#'
 
         # tests
-        - '#Offset 0 does not exist on array<Knp\\DoctrineBehaviors\\Contract\\Model\\Tree\\NodeInterface\>\|ArrayAccess\|null#'
+        - '#Offset 0 does not exist on array<Knp\\DoctrineBehaviors\\Contract\\Entity\\TreeNodeInterface\>\|ArrayAccess\|null#'
 
-        - '#Cannot call method addChildNode\(\) on Knp\\DoctrineBehaviors\\Contract\\Model\\Tree\\NodeInterface\|null#'
+        - '#Cannot call method addChildNode\(\) on Knp\\DoctrineBehaviors\\Contract\\Entity\\TreeNodeInterface\|null#'
 
         # iterable
         - '#Parameter \#1 \$translations of method Knp\\DoctrineBehaviors\\Tests\\Fixtures\\Entity\\TranslatableEntity\:\:setTranslations\(\) expects Doctrine\\Common\\Collections\\Collection&iterable<Knp\\DoctrineBehaviors\\Contract\\Entity\\TranslationInterface\>, array<int, Knp\\DoctrineBehaviors\\Contract\\Entity\\TranslationInterface\> given#'

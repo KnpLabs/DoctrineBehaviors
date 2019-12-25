@@ -2,17 +2,17 @@
 
 declare(strict_types=1);
 
-namespace Knp\DoctrineBehaviors\Tests\ORM\Tree;
+namespace Knp\DoctrineBehaviors\Tests\ORM;
 
 use Iterator;
-use Knp\DoctrineBehaviors\Contract\Model\Tree\NodeInterface;
+use Knp\DoctrineBehaviors\Contract\Entity\TreeNodeInterface;
 use Knp\DoctrineBehaviors\Tests\AbstractBehaviorTestCase;
 use Knp\DoctrineBehaviors\Tests\Fixtures\Entity\TreeNodeEntity;
 use Knp\DoctrineBehaviors\Tests\Fixtures\Repository\TreeNodeRepository;
 use LogicException;
 use Nette\Utils\Json;
 
-final class NodeTest extends AbstractBehaviorTestCase
+final class TreeNodeTest extends AbstractBehaviorTestCase
 {
     public function testBuildTree(): void
     {
@@ -21,6 +21,7 @@ final class NodeTest extends AbstractBehaviorTestCase
             'setName' => 'root',
             'setId' => 1,
         ]);
+
         $flatTree = [
             $this->buildNode([
                 'setMaterializedPath' => '/1',
@@ -100,7 +101,7 @@ final class NodeTest extends AbstractBehaviorTestCase
     /**
      * @dataProvider provideIsChildNodeOf()
      */
-    public function testTestisChildNodeOf(NodeInterface $child, NodeInterface $parent, $expected): void
+    public function testTestisChildNodeOf(TreeNodeInterface $child, TreeNodeInterface $parent, $expected): void
     {
         $this->assertSame($expected, $child->isChildNodeOf($parent));
     }
@@ -273,9 +274,16 @@ final class NodeTest extends AbstractBehaviorTestCase
         /** @var TreeNodeRepository $repository */
         $repository = $this->entityManager->getRepository(TreeNodeEntity::class);
 
-        $entity = new TreeNodeEntity(1);
-        $entity[0] = new TreeNodeEntity(2);
-        $entity[0][0] = new TreeNodeEntity(3);
+        $entity = new TreeNodeEntity();
+        $entity->setId(1);
+
+        $secondEntity = new TreeNodeEntity();
+        $secondEntity->setId(2);
+        $entity[0] = $secondEntity;
+
+        $thirdEntity = new TreeNodeEntity();
+        $thirdEntity->setId(3);
+        $entity[0][0] = $thirdEntity;
 
         $this->entityManager->persist($entity);
         $this->entityManager->persist($entity[0]);

@@ -7,7 +7,7 @@ namespace Knp\DoctrineBehaviors\EventSubscriber;
 use Doctrine\Common\EventSubscriber;
 use Doctrine\ORM\Event\LoadClassMetadataEventArgs;
 use Doctrine\ORM\Events;
-use Knp\DoctrineBehaviors\Contract\Model\Tree\NodeInterface;
+use Knp\DoctrineBehaviors\Contract\Entity\TreeNodeInterface;
 
 final class TreeSubscriber implements EventSubscriber
 {
@@ -15,7 +15,7 @@ final class TreeSubscriber implements EventSubscriber
     {
         $classMetadata = $loadClassMetadataEventArgs->getClassMetadata();
 
-        if (! is_a($classMetadata->reflClass->getName(), NodeInterface::class, true)) {
+        if (! is_a($classMetadata->reflClass->getName(), TreeNodeInterface::class, true)) {
             return;
         }
 

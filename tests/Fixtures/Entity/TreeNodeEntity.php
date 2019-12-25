@@ -5,28 +5,22 @@ declare(strict_types=1);
 namespace Knp\DoctrineBehaviors\Tests\Fixtures\Entity;
 
 use ArrayAccess;
-use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\ORM\Mapping as ORM;
-use Knp\DoctrineBehaviors\Contract\Model\Tree\NodeInterface;
-use Knp\DoctrineBehaviors\Model\Tree\NodeTrait;
+use Knp\DoctrineBehaviors\Contract\Entity\TreeNodeInterface;
+use Knp\DoctrineBehaviors\Model\Tree\TreeNodeTrait;
 
 /**
  * @ORM\Entity(repositoryClass="Knp\DoctrineBehaviors\Tests\Fixtures\Repository\TreeNodeRepository")
  */
-class TreeNodeEntity implements NodeInterface, ArrayAccess
+class TreeNodeEntity implements TreeNodeInterface, ArrayAccess
 {
-    use NodeTrait;
-
-    /**
-     * @var string
-     */
-    public const PATH_SEPARATOR = '/';
+    use TreeNodeTrait;
 
     /**
      * @ORM\Column(type="string", length=255, nullable=true)
      * @var string
      */
-    protected $name;
+    private $name;
 
     /**
      * @ORM\Id
@@ -34,13 +28,7 @@ class TreeNodeEntity implements NodeInterface, ArrayAccess
      * @ORM\GeneratedValue(strategy="NONE")
      * @var int|null
      */
-    protected $id;
-
-    public function __construct(?int $id = null)
-    {
-        $this->id = $id;
-        $this->childNodes = new ArrayCollection();
-    }
+    private $id;
 
     public function __toString(): string
     {

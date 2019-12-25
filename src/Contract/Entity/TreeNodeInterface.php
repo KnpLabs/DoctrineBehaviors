@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace Knp\DoctrineBehaviors\Contract\Model\Tree;
+namespace Knp\DoctrineBehaviors\Contract\Entity;
 
 use Doctrine\Common\Collections\Collection;
 
@@ -10,7 +10,7 @@ use Doctrine\Common\Collections\Collection;
  * Tree\Node defines a set of needed methods
  * to work with materialized path tree nodes
  */
-interface NodeInterface
+interface TreeNodeInterface
 {
     public function __toString(): string;
 

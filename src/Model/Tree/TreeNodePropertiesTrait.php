@@ -5,9 +5,9 @@ declare(strict_types=1);
 namespace Knp\DoctrineBehaviors\Model\Tree;
 
 use Doctrine\Common\Collections\Collection;
-use Knp\DoctrineBehaviors\Contract\Model\Tree\NodeInterface;
+use Knp\DoctrineBehaviors\Contract\Entity\TreeNodeInterface;
 
-trait NodePropertiesTrait
+trait TreeNodePropertiesTrait
 {
     /**
      * @var string
@@ -15,12 +15,12 @@ trait NodePropertiesTrait
     protected $materializedPath = '';
 
     /**
-     * @var Collection|NodeInterface[]
+     * @var Collection|TreeNodeInterface[]
      */
     private $childNodes;
 
     /**
-     * @var NodeInterface|null
+     * @var TreeNodeInterface|null
      */
     private $parentNode;
 }
