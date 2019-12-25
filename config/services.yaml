@@ -3,18 +3,13 @@ services:
         public: true
         autowire: true
         autoconfigure: true
+        bind:
+            $translatableFetchMode: "LAZY"
+            $translationFetchMode: "LAZY"
+            $dbFieldType: "datetime"
 
     Knp\DoctrineBehaviors\:
         resource: "../src"
         exclude:
             - "../src/Bundle/*"
             - "../src/Exception/*"
-
-    Knp\DoctrineBehaviors\ORM\Translatable\TranslatableSubscriber:
-        arguments:
-            $translatableFetchMode: "LAZY"
-            $translationFetchMode: "LAZY"
-
-    Knp\DoctrineBehaviors\ORM\Timestampable\TimestampableSubscriber:
-        arguments:
-            $dbFieldType: "datetime"

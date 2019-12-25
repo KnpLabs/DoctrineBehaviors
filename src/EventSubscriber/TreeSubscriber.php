@@ -2,31 +2,31 @@
 
 declare(strict_types=1);
 
-namespace Knp\DoctrineBehaviors\ORM\Sortable;
+namespace Knp\DoctrineBehaviors\EventSubscriber;
 
 use Doctrine\Common\EventSubscriber;
 use Doctrine\ORM\Event\LoadClassMetadataEventArgs;
 use Doctrine\ORM\Events;
-use Knp\DoctrineBehaviors\Contract\Entity\SortableInterface;
+use Knp\DoctrineBehaviors\Contract\Model\Tree\NodeInterface;
 
-final class SortableSubscriber implements EventSubscriber
+final class TreeSubscriber implements EventSubscriber
 {
     public function loadClassMetadata(LoadClassMetadataEventArgs $loadClassMetadataEventArgs): void
     {
         $classMetadata = $loadClassMetadataEventArgs->getClassMetadata();
 
-        if (! is_a($classMetadata->reflClass->getName(), SortableInterface::class, true)) {
+        if (! is_a($classMetadata->reflClass->getName(), NodeInterface::class, true)) {
             return;
         }
 
-        // already has the field
-        if ($classMetadata->hasField('sort')) {
+        if ($classMetadata->hasField('materializedPath')) {
             return;
         }
 
         $classMetadata->mapField([
-            'fieldName' => 'sort',
-            'type' => 'integer',
+            'fieldName' => 'materializedPath',
+            'type' => 'string',
+            'length' => 255,
         ]);
     }
 

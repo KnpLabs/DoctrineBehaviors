@@ -11,7 +11,6 @@ It currently handles:
  * [Loggable](/docs/loggable.md)
  * [Sluggable](/docs/sluggable.md)
  * [SoftDeletable](/docs/soft-deletable.md)
- * [Sortable](/docs/sortable.md)
  * [Uuidable](/docs/uuidable.md)
  * [Timestampable](/docs/timestampable.md)
  * [Translatable](/docs/translatable.md)
