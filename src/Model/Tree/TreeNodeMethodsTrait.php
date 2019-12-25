@@ -7,11 +7,11 @@ namespace Knp\DoctrineBehaviors\Model\Tree;
 use Closure;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
-use Knp\DoctrineBehaviors\Contract\Model\Tree\NodeInterface;
+use Knp\DoctrineBehaviors\Contract\Entity\TreeNodeInterface;
 use LogicException;
 use Nette\Utils\Json;
 
-trait NodeMethodsTrait
+trait TreeNodeMethodsTrait
 {
     /**
      * @return string|int|null
@@ -78,7 +78,7 @@ trait NodeMethodsTrait
     }
 
     /**
-     * @return Collection|NodeInterface[]
+     * @return Collection|TreeNodeInterface[]
      */
     public function getChildNodes(): Collection
     {
@@ -90,31 +90,31 @@ trait NodeMethodsTrait
         return $this->childNodes;
     }
 
-    public function addChildNode(NodeInterface $node): void
+    public function addChildNode(TreeNodeInterface $treeNode): void
     {
-        $this->getChildNodes()->add($node);
+        $this->getChildNodes()->add($treeNode);
     }
 
-    public function isIndirectChildNodeOf(NodeInterface $node): bool
+    public function isIndirectChildNodeOf(TreeNodeInterface $treeNode): bool
     {
-        return $this->getRealMaterializedPath() !== $node->getRealMaterializedPath()
-            && strpos($this->getRealMaterializedPath(), $node->getRealMaterializedPath()) === 0;
+        return $this->getRealMaterializedPath() !== $treeNode->getRealMaterializedPath()
+            && strpos($this->getRealMaterializedPath(), $treeNode->getRealMaterializedPath()) === 0;
     }
 
-    public function isChildNodeOf(NodeInterface $node): bool
+    public function isChildNodeOf(TreeNodeInterface $treeNode): bool
     {
-        return $this->getParentMaterializedPath() === $node->getRealMaterializedPath();
+        return $this->getParentMaterializedPath() === $treeNode->getRealMaterializedPath();
     }
 
-    public function setChildNodeOf(?NodeInterface $node = null): void
+    public function setChildNodeOf(?TreeNodeInterface $treeNode = null): void
     {
         $id = $this->getNodeId();
         if (empty($id)) {
             throw new LogicException('You must provide an id for this node if you want it to be part of a tree.');
         }
 
-        $path = $node !== null
-            ? rtrim($node->getRealMaterializedPath(), static::getMaterializedPathSeparator())
+        $path = $treeNode !== null
+            ? rtrim($treeNode->getRealMaterializedPath(), static::getMaterializedPathSeparator())
             : static::getMaterializedPathSeparator();
         $this->setMaterializedPath($path);
 
@@ -122,30 +122,30 @@ trait NodeMethodsTrait
             $this->parentNode->getChildNodes()->removeElement($this);
         }
 
-        $this->parentNode = $node;
+        $this->parentNode = $treeNode;
 
-        if ($node !== null) {
+        if ($treeNode !== null) {
             $this->parentNode->addChildNode($this);
         }
 
         foreach ($this->getChildNodes() as $child) {
-            /** @var NodeInterface $this */
+            /** @var TreeNodeInterface $this */
             $child->setChildNodeOf($this);
         }
     }
 
-    public function getParentNode(): ?NodeInterface
+    public function getParentNode(): ?TreeNodeInterface
     {
         return $this->parentNode;
     }
 
-    public function setParentNode(NodeInterface $node): void
+    public function setParentNode(TreeNodeInterface $treeNode): void
     {
-        $this->parentNode = $node;
+        $this->parentNode = $treeNode;
         $this->setChildNodeOf($this->parentNode);
     }
 
-    public function getRootNode(): NodeInterface
+    public function getRootNode(): TreeNodeInterface
     {
         $parent = $this;
         while ($parent->getParentNode() !== null) {
@@ -182,14 +182,14 @@ trait NodeMethodsTrait
     public function toArray(?Closure $prepare = null, ?array &$tree = null): array
     {
         if ($prepare === null) {
-            $prepare = function (NodeInterface $node) {
+            $prepare = function (TreeNodeInterface $node) {
                 return (string) $node;
             };
         }
         if ($tree === null) {
             $tree = [
                 $this->getNodeId() => [
-                    /** @var NodeInterface $this */
+                    /** @var TreeNodeInterface $this */
                     'node' => $prepare($this),
                     'children' => [],
                 ],
@@ -215,7 +215,7 @@ trait NodeMethodsTrait
     public function toFlatArray(?Closure $prepare = null, ?array &$tree = null): array
     {
         if ($prepare === null) {
-            $prepare = function (NodeInterface $node) {
+            $prepare = function (TreeNodeInterface $node) {
                 $pre = $node->getNodeLevel() > 1 ? implode('', array_fill(0, $node->getNodeLevel(), '--')) : '';
 
                 return $pre . $node;
@@ -235,11 +235,11 @@ trait NodeMethodsTrait
     }
 
     /**
-     * @param NodeInterface $node
+     * @param TreeNodeInterface $node
      */
     public function offsetSet($offset, $node): void
     {
-        /** @var NodeInterface $this */
+        /** @var TreeNodeInterface $this */
         $node->setChildNodeOf($this);
     }
 

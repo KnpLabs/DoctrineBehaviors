@@ -6,7 +6,7 @@ namespace Knp\DoctrineBehaviors\ORM\Tree;
 
 use ArrayAccess;
 use Doctrine\ORM\QueryBuilder;
-use Knp\DoctrineBehaviors\Contract\Model\Tree\NodeInterface;
+use Knp\DoctrineBehaviors\Contract\Entity\TreeNodeInterface;
 
 trait TreeTrait
 {
@@ -30,7 +30,7 @@ trait TreeTrait
     /**
      * Returns a node hydrated with its children and parents
      *
-     * @return NodeInterface[]|ArrayAccess|null
+     * @return TreeNodeInterface[]|ArrayAccess|null
      */
     public function getTree(string $path = '', string $rootAlias = 't', array $extraParams = [])
     {
@@ -39,18 +39,18 @@ trait TreeTrait
         return $this->buildTree($results);
     }
 
-    public function getTreeExceptNodeAndItsChildrenQB(NodeInterface $node, string $rootAlias = 't')
+    public function getTreeExceptNodeAndItsChildrenQB(TreeNodeInterface $treeNode, string $rootAlias = 't')
     {
         return $this->getFlatTreeQB('', $rootAlias)
             ->andWhere($rootAlias . '.materializedPath NOT LIKE :except_path')
             ->andWhere($rootAlias . '.id != :id')
-            ->setParameter('except_path', $node->getRealMaterializedPath() . '%')
-            ->setParameter('id', $node->getId());
+            ->setParameter('except_path', $treeNode->getRealMaterializedPath() . '%')
+            ->setParameter('id', $treeNode->getId());
     }
 
     /**
      * Extracts the root node and constructs a tree using flat resultset
-     * @return ArrayAccess|NodeInterface[]|null
+     * @return ArrayAccess|TreeNodeInterface[]|null
      */
     public function buildTree(array $results)
     {

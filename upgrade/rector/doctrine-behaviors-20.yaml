@@ -25,7 +25,7 @@ services:
     Rector\Renaming\Rector\Class_\RenameClassRector:
         $oldToNewClasses:
             # move interface to "Contract"
-            Knp\DoctrineBehaviors\Model\Tree\NodeInterface: 'Knp\DoctrineBehaviors\Contract\Model\Tree\NodeInterface'
+            Knp\DoctrineBehaviors\Model\Tree\NodeInterface: 'Knp\DoctrineBehaviors\Contract\Entity\TreeNodeInterface'
 
             # suffix "Trait" for traits
             Knp\DoctrineBehaviors\Model\Blameable\BlameableMethods: Knp\DoctrineBehaviors\Model\Blameable\BlameableMethodsTrait
@@ -57,6 +57,9 @@ services:
             Knp\DoctrineBehaviors\Model\Translatable\TranslationMethods: Knp\DoctrineBehaviors\Model\Translatable\TranslationMethodsTrait
             Knp\DoctrineBehaviors\Model\Translatable\TranslationProperties: Knp\DoctrineBehaviors\Model\Translatable\TranslationPropertiesTrait
             Knp\DoctrineBehaviors\Model\Translatable\Translation: Knp\DoctrineBehaviors\Model\Translatable\TranslationTrait
+
+            # tree
+            Knp\DoctrineBehaviors\Model\Tree\Node: 'Knp\DoctrineBehaviors\Model\Tree\TreeNodeTrait'
 
     # @todo de-fluent method calls
     # add scalar types to trait methods

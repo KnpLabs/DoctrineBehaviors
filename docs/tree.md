@@ -10,19 +10,25 @@ declare(strict_types=1);
 namespace App\Entity;
 
 use Doctrine\ORM\Mapping as ORM;
-use Knp\DoctrineBehaviors\Contract\Model\Tree\NodeInterface;
-use Knp\DoctrineBehaviors\Model\Tree\NodeTrait;
+use Knp\DoctrineBehaviors\Contract\Entity\TreeNodeInterface;
+use Knp\DoctrineBehaviors\Model\Tree\TreeNodeTrait;
 
 /**
  * @ORM\Entity
  */
-class Category implements NodeInterface
+class Category implements TreeNodeInterface
 {
-    use NodeTrait;
+    use TreeNodeTrait;
+
+    /**
+     * @ORM\Column(type="string")
+     * @var string
+     */
+    private $name;
 
     public function __toString() : string
     {
-        return $this->...;
+        return (string) $this->name;
     }
 }
 ```
