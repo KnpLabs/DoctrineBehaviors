@@ -41,7 +41,8 @@ class Category implements TreeNodeInterface
 declare(strict_types=1);
 
 $category = new Category;
-$category->setId(1); // tree nodes need an id to construct path.
+$category->setId(1);
+
 $child = new Category;
 $child->setId(2);
 
