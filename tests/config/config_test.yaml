@@ -25,8 +25,7 @@ services:
 
     Knp\DoctrineBehaviors\Tests\DatabaseLoader:  null
 
-
-    Knp\DoctrineBehaviors\ORM\Loggable\LoggableSubscriber:
+    Knp\DoctrineBehaviors\EventSubscriber\LoggableSubscriber:
         arguments:
             $logger: '@Psr\Log\Test\TestLogger'
         tags:
@@ -44,13 +43,6 @@ doctrine:
     # creates Doctrine\ORM\EntityManager services
     orm:
         auto_mapping: true
-
-        dql:
-            # see https://symfony.com/doc/current/doctrine/custom_dql_functions.html
-            # required for Geocodable
-            numeric_functions:
-                DISTANCE: 'Knp\DoctrineBehaviors\ORM\Geocodable\Query\AST\Functions\DistanceFunction'
-
         mappings:
             -
                 name: "DoctrineBehaviors"
