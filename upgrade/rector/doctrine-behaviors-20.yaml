@@ -13,9 +13,6 @@ services:
             Knp\DoctrineBehaviors\Model\SoftDeletable\SoftDeletable: 'Knp\DoctrineBehaviors\Contract\Entity\SoftDeletableInterface'
             Knp\DoctrineBehaviors\Model\SoftDeletable\SoftDeletableMethodsTrait: 'Knp\DoctrineBehaviors\Contract\Entity\SoftDeletableInterface'
 
-            Knp\DoctrineBehaviors\Model\Sortable\Sortable: 'Knp\DoctrineBehaviors\Contract\Entity\SortableInterface'
-            Knp\DoctrineBehaviors\Model\Sortable\SortableMethods: 'Knp\DoctrineBehaviors\Contract\Entity\SortableInterface'
-
             Knp\DoctrineBehaviors\Model\Translatable\Translatable: 'Knp\DoctrineBehaviors\Contract\Entity\TranslatableInterface'
             Knp\DoctrineBehaviors\Model\Translatable\TranslatableMethods: 'Knp\DoctrineBehaviors\Contract\Entity\TranslatableInterface'
 
@@ -48,10 +45,6 @@ services:
             Knp\DoctrineBehaviors\Model\SoftDeletable\SoftDeletableMethods: Knp\DoctrineBehaviors\Model\SoftDeletable\SoftDeletableMethodsTrait
             Knp\DoctrineBehaviors\Model\SoftDeletable\SoftDeletableProperties: Knp\DoctrineBehaviors\Model\SoftDeletable\SoftDeletablePropertiesTrait
             Knp\DoctrineBehaviors\Model\SoftDeletable\SoftDeletable: Knp\DoctrineBehaviors\Model\SoftDeletable\SoftDeletableTrait
-
-            Knp\DoctrineBehaviors\Model\Sortable\SortableMethods: Knp\DoctrineBehaviors\Model\Sortable\SortableMethodsTrait
-            Knp\DoctrineBehaviors\Model\Sortable\SortableProperties: Knp\DoctrineBehaviors\Model\Sortable\SortablePropertiesTrait
-            Knp\DoctrineBehaviors\Model\Sortable\Sortable: Knp\DoctrineBehaviors\Model\Sortable\SortableTrait
 
             Knp\DoctrineBehaviors\Model\Timestampable\TimestampableMethods: Knp\DoctrineBehaviors\Model\Timestampable\TimestampableMethodsTrait
             Knp\DoctrineBehaviors\Model\Timestampable\TimestampableProperties: Knp\DoctrineBehaviors\Model\Timestampable\TimestampablePropertiesTrait
