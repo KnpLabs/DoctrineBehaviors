@@ -1,7 +1,10 @@
 # Translatable
 
-If you're working on a `Category` entity, the `Translatable` behavior expects a **CategoryTranslation** entity in the
-same folder of Category entity by default.
+If you're working on a `Category` entity, translatable behavior expects a `CategoryTranslation` entity in the
+same folder:
+
+- `app/Entity/Category.php`
+- `app/Entity/CategoryTranslation.php`
 
 The default naming convention (or its customization via trait methods) avoids you to manually handle entity associations.
 It is handled automatically by the TranslationSubscriber.
