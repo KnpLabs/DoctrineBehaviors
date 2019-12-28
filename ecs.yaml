@@ -31,6 +31,9 @@ parameters:
             # & bug
             - "*Repository.php"
 
+        SlevomatCodingStandard\Sniffs\Classes\UnusedPrivateElementsSniff:
+            - "tests/Fixtures/Entity/SluggableWithoutRegenerateEntity.php"
+
 services:
     Symplify\CodingStandard\Sniffs\CleanCode\CognitiveComplexitySniff:
         max_cognitive_complexity: 8
