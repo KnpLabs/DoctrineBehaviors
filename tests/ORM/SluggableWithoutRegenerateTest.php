@@ -4,10 +4,8 @@ declare(strict_types=1);
 
 namespace Knp\DoctrineBehaviors\Tests\ORM;
 
-use DateTime;
 use Doctrine\Common\Persistence\ObjectRepository;
 use Doctrine\ORM\EntityRepository;
-use Iterator;
 use Knp\DoctrineBehaviors\Tests\AbstractBehaviorTestCase;
 use Knp\DoctrineBehaviors\Tests\Fixtures\Entity\SluggableEntity;
 use Knp\DoctrineBehaviors\Tests\Fixtures\Entity\SluggableWithoutRegenerateEntity;
@@ -23,7 +21,9 @@ final class SluggableWithoutRegenerateTest extends AbstractBehaviorTestCase
     {
         parent::setUp();
 
-        $this->sluggableWithoutRegenerateRepository = $this->entityManager->getRepository(SluggableWithoutRegenerateEntity::class);
+        $this->sluggableWithoutRegenerateRepository = $this->entityManager->getRepository(
+            SluggableWithoutRegenerateEntity::class
+        );
     }
 
     public function testSlugLoading(): void
