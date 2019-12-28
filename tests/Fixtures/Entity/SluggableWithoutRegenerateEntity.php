@@ -31,17 +31,6 @@ class SluggableWithoutRegenerateEntity implements SluggableInterface
      */
     private $id;
 
-    /**
-     * @ORM\Column(type="datetime")
-     * @var DateTimeInterface
-     */
-    private $date;
-
-    public function __construct()
-    {
-        $this->date = (new DateTime())->modify('-1 year');
-    }
-
     public function getId(): int
     {
         return $this->id;
@@ -55,16 +44,6 @@ class SluggableWithoutRegenerateEntity implements SluggableInterface
     public function setName(string $name): void
     {
         $this->name = $name;
-    }
-
-    public function getDate(): DateTimeInterface
-    {
-        return $this->date;
-    }
-
-    public function setDate(DateTimeInterface $date): void
-    {
-        $this->date = $date;
     }
 
     /**
