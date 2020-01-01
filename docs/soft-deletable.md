@@ -27,11 +27,12 @@ class Category implements SoftDeletableInterface
 ```php
 <?php
 
+/** @var Knp\DoctrineBehaviors\Contract\Entity\SoftDeletableInterface $category */
 $category = new Category();
 $entityManager->persist($category);
 $entityManager->flush();
 
-// get id
+// get id for later
 $id = $category->getId();
 
 // now remove it
@@ -45,8 +46,16 @@ $category = $categoryRepository->findOneById($id);
 // but it's "deleted"
 var_dump($category->isDeleted()); 
 // true
+```
 
-// restore me
+### Restore?
+
+```php
+<?php
+
+use Knp\DoctrineBehaviors\Contract\Entity\SoftDeletableInterface;
+
+/** @var SoftDeletableInterface $category */
 $category->restore();
 
 var_dump($category->isDeleted());
@@ -56,13 +65,15 @@ var_dump($category->isDeleted());
 $entityManager->flush();
 ```
 
+### Delete at Given Time?
+
 ```php
 <?php
 
 use Knp\DoctrineBehaviors\Contract\Entity\SoftDeletableInterface;
 
 /** @var SoftDeletableInterface $category */
-$category = new Category;
+$category = new Category();
 
 $entityManager->persist($category);
 $entityManager->flush();

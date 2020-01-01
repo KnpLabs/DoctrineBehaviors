@@ -30,7 +30,7 @@ class Category implements TimestampableInterface
 use App\Entity\Category;   
 
 /** @var Knp\DoctrineBehaviors\Contract\Entity\TimestampableInterface $category */
-$category = new Category;
+$category = new Category();
 
 $entityManager->persist($category);
 $entityManager->flush();

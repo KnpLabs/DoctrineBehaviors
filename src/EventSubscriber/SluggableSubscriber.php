@@ -15,6 +15,11 @@ use Knp\DoctrineBehaviors\Repository\DefaultSluggableRepository;
 final class SluggableSubscriber implements EventSubscriber
 {
     /**
+     * @var string
+     */
+    private const SLUG = 'slug';
+
+    /**
      * @var DefaultSluggableRepository
      */
     private $defaultSluggableRepository;
@@ -32,7 +37,7 @@ final class SluggableSubscriber implements EventSubscriber
         }
 
         $classMetadata->mapField([
-            'fieldName' => 'slug',
+            'fieldName' => self::SLUG,
             'type' => 'string',
             'nullable' => true,
         ]);
@@ -61,7 +66,7 @@ final class SluggableSubscriber implements EventSubscriber
         if (! is_a($classMetadataInfo->getName(), SluggableInterface::class, true)) {
             return true;
         }
-        return $classMetadataInfo->hasField('slug');
+        return $classMetadataInfo->hasField(self::SLUG);
     }
 
     private function processLifecycleEventArgs(LifecycleEventArgs $lifecycleEventArgs): void
