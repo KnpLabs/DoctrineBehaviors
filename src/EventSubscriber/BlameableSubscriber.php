@@ -13,7 +13,6 @@ use Doctrine\ORM\Mapping\ClassMetadataInfo;
 use Doctrine\ORM\UnitOfWork;
 use Knp\DoctrineBehaviors\Contract\Entity\BlameableInterface;
 use Knp\DoctrineBehaviors\Contract\Provider\UserProviderInterface;
-use Knp\DoctrineBehaviors\Validation\BlameableUserValidation;
 
 final class BlameableSubscriber implements EventSubscriber
 {
@@ -42,19 +41,10 @@ final class BlameableSubscriber implements EventSubscriber
      */
     private $unitOfWork;
 
-    /**
-     * @var BlameableUserValidation
-     */
-    private $blameableUserValidation;
-
-    public function __construct(
-        UserProviderInterface $userProvider,
-        EntityManagerInterface $entityManager,
-        BlameableUserValidation $blameableUserValidation
-    ) {
+    public function __construct(UserProviderInterface $userProvider, EntityManagerInterface $entityManager)
+    {
         $this->userProvider = $userProvider;
         $this->unitOfWork = $entityManager->getUnitOfWork();
-        $this->blameableUserValidation = $blameableUserValidation;
     }
 
     /**
@@ -81,22 +71,22 @@ final class BlameableSubscriber implements EventSubscriber
             return;
         }
 
-        if (! $entity->getCreatedBy()) {
-            $user = $this->userProvider->provideUser();
-            if ($this->blameableUserValidation->isUserValid($user)) {
-                $entity->setCreatedBy($user);
+        $user = $this->userProvider->provideUser();
+        // no user set → skip
+        if ($user === null) {
+            return;
+        }
 
-                $this->unitOfWork->propertyChanged($entity, self::CREATED_BY, null, $user);
-            }
+        if (! $entity->getCreatedBy()) {
+            $entity->setCreatedBy($user);
+
+            $this->unitOfWork->propertyChanged($entity, self::CREATED_BY, null, $user);
         }
 
         if (! $entity->getUpdatedBy()) {
-            $user = $this->userProvider->provideUser();
-            if ($this->blameableUserValidation->isUserValid($user)) {
-                $entity->setUpdatedBy($user);
+            $entity->setUpdatedBy($user);
 
-                $this->unitOfWork->propertyChanged($entity, self::UPDATED_BY, null, $user);
-            }
+            $this->unitOfWork->propertyChanged($entity, self::UPDATED_BY, null, $user);
         }
     }
 
@@ -111,7 +101,7 @@ final class BlameableSubscriber implements EventSubscriber
         }
 
         $user = $this->userProvider->provideUser();
-        if (! $this->blameableUserValidation->isUserValid($user)) {
+        if ($user === null) {
             return;
         }
 
@@ -132,12 +122,14 @@ final class BlameableSubscriber implements EventSubscriber
         }
 
         $user = $this->userProvider->provideUser();
-        if ($this->blameableUserValidation->isUserValid($user)) {
-            $oldValue = $entity->getDeletedBy();
-            $entity->setDeletedBy($user);
-
-            $this->unitOfWork->propertyChanged($entity, self::DELETED_BY, $oldValue, $user);
+        if ($user === null) {
+            return;
         }
+
+        $oldValue = $entity->getDeletedBy();
+        $entity->setDeletedBy($user);
+
+        $this->unitOfWork->propertyChanged($entity, self::DELETED_BY, $oldValue, $user);
     }
 
     public function getSubscribedEvents()
@@ -193,27 +185,24 @@ final class BlameableSubscriber implements EventSubscriber
     private function mapStringUser(ClassMetadataInfo $classMetadataInfo): void
     {
         if (! $classMetadataInfo->hasField(self::CREATED_BY)) {
-            $classMetadataInfo->mapField([
-                'fieldName' => self::CREATED_BY,
-                'type' => 'string',
-                'nullable' => true,
-            ]);
+            $this->mapStringNullableField($classMetadataInfo, self::CREATED_BY);
         }
 
         if (! $classMetadataInfo->hasField(self::UPDATED_BY)) {
-            $classMetadataInfo->mapField([
-                'fieldName' => self::UPDATED_BY,
-                'type' => 'string',
-                'nullable' => true,
-            ]);
+            $this->mapStringNullableField($classMetadataInfo, self::UPDATED_BY);
         }
 
         if (! $classMetadataInfo->hasField(self::DELETED_BY)) {
-            $classMetadataInfo->mapField([
-                'fieldName' => self::DELETED_BY,
-                'type' => 'string',
-                'nullable' => true,
-            ]);
+            $this->mapStringNullableField($classMetadataInfo, self::DELETED_BY);
         }
+    }
+
+    private function mapStringNullableField(ClassMetadataInfo $classMetadataInfo, string $fieldName): void
+    {
+        $classMetadataInfo->mapField([
+            'fieldName' => $fieldName,
+            'type' => 'string',
+            'nullable' => true,
+        ]);
     }
 }
