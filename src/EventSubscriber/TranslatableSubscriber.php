@@ -5,20 +5,21 @@ declare(strict_types=1);
 namespace Knp\DoctrineBehaviors\EventSubscriber;
 
 use Doctrine\Common\EventSubscriber;
-use Doctrine\ORM\EntityManagerInterface;
 use Doctrine\ORM\Event\LifecycleEventArgs;
 use Doctrine\ORM\Event\LoadClassMetadataEventArgs;
 use Doctrine\ORM\Events;
-use Doctrine\ORM\Mapping\Builder\ClassMetadataBuilder;
-use Doctrine\ORM\Mapping\ClassMetadataFactory;
 use Doctrine\ORM\Mapping\ClassMetadataInfo;
 use Knp\DoctrineBehaviors\Contract\Entity\TranslatableInterface;
 use Knp\DoctrineBehaviors\Contract\Entity\TranslationInterface;
 use Knp\DoctrineBehaviors\Contract\Provider\LocaleProviderInterface;
-use Symplify\PackageBuilder\Reflection\PrivatesCaller;
 
 final class TranslatableSubscriber implements EventSubscriber
 {
+    /**
+     * @var string
+     */
+    public const LOCALE = 'locale';
+
     /**
      * @var int
      */
@@ -34,18 +35,11 @@ final class TranslatableSubscriber implements EventSubscriber
      */
     private $localeProvider;
 
-    /**
-     * @var EntityManagerInterface
-     */
-    private $entityManager;
-
     public function __construct(
-        EntityManagerInterface $entityManager,
         LocaleProviderInterface $localeProvider,
         string $translatableFetchMode,
         string $translationFetchMode
     ) {
-        $this->entityManager = $entityManager;
         $this->localeProvider = $localeProvider;
         $this->translatableFetchMode = $this->convertFetchString($translatableFetchMode);
         $this->translationFetchMode = $this->convertFetchString($translationFetchMode);
@@ -62,13 +56,12 @@ final class TranslatableSubscriber implements EventSubscriber
             return;
         }
 
-        if ($this->isTranslatable($classMetadata)) {
+        if (is_a($classMetadata->reflClass->getName(), TranslatableInterface::class, true)) {
             $this->mapTranslatable($classMetadata);
         }
 
-        if ($this->isTranslation($classMetadata)) {
+        if (is_a($classMetadata->reflClass->getName(), TranslationInterface::class, true)) {
             $this->mapTranslation($classMetadata);
-            $this->mapId($classMetadata);
         }
     }
 
@@ -111,11 +104,6 @@ final class TranslatableSubscriber implements EventSubscriber
         }
     }
 
-    private function isTranslatable(ClassMetadataInfo $classMetadataInfo): bool
-    {
-        return is_a($classMetadataInfo->reflClass->getName(), TranslatableInterface::class, true);
-    }
-
     private function mapTranslatable(ClassMetadataInfo $classMetadataInfo): void
     {
         if ($classMetadataInfo->hasAssociation('translations')) {
@@ -125,7 +113,7 @@ final class TranslatableSubscriber implements EventSubscriber
         $classMetadataInfo->mapOneToMany([
             'fieldName' => 'translations',
             'mappedBy' => 'translatable',
-            'indexBy' => 'locale',
+            'indexBy' => self::LOCALE,
             'cascade' => ['persist', 'merge', 'remove'],
             'fetch' => $this->translatableFetchMode,
             'targetEntity' => $classMetadataInfo->getReflectionClass()->getMethod('getTranslationEntityClass')->invoke(
@@ -133,11 +121,6 @@ final class TranslatableSubscriber implements EventSubscriber
             ),
             'orphanRemoval' => true,
         ]);
-    }
-
-    private function isTranslation(ClassMetadataInfo $classMetadataInfo): bool
-    {
-        return is_a($classMetadataInfo->reflClass->getName(), TranslationInterface::class, true);
     }
 
     private function mapTranslation(ClassMetadataInfo $classMetadataInfo): void
@@ -162,41 +145,17 @@ final class TranslatableSubscriber implements EventSubscriber
         $name = $classMetadataInfo->getTableName() . '_unique_translation';
         if (! $this->hasUniqueTranslationConstraint($classMetadataInfo, $name)) {
             $classMetadataInfo->table['uniqueConstraints'][$name] = [
-                'columns' => ['translatable_id', 'locale'],
+                'columns' => ['translatable_id', self::LOCALE],
             ];
         }
 
-        if (! $classMetadataInfo->hasField('locale') && ! $classMetadataInfo->hasAssociation('locale')) {
+        if (! $classMetadataInfo->hasField(self::LOCALE) && ! $classMetadataInfo->hasAssociation(self::LOCALE)) {
             $classMetadataInfo->mapField([
-                'fieldName' => 'locale',
+                'fieldName' => self::LOCALE,
                 'type' => 'string',
                 'length' => 5,
             ]);
         }
-    }
-
-    /**
-     * Kept for BC-compatibility purposes : people expect this lib to map ids for
-     * translations.
-     *
-     * @see https://github.com/doctrine/doctrine2/blob/0bff6aadbc9f3fd8167a320d9f4f6cf269382da0/lib/Doctrine/ORM/Mapping/ClassMetadataFactory.php#L508
-     */
-    private function mapId(ClassMetadataInfo $classMetadataInfo): void
-    {
-        // skip if already has id property
-        if ($classMetadataInfo->hasField('id')) {
-            return;
-        }
-
-        $builder = new ClassMetadataBuilder($classMetadataInfo);
-        $builder->createField('id', 'integer')
-            ->makePrimaryKey()
-            ->generatedValue()
-            ->build();
-
-        $metadataFactory = $this->entityManager->getMetadataFactory();
-        $privatesCaller = new PrivatesCaller();
-        $privatesCaller->callPrivateMethod($metadataFactory, 'completeIdGeneratorMapping', $classMetadataInfo);
     }
 
     private function setLocales(LifecycleEventArgs $lifecycleEventArgs): void
