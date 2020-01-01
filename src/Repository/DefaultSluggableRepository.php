@@ -30,6 +30,6 @@ final class DefaultSluggableRepository
             ->setParameter('id', $sluggable->getId())
             ->setParameter('slug', $uniqueSlug);
 
-        return (bool) $queryBuilder->getQuery()->getSingleScalarResult();
+        return !(bool) $queryBuilder->getQuery()->getSingleScalarResult();
     }
 }
