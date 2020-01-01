@@ -13,6 +13,7 @@ use Doctrine\ORM\Mapping\ClassMetadataInfo;
 use Doctrine\ORM\UnitOfWork;
 use Knp\DoctrineBehaviors\Contract\Entity\BlameableInterface;
 use Knp\DoctrineBehaviors\Contract\Provider\UserProviderInterface;
+use Knp\DoctrineBehaviors\Validation\BlameableUserValidation;
 
 final class BlameableSubscriber implements EventSubscriber
 {
@@ -41,10 +42,19 @@ final class BlameableSubscriber implements EventSubscriber
      */
     private $unitOfWork;
 
-    public function __construct(UserProviderInterface $userProvider, EntityManagerInterface $entityManager)
-    {
+    /**
+     * @var BlameableUserValidation
+     */
+    private $blameableUserValidation;
+
+    public function __construct(
+        UserProviderInterface $userProvider,
+        EntityManagerInterface $entityManager,
+        BlameableUserValidation $blameableUserValidation
+    ) {
         $this->userProvider = $userProvider;
         $this->unitOfWork = $entityManager->getUnitOfWork();
+        $this->blameableUserValidation = $blameableUserValidation;
     }
 
     /**
@@ -73,7 +83,7 @@ final class BlameableSubscriber implements EventSubscriber
 
         if (! $entity->getCreatedBy()) {
             $user = $this->userProvider->provideUser();
-            if ($this->isValidUser($user)) {
+            if ($this->blameableUserValidation->isUserValid($user)) {
                 $entity->setCreatedBy($user);
 
                 $this->unitOfWork->propertyChanged($entity, self::CREATED_BY, null, $user);
@@ -82,7 +92,7 @@ final class BlameableSubscriber implements EventSubscriber
 
         if (! $entity->getUpdatedBy()) {
             $user = $this->userProvider->provideUser();
-            if ($this->isValidUser($user)) {
+            if ($this->blameableUserValidation->isUserValid($user)) {
                 $entity->setUpdatedBy($user);
 
                 $this->unitOfWork->propertyChanged($entity, self::UPDATED_BY, null, $user);
@@ -101,7 +111,7 @@ final class BlameableSubscriber implements EventSubscriber
         }
 
         $user = $this->userProvider->provideUser();
-        if (! $this->isValidUser($user)) {
+        if (! $this->blameableUserValidation->isUserValid($user)) {
             return;
         }
 
@@ -122,7 +132,7 @@ final class BlameableSubscriber implements EventSubscriber
         }
 
         $user = $this->userProvider->provideUser();
-        if ($this->isValidUser($user)) {
+        if ($this->blameableUserValidation->isUserValid($user)) {
             $oldValue = $entity->getDeletedBy();
             $entity->setDeletedBy($user);
 
@@ -142,23 +152,6 @@ final class BlameableSubscriber implements EventSubscriber
         } else {
             $this->mapStringUser($classMetadataInfo);
         }
-    }
-
-    /**
-     * @todo decouple to validator
-     */
-    private function isValidUser($user): bool
-    {
-        $userEntity = $this->userProvider->provideUserEntity();
-        if ($userEntity !== null) {
-            return is_a($user, $userEntity);
-        }
-
-        if (is_object($user)) {
-            return method_exists($user, '__toString');
-        }
-
-        return is_string($user);
     }
 
     private function mapManyToOneUser(ClassMetadataInfo $classMetadataInfo): void
