@@ -148,57 +148,49 @@ final class BlameableSubscriber implements EventSubscriber
 
     private function mapManyToOneUser(ClassMetadataInfo $classMetadataInfo): void
     {
-        /** @var string $userEntity */
         $userEntity = $this->userProvider->provideUserEntity();
-
-        if (! $classMetadataInfo->hasAssociation(self::CREATED_BY)) {
-            $classMetadataInfo->mapManyToOne([
-                'fieldName' => self::CREATED_BY,
-                'targetEntity' => $userEntity,
-                'joinColumns' => [[
-                    'onDelete' => 'SET NULL',
-                ]],
-            ]);
+        if ($userEntity === null) {
+            return;
         }
 
-        if (! $classMetadataInfo->hasAssociation(self::UPDATED_BY)) {
-            $classMetadataInfo->mapManyToOne([
-                'fieldName' => self::UPDATED_BY,
-                'targetEntity' => $userEntity,
-                'joinColumns' => [[
-                    'onDelete' => 'SET NULL',
-                ]],
-            ]);
-        }
-
-        if (! $classMetadataInfo->hasAssociation(self::DELETED_BY)) {
-            $classMetadataInfo->mapManyToOne([
-                'fieldName' => self::DELETED_BY,
-                'targetEntity' => $userEntity,
-                'joinColumns' => [[
-                    'onDelete' => 'SET NULL',
-                ]],
-            ]);
-        }
+        $this->mapManyToOneWithTargetEntity($classMetadataInfo, $userEntity, self::CREATED_BY);
+        $this->mapManyToOneWithTargetEntity($classMetadataInfo, $userEntity, self::UPDATED_BY);
+        $this->mapManyToOneWithTargetEntity($classMetadataInfo, $userEntity, self::DELETED_BY);
     }
 
     private function mapStringUser(ClassMetadataInfo $classMetadataInfo): void
     {
-        if (! $classMetadataInfo->hasField(self::CREATED_BY)) {
-            $this->mapStringNullableField($classMetadataInfo, self::CREATED_BY);
+        $this->mapStringNullableField($classMetadataInfo, self::CREATED_BY);
+        $this->mapStringNullableField($classMetadataInfo, self::UPDATED_BY);
+        $this->mapStringNullableField($classMetadataInfo, self::DELETED_BY);
+    }
+
+    private function mapManyToOneWithTargetEntity(
+        ClassMetadataInfo $classMetadataInfo,
+        string $userEntity,
+        string $fieldName
+    ): void {
+        if ($classMetadataInfo->hasAssociation($fieldName)) {
+            return;
         }
 
-        if (! $classMetadataInfo->hasField(self::UPDATED_BY)) {
-            $this->mapStringNullableField($classMetadataInfo, self::UPDATED_BY);
-        }
-
-        if (! $classMetadataInfo->hasField(self::DELETED_BY)) {
-            $this->mapStringNullableField($classMetadataInfo, self::DELETED_BY);
-        }
+        $classMetadataInfo->mapManyToOne([
+            'fieldName' => $fieldName,
+            'targetEntity' => $userEntity,
+            'joinColumns' => [
+                [
+                    'onDelete' => 'SET NULL',
+                ],
+            ],
+        ]);
     }
 
     private function mapStringNullableField(ClassMetadataInfo $classMetadataInfo, string $fieldName): void
     {
+        if ($classMetadataInfo->hasField($fieldName)) {
+            return;
+        }
+
         $classMetadataInfo->mapField([
             'fieldName' => $fieldName,
             'type' => 'string',
