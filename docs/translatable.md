@@ -1,15 +1,12 @@
 # Translatable
 
-If you're working on a `Category` entity, translatable behavior expects a `CategoryTranslation` entity in the
-same folder:
+If you're working on a `<X>` entity, translatable behavior expects a `<X>Translation` entity in the
+same folder, e.g.:
 
 - `app/Entity/Category.php`
 - `app/Entity/CategoryTranslation.php`
 
-The default naming convention (or its customization via trait methods) avoids you to manually handle entity associations.
-It is handled automatically by the TranslationSubscriber.
-
-In order to use the Translatable trait, you will have to create this `CategoryTranslation` entity.
+The default naming convention (or its customization via trait methods) avoids you to manually handle entity associations. It is handled automatically by the `TranslationSubscriber`.
 
 ## Entity
 
@@ -41,41 +38,28 @@ class CategoryTranslation implements TranslationInterface
      */
     protected $description;
 
-    /**
-     * @return string
-     */
-    public function getName()
+    public function getName(): string
     {
         return $this->name;
     }
 
-    /**
-     * @param  string
-     * @return null
-     */
-    public function setName($name)
+    public function setName(string $name): void
     {
         $this->name = $name;
     }
 
-    /**
-     * @return string
-     */
-    public function getDescription()
+    public function getDescription(): string
     {
         return $this->description;
     }
 
-    /**
-     * @param  string
-     * @return null
-     */
-    public function setDescription($description)
+    public function setDescription(string $description): void
     {
         $this->description = $description;
     }
 }
 ```
+
 The corresponding Category entity needs to `use Translatable;`
 and should only contain fields that you do not need to translate.
 
@@ -106,13 +90,14 @@ class Category implements TranslatableInterface
 
 
 After updating the database, ie. with `bin/console doctrine:schema:update --force`,
-you can now work on translations using `translate` or `getTranslations` methods.
+you can now work on translations using `translate()` or `getTranslations()` methods.
 
 ```php
 <?php
 
 declare(strict_types=1);
 
+/** @var \Knp\DoctrineBehaviors\Contract\Entity\TranslatableInterface $category */
 $category = new Category();
 $category->translate('fr')->setName('Chaussures');
 $category->translate('en')->setName('Shoes');
@@ -154,7 +139,7 @@ trait TranslatableTrait
         $explodedNamespace = explode('\\', __CLASS__);
         $entityClass = array_pop($explodedNamespace);
         
-        return '\\'.implode('\\', $explodedNamespace).'\\Translation\\'.$entityClass.'Translation';
+        return '\\' . implode('\\', $explodedNamespace) . '\\Translation\\' . $entityClass . 'Translation';
     }
 }
 ```
@@ -179,7 +164,7 @@ trait TranslationTrait
         // Remove Translation namespace
         array_pop($explodedNamespace);
         
-        return '\\'.implode('\\', $explodedNamespace).'\\'.substr($entityClass, 0, -11);
+        return '\\' . implode('\\', $explodedNamespace) . '\\' . substr($entityClass, 0, -11);
     }
 }
 ```
@@ -188,10 +173,9 @@ If you want to define a custom translation entity class name just for a single t
 Override the trait method `getTranslationEntityClass` in the translatable entity and `getTranslatableEntityClass`
 in the translation entity. If you override one, you also need to override the other to return the inverse class.
 
-#### Guess Current Locale
+#### Provide Current Locale
 
-You can configure the way the subscriber guesses the current locale, by giving a callable as its first argument.
-This library provides an interface `Knp\DoctrineBehaviors\Contract\Provider\LocaleProviderInterface` that by default returns the current locale using Symfony `RequestStack`.
+This library provides an interface `Knp\DoctrineBehaviors\Contract\Provider\LocaleProviderInterface` that [by default returns the current locale using Symfony `RequestStack` or `TranslatorInterface`](https://github.com/KnpLabs/DoctrineBehaviors/blob/master/src/Provider/LocaleProvider.php).
 
 #### Proxy Translations
 
@@ -217,4 +201,15 @@ class SomeClass
         return \Symfony\Component\PropertyAccess\PropertyAccess::createPropertyAccessor()->getValue($this->translate(), $method);
     }
 }
+```
+
+## Configuration
+
+By default, translation relations are lazy loaded. To change that, just modify parameters in your config:
+
+```yaml
+# services.yaml
+parameters:
+    doctrine_behaviors_translatable_fetch_mode: "LAZY"
+    doctrine_behaviors_translation_fetch_mode: "LAZY"
 ```
