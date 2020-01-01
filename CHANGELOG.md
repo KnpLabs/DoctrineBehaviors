@@ -9,6 +9,27 @@ PRs and issues are linked, so you can find more about it. Thanks to [ChangelogLi
 
 <!-- changelog-linker -->
 
+## [v2.0.0-beta1]
+
+### Added
+
+- [#470] Add `CHANGELOG.md`
+
+### Changed
+
+- [#475] [Tree] Include name "tree" in naming
+- [#478] Improve docs, handle timestampable field type for the user
+- [#474] split NodeTrait to NodeMethodsTrait and NodePropertiesTrait
+
+### Fixed
+
+- [#477] Fix slug uniqueness check function, Thanks to [@StanislavUngr]
+- [#472] Fix slug generation if the getRegenerateSlugOnUpdate method return false, Thanks to [@hermann8u]
+
+### Removed
+
+- [#473] [Sortable] Drop, it never worked
+
 ## [v2.0.0-alpha4]
 
 ### Added
@@ -156,7 +177,7 @@ PRs and issues are linked, so you can find more about it. Thanks to [ChangelogLi
 
 - [#85] [FEATURE] Refactor \Knp\DoctrineBehaviors\ORM\Tree\Tree::getRootNodes to support QueryBuilder customization, Thanks to [@MisatoTremor]
 - [#187] Call generateSlug from SluggableSubscriber, Thanks to [@EmmanuelVella]
-- [#174] Issue [#172]: ability to choose the class translation name, Thanks to [@asprega]
+- [#174] Fix ability to choose the class translation name, Thanks to [@asprega]
 - [#31] README update, Thanks to [@eillarra]
 - [#217] Change allowed_falures to allow_failures in travis.yml config, Thanks to [@akovalyov]
 - [#216] Attemt to put vendor folder to cache to prevent composer failures, Thanks to [@akovalyov]
@@ -225,7 +246,7 @@ PRs and issues are linked, so you can find more about it. Thanks to [ChangelogLi
 - [#30] Fixed bug with isDeleted() return true, Thanks to [@dmishh]
 - [#4] Fixes generate:doctrine:entities errors, Thanks to [@fixe]
 - [#300] Fix beforeNormalization anonymous function, Thanks to [@NiR-]
-- [#298] Fix [#267]: if no config specified all behaviors are enabled, Thanks to [@NiR-]
+- [#298] Fix if no config specified all behaviors are enabled, Thanks to [@NiR-]
 - [#279] Fixes Travis checks, Thanks to [@tobias-93]
 - [#275] Fixes compatibility for Symfony 3.0, Thanks to [@tobias-93]
 - [#24] Fixed removal of translations, Thanks to [@jankramer]
@@ -304,7 +325,6 @@ PRs and issues are linked, so you can find more about it. Thanks to [ChangelogLi
 [#276]: https://github.com/KnpLabs/DoctrineBehaviors/pull/276
 [#275]: https://github.com/KnpLabs/DoctrineBehaviors/pull/275
 [#274]: https://github.com/KnpLabs/DoctrineBehaviors/pull/274
-[#267]: https://github.com/KnpLabs/DoctrineBehaviors/pull/267
 [#266]: https://github.com/KnpLabs/DoctrineBehaviors/pull/266
 [#265]: https://github.com/KnpLabs/DoctrineBehaviors/pull/265
 [#262]: https://github.com/KnpLabs/DoctrineBehaviors/pull/262
@@ -335,7 +355,6 @@ PRs and issues are linked, so you can find more about it. Thanks to [ChangelogLi
 [#179]: https://github.com/KnpLabs/DoctrineBehaviors/pull/179
 [#176]: https://github.com/KnpLabs/DoctrineBehaviors/pull/176
 [#174]: https://github.com/KnpLabs/DoctrineBehaviors/pull/174
-[#172]: https://github.com/KnpLabs/DoctrineBehaviors/pull/172
 [#167]: https://github.com/KnpLabs/DoctrineBehaviors/pull/167
 [#162]: https://github.com/KnpLabs/DoctrineBehaviors/pull/162
 [#161]: https://github.com/KnpLabs/DoctrineBehaviors/pull/161
@@ -484,3 +503,14 @@ PRs and issues are linked, so you can find more about it. Thanks to [ChangelogLi
 [1.5.0]: https://github.com/KnpLabs/DoctrineBehaviors/compare/1.4.1...1.5.0
 [1.4.1]: https://github.com/KnpLabs/DoctrineBehaviors/compare/1.4.0...1.4.1
 [1.4.0]: https://github.com/KnpLabs/DoctrineBehaviors/compare/v2.0.0-alpha4...1.4.0
+[#478]: https://github.com/KnpLabs/DoctrineBehaviors/pull/478
+[#477]: https://github.com/KnpLabs/DoctrineBehaviors/pull/477
+[#475]: https://github.com/KnpLabs/DoctrineBehaviors/pull/475
+[#474]: https://github.com/KnpLabs/DoctrineBehaviors/pull/474
+[#473]: https://github.com/KnpLabs/DoctrineBehaviors/pull/473
+[#472]: https://github.com/KnpLabs/DoctrineBehaviors/pull/472
+[#470]: https://github.com/KnpLabs/DoctrineBehaviors/pull/470
+[v2.0.0-beta1]: https://github.com/KnpLabs/DoctrineBehaviors/compare/v2.0.0-alpha4...v2.0.0-beta1
+[v2.0.0-alpha1]: https://github.com/KnpLabs/DoctrineBehaviors/compare/1.6.0...v2.0.0-alpha1
+[@hermann8u]: https://github.com/hermann8u
+[@StanislavUngr]: https://github.com/StanislavUngr
