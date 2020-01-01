@@ -6,7 +6,6 @@ services:
         bind:
             $translatableFetchMode: "LAZY"
             $translationFetchMode: "LAZY"
-            $dbFieldType: "datetime"
 
     Knp\DoctrineBehaviors\:
         resource: "../src"

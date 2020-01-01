@@ -36,6 +36,7 @@ Then, you can use it like that:
 ```php
 <?php
 
+/** @var Knp\DoctrineBehaviors\Contract\Entity\BlameableInterface $category */
 $category = new Category();
 $entityManager->persist($category);
 
