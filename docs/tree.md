@@ -38,12 +38,11 @@ class Category implements TreeNodeInterface
 ```php
 <?php
 
-declare(strict_types=1);
-
-$category = new Category;
+/** @var Knp\DoctrineBehaviors\Contract\Entity\TreeNodeInterface $category */
+$category = new Category();
 $category->setId(1);
 
-$child = new Category;
+$child = new Category();
 $child->setId(2);
 
 $child->setChildNodeOf($category);

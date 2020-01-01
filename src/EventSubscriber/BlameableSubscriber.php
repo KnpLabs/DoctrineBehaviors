@@ -71,22 +71,22 @@ final class BlameableSubscriber implements EventSubscriber
             return;
         }
 
-        if (! $entity->getCreatedBy()) {
-            $user = $this->userProvider->provideUser();
-            if ($this->isValidUser($user)) {
-                $entity->setCreatedBy($user);
+        $user = $this->userProvider->provideUser();
+        // no user set → skip
+        if ($user === null) {
+            return;
+        }
 
-                $this->unitOfWork->propertyChanged($entity, self::CREATED_BY, null, $user);
-            }
+        if (! $entity->getCreatedBy()) {
+            $entity->setCreatedBy($user);
+
+            $this->unitOfWork->propertyChanged($entity, self::CREATED_BY, null, $user);
         }
 
         if (! $entity->getUpdatedBy()) {
-            $user = $this->userProvider->provideUser();
-            if ($this->isValidUser($user)) {
-                $entity->setUpdatedBy($user);
+            $entity->setUpdatedBy($user);
 
-                $this->unitOfWork->propertyChanged($entity, self::UPDATED_BY, null, $user);
-            }
+            $this->unitOfWork->propertyChanged($entity, self::UPDATED_BY, null, $user);
         }
     }
 
@@ -101,7 +101,7 @@ final class BlameableSubscriber implements EventSubscriber
         }
 
         $user = $this->userProvider->provideUser();
-        if (! $this->isValidUser($user)) {
+        if ($user === null) {
             return;
         }
 
@@ -122,12 +122,14 @@ final class BlameableSubscriber implements EventSubscriber
         }
 
         $user = $this->userProvider->provideUser();
-        if ($this->isValidUser($user)) {
-            $oldValue = $entity->getDeletedBy();
-            $entity->setDeletedBy($user);
-
-            $this->unitOfWork->propertyChanged($entity, self::DELETED_BY, $oldValue, $user);
+        if ($user === null) {
+            return;
         }
+
+        $oldValue = $entity->getDeletedBy();
+        $entity->setDeletedBy($user);
+
+        $this->unitOfWork->propertyChanged($entity, self::DELETED_BY, $oldValue, $user);
     }
 
     public function getSubscribedEvents()
@@ -144,83 +146,55 @@ final class BlameableSubscriber implements EventSubscriber
         }
     }
 
-    /**
-     * @todo decouple to validator
-     */
-    private function isValidUser($user): bool
-    {
-        $userEntity = $this->userProvider->provideUserEntity();
-        if ($userEntity !== null) {
-            return is_a($user, $userEntity);
-        }
-
-        if (is_object($user)) {
-            return method_exists($user, '__toString');
-        }
-
-        return is_string($user);
-    }
-
     private function mapManyToOneUser(ClassMetadataInfo $classMetadataInfo): void
     {
-        /** @var string $userEntity */
         $userEntity = $this->userProvider->provideUserEntity();
-
-        if (! $classMetadataInfo->hasAssociation(self::CREATED_BY)) {
-            $classMetadataInfo->mapManyToOne([
-                'fieldName' => self::CREATED_BY,
-                'targetEntity' => $userEntity,
-                'joinColumns' => [[
-                    'onDelete' => 'SET NULL',
-                ]],
-            ]);
+        if ($userEntity === null) {
+            return;
         }
 
-        if (! $classMetadataInfo->hasAssociation(self::UPDATED_BY)) {
-            $classMetadataInfo->mapManyToOne([
-                'fieldName' => self::UPDATED_BY,
-                'targetEntity' => $userEntity,
-                'joinColumns' => [[
-                    'onDelete' => 'SET NULL',
-                ]],
-            ]);
-        }
-
-        if (! $classMetadataInfo->hasAssociation(self::DELETED_BY)) {
-            $classMetadataInfo->mapManyToOne([
-                'fieldName' => self::DELETED_BY,
-                'targetEntity' => $userEntity,
-                'joinColumns' => [[
-                    'onDelete' => 'SET NULL',
-                ]],
-            ]);
-        }
+        $this->mapManyToOneWithTargetEntity($classMetadataInfo, $userEntity, self::CREATED_BY);
+        $this->mapManyToOneWithTargetEntity($classMetadataInfo, $userEntity, self::UPDATED_BY);
+        $this->mapManyToOneWithTargetEntity($classMetadataInfo, $userEntity, self::DELETED_BY);
     }
 
     private function mapStringUser(ClassMetadataInfo $classMetadataInfo): void
     {
-        if (! $classMetadataInfo->hasField(self::CREATED_BY)) {
-            $classMetadataInfo->mapField([
-                'fieldName' => self::CREATED_BY,
-                'type' => 'string',
-                'nullable' => true,
-            ]);
+        $this->mapStringNullableField($classMetadataInfo, self::CREATED_BY);
+        $this->mapStringNullableField($classMetadataInfo, self::UPDATED_BY);
+        $this->mapStringNullableField($classMetadataInfo, self::DELETED_BY);
+    }
+
+    private function mapManyToOneWithTargetEntity(
+        ClassMetadataInfo $classMetadataInfo,
+        string $userEntity,
+        string $fieldName
+    ): void {
+        if ($classMetadataInfo->hasAssociation($fieldName)) {
+            return;
         }
 
-        if (! $classMetadataInfo->hasField(self::UPDATED_BY)) {
-            $classMetadataInfo->mapField([
-                'fieldName' => self::UPDATED_BY,
-                'type' => 'string',
-                'nullable' => true,
-            ]);
+        $classMetadataInfo->mapManyToOne([
+            'fieldName' => $fieldName,
+            'targetEntity' => $userEntity,
+            'joinColumns' => [
+                [
+                    'onDelete' => 'SET NULL',
+                ],
+            ],
+        ]);
+    }
+
+    private function mapStringNullableField(ClassMetadataInfo $classMetadataInfo, string $fieldName): void
+    {
+        if ($classMetadataInfo->hasField($fieldName)) {
+            return;
         }
 
-        if (! $classMetadataInfo->hasField(self::DELETED_BY)) {
-            $classMetadataInfo->mapField([
-                'fieldName' => self::DELETED_BY,
-                'type' => 'string',
-                'nullable' => true,
-            ]);
-        }
+        $classMetadataInfo->mapField([
+            'fieldName' => $fieldName,
+            'type' => 'string',
+            'nullable' => true,
+        ]);
     }
 }

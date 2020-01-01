@@ -113,7 +113,7 @@ you can now work on translations using `translate` or `getTranslations` methods.
 
 declare(strict_types=1);
 
-$category = new Category;
+$category = new Category();
 $category->translate('fr')->setName('Chaussures');
 $category->translate('en')->setName('Shoes');
 

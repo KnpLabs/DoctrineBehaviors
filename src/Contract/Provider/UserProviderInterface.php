@@ -7,7 +7,7 @@ namespace Knp\DoctrineBehaviors\Contract\Provider;
 interface UserProviderInterface
 {
     /**
-     * @return mixed|null
+     * @return object|string|null
      */
     public function provideUser();
 

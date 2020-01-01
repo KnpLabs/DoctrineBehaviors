@@ -21,15 +21,18 @@ final class DefaultSluggableRepository
 
     public function isSlugUniqueFor(SluggableInterface $sluggable, string $uniqueSlug): bool
     {
+        $entityClass = get_class($sluggable);
+
         $queryBuilder = $this->entityManager->createQueryBuilder()
             ->select('e')
-            ->from(get_class($sluggable), 'e')
+            ->from($entityClass, 'e')
             ->select('COUNT(e)')
             ->andWhere('e.id != :id')
             ->andWhere('e.slug = :slug')
             ->setParameter('id', $sluggable->getId())
             ->setParameter('slug', $uniqueSlug);
 
-        return !(bool) $queryBuilder->getQuery()->getSingleScalarResult();
+        return ! (bool) $queryBuilder->getQuery()
+            ->getSingleScalarResult();
     }
 }
