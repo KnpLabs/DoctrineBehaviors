@@ -27,31 +27,17 @@ class Category implements TimestampableInterface
 ```php
 <?php
 
+use App\Entity\Category;   
+
+/** @var Knp\DoctrineBehaviors\Contract\Entity\TimestampableInterface $category */
 $category = new Category;
+
 $entityManager->persist($category);
 $entityManager->flush();
 
-$id = $category->getId();
+var_dump($category->getCreatedAt());
+// instanceof "DateTime"
 
-$categoryRepository = $entityManager->getRepository(Category::class);
-
-$category = $categoryRepository->findOneById($id);
-
-$category->getCreatedAt();
-$category->getUpdatedAt();
+var_dump($category->getUpdatedAt());
+// instanceof "DateTime"
 ```
-
-## Configuration
-
-If you wish to change the doctrine type of the database fields that will be created for timestampable models you can
-set the following parameter like so:
-
-```yaml
-parameters:
-    knp.doctrine_behaviors.timestampable_subscriber.db_field_type: datetimetz
-```
-
-`datetimetz` here is a useful one to use if you are working with a Postgres database, otherwise you may encounter some
-timezone issues. For more information on this see [Dbal documentation](http://doctrine-dbal.readthedocs.org/en/latest/reference/known-vendor-issues.html#datetime-datetimetz).
-
-The default type is `datetime`.

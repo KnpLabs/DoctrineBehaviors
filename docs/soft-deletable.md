@@ -38,18 +38,19 @@ $id = $category->getId();
 $entityManager->remove($category);
 $entityManager->flush();
 
-// hey, I'm still here:
+// entity is still there
 $categoryRepository = $entityManager->getRepository(Category::class);
 $category = $categoryRepository->findOneById($id);
 
-// but I'm "deleted"
-$category->isDeleted(); // === true
+// but it's "deleted"
+var_dump($category->isDeleted()); 
+// true
 
 // restore me
 $category->restore();
 
-//look ma, I am back
-$category->isDeleted(); // === false
+var_dump($category->isDeleted());
+// false
 
 // do not forget to call flush method to apply the change
 $entityManager->flush();
@@ -58,21 +59,24 @@ $entityManager->flush();
 ```php
 <?php
 
+use Knp\DoctrineBehaviors\Contract\Entity\SoftDeletableInterface;
+
+/** @var SoftDeletableInterface $category */
 $category = new Category;
 
 $entityManager->persist($category);
 $entityManager->flush();
 
-// I'll delete you tomorrow
-$category->setDeletedAt((new \DateTime())->modify('+1 day'));
+// delete it tomorrow
+$tomorrowDateTime = (new \DateTime())->modify('+1 day');
+$category->setDeletedAt($tomorrowDateTime);
 
-// OK, I'm here
-$category->isDeleted(); // === false
+var_dump($category->isDeleted());
+// false
 
-/*
- *  24 hours later...
- */
+// 24 hours later...
 
 // OK, I'm deleted
-$category->isDeleted(); // === true
+var_dump($category->isDeleted()); 
+// true
 ```

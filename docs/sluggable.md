@@ -4,7 +4,7 @@ Sluggable generates slugs (uniqueness is not guaranteed) for an entity.
 
 Will automatically generate on update/persist (you can disable the on update generation by overriding `getRegenerateSlugOnUpdate()` to return `false`.
 
-You can also override the slug delimiter from the default hyphen by overriding `getSlugDelimiter()`.
+You can also override the slug delimiter from the default `-` by overriding `getSlugDelimiter()` method.
 
 Slug generation algo can be changed by overriding `generateSlugValue()`.
 

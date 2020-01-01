@@ -2,16 +2,6 @@
 
 Blameable is able to **track entity creators and updaters**.
 
-- `Knp\DoctrineBehaviors\Contract\Provider\UserProviderInterface`
-
-A Blameable [callable](#callables) is used to get the current user from your application.
-
-In the case you are using a Doctrine Entity to represent your users, you can configure the subscriber
-to manage automatically the association between this user entity and your entites.
-
-Using Symfony, all you have to do is to configure the DI parameter named `%knp.doctrine_behaviors.blameable_subscriber.user_entity%` with a fully qualified namespace,
-for example:
-
 ## Entity
 
 ```php
@@ -34,6 +24,11 @@ class Category implements BlameableInterface
 }
 ```
 
+## How it Works
+
+By default, the current user from Symfony\Security is used.
+If you want to change it, just implement `Knp\DoctrineBehaviors\Contract\Provider\UserProviderInterface` youself and override native service.
+
 ## Usage
 
 Then, you can use it like that:
@@ -41,9 +36,14 @@ Then, you can use it like that:
 ```php
 <?php
 
-$category = new Category;
+$category = new Category();
 $entityManager->persist($category);
 
-$creator = $category->getCreatedBy();
-$updater = $category->getUpdatedBy();
+$createdBy = $category->getCreatedBy();
+var_dump($createdBy); 
+// "App\Entity\User" object
+
+$updatedBy = $category->getUpdatedBy();
+var_dump($updatedBy);
+// "App\Entity\User" object
 ```
