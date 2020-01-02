@@ -9,7 +9,17 @@ PRs and issues are linked, so you can find more about it. Thanks to [ChangelogLi
 
 <!-- changelog-linker -->
 
-## [v2.0.0-beta1]
+## [v2.0.0] - 2020-01-02
+
+### Changed
+
+- [#479] make lazy loading configurable
+
+### Removed
+
+- [#480] [Translatable] Remove mapId() magic
+
+## [v2.0.0-beta1] - 2020-01-01
 
 ### Added
 
@@ -30,13 +40,13 @@ PRs and issues are linked, so you can find more about it. Thanks to [ChangelogLi
 
 - [#473] [Sortable] Drop, it never worked
 
-## [v2.0.0-alpha4]
+## [v2.0.0-alpha4] - 2019-12-24
 
 ### Added
 
 - [#469] [Rector] Add Upgrade set for id property on translations
 
-## [v2.0.0-alpha3]
+## [v2.0.0-alpha3] - 2019-12-19
 
 ### Changed
 
@@ -47,7 +57,7 @@ PRs and issues are linked, so you can find more about it. Thanks to [ChangelogLi
 - [#467] [Geocodable] Drop for very wide interface and limited usage
 - [#464] Remove scheduleExtraUpdate calls
 
-## [v2.0.0-alpha2]
+## [v2.0.0-alpha2] - 2019-12-18
 
 ### Added
 
@@ -71,7 +81,7 @@ PRs and issues are linked, so you can find more about it. Thanks to [ChangelogLi
 - [#463] drop filterable, way to opinionated and limited, use custom implementation
 - [#457] remove repository traits, use custom methods in own repository instead
 
-## [v2.0.0-alpha1]
+## [v2.0.0-alpha1] - 2019-12-12
 
 ### Added
 
@@ -514,3 +524,6 @@ PRs and issues are linked, so you can find more about it. Thanks to [ChangelogLi
 [v2.0.0-alpha1]: https://github.com/KnpLabs/DoctrineBehaviors/compare/1.6.0...v2.0.0-alpha1
 [@hermann8u]: https://github.com/hermann8u
 [@StanislavUngr]: https://github.com/StanislavUngr
+[#480]: https://github.com/KnpLabs/DoctrineBehaviors/pull/480
+[#479]: https://github.com/KnpLabs/DoctrineBehaviors/pull/479
+[v2.0.0]: https://github.com/KnpLabs/DoctrineBehaviors/compare/v2.0.0-beta1...v2.0.0
