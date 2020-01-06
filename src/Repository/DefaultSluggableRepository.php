@@ -27,10 +27,15 @@ final class DefaultSluggableRepository
             ->select('e')
             ->from($entityClass, 'e')
             ->select('COUNT(e)')
-            ->andWhere('e.id != :id')
             ->andWhere('e.slug = :slug')
-            ->setParameter('id', $sluggable->getId())
             ->setParameter('slug', $uniqueSlug);
+
+        $id = $sluggable->getId();
+        if ($id !== null) {
+            $queryBuilder
+                ->andWhere('e.id != :id')
+                ->setParameter('id', $id);
+        }
 
         return ! (bool) $queryBuilder->getQuery()
             ->getSingleScalarResult();
