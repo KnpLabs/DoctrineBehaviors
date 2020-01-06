@@ -11,14 +11,14 @@ namespace App\Entity;
 
 use Doctrine\ORM\Mapping as ORM;
 use Knp\DoctrineBehaviors\Contract\Entity\SoftDeletableInterface;
-use Knp\DoctrineBehaviors\Model\SoftDeletable\SoftDeletable;
+use Knp\DoctrineBehaviors\Model\SoftDeletable\SoftDeletableTrait;
 
 /**
  * @ORM\Entity
  */
 class Category implements SoftDeletableInterface
 {
-    use SoftDeletable;
+    use SoftDeletableTrait;
 }
 ```
 

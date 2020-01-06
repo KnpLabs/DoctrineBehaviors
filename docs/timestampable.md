@@ -1,5 +1,5 @@
 # Timestampable
-
+ 
 ## Entity
 
 ```php 
@@ -11,14 +11,14 @@ namespace App\Entity;
 
 use Doctrine\ORM\Mapping as ORM;
 use Knp\DoctrineBehaviors\Contract\Entity\TimestampableInterface;
-use Knp\DoctrineBehaviors\Model\Timestampable\Timestampable;
+use Knp\DoctrineBehaviors\Model\Timestampable\TimestampableTrait;
 
 /**
  * @ORM\Entity
  */
 class Category implements TimestampableInterface
 {
-    use Timestampable;
+    use TimestampableTrait;
 }
 ```
 
