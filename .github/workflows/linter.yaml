@@ -1,0 +1,22 @@
+name: Linter
+
+on:
+    pull_request: null
+    push:
+        branches:
+            - master
+
+jobs:
+    linter:
+        runs-on: ubuntu-latest
+
+        steps:
+            -   uses: actions/checkout@v2
+
+            -   uses: shivammathur/setup-php@v1
+                with:
+                    php-version: 7.3
+                    coverage: none
+
+            -   run: composer install --no-progress
+            -   run: vendor/bin/parallel-lint src tests -e php,phpt
