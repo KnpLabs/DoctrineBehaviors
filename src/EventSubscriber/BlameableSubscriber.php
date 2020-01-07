@@ -10,7 +10,6 @@ use Doctrine\ORM\Event\LifecycleEventArgs;
 use Doctrine\ORM\Event\LoadClassMetadataEventArgs;
 use Doctrine\ORM\Events;
 use Doctrine\ORM\Mapping\ClassMetadataInfo;
-use Doctrine\ORM\UnitOfWork;
 use Knp\DoctrineBehaviors\Contract\Entity\BlameableInterface;
 use Knp\DoctrineBehaviors\Contract\Provider\UserProviderInterface;
 
@@ -37,14 +36,14 @@ final class BlameableSubscriber implements EventSubscriber
     private $userProvider;
 
     /**
-     * @var UnitOfWork
+     * @var EntityManagerInterface
      */
-    private $unitOfWork;
+    private $entityManager;
 
     public function __construct(UserProviderInterface $userProvider, EntityManagerInterface $entityManager)
     {
         $this->userProvider = $userProvider;
-        $this->unitOfWork = $entityManager->getUnitOfWork();
+        $this->entityManager = $entityManager;
     }
 
     /**
@@ -80,13 +79,13 @@ final class BlameableSubscriber implements EventSubscriber
         if (! $entity->getCreatedBy()) {
             $entity->setCreatedBy($user);
 
-            $this->unitOfWork->propertyChanged($entity, self::CREATED_BY, null, $user);
+            $this->entityManager->getUnitOfWork()->propertyChanged($entity, self::CREATED_BY, null, $user);
         }
 
         if (! $entity->getUpdatedBy()) {
             $entity->setUpdatedBy($user);
 
-            $this->unitOfWork->propertyChanged($entity, self::UPDATED_BY, null, $user);
+            $this->entityManager->getUnitOfWork()->propertyChanged($entity, self::UPDATED_BY, null, $user);
         }
     }
 
@@ -108,7 +107,7 @@ final class BlameableSubscriber implements EventSubscriber
         $oldValue = $entity->getUpdatedBy();
         $entity->setUpdatedBy($user);
 
-        $this->unitOfWork->propertyChanged($entity, self::UPDATED_BY, $oldValue, $user);
+        $this->entityManager->getUnitOfWork()->propertyChanged($entity, self::UPDATED_BY, $oldValue, $user);
     }
 
     /**
@@ -129,7 +128,7 @@ final class BlameableSubscriber implements EventSubscriber
         $oldValue = $entity->getDeletedBy();
         $entity->setDeletedBy($user);
 
-        $this->unitOfWork->propertyChanged($entity, self::DELETED_BY, $oldValue, $user);
+        $this->entityManager->getUnitOfWork()->propertyChanged($entity, self::DELETED_BY, $oldValue, $user);
     }
 
     public function getSubscribedEvents()
