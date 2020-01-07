@@ -37,14 +37,14 @@ final class BlameableSubscriber implements EventSubscriber
     private $userProvider;
 
     /**
-     * @var UnitOfWork
+     * @var EntityManagerInterface
      */
-    private $unitOfWork;
+    private $entityManager;
 
     public function __construct(UserProviderInterface $userProvider, EntityManagerInterface $entityManager)
     {
         $this->userProvider = $userProvider;
-        $this->unitOfWork = $entityManager->getUnitOfWork();
+        $this->entityManager = $entityManager;
     }
 
     /**
@@ -80,13 +80,13 @@ final class BlameableSubscriber implements EventSubscriber
         if (! $entity->getCreatedBy()) {
             $entity->setCreatedBy($user);
 
-            $this->unitOfWork->propertyChanged($entity, self::CREATED_BY, null, $user);
+            $this->getUnitOfWork()->propertyChanged($entity, self::CREATED_BY, null, $user);
         }
 
         if (! $entity->getUpdatedBy()) {
             $entity->setUpdatedBy($user);
 
-            $this->unitOfWork->propertyChanged($entity, self::UPDATED_BY, null, $user);
+            $this->getUnitOfWork()->propertyChanged($entity, self::UPDATED_BY, null, $user);
         }
     }
 
@@ -108,7 +108,7 @@ final class BlameableSubscriber implements EventSubscriber
         $oldValue = $entity->getUpdatedBy();
         $entity->setUpdatedBy($user);
 
-        $this->unitOfWork->propertyChanged($entity, self::UPDATED_BY, $oldValue, $user);
+        $this->getUnitOfWork()->propertyChanged($entity, self::UPDATED_BY, $oldValue, $user);
     }
 
     /**
@@ -129,7 +129,7 @@ final class BlameableSubscriber implements EventSubscriber
         $oldValue = $entity->getDeletedBy();
         $entity->setDeletedBy($user);
 
-        $this->unitOfWork->propertyChanged($entity, self::DELETED_BY, $oldValue, $user);
+        $this->getUnitOfWork()->propertyChanged($entity, self::DELETED_BY, $oldValue, $user);
     }
 
     public function getSubscribedEvents()
@@ -196,5 +196,10 @@ final class BlameableSubscriber implements EventSubscriber
             'type' => 'string',
             'nullable' => true,
         ]);
+    }
+
+    private function getUnitOfWork() : UnitOfWork
+    {
+        return $this->entityManager->getUnitOfWork();
     }
 }
