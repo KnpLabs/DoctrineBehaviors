@@ -48,3 +48,13 @@ $updatedBy = $category->getUpdatedBy();
 var_dump($updatedBy);
 // "App\Entity\User" object
 ```
+
+## Configuration
+
+By default, no user entity is provided. You need to specify the User class with a new parameter in your config:
+
+```yaml
+# services.yaml
+parameters:
+    doctrine_behaviors_blameable_user_entity: App\Entity\User
+```

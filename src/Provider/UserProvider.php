@@ -10,20 +10,33 @@ use Symfony\Component\Security\Core\Security;
 final class UserProvider implements UserProviderInterface
 {
     /**
+     * @var string|null
+     */
+    private $blameableUserEntity;
+
+    /**
      * @var Security
      */
     private $security;
 
-    public function __construct(Security $security)
+    public function __construct(Security $security, ?string $blameableUserEntity = null)
     {
         $this->security = $security;
+        $this->blameableUserEntity = $blameableUserEntity;
     }
 
     public function provideUser()
     {
         $token = $this->security->getToken();
-        if ($token !== null) {
-            return $token->getUser();
+        if ($token) {
+            $user = $token->getUser();
+            if ($this->blameableUserEntity) {
+                if ($user instanceof $this->blameableUserEntity) {
+                    return $user;
+                }
+            } else {
+                return $user;
+            }
         }
 
         return null;

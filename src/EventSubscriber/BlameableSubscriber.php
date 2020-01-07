@@ -32,6 +32,11 @@ final class BlameableSubscriber implements EventSubscriber
     private const CREATED_BY = 'createdBy';
 
     /**
+     * @var string|null
+     */
+    private $blameableUserEntity;
+
+    /**
      * @var UserProviderInterface
      */
     private $userProvider;
@@ -41,10 +46,14 @@ final class BlameableSubscriber implements EventSubscriber
      */
     private $entityManager;
 
-    public function __construct(UserProviderInterface $userProvider, EntityManagerInterface $entityManager)
-    {
+    public function __construct(
+        UserProviderInterface $userProvider,
+        EntityManagerInterface $entityManager,
+        ?string $blameableUserEntity = null
+    ) {
         $this->userProvider = $userProvider;
         $this->entityManager = $entityManager;
+        $this->blameableUserEntity = $blameableUserEntity;
     }
 
     /**
@@ -139,7 +148,7 @@ final class BlameableSubscriber implements EventSubscriber
 
     private function mapEntity(ClassMetadataInfo $classMetadataInfo): void
     {
-        if ($this->userProvider->provideUserEntity()) {
+        if ($this->blameableUserEntity !== null && class_exists($this->blameableUserEntity)) {
             $this->mapManyToOneUser($classMetadataInfo);
         } else {
             $this->mapStringUser($classMetadataInfo);
@@ -153,14 +162,9 @@ final class BlameableSubscriber implements EventSubscriber
 
     private function mapManyToOneUser(ClassMetadataInfo $classMetadataInfo): void
     {
-        $userEntity = $this->userProvider->provideUserEntity();
-        if ($userEntity === null) {
-            return;
-        }
-
-        $this->mapManyToOneWithTargetEntity($classMetadataInfo, $userEntity, self::CREATED_BY);
-        $this->mapManyToOneWithTargetEntity($classMetadataInfo, $userEntity, self::UPDATED_BY);
-        $this->mapManyToOneWithTargetEntity($classMetadataInfo, $userEntity, self::DELETED_BY);
+        $this->mapManyToOneWithTargetEntity($classMetadataInfo, self::CREATED_BY);
+        $this->mapManyToOneWithTargetEntity($classMetadataInfo, self::UPDATED_BY);
+        $this->mapManyToOneWithTargetEntity($classMetadataInfo, self::DELETED_BY);
     }
 
     private function mapStringUser(ClassMetadataInfo $classMetadataInfo): void
@@ -170,18 +174,15 @@ final class BlameableSubscriber implements EventSubscriber
         $this->mapStringNullableField($classMetadataInfo, self::DELETED_BY);
     }
 
-    private function mapManyToOneWithTargetEntity(
-        ClassMetadataInfo $classMetadataInfo,
-        string $userEntity,
-        string $fieldName
-    ): void {
+    private function mapManyToOneWithTargetEntity(ClassMetadataInfo $classMetadataInfo, string $fieldName): void
+    {
         if ($classMetadataInfo->hasAssociation($fieldName)) {
             return;
         }
 
         $classMetadataInfo->mapManyToOne([
             'fieldName' => $fieldName,
-            'targetEntity' => $userEntity,
+            'targetEntity' => $this->blameableUserEntity,
             'joinColumns' => [
                 [
                     'onDelete' => 'SET NULL',
