@@ -1,3 +1,6 @@
+parameters:
+    doctrine_behaviors_blameable_user_entity: Knp\DoctrineBehaviors\Tests\Fixtures\Entity\UserEntity
+
 services:
     _defaults:
         public: true
