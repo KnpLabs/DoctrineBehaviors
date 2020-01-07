@@ -52,7 +52,7 @@ class SluggableWithoutRegenerateEntity implements SluggableInterface
         return ['name'];
     }
 
-    private function getRegenerateSlugOnUpdate(): bool
+    private function shouldRegenerateSlugOnUpdate(): bool
     {
         return false;
     }
