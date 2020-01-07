@@ -21,17 +21,6 @@ use Knp\DoctrineBehaviors\Contract\Entity\LoggableInterface;
 class Category implements LoggableInterface
 {
     use LoggableTrait;
-
-    // you can override the default log messages defined in trait:
-    public function getUpdateLogMessage(array $changeSets = []): string
-    {
-        return 'Changed: '.print_r($changeSets, true);
-    }
-
-    public function getRemoveLogMessage(): string
-    {
-        return 'removed!';
-    }
 }
 ```
 
