@@ -146,6 +146,11 @@ final class BlameableSubscriber implements EventSubscriber
         }
     }
 
+    private function getUnitOfWork(): UnitOfWork
+    {
+        return $this->entityManager->getUnitOfWork();
+    }
+
     private function mapManyToOneUser(ClassMetadataInfo $classMetadataInfo): void
     {
         $userEntity = $this->userProvider->provideUserEntity();
@@ -196,10 +201,5 @@ final class BlameableSubscriber implements EventSubscriber
             'type' => 'string',
             'nullable' => true,
         ]);
-    }
-
-    private function getUnitOfWork() : UnitOfWork
-    {
-        return $this->entityManager->getUnitOfWork();
     }
 }
