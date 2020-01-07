@@ -20,7 +20,7 @@
         "symfony/http-kernel": "^4.4|^5.0",
         "symfony/security-core": "^4.4|^5.0",
         "symfony/string": "^5.0",
-        "symplify/package-builder": "^7.1",
+        "symplify/package-builder": "^7.2",
         "nette/utils": "^3.0",
         "ramsey/uuid": "^3.9"
     },
@@ -35,11 +35,11 @@
         "phpstan/phpstan": "^0.12.2",
         "phpunit/phpunit": "^8.5",
         "rector/rector": "dev-master",
-        "symplify/easy-coding-standard": "^7.1",
-        "symplify/phpstan-extensions": "^7.1",
+        "symplify/easy-coding-standard": "^7.2",
+        "symplify/phpstan-extensions": "^7.2",
         "phpstan/phpstan-doctrine": "^0.12.4",
         "phpstan/phpstan-phpunit": "^0.12.2",
-        "symplify/changelog-linker": "^7.1"
+        "symplify/changelog-linker": "^7.2"
     },
     "autoload": {
         "psr-4": {
