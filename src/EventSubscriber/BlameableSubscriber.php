@@ -10,6 +10,7 @@ use Doctrine\ORM\Event\LifecycleEventArgs;
 use Doctrine\ORM\Event\LoadClassMetadataEventArgs;
 use Doctrine\ORM\Events;
 use Doctrine\ORM\Mapping\ClassMetadataInfo;
+use Doctrine\ORM\UnitOfWork;
 use Knp\DoctrineBehaviors\Contract\Entity\BlameableInterface;
 use Knp\DoctrineBehaviors\Contract\Provider\UserProviderInterface;
 
@@ -79,13 +80,13 @@ final class BlameableSubscriber implements EventSubscriber
         if (! $entity->getCreatedBy()) {
             $entity->setCreatedBy($user);
 
-            $this->entityManager->getUnitOfWork()->propertyChanged($entity, self::CREATED_BY, null, $user);
+            $this->getUnitOfWork()->propertyChanged($entity, self::CREATED_BY, null, $user);
         }
 
         if (! $entity->getUpdatedBy()) {
             $entity->setUpdatedBy($user);
 
-            $this->entityManager->getUnitOfWork()->propertyChanged($entity, self::UPDATED_BY, null, $user);
+            $this->getUnitOfWork()->propertyChanged($entity, self::UPDATED_BY, null, $user);
         }
     }
 
@@ -107,7 +108,7 @@ final class BlameableSubscriber implements EventSubscriber
         $oldValue = $entity->getUpdatedBy();
         $entity->setUpdatedBy($user);
 
-        $this->entityManager->getUnitOfWork()->propertyChanged($entity, self::UPDATED_BY, $oldValue, $user);
+        $this->getUnitOfWork()->propertyChanged($entity, self::UPDATED_BY, $oldValue, $user);
     }
 
     /**
@@ -128,7 +129,7 @@ final class BlameableSubscriber implements EventSubscriber
         $oldValue = $entity->getDeletedBy();
         $entity->setDeletedBy($user);
 
-        $this->entityManager->getUnitOfWork()->propertyChanged($entity, self::DELETED_BY, $oldValue, $user);
+        $this->getUnitOfWork()->propertyChanged($entity, self::DELETED_BY, $oldValue, $user);
     }
 
     public function getSubscribedEvents()
@@ -195,5 +196,10 @@ final class BlameableSubscriber implements EventSubscriber
             'type' => 'string',
             'nullable' => true,
         ]);
+    }
+
+    private function getUnitOfWork() : UnitOfWork
+    {
+        return $this->entityManager->getUnitOfWork();
     }
 }
