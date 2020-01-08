@@ -9,6 +9,18 @@ PRs and issues are linked, so you can find more about it. Thanks to [ChangelogLi
 
 <!-- changelog-linker -->
 
+## [v2.0.1] - 2020-01-08
+
+### Changed
+
+- [#493] Moved unitOfWork access to methods instead of constructor, Thanks to [@toooni]
+- [#484] Update trait names in docs, Thanks to [@ckrack]
+
+### Fixed
+
+- [#490] fix boolean method name prefix
+- [#487] Fix slug uniqueness, Thanks to [@hermann8u]
+
 ## [v2.0.0] - 2020-01-02
 
 ### Changed
@@ -527,3 +539,10 @@ PRs and issues are linked, so you can find more about it. Thanks to [ChangelogLi
 [#480]: https://github.com/KnpLabs/DoctrineBehaviors/pull/480
 [#479]: https://github.com/KnpLabs/DoctrineBehaviors/pull/479
 [v2.0.0]: https://github.com/KnpLabs/DoctrineBehaviors/compare/v2.0.0-beta1...v2.0.0
+[#493]: https://github.com/KnpLabs/DoctrineBehaviors/pull/493
+[#490]: https://github.com/KnpLabs/DoctrineBehaviors/pull/490
+[#487]: https://github.com/KnpLabs/DoctrineBehaviors/pull/487
+[#484]: https://github.com/KnpLabs/DoctrineBehaviors/pull/484
+[v2.0.1]: https://github.com/KnpLabs/DoctrineBehaviors/compare/v2.0.0...v2.0.1
+[@toooni]: https://github.com/toooni
+[@ckrack]: https://github.com/ckrack
