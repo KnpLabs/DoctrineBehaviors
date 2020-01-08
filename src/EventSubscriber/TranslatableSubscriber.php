@@ -110,7 +110,7 @@ final class TranslatableSubscriber implements EventSubscriber
             return;
         }
 
-        $cache = $classMetadataInfo->cache ? ['cache' => $classMetadataInfo->cache ] : [];
+        $cache = $classMetadataInfo->cache ? ['cache' => $classMetadataInfo->cache] : [];
         $classMetadataInfo->mapOneToMany(array_merge([
             'fieldName' => 'translations',
             'mappedBy' => 'translatable',
@@ -127,7 +127,7 @@ final class TranslatableSubscriber implements EventSubscriber
     private function mapTranslation(ClassMetadataInfo $classMetadataInfo): void
     {
         if (! $classMetadataInfo->hasAssociation('translatable')) {
-            $cache = $classMetadataInfo->cache ? ['cache' => $classMetadataInfo->cache ] : [];
+            $cache = $classMetadataInfo->cache ? ['cache' => $classMetadataInfo->cache] : [];
             $classMetadataInfo->mapManyToOne(array_merge([
                 'fieldName' => 'translatable',
                 'inversedBy' => 'translations',
@@ -141,7 +141,7 @@ final class TranslatableSubscriber implements EventSubscriber
                 'targetEntity' => $classMetadataInfo->getReflectionClass()->getMethod(
                     'getTranslatableEntityClass'
                 )->invoke(null),
-            ],$cache));
+            ], $cache));
         }
 
         $name = $classMetadataInfo->getTableName() . '_unique_translation';
