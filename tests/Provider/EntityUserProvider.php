@@ -16,6 +16,11 @@ final class EntityUserProvider implements UserProviderInterface
     private $isUserEntityPrepared = false;
 
     /**
+     * @var UserEntity[]
+     */
+    private $userEntities = [];
+
+    /**
      * @var UserEntity
      */
     private $userEntity;
@@ -30,9 +35,16 @@ final class EntityUserProvider implements UserProviderInterface
         $this->entityManager = $entityManager;
     }
 
+    public function changeUser($userEntity): void
+    {
+        if (! empty($this->userEntities) && array_key_exists($userEntity, $this->userEntities)) {
+            $this->userEntity = $this->userEntities[$userEntity];
+        }
+    }
+
     public function provideUser()
     {
-        $this->prepareUserEntity();
+        $this->prepareUserEntities();
 
         return $this->userEntity;
     }
@@ -42,18 +54,25 @@ final class EntityUserProvider implements UserProviderInterface
         return UserEntity::class;
     }
 
-    private function prepareUserEntity(): void
+    private function prepareUserEntities(): void
     {
         if ($this->isUserEntityPrepared) {
             return;
         }
 
         $userEntity = new UserEntity();
-        $userEntity->setUsername('some_user_name');
+        $userEntity->setUsername('user');
+
+        $user2Entity = new UserEntity();
+        $user2Entity->setUsername('user2');
 
         // persist user
         $this->entityManager->persist($userEntity);
+        $this->entityManager->persist($user2Entity);
         $this->entityManager->flush();
+
+        $this->userEntities['user'] = $userEntity;
+        $this->userEntities['user2'] = $user2Entity;
 
         $this->userEntity = $userEntity;
 

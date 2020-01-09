@@ -4,48 +4,94 @@ declare(strict_types=1);
 
 namespace Knp\DoctrineBehaviors\Tests\ORM;
 
+use Doctrine\Common\Persistence\ObjectRepository;
+use Doctrine\ORM\EntityRepository;
+use Knp\DoctrineBehaviors\Contract\Provider\UserProviderInterface;
 use Knp\DoctrineBehaviors\Tests\AbstractBehaviorTestCase;
-use Knp\DoctrineBehaviors\Tests\Fixtures\Entity\BlameableEntity;
+use Knp\DoctrineBehaviors\Tests\Fixtures\Entity\BlameableEntityWithUserEntity;
 use Knp\DoctrineBehaviors\Tests\Fixtures\Entity\UserEntity;
 
 final class BlameableWithEntityTest extends AbstractBehaviorTestCase
 {
-    public function testUserEntity(): void
+    /**
+     * @var UserProviderInterface
+     */
+    private $userProvider;
+
+    /**
+     * @var ObjectRepository|EntityRepository
+     */
+    private $blameableRepository;
+
+    /**
+     * @var UserEntity
+     */
+    private $userEntity;
+
+    protected function setUp(): void
     {
-        $entity = new BlameableEntity();
+        parent::setUp();
+
+        $this->userProvider = static::$container->get(UserProviderInterface::class);
+        $this->blameableRepository = $this->entityManager->getRepository(BlameableEntityWithUserEntity::class);
+        $this->userEntity = $this->userProvider->provideUser();
+    }
+
+    public function testCreate(): void
+    {
+        $entity = new BlameableEntityWithUserEntity();
 
         $this->entityManager->persist($entity);
         $this->entityManager->flush();
 
         $this->assertInstanceOf(UserEntity::class, $entity->getCreatedBy());
         $this->assertInstanceOf(UserEntity::class, $entity->getUpdatedBy());
+        $this->assertSame($this->userEntity, $entity->getCreatedBy());
+        $this->assertSame($this->userEntity, $entity->getUpdatedBy());
+        $this->assertNull($entity->getDeletedBy());
     }
 
-    public function testSubscriberWithUserCallback(): void
+    public function testUpdate(): void
     {
-        $entity = new BlameableEntity();
+        $entity = new BlameableEntityWithUserEntity();
 
         $this->entityManager->persist($entity);
         $this->entityManager->flush();
-
         $id = $entity->getId();
         $createdBy = $entity->getCreatedBy();
 
-        $blameableRepository = $this->entityManager->getRepository(BlameableEntity::class);
+        $this->userProvider->changeUser('user2');
 
-        /** @var BlameableEntity $entity */
-        $entity = $blameableRepository->find($id);
+        /** @var BlameableEntityWithUserEntity $entity */
+        $entity = $this->blameableRepository->find($id);
+
+        $this->enableDebugStackLogger();
+
         $entity->setTitle('test');
-
         $this->entityManager->flush();
-        $this->entityManager->clear();
+
+        $this->assertCount(3, $this->debugStack->queries);
+        $this->assertSame('"START TRANSACTION"', $this->debugStack->queries[1]['sql']);
+        $this->assertSame(
+            'UPDATE BlameableEntityWithUserEntity SET title = ?, updatedBy_id = ? WHERE id = ?',
+            $this->debugStack->queries[2]['sql']
+        );
+        $this->assertSame('"COMMIT"', $this->debugStack->queries[3]['sql']);
 
         $this->assertInstanceOf(UserEntity::class, $entity->getCreatedBy());
+        $this->assertInstanceOf(UserEntity::class, $entity->getUpdatedBy());
+
+        $user2 = $this->userProvider->provideUser();
 
         /** @var UserEntity $createdBy */
-        $this->assertSame($createdBy->getUsername(), $entity->getCreatedBy()->getUsername());
+        $this->assertSame($createdBy, $entity->getCreatedBy(), 'createdBy is constant');
+        $this->assertSame($user2, $entity->getUpdatedBy());
 
-        $this->assertSame($entity->getCreatedBy(), $entity->getUpdatedBy());
+        $this->assertNotSame(
+            $entity->getCreatedBy(),
+            $entity->getUpdatedBy(),
+            'createBy and updatedBy have diverged since new update'
+        );
     }
 
     protected function provideCustomConfig(): ?string

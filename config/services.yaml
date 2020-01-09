@@ -1,6 +1,7 @@
 parameters:
     doctrine_behaviors_translatable_fetch_mode: "LAZY"
     doctrine_behaviors_translation_fetch_mode: "LAZY"
+    doctrine_behaviors_blameable_user_entity: ~
 
 services:
     _defaults:
@@ -10,6 +11,7 @@ services:
         bind:
             $translatableFetchMode: "%doctrine_behaviors_translatable_fetch_mode%"
             $translationFetchMode: "%doctrine_behaviors_translation_fetch_mode%"
+            $blameableUserEntity: "%doctrine_behaviors_blameable_user_entity%"
 
     Knp\DoctrineBehaviors\:
         resource: "../src"
