@@ -12,7 +12,6 @@ services:
             $translatableFetchMode: "%doctrine_behaviors_translatable_fetch_mode%"
             $translationFetchMode: "%doctrine_behaviors_translation_fetch_mode%"
             $blameableUserEntity: "%doctrine_behaviors_blameable_user_entity%"
-            string $defaultLocale: "%locale%"
 
     Knp\DoctrineBehaviors\:
         resource: "../src"
