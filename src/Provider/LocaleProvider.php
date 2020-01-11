@@ -17,13 +17,19 @@ final class LocaleProvider implements LocaleProviderInterface
     private $translator;
 
     /**
+     * @var string|null
+     */
+    private $defaultLocale;
+
+    /**
      * @var RequestStack
      */
     private $requestStack;
 
-    public function __construct(RequestStack $requestStack, ?TranslatorInterface $translator)
+    public function __construct(RequestStack $requestStack, string $defaultLocale, ?TranslatorInterface $translator)
     {
         $this->requestStack = $requestStack;
+        $this->defaultLocale = $defaultLocale;
         $this->translator = $translator;
     }
 
@@ -39,30 +45,15 @@ final class LocaleProvider implements LocaleProviderInterface
             return $currentLocale;
         }
 
-        return $this->getTranslatorLocale();
-    }
-
-    public function provideFallbackLocale(): ?string
-    {
-        $currentRequest = $this->requestStack->getCurrentRequest();
-        if ($currentRequest === null) {
-            return null;
-        }
-
-        $defaultLocale = $currentRequest->getDefaultLocale();
-        if ($defaultLocale) {
-            return $defaultLocale;
-        }
-
-        return $this->getTranslatorLocale();
-    }
-
-    private function getTranslatorLocale(): ?string
-    {
         if ($this->translator) {
             return $this->translator->getLocale();
         }
 
         return null;
+    }
+
+    public function provideFallbackLocale(): ?string
+    {
+        return $this->defaultLocale;
     }
 }
