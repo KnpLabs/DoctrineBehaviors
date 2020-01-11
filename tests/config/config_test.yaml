@@ -6,6 +6,7 @@ parameters:
     env(DB_PASSWD): ""
     env(DB_MEMORY): "true"
     kernel.secret: "for_framework_bundle"
+    locale: "en"
 
 services:
     _defaults:
