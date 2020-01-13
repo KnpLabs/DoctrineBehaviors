@@ -22,28 +22,16 @@ It currently handles:
 composer require knplabs/doctrine-behaviors
 ```
 
-Register bundle in `AppKernel`:
+Register bundle in `config/bundles.php`:
 
 ```php
 <?php
 
-declare(strict_types=1);
-
-namespace App;
-
-use Symfony\Component\HttpKernel\Kernel;
-
-final class AppKernel extends Kernel
-{
-    public function registerBundles(): array
-    {
-        return [
-            //...
-            new Knp\DoctrineBehaviors\Bundle\DoctrineBehaviorsBundle(),
-            //...
-        ];
-    }
-}
+return [
+    // ...
+    Knp\DoctrineBehaviors\Bundle\DoctrineBehaviorsBundle::class => ['all' => true],
+    // ...
+];
 ```
 
 ## Usage
