@@ -61,7 +61,7 @@ final class LocaleProvider implements LocaleProviderInterface
     {
         $currentRequest = $this->requestStack->getCurrentRequest();
         if ($currentRequest !== null) {
-            return $this->getDefaultLocale();
+            return $currentRequest->getDefaultLocale();
         }
 
         try {
