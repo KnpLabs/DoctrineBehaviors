@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace Knp\DoctrineBehaviors\EventSubscriber;
 
 use Doctrine\Common\EventSubscriber;
+use Doctrine\ORM\EntityManagerInterface;
 use Doctrine\ORM\Event\LifecycleEventArgs;
 use Doctrine\ORM\Event\LoadClassMetadataEventArgs;
 use Doctrine\ORM\Events;
@@ -24,9 +25,17 @@ final class SluggableSubscriber implements EventSubscriber
      */
     private $defaultSluggableRepository;
 
-    public function __construct(DefaultSluggableRepository $defaultSluggableRepository)
-    {
+    /**
+     * @var EntityManagerInterface
+     */
+    private $entityManager;
+
+    public function __construct(
+        EntityManagerInterface $entityManager,
+        DefaultSluggableRepository $defaultSluggableRepository
+    ) {
         $this->defaultSluggableRepository = $defaultSluggableRepository;
+        $this->entityManager = $entityManager;
     }
 
     public function loadClassMetadata(LoadClassMetadataEventArgs $loadClassMetadataEventArgs): void
@@ -90,10 +99,46 @@ final class SluggableSubscriber implements EventSubscriber
 
         $uniqueSlug = $slug;
 
-        while (! $this->defaultSluggableRepository->isSlugUniqueFor($sluggable, $uniqueSlug)) {
+        while (! (
+            $this->defaultSluggableRepository->isSlugUniqueFor($sluggable, $uniqueSlug)
+            && $this->isSlugUniqueInUnitOfWork($sluggable, $uniqueSlug)
+        )) {
             $uniqueSlug = $slug . '-' . ++$i;
         }
 
         $sluggable->setSlug($uniqueSlug);
+    }
+
+    private function isSlugUniqueInUnitOfWork(SluggableInterface $sluggable, string $uniqueSlug): bool
+    {
+        $scheduledEntities = $this->getOtherScheduledEntities($sluggable);
+        foreach ($scheduledEntities as $entity) {
+            if ($entity->getSlug() === $uniqueSlug) {
+                return false;
+            }
+        }
+
+        return true;
+    }
+
+    /**
+     * @return SluggableInterface[]
+     */
+    private function getOtherScheduledEntities(SluggableInterface $sluggable): array
+    {
+        $uowScheduledEntities = array_merge(
+            $this->entityManager->getUnitOfWork()->getScheduledEntityInsertions(),
+            $this->entityManager->getUnitOfWork()->getScheduledEntityUpdates(),
+            $this->entityManager->getUnitOfWork()->getScheduledEntityDeletions()
+        );
+
+        $scheduledEntities = [];
+        foreach ($uowScheduledEntities as $entity) {
+            if ($entity instanceof SluggableInterface && $sluggable !== $entity) {
+                $scheduledEntities[] = $entity;
+            }
+        }
+
+        return $scheduledEntities;
     }
 }
