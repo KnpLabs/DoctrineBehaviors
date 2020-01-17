@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace Knp\DoctrineBehaviors\EventSubscriber;
 
 use Doctrine\Common\EventSubscriber;
+use Doctrine\Common\Persistence\ManagerRegistry;
 use Doctrine\ORM\EntityManagerInterface;
 use Doctrine\ORM\Event\LifecycleEventArgs;
 use Doctrine\ORM\Event\LoadClassMetadataEventArgs;
@@ -26,16 +27,16 @@ final class SluggableSubscriber implements EventSubscriber
     private $defaultSluggableRepository;
 
     /**
-     * @var EntityManagerInterface
+     * @var ManagerRegistry
      */
-    private $entityManager;
+    private $managerRegistry;
 
     public function __construct(
-        EntityManagerInterface $entityManager,
+        ManagerRegistry $managerRegistry,
         DefaultSluggableRepository $defaultSluggableRepository
     ) {
         $this->defaultSluggableRepository = $defaultSluggableRepository;
-        $this->entityManager = $entityManager;
+        $this->managerRegistry = $managerRegistry;
     }
 
     public function loadClassMetadata(LoadClassMetadataEventArgs $loadClassMetadataEventArgs): void
@@ -126,10 +127,13 @@ final class SluggableSubscriber implements EventSubscriber
      */
     private function getOtherScheduledEntities(SluggableInterface $sluggable): array
     {
+        /** @var EntityManagerInterface $entityManager */
+        $entityManager = $this->managerRegistry->getManagerForClass(get_class($sluggable));
+
         $uowScheduledEntities = array_merge(
-            $this->entityManager->getUnitOfWork()->getScheduledEntityInsertions(),
-            $this->entityManager->getUnitOfWork()->getScheduledEntityUpdates(),
-            $this->entityManager->getUnitOfWork()->getScheduledEntityDeletions()
+            $entityManager->getUnitOfWork()->getScheduledEntityInsertions(),
+            $entityManager->getUnitOfWork()->getScheduledEntityUpdates(),
+            $entityManager->getUnitOfWork()->getScheduledEntityDeletions()
         );
 
         $scheduledEntities = [];

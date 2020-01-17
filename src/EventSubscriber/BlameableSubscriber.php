@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace Knp\DoctrineBehaviors\EventSubscriber;
 
 use Doctrine\Common\EventSubscriber;
+use Doctrine\Common\Persistence\ManagerRegistry;
 use Doctrine\ORM\EntityManagerInterface;
 use Doctrine\ORM\Event\LifecycleEventArgs;
 use Doctrine\ORM\Event\LoadClassMetadataEventArgs;
@@ -42,17 +43,17 @@ final class BlameableSubscriber implements EventSubscriber
     private $userProvider;
 
     /**
-     * @var EntityManagerInterface
+     * @var ManagerRegistry
      */
-    private $entityManager;
+    private $managerRegistry;
 
     public function __construct(
         UserProviderInterface $userProvider,
-        EntityManagerInterface $entityManager,
+        ManagerRegistry $managerRegistry,
         ?string $blameableUserEntity = null
     ) {
         $this->userProvider = $userProvider;
-        $this->entityManager = $entityManager;
+        $this->managerRegistry = $managerRegistry;
         $this->blameableUserEntity = $blameableUserEntity;
     }
 
@@ -89,13 +90,13 @@ final class BlameableSubscriber implements EventSubscriber
         if (! $entity->getCreatedBy()) {
             $entity->setCreatedBy($user);
 
-            $this->getUnitOfWork()->propertyChanged($entity, self::CREATED_BY, null, $user);
+            $this->getUnitOfWork($entity)->propertyChanged($entity, self::CREATED_BY, null, $user);
         }
 
         if (! $entity->getUpdatedBy()) {
             $entity->setUpdatedBy($user);
 
-            $this->getUnitOfWork()->propertyChanged($entity, self::UPDATED_BY, null, $user);
+            $this->getUnitOfWork($entity)->propertyChanged($entity, self::UPDATED_BY, null, $user);
         }
     }
 
@@ -117,7 +118,7 @@ final class BlameableSubscriber implements EventSubscriber
         $oldValue = $entity->getUpdatedBy();
         $entity->setUpdatedBy($user);
 
-        $this->getUnitOfWork()->propertyChanged($entity, self::UPDATED_BY, $oldValue, $user);
+        $this->getUnitOfWork($entity)->propertyChanged($entity, self::UPDATED_BY, $oldValue, $user);
     }
 
     /**
@@ -138,7 +139,7 @@ final class BlameableSubscriber implements EventSubscriber
         $oldValue = $entity->getDeletedBy();
         $entity->setDeletedBy($user);
 
-        $this->getUnitOfWork()->propertyChanged($entity, self::DELETED_BY, $oldValue, $user);
+        $this->getUnitOfWork($entity)->propertyChanged($entity, self::DELETED_BY, $oldValue, $user);
     }
 
     public function getSubscribedEvents()
@@ -155,9 +156,12 @@ final class BlameableSubscriber implements EventSubscriber
         }
     }
 
-    private function getUnitOfWork(): UnitOfWork
+    private function getUnitOfWork($entity): UnitOfWork
     {
-        return $this->entityManager->getUnitOfWork();
+        /** @var EntityManagerInterface $entityManager */
+        $entityManager = $this->managerRegistry->getManagerForClass(get_class($entity));
+
+        return $entityManager->getUnitOfWork();
     }
 
     private function mapManyToOneUser(ClassMetadataInfo $classMetadataInfo): void

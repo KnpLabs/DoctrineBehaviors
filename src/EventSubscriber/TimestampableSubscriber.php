@@ -14,16 +14,6 @@ use Knp\DoctrineBehaviors\Contract\Entity\TimestampableInterface;
 
 final class TimestampableSubscriber implements EventSubscriber
 {
-    /**
-     * @var EntityManagerInterface
-     */
-    private $entityManager;
-
-    public function __construct(EntityManagerInterface $entityManager)
-    {
-        $this->entityManager = $entityManager;
-    }
-
     public function loadClassMetadata(LoadClassMetadataEventArgs $loadClassMetadataEventArgs): void
     {
         $classMetadata = $loadClassMetadataEventArgs->getClassMetadata();
@@ -38,7 +28,7 @@ final class TimestampableSubscriber implements EventSubscriber
             if (! $classMetadata->hasField($field)) {
                 $classMetadata->mapField([
                     'fieldName' => $field,
-                    'type' => $this->getFieldType(),
+                    'type' => $this->getFieldType($loadClassMetadataEventArgs->getEntityManager()),
                     'nullable' => true,
                 ]);
             }
@@ -53,15 +43,15 @@ final class TimestampableSubscriber implements EventSubscriber
         return [Events::loadClassMetadata];
     }
 
-    private function getFieldType(): string
+    private function getFieldType(EntityManagerInterface $entityManager): string
     {
-        return $this->isPostgreSqlPlatform() ? 'datetimetz' : 'datetime';
+        return $this->isPostgreSqlPlatform($entityManager) ? 'datetimetz' : 'datetime';
     }
 
-    private function isPostgreSqlPlatform(): bool
+    private function isPostgreSqlPlatform(EntityManagerInterface $entityManager): bool
     {
         /** @var Connection $connection */
-        $connection = $this->entityManager->getConnection();
+        $connection = $entityManager->getConnection();
 
         return $connection->getDatabasePlatform() instanceof PostgreSqlPlatform;
     }
