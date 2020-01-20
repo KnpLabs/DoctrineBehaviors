@@ -14,6 +14,10 @@ final class TreeSubscriber implements EventSubscriber
     public function loadClassMetadata(LoadClassMetadataEventArgs $loadClassMetadataEventArgs): void
     {
         $classMetadata = $loadClassMetadataEventArgs->getClassMetadata();
+        if ($classMetadata->reflClass === null) {
+            // Class has not yet been fully built, ignore this event
+            return;
+        }
 
         if (! is_a($classMetadata->reflClass->getName(), TreeNodeInterface::class, true)) {
             return;

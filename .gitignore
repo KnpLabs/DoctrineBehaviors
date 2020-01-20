@@ -1,6 +1,6 @@
 /vendor
 composer.lock
-
+.idea
 .phpunit.result.cache
 
 config/secrets/*
