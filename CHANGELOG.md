@@ -93,6 +93,21 @@ PRs and issues are linked, so you can find more about it. Thanks to [ChangelogLi
 - [#463] drop filterable, way to opinionated and limited, use custom implementation
 - [#457] remove repository traits, use custom methods in own repository instead
 
+### BREAKING CHANGES
+
+#### [#448] [Translation] add abstract class support
+
+Given three classes:
+- `AbstractEntity` (translatable)
+- `AbstractEntityTranslation` (translation)
+- `TheEntity` which extends `AbstractEntity`
+
+`TheEntity::getTranslationEntityClass()` now resolves to `YourEntityTranslation` instead of `AbstractEntityTranslation`.
+
+You can either: 
+- create a `YourEntityTranslation` class (recommended)
+- use the old way, re-implement `AbstractEntity#getTranslationEntityClass()` to return `self::class.'Translation'`
+
 ## [v2.0.0-alpha1] - 2019-12-12
 
 ### Added
