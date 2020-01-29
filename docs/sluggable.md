@@ -2,7 +2,7 @@
 
 Sluggable generates slugs (uniqueness is not guaranteed) for an entity. 
 
-Will automatically generate on update/persist (you can disable the on update generation by overriding `getRegenerateSlugOnUpdate()` to return `false`.
+Will automatically generate on update/persist (you can disable the on update generation by overriding `shouldRegenerateSlugOnUpdate()` to return `false`.
 
 You can also override the slug delimiter from the default `-` by overriding `getSlugDelimiter()` method.
 
