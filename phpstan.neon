@@ -11,9 +11,6 @@ parameters:
     reportUnmatchedIgnoredErrors: false
 
     ignoreErrors:
-        # traits
-        - '#Call to an undefined method Knp\\DoctrineBehaviors(.*?)#'
-
         # buggy
         - '#of function call_user_func_array expects callable#'
 
