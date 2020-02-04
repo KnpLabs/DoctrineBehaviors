@@ -10,8 +10,9 @@ use Knp\DoctrineBehaviors\Model\Translatable\TranslationTrait;
 use Knp\DoctrineBehaviors\Tests\Fixtures\Entity\TranslatableCustomizedEntity;
 
 /**
- * @ORM\Entity
  * Used to test translatable classes which declare a custom translation class.
+ * @ORM\Entity
+ * @implements TranslationInterface<TranslatableCustomizedEntity>
  */
 class TranslatableCustomizedEntityTranslation implements TranslationInterface
 {
