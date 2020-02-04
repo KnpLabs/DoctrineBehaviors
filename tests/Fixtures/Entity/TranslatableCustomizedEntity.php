@@ -13,7 +13,7 @@ use Knp\DoctrineBehaviors\Tests\Fixtures\Entity\Translation\TranslatableCustomiz
  * Used to test translation classes which declare custom translatable classes.
  *
  * @ORM\Entity
- * @implements TranslatableInterface<TranslatableCustomizedEntityTranslation>
+ * @phpstan-implements TranslatableInterface<TranslatableCustomizedEntityTranslation>
  */
 class TranslatableCustomizedEntity implements TranslatableInterface
 {

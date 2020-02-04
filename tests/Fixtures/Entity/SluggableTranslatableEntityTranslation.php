@@ -12,7 +12,7 @@ use Knp\DoctrineBehaviors\Model\Translatable\TranslationTrait;
 
 /**
  * @ORM\Entity
- * @implements TranslationInterface<SluggableTranslatableEntity>
+ * @phpstan-implements TranslationInterface<SluggableTranslatableEntity>
  */
 class SluggableTranslatableEntityTranslation implements TranslationInterface, SluggableInterface
 {

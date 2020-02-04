@@ -10,7 +10,7 @@ use Knp\DoctrineBehaviors\Model\Translatable\TranslatableTrait;
 
 /**
  * @ORM\Entity
- * @implements TranslatableInterface<SluggableTranslatableEntityTranslation>
+ * @phpstan-implements TranslatableInterface<SluggableTranslatableEntityTranslation>
  */
 class SluggableTranslatableEntity implements TranslatableInterface
 {
