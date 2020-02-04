@@ -269,7 +269,7 @@ final class TranslatableTest extends AbstractBehaviorTestCase
         $entity = new TranslatableEntity();
         $entity->addTranslation($entityTranslation);
 
-        $this->assertEquals('My title', $entityTranslation->getTranslatable()->translate('en')->getTitle());
+        $this->assertSame('My title', $entityTranslation->getTranslatable()->translate('en')->getTitle());
     }
 
     /**

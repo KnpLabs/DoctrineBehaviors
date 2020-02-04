@@ -11,9 +11,6 @@ use Knp\DoctrineBehaviors\Contract\Entity\TranslationInterface;
 
 trait TranslatableMethodsTrait
 {
-    /**
-     * {@inheritDoc}
-     */
     public function getTranslations()
     {
         // initialize collection, usually in ctor
@@ -24,9 +21,6 @@ trait TranslatableMethodsTrait
         return $this->translations;
     }
 
-    /**
-     * {@inheritDoc}
-     */
     public function setTranslations(iterable $translations): void
     {
         $this->ensureIsIterableOrCollection($translations);
@@ -36,9 +30,6 @@ trait TranslatableMethodsTrait
         }
     }
 
-    /**
-     * {@inheritDoc}
-     */
     public function getNewTranslations()
     {
         // initialize collection, usually in ctor
@@ -49,26 +40,17 @@ trait TranslatableMethodsTrait
         return $this->newTranslations;
     }
 
-    /**
-     * {@inheritDoc}
-     */
     public function addTranslation(TranslationInterface $translation): void
     {
         $this->getTranslations()->set((string) $translation->getLocale(), $translation);
         $translation->setTranslatable($this);
     }
 
-    /**
-     * {@inheritDoc}
-     */
     public function removeTranslation(TranslationInterface $translation): void
     {
         $this->getTranslations()->removeElement($translation);
     }
 
-    /**
-     * {@inheritDoc}
-     */
     public function translate(?string $locale = null, bool $fallbackToDefault = true): TranslationInterface
     {
         return $this->doTranslate($locale, $fallbackToDefault);

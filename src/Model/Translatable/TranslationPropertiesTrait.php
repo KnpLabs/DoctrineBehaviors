@@ -4,8 +4,6 @@ declare(strict_types=1);
 
 namespace Knp\DoctrineBehaviors\Model\Translatable;
 
-use Knp\DoctrineBehaviors\Contract\Entity\TranslatableInterface;
-
 trait TranslationPropertiesTrait
 {
     /**
