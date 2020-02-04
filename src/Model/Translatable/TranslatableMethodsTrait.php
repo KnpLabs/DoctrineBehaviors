@@ -12,7 +12,7 @@ use Knp\DoctrineBehaviors\Contract\Entity\TranslationInterface;
 trait TranslatableMethodsTrait
 {
     /**
-     * @return Collection|TranslationInterface[]
+     * {@inheritDoc}
      */
     public function getTranslations()
     {
@@ -25,7 +25,7 @@ trait TranslatableMethodsTrait
     }
 
     /**
-     * @param Collection|TranslationInterface[] $translations
+     * {@inheritDoc}
      */
     public function setTranslations(iterable $translations): void
     {
@@ -37,7 +37,7 @@ trait TranslatableMethodsTrait
     }
 
     /**
-     * @return Collection|TranslationInterface[]
+     * {@inheritDoc}
      */
     public function getNewTranslations()
     {
@@ -49,24 +49,25 @@ trait TranslatableMethodsTrait
         return $this->newTranslations;
     }
 
+    /**
+     * {@inheritDoc}
+     */
     public function addTranslation(TranslationInterface $translation): void
     {
         $this->getTranslations()->set((string) $translation->getLocale(), $translation);
         $translation->setTranslatable($this);
     }
 
+    /**
+     * {@inheritDoc}
+     */
     public function removeTranslation(TranslationInterface $translation): void
     {
         $this->getTranslations()->removeElement($translation);
     }
 
     /**
-     * Returns translation for specific locale (creates new one if doesn't exists).
-     * If requested translation doesn't exist, it will first try to fallback default locale
-     * If any translation doesn't exist, it will be added to newTranslations collection.
-     * In order to persist new translations, call mergeNewTranslations method, before flush
-     *
-     * @param string $locale The locale (en, ru, fr) | null If null, will try with current locale
+     * {@inheritDoc}
      */
     public function translate(?string $locale = null, bool $fallbackToDefault = true): TranslationInterface
     {
@@ -130,7 +131,7 @@ trait TranslatableMethodsTrait
      *
      * @param string $locale The locale (en, ru, fr) | null If null, will try with current locale
      */
-    protected function doTranslate(?string $locale = null, bool $fallbackToDefault = true): TranslationInterface
+    protected function doTranslate(?string $locale = null, bool $fallbackToDefault = true)
     {
         if ($locale === null) {
             $locale = $this->getCurrentLocale();
@@ -163,7 +164,6 @@ trait TranslatableMethodsTrait
 
         $class = static::getTranslationEntityClass();
 
-        /** @var TranslationInterface $translation */
         $translation = new $class();
         $translation->setLocale($locale);
 

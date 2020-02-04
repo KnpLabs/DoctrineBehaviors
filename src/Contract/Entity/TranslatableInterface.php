@@ -6,20 +6,31 @@ namespace Knp\DoctrineBehaviors\Contract\Entity;
 
 use Doctrine\Common\Collections\Collection;
 
+/**
+ * @phpstan-template T of TranslationInterface
+ */
 interface TranslatableInterface
 {
     /**
      * @return Collection|TranslationInterface[]
+     * @phpstan-return Collection<string,T>|T[]
      */
     public function getTranslations();
 
     /**
      * @return Collection|TranslationInterface[]
+     * @phpstan-return Collection<string,T>|T[]
      */
     public function getNewTranslations();
 
+    /**
+     * @phpstan-param T $translation
+     */
     public function addTranslation(TranslationInterface $translation): void;
 
+    /**
+     * @phpstan-param T $translation
+     */
     public function removeTranslation(TranslationInterface $translation): void;
 
     /**
@@ -29,6 +40,8 @@ interface TranslatableInterface
      * In order to persist new translations, call mergeNewTranslations method, before flush
      *
      * @param string $locale The locale (en, ru, fr) | null If null, will try with current locale
+     *
+     * @phpstan-return T
      */
     public function translate(?string $locale = null, bool $fallbackToDefault = true): TranslationInterface;
 

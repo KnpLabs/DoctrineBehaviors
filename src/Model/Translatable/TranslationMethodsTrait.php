@@ -17,6 +17,8 @@ trait TranslationMethodsTrait
 
     /**
      * Sets entity, that this translation should be mapped to.
+     *
+     * {@inheritDoc}
      */
     public function setTranslatable(TranslatableInterface $translatable): void
     {
@@ -25,6 +27,8 @@ trait TranslationMethodsTrait
 
     /**
      * Returns entity, that this translation is mapped to.
+     *
+     * {@inheritDoc}
      */
     public function getTranslatable(): TranslatableInterface
     {

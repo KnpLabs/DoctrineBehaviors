@@ -15,7 +15,7 @@ trait TranslationPropertiesTrait
 
     /**
      * Will be mapped to translatable entity by TranslatableSubscriber
-     * @var TranslatableInterface
+     * @var mixed
      */
     protected $translatable;
 }
