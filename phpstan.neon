@@ -11,6 +11,21 @@ parameters:
     reportUnmatchedIgnoredErrors: false
 
     ignoreErrors:
+        # traits
+        - '#Call to an undefined method Knp\\DoctrineBehaviors\\Contract\\Provider\\UserProviderInterface::changeUser\(\)#'
+        - '#Call to an undefined method Knp\\DoctrineBehaviors\\Contract\\Entity\\SluggableInterface::getId\(\)#'
+        - '#Call to an undefined method Knp\\DoctrineBehaviors\\Contract\\Entity\\TreeNodeInterface::getId\(\)#'
+        - '#Call to an undefined method Knp\\DoctrineBehaviors\\Contract\\Entity\\TreeNodeInterface::to(Flat)?Array\(\)#'
+
+        # translation proxy
+        - message: '#Call to an undefined method Knp\\DoctrineBehaviors\\Tests\\Fixtures\\Entity\\TranslatableEntity::(get|set)Title\(\)#'
+          path: tests/ORM/TranslatableTest.php
+
+        # translation inheritance, I don't wanted to change (Abstract|Extended)TranslationEntity(Translation)? classes
+        # to had generics support because it feels super weird and inheritance was legit useless.
+        - message: '#Call to an undefined method Knp\\DoctrineBehaviors\\Contract\\Entity\\TranslationInterface::(get|set)(Extended)?Title\(\)#'
+          path: tests/ORM/TranslatableInheritanceTest.php
+
         # buggy
         - '#of function call_user_func_array expects callable#'
 
