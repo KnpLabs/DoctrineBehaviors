@@ -45,10 +45,10 @@ interface TreeNodeInterface
 
     /**
      * Used to build the hierarchical tree.
-     * This method will do:
+     * This method will:
      *    - modify the parent of this node
-     *    - Add the this node to the children of the new parent
-     *    - Remove the this node from the children of the old parent
+     *    - Add this node to the children of the new parent
+     *    - Remove this node from the children of the old parent
      *    - Modify the materialized path of this node and all its children, recursively
      */
     public function setChildNodeOf(?self $node = null): void;
