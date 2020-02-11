@@ -4,6 +4,10 @@ includes:
     - vendor/phpstan/phpstan-phpunit/extension.neon
 
 parameters:
+    paths:
+        - "src"
+        - "tests"
+
     level: 8
     checkGenericClassInNonGenericObjectType: false
 
