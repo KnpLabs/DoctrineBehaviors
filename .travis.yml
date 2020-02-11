@@ -1,4 +1,5 @@
 dist: xenial # see https://travis-ci.community/t/postgresql-fails-to-start-unrecognized-operating-system/4558
+
 language: php
 
 install:
@@ -28,6 +29,8 @@ jobs:
                 - DB_PASSWD=root
                 - DB_MEMORY=false
             php: '7.2'
+            install:
+                - composer update --prefer-lowest
             before_script:
                 - psql -c 'CREATE DATABASE orm_behaviors_test' -U postgres
                 # see https://www.guru99.com/postgresql-create-alter-add-user.html step 5)
@@ -45,12 +48,6 @@ jobs:
             <<: *POSTGRES_JOB
             php: '7.4'
 
-        -
-            <<: *POSTGRES_JOB
-            php: '7.2'
-            install:
-                - composer update --prefer-lowest
-
         # MySQL
         - &MYSQL_JOB
             stage: test
@@ -66,6 +63,8 @@ jobs:
                 - DB_PASSWD=""
                 - DB_MEMORY=false
             php: '7.2'
+            install:
+                - composer update --prefer-lowest
             before_script:
                 - mysql -e 'create database IF NOT EXISTS orm_behaviors_test' -uroot
             script:
@@ -78,44 +77,6 @@ jobs:
         -
             <<: *MYSQL_JOB
             php: '7.4'
-
-        -
-            <<: *MYSQL_JOB
-            php: '7.2'
-            install:
-                - composer update --prefer-lowest
-
-        -
-            stage: test
-            name: "Lint PHP"
-            php: '7.2'
-            script:
-                - vendor/bin/parallel-lint src tests -e php,phpt
-
-        -
-            stage: test
-            name: "Coding Standards"
-            php: '7.2'
-            script:
-                - composer check-cs
-
-
-        -
-            stage: test
-            name: "Static Analysis"
-            php: '7.2'
-            script:
-                - composer phpstan
-
-        -
-            stage: test
-            name: "Rector"
-            php: '7.2'
-            script:
-                - composer rector
-
-    allow_failures:
-        - name: "Rector"
 
 cache:
     directories:
