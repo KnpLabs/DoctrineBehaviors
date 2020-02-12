@@ -10,6 +10,8 @@ use Knp\DoctrineBehaviors\Model\Translatable\TranslatableTrait;
 
 /**
  * @ORM\Entity
+ * @method string|null getTitle()
+ * @method void setTitle(string $title)
  */
 class TranslatableEntity implements TranslatableInterface
 {
