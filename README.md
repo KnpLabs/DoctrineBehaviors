@@ -61,7 +61,21 @@ final class CategoryRepository extends EntityRepository
 
 Voilá!
 
-You now have a working `Category` that behaves like:
+You now have a working `Category` that behaves like.
+
+## PHPStan
+
+A PHPStan is available and provides the following features:
+  - Provides correct return type for `TranslatableInterface::getTranslations()` and `TranslatableInterface::getNewTranslations()`
+  - Provides correct return type for `TranslatableInterface::translate()`
+  - Provides correct return type for `TranslationInterface::getTranslatable()`
+
+Include `extension.neon` in your project's PHPStan config:
+```yaml
+# phpstan.neon
+includes:
+    - vendor/knplabs/doctrine-behaviors/extension.neon
+```
 
 ## 3 Steps to Contribute
 
