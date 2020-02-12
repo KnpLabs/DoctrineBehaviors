@@ -44,8 +44,5 @@ parameters:
 
         - '#Cannot call method addChildNode\(\) on Knp\\DoctrineBehaviors\\Contract\\Entity\\TreeNodeInterface\|null#'
 
-        # iterable
-        - '#Parameter \#1 \$translations of method Knp\\DoctrineBehaviors\\Tests\\Fixtures\\Entity\\TranslatableEntity\:\:setTranslations\(\) expects Doctrine\\Common\\Collections\\Collection&iterable<Knp\\DoctrineBehaviors\\Contract\\Entity\\TranslationInterface\>, array<int, Knp\\DoctrineBehaviors\\Contract\\Entity\\TranslationInterface\> given#'
-
         - '#Property Knp\\DoctrineBehaviors\\Provider\\LocaleProvider\:\:\$translator has no typehint specified#'
         - '#PHPDoc tag @var has invalid value \(TranslatorInterface&LocaleAwareInterface\|null\)\: Unexpected token "\|", expected TOKEN_OTHER at offset 56#'
