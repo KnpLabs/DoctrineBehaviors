@@ -26,6 +26,7 @@ trait TranslatableMethodsTrait
 
     /**
      * @param Collection|TranslationInterface[] $translations
+     * @phpstan-param iterable<TranslationInterface> $translations
      */
     public function setTranslations(iterable $translations): void
     {
