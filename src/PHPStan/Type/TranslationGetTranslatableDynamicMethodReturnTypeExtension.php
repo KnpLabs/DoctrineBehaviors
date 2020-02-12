@@ -12,10 +12,13 @@ use PHPStan\Reflection\BrokerAwareExtension;
 use PHPStan\Reflection\MethodReflection;
 use PHPStan\Type\DynamicMethodReturnTypeExtension;
 use PHPStan\Type\ObjectType;
+use PHPStan\Type\Type;
 
 final class TranslationGetTranslatableDynamicMethodReturnTypeExtension implements DynamicMethodReturnTypeExtension, BrokerAwareExtension
 {
-    /** @var Broker */
+    /**
+     * @var Broker
+     */
     private $broker;
 
     public function setBroker(Broker $broker): void
@@ -30,11 +33,14 @@ final class TranslationGetTranslatableDynamicMethodReturnTypeExtension implement
 
     public function isMethodSupported(MethodReflection $methodReflection): bool
     {
-        return 'getTranslatable' === $methodReflection->getName();
+        return $methodReflection->getName() === 'getTranslatable';
     }
 
-    public function getTypeFromMethodCall(MethodReflection $methodReflection, MethodCall $methodCall, Scope $scope): \PHPStan\Type\Type
-    {
+    public function getTypeFromMethodCall(
+        MethodReflection $methodReflection,
+        MethodCall $methodCall,
+        Scope $scope
+    ): Type {
         $translatableClass = Helper::getTranslatableClass($this->broker, $methodCall, $scope);
 
         return new ObjectType($translatableClass);
