@@ -43,7 +43,7 @@ final class TranslatableInheritanceTest extends AbstractBehaviorTestCase
 
         $this->entityManager->clear();
 
-        /** @var TranslatableInterface $entity */
+        /** @var ExtendedTranslatableEntity $entity */
         $entity = $this->objectRepository->find($id);
 
         $this->assertSame('fabuleux', $entity->translate('fr')->getTitle());
