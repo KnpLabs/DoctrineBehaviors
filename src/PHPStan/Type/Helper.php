@@ -2,23 +2,34 @@
 
 namespace Knp\DoctrineBehaviors\PHPStan\Type;
 
+use PhpParser\Node\Expr\MethodCall;
+use PHPStan\Analyser\Scope;
+use PHPStan\Broker\Broker;
 use PHPStan\Reflection\MethodReflection;
 
 final class Helper
 {
-    public static function getTranslationClassFromMethodReflection(MethodReflection $methodReflection): string
+    public static function getTranslationClass(Broker $broker, MethodCall $methodCall, Scope $scope): string
     {
-        $translatableReflection       = $methodReflection->getDeclaringClass();
-        $translatableNativeReflection = $translatableReflection->getNativeReflection();
+        $type              = $scope->getType($methodCall->var);
+        $translatableClass = $type->getReferencedClasses()[0];
 
-        return $translatableNativeReflection->getMethod('getTranslationEntityClass')->invoke(null);
+        return $broker
+            ->getClass($translatableClass)
+            ->getNativeReflection()
+            ->getMethod('getTranslationEntityClass')
+            ->invoke(null);
     }
 
-    public static function getTranslatableClassFromMethodReflection(MethodReflection $methodReflection): string
+    public static function getTranslatableClass(Broker $broker, MethodCall $methodCall, Scope $scope): string
     {
-        $translationReflection       = $methodReflection->getDeclaringClass();
-        $translationNativeReflection = $translationReflection->getNativeReflection();
+        $type              = $scope->getType($methodCall->var);
+        $translatableClass = $type->getReferencedClasses()[0];
 
-        return $translationNativeReflection->getMethod('getTranslatableEntityClass')->invoke(null);
+        return $broker
+            ->getClass($translatableClass)
+            ->getNativeReflection()
+            ->getMethod('getTranslatableEntityClass')
+            ->invoke(null);
     }
 }

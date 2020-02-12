@@ -8,6 +8,8 @@ use Doctrine\Common\Collections\Collection;
 use Knp\DoctrineBehaviors\Contract\Entity\TranslatableInterface;
 use PhpParser\Node\Expr\MethodCall;
 use PHPStan\Analyser\Scope;
+use PHPStan\Broker\Broker;
+use PHPStan\Reflection\BrokerAwareExtension;
 use PHPStan\Reflection\MethodReflection;
 use PHPStan\Type\DynamicMethodReturnTypeExtension;
 use PHPStan\Type\IterableType;
@@ -15,8 +17,16 @@ use PHPStan\Type\MixedType;
 use PHPStan\Type\ObjectType;
 use PHPStan\Type\TypeCombinator;
 
-final class TranslatableGetTranslationsDynamicMethodReturnTypeExtension implements DynamicMethodReturnTypeExtension
+final class TranslatableGetTranslationsDynamicMethodReturnTypeExtension implements DynamicMethodReturnTypeExtension, BrokerAwareExtension
 {
+    /** @var Broker */
+    private $broker;
+
+    public function setBroker(Broker $broker): void
+    {
+        $this->broker = $broker;
+    }
+
     public function getClass(): string
     {
         return TranslatableInterface::class;
@@ -29,7 +39,7 @@ final class TranslatableGetTranslationsDynamicMethodReturnTypeExtension implemen
 
     public function getTypeFromMethodCall(MethodReflection $methodReflection, MethodCall $methodCall, Scope $scope): \PHPStan\Type\Type
     {
-        $translationClass = Helper::getTranslationClassFromMethodReflection($methodReflection);
+        $translationClass = Helper::getTranslationClass($this->broker, $methodCall, $scope);
 
         return TypeCombinator::intersect(
             new ObjectType(Collection::class),
