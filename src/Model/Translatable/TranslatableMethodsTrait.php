@@ -144,6 +144,7 @@ trait TranslatableMethodsTrait
             return $translation;
         }
 
+        /** @var TranslationInterface $translation */
         $class = static::getTranslationEntityClass();
 
         $translation = new $class();
