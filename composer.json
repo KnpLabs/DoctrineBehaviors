@@ -1,6 +1,7 @@
 {
     "name": "knplabs/doctrine-behaviors",
     "description": "Doctrine Behavior Traits",
+    "type": "symfony-bundle",
     "keywords": [
         "behaviors", "doctrine", "timestampable", "translatable", "blameable", "softdeletable", "tree", "uuid"
     ],
