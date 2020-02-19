@@ -5,7 +5,6 @@ declare(strict_types=1);
 namespace Knp\DoctrineBehaviors\Tests\ORM;
 
 use Doctrine\Persistence\ObjectRepository;
-use Knp\DoctrineBehaviors\Contract\Entity\TranslatableInterface;
 use Knp\DoctrineBehaviors\Tests\AbstractBehaviorTestCase;
 use Knp\DoctrineBehaviors\Tests\Fixtures\Entity\Translatable\ExtendedTranslatableEntity;
 
@@ -43,7 +42,7 @@ final class TranslatableInheritanceTest extends AbstractBehaviorTestCase
 
         $this->entityManager->clear();
 
-        /** @var TranslatableInterface $entity */
+        /** @var ExtendedTranslatableEntity $entity */
         $entity = $this->objectRepository->find($id);
 
         $this->assertSame('fabuleux', $entity->translate('fr')->getTitle());

@@ -1,0 +1,10 @@
+services:
+    -
+        class: Knp\DoctrineBehaviors\PHPStan\Type\TranslatableTranslateDynamicMethodReturnTypeExtension
+        tags: [phpstan.broker.dynamicMethodReturnTypeExtension]
+    -
+        class: Knp\DoctrineBehaviors\PHPStan\Type\TranslatableGetTranslationsDynamicMethodReturnTypeExtension
+        tags: [phpstan.broker.dynamicMethodReturnTypeExtension]
+    -
+        class: Knp\DoctrineBehaviors\PHPStan\Type\TranslationGetTranslatableDynamicMethodReturnTypeExtension
+        tags: [phpstan.broker.dynamicMethodReturnTypeExtension]

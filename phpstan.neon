@@ -1,4 +1,5 @@
 includes:
+    - extension.neon
     - vendor/symplify/phpstan-extensions/config/config.neon
     - vendor/phpstan/phpstan-doctrine/extension.neon
     - vendor/phpstan/phpstan-phpunit/extension.neon
@@ -16,7 +17,10 @@ parameters:
 
     ignoreErrors:
         # traits
-        - '#Call to an undefined method Knp\\DoctrineBehaviors(.*?)#'
+        - '#Call to an undefined method Knp\\DoctrineBehaviors\\Contract\\Provider\\UserProviderInterface::changeUser\(\)#'
+        - '#Call to an undefined method Knp\\DoctrineBehaviors\\Contract\\Entity\\SluggableInterface::getId\(\)#'
+        - '#Call to an undefined method Knp\\DoctrineBehaviors\\Contract\\Entity\\TreeNodeInterface::getId\(\)#'
+        - '#Call to an undefined method Knp\\DoctrineBehaviors\\Contract\\Entity\\TreeNodeInterface::to(Flat)?Array\(\)#'
 
         # buggy
         - '#of function call_user_func_array expects callable#'
@@ -35,9 +39,6 @@ parameters:
         - '#Offset 0 does not exist on array<Knp\\DoctrineBehaviors\\Contract\\Entity\\TreeNodeInterface\>\|ArrayAccess\|null#'
 
         - '#Cannot call method addChildNode\(\) on Knp\\DoctrineBehaviors\\Contract\\Entity\\TreeNodeInterface\|null#'
-
-        # iterable
-        - '#Parameter \#1 \$translations of method Knp\\DoctrineBehaviors\\Tests\\Fixtures\\Entity\\TranslatableEntity\:\:setTranslations\(\) expects Doctrine\\Common\\Collections\\Collection&iterable<Knp\\DoctrineBehaviors\\Contract\\Entity\\TranslationInterface\>, array<int, Knp\\DoctrineBehaviors\\Contract\\Entity\\TranslationInterface\> given#'
 
         - '#Property Knp\\DoctrineBehaviors\\Provider\\LocaleProvider\:\:\$translator has no typehint specified#'
         - '#PHPDoc tag @var has invalid value \(TranslatorInterface&LocaleAwareInterface\|null\)\: Unexpected token "\|", expected TOKEN_OTHER at offset 56#'
