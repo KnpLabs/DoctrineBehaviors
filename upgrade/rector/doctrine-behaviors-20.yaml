@@ -1,6 +1,6 @@
 # inspiration https://github.com/cpliakas/git-wrapper/tree/master/upgrade/rector
 services:
-    Rector\Rector\Class_\AddInterfaceByTraitRector:
+    Rector\Core\Rector\Class_\AddInterfaceByTraitRector:
         $interfaceByTrait:
             Knp\DoctrineBehaviors\Model\Timestampable\Timestampable: 'Knp\DoctrineBehaviors\Contract\Entity\TimestampableInterface'
             Knp\DoctrineBehaviors\Model\Timestampable\TimestampableMethods: 'Knp\DoctrineBehaviors\Contract\Entity\TimestampableInterface'
