@@ -28,7 +28,7 @@ final class UserProvider implements UserProviderInterface
     public function provideUser()
     {
         $token = $this->security->getToken();
-        if ($token) {
+        if ($token !== null) {
             $user = $token->getUser();
             if ($this->blameableUserEntity) {
                 if ($user instanceof $this->blameableUserEntity) {

@@ -46,11 +46,11 @@ final class LocaleProvider implements LocaleProviderInterface
         }
 
         $currentLocale = $currentRequest->getLocale();
-        if ($currentLocale) {
+        if ($currentLocale !== '') {
             return $currentLocale;
         }
 
-        if ($this->translator) {
+        if ($this->translator !== null) {
             return $this->translator->getLocale();
         }
 
