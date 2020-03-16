@@ -200,16 +200,13 @@ trait TranslatableMethodsTrait
         return null;
     }
 
-    /**
-     * @return false|string
-     */
-    protected function computeFallbackLocale($locale)
+    protected function computeFallbackLocale($locale): ?string
     {
         if (strrchr($locale, '_') !== false) {
             return substr($locale, 0, -strlen(strrchr($locale, '_')));
         }
 
-        return false;
+        return null;
     }
 
     private function ensureIsIterableOrCollection($translations): void
@@ -230,13 +227,10 @@ trait TranslatableMethodsTrait
     {
         $fallbackLocale = $this->computeFallbackLocale($locale);
 
-        if ($fallbackLocale) {
-            $translation = $this->findTranslationByLocale($fallbackLocale);
-            if ($translation) {
-                return $translation;
-            }
+        if ($fallbackLocale === null) {
+            return $this->findTranslationByLocale($this->getDefaultLocale(), false);
         }
 
-        return $this->findTranslationByLocale($this->getDefaultLocale(), false);
+        return $this->findTranslationByLocale($fallbackLocale);
     }
 }
