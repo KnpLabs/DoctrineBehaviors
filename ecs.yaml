@@ -16,8 +16,6 @@ parameters:
         Symplify\CodingStandard\Sniffs\ControlStructure\SprintfOverContactSniff: null
         Symplify\CodingStandard\Sniffs\CleanCode\ForbiddenStaticFunctionSniff: null
         Symplify\CodingStandard\Sniffs\CleanCode\ForbiddenReferenceSniff: null
-#        Symplify\CodingStandard\Sniffs\Architecture\ExplicitExceptionSniff: null
-        Symplify\CodingStandard\Sniffs\Architecture\DuplicatedClassShortNameSniff: null
 
         # mixed types
         SlevomatCodingStandard\Sniffs\TypeHints\PropertyTypeHintSniff: null

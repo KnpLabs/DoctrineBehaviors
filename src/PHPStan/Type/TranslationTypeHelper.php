@@ -8,7 +8,7 @@ use PhpParser\Node\Expr\MethodCall;
 use PHPStan\Analyser\Scope;
 use PHPStan\Broker\Broker;
 
-final class Helper
+final class TranslationTypeHelper
 {
     public static function getTranslationClass(Broker $broker, MethodCall $methodCall, Scope $scope): string
     {
