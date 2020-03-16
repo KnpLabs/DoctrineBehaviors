@@ -8,7 +8,7 @@ use Closure;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Knp\DoctrineBehaviors\Contract\Entity\TreeNodeInterface;
-use LogicException;
+use Knp\DoctrineBehaviors\Exception\TreeException;
 use Nette\Utils\Json;
 
 trait TreeNodeMethodsTrait
@@ -110,7 +110,7 @@ trait TreeNodeMethodsTrait
     {
         $id = $this->getNodeId();
         if (empty($id)) {
-            throw new LogicException('You must provide an id for this node if you want it to be part of a tree.');
+            throw new TreeException('You must provide an id for this node if you want it to be part of a tree.');
         }
 
         $path = $treeNode !== null

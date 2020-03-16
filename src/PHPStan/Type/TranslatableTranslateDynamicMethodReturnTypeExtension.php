@@ -41,7 +41,7 @@ final class TranslatableTranslateDynamicMethodReturnTypeExtension implements Dyn
         MethodCall $methodCall,
         Scope $scope
     ): Type {
-        $translationClass = Helper::getTranslationClass($this->broker, $methodCall, $scope);
+        $translationClass = TranslationTypeHelper::getTranslationClass($this->broker, $methodCall, $scope);
 
         return new ObjectType($translationClass);
     }

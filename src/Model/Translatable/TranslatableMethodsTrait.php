@@ -6,8 +6,8 @@ namespace Knp\DoctrineBehaviors\Model\Translatable;
 
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
-use InvalidArgumentException;
 use Knp\DoctrineBehaviors\Contract\Entity\TranslationInterface;
+use Knp\DoctrineBehaviors\Exception\TranslatableException;
 
 trait TranslatableMethodsTrait
 {
@@ -138,23 +138,14 @@ trait TranslatableMethodsTrait
         }
 
         $translation = $this->findTranslationByLocale($locale);
-        if ($translation and ! $translation->isEmpty()) {
+        if ($translation && ! $translation->isEmpty()) {
             return $translation;
         }
 
         if ($fallbackToDefault) {
-            $fallbackLocale = $this->computeFallbackLocale($locale);
-
-            if ($fallbackLocale) {
-                $translation = $this->findTranslationByLocale($fallbackLocale);
-                if ($translation) {
-                    return $translation;
-                }
-            }
-
-            $defaultTranslation = $this->findTranslationByLocale($this->getDefaultLocale(), false);
-            if ($defaultTranslation) {
-                return $defaultTranslation;
+            $fallbackTranslation = $this->resolveFallbackTranslation($locale);
+            if ($fallbackTranslation !== null) {
+                return $fallbackTranslation;
             }
         }
 
@@ -209,16 +200,13 @@ trait TranslatableMethodsTrait
         return null;
     }
 
-    /**
-     * @return false|string
-     */
-    protected function computeFallbackLocale($locale)
+    protected function computeFallbackLocale($locale): ?string
     {
         if (strrchr($locale, '_') !== false) {
             return substr($locale, 0, -strlen(strrchr($locale, '_')));
         }
 
-        return false;
+        return null;
     }
 
     private function ensureIsIterableOrCollection($translations): void
@@ -231,8 +219,18 @@ trait TranslatableMethodsTrait
             return;
         }
 
-        throw new InvalidArgumentException(sprintf(
-            '$translations parameter must be iterable or %s', Collection::class)
+        throw new TranslatableException(sprintf('$translations parameter must be iterable or %s', Collection::class)
         );
+    }
+
+    private function resolveFallbackTranslation(?string $locale): ?TranslationInterface
+    {
+        $fallbackLocale = $this->computeFallbackLocale($locale);
+
+        if ($fallbackLocale === null) {
+            return $this->findTranslationByLocale($this->getDefaultLocale(), false);
+        }
+
+        return $this->findTranslationByLocale($fallbackLocale);
     }
 }

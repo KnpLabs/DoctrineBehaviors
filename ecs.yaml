@@ -15,10 +15,7 @@ parameters:
         PhpCsFixer\Fixer\Operator\UnaryOperatorSpacesFixer: null
         Symplify\CodingStandard\Sniffs\ControlStructure\SprintfOverContactSniff: null
         Symplify\CodingStandard\Sniffs\CleanCode\ForbiddenStaticFunctionSniff: null
-        Symplify\CodingStandard\Sniffs\CleanCode\CognitiveComplexitySniff: null
         Symplify\CodingStandard\Sniffs\CleanCode\ForbiddenReferenceSniff: null
-        Symplify\CodingStandard\Sniffs\Architecture\ExplicitExceptionSniff: null
-        Symplify\CodingStandard\Sniffs\Architecture\DuplicatedClassShortNameSniff: null
 
         # mixed types
         SlevomatCodingStandard\Sniffs\TypeHints\PropertyTypeHintSniff: null
@@ -39,6 +36,9 @@ parameters:
             - "tests/Fixtures/Entity/SluggableWithoutRegenerateEntity.php"
 
 services:
+    Symplify\CodingStandard\Sniffs\CleanCode\ClassCognitiveComplexitySniff:
+        max_class_cognitive_complexity: 20
+
     Symplify\CodingStandard\Sniffs\CleanCode\CognitiveComplexitySniff:
         max_cognitive_complexity: 8
 
