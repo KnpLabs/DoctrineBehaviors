@@ -6,8 +6,8 @@ namespace Knp\DoctrineBehaviors\Model\Translatable;
 
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
-use InvalidArgumentException;
 use Knp\DoctrineBehaviors\Contract\Entity\TranslationInterface;
+use Knp\DoctrineBehaviors\Exception\TranslatableException;
 
 trait TranslatableMethodsTrait
 {
@@ -222,8 +222,7 @@ trait TranslatableMethodsTrait
             return;
         }
 
-        throw new InvalidArgumentException(sprintf(
-            '$translations parameter must be iterable or %s', Collection::class)
+        throw new TranslatableException(sprintf('$translations parameter must be iterable or %s', Collection::class)
         );
     }
 

@@ -4,8 +4,8 @@ declare(strict_types=1);
 
 namespace Knp\DoctrineBehaviors\Model\Sluggable;
 
+use Knp\DoctrineBehaviors\Exception\SluggableException;
 use Symfony\Component\String\Slugger\AsciiSlugger;
-use UnexpectedValueException;
 
 trait SluggableMethodsTrait
 {
@@ -84,7 +84,7 @@ trait SluggableMethodsTrait
             return;
         }
 
-        throw new UnexpectedValueException(sprintf(
+        throw new SluggableException(sprintf(
             'Sluggable expects to have at least one non-empty field from the following: ["%s"]',
             implode('", "', array_keys($values))
         ));
