@@ -18,16 +18,11 @@ trait LoggableTrait
                 }
             }
 
-            if ($changeSet[0] !== $changeSet[1]) {
-                $message[] = sprintf(
-                    '%s #%d : property "%s" changed from "%s" to "%s"',
-                    self::class,
-                    $this->getId(),
-                    $property,
-                    ! is_array($changeSet[0]) ? $changeSet[0] : 'an array',
-                    ! is_array($changeSet[1]) ? $changeSet[1] : 'an array'
-                );
+            if ($changeSet[0] === $changeSet[1]) {
+                continue;
             }
+
+            $message[] = $this->createChangeSetMessage($property, $changeSet);
         }
 
         return implode("\n", $message);
@@ -41,5 +36,17 @@ trait LoggableTrait
     public function getRemoveLogMessage(): string
     {
         return sprintf('%s #%d removed', self::class, $this->getId());
+    }
+
+    private function createChangeSetMessage(string $property, array $changeSet): string
+    {
+        return sprintf(
+            '%s #%d : property "%s" changed from "%s" to "%s"',
+            self::class,
+            $this->getId(),
+            $property,
+            ! is_array($changeSet[0]) ? $changeSet[0] : 'an array',
+            ! is_array($changeSet[1]) ? $changeSet[1] : 'an array'
+        );
     }
 }

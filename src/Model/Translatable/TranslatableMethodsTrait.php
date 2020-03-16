@@ -138,23 +138,14 @@ trait TranslatableMethodsTrait
         }
 
         $translation = $this->findTranslationByLocale($locale);
-        if ($translation and ! $translation->isEmpty()) {
+        if ($translation && ! $translation->isEmpty()) {
             return $translation;
         }
 
         if ($fallbackToDefault) {
-            $fallbackLocale = $this->computeFallbackLocale($locale);
-
-            if ($fallbackLocale) {
-                $translation = $this->findTranslationByLocale($fallbackLocale);
-                if ($translation) {
-                    return $translation;
-                }
-            }
-
-            $defaultTranslation = $this->findTranslationByLocale($this->getDefaultLocale(), false);
-            if ($defaultTranslation) {
-                return $defaultTranslation;
+            $fallbackTranslation = $this->resolveFallbackTranslation($locale);
+            if ($fallbackTranslation !== null) {
+                return $fallbackTranslation;
             }
         }
 
@@ -234,5 +225,19 @@ trait TranslatableMethodsTrait
         throw new InvalidArgumentException(sprintf(
             '$translations parameter must be iterable or %s', Collection::class)
         );
+    }
+
+    private function resolveFallbackTranslation(?string $locale): ?TranslationInterface
+    {
+        $fallbackLocale = $this->computeFallbackLocale($locale);
+
+        if ($fallbackLocale) {
+            $translation = $this->findTranslationByLocale($fallbackLocale);
+            if ($translation) {
+                return $translation;
+            }
+        }
+
+        return $this->findTranslationByLocale($this->getDefaultLocale(), false);
     }
 }
