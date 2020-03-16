@@ -70,11 +70,11 @@ A PHPStan extension is available and provides the following features:
   - Provides correct return type for `TranslatableInterface::translate()`
   - Provides correct return type for `TranslationInterface::getTranslatable()`
 
-Include `extension.neon` in your project's PHPStan config:
+Include `phpstan-extension.neon` in your project's PHPStan config:
 ```yaml
 # phpstan.neon
 includes:
-    - vendor/knplabs/doctrine-behaviors/extension.neon
+    - vendor/knplabs/doctrine-behaviors/phpstan-extension.neon
 ```
 
 ## 3 Steps to Contribute

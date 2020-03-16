@@ -6,6 +6,7 @@ namespace Knp\DoctrineBehaviors\Tests\ORM;
 
 use Iterator;
 use Knp\DoctrineBehaviors\Contract\Entity\TreeNodeInterface;
+use Knp\DoctrineBehaviors\Exception\TreeException;
 use Knp\DoctrineBehaviors\Tests\AbstractBehaviorTestCase;
 use Knp\DoctrineBehaviors\Tests\Fixtures\Entity\TreeNodeEntity;
 use Knp\DoctrineBehaviors\Tests\Fixtures\Repository\TreeNodeRepository;
@@ -203,7 +204,7 @@ final class TreeNodeTest extends AbstractBehaviorTestCase
 
     public function testTestsetChildNodeOfWithoutId(): void
     {
-        $this->expectException(LogicException::class);
+        $this->expectException(TreeException::class);
         $this->expectExceptionMessage('You must provide an id for this node if you want it to be part of a tree.');
 
         $this->buildNode(['setMaterializedPath' => '/0/1'])->setChildNodeOf(

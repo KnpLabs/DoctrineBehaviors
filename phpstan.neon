@@ -1,5 +1,5 @@
 includes:
-    - extension.neon
+    - phpstan-extension.neon
     - vendor/symplify/phpstan-extensions/config/config.neon
     - vendor/phpstan/phpstan-doctrine/extension.neon
     - vendor/phpstan/phpstan-phpunit/extension.neon
