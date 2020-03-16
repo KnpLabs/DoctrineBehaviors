@@ -98,7 +98,8 @@ trait TreeNodeMethodsTrait
     public function isIndirectChildNodeOf(TreeNodeInterface $treeNode): bool
     {
         return $this->getRealMaterializedPath() !== $treeNode->getRealMaterializedPath()
-            && strpos($this->getRealMaterializedPath(), $treeNode->getRealMaterializedPath()) === 0;
+            && strpos($this->getRealMaterializedPath() . self::getMaterializedPathSeparator(),
+                      $treeNode->getRealMaterializedPath() . self::getMaterializedPathSeparator()) === 0;
     }
 
     public function isChildNodeOf(TreeNodeInterface $treeNode): bool
