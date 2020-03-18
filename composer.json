@@ -54,14 +54,14 @@
         }
     },
     "scripts": {
-        "check-cs": "vendor/bin/ecs check --ansi",
-        "fix-cs": "vendor/bin/ecs check --fix --ansi",
-        "phpstan": "vendor/bin/phpstan analyse --ansi --error-format symplify",
-        "rector": "vendor/bin/rector process --config rector-ci.yaml",
+        "check-cs": "\"vendor/bin/ecs\" check --ansi",
+        "fix-cs": "\"vendor/bin/ecs\" check --fix --ansi",
+        "phpstan": "\"vendor/bin/phpstan\" analyse --ansi --error-format symplify",
+        "rector": "\"vendor/bin/rector\" process --config rector-ci.yaml",
         "changelog": [
-            "vendor/bin/changelog-linker dump-merges --in-categories --ansi",
-            "vendor/bin/changelog-linker link --ansi",
-            "vendor/bin/changelog-linker cleanup --ansi"
+            "\"vendor/bin/changelog-linker\" dump-merges --in-categories --ansi",
+            "\"vendor/bin/changelog-linker\" link --ansi",
+            "\"vendor/bin/changelog-linker\" cleanup --ansi"
         ]
     }
 }
