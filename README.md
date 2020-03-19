@@ -22,18 +22,6 @@ It currently handles:
 composer require knplabs/doctrine-behaviors
 ```
 
-Register bundle in `config/bundles.php`:
-
-```php
-<?php
-
-return [
-    // ...
-    Knp\DoctrineBehaviors\Bundle\DoctrineBehaviorsBundle::class => ['all' => true],
-    // ...
-];
-```
-
 ## Usage
 
 All you have to do is to define a Doctrine entity:
