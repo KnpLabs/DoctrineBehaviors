@@ -17,4 +17,5 @@ services:
         resource: "../src"
         exclude:
             - "../src/Bundle/*"
+            - "../src/DoctrineBehaviorsBundle.php"
             - "../src/Exception/*"
