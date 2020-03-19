@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace Knp\DoctrineBehaviors\Bundle;
+namespace Knp\DoctrineBehaviors;
 
 use Knp\DoctrineBehaviors\Bundle\DependencyInjection\DoctrineBehaviorsExtension;
 use Symfony\Component\DependencyInjection\Extension\Extension;
