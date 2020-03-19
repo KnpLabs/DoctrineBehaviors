@@ -19,3 +19,4 @@ services:
             - "../src/Bundle/*"
             - "../src/DoctrineBehaviorsBundle.php"
             - "../src/Exception/*"
+            - "../src/PHPStan/*"
