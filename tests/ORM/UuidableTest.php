@@ -25,7 +25,7 @@ final class UuidableTest extends AbstractBehaviorTestCase
 
         $uuidableRepository = $this->entityManager->getRepository(UuidableEntity::class);
 
-        /** @var UuidableEntity $entity */
+        /** @var UuidableInterface $entity */
         $entity = $uuidableRepository->find($id);
 
         $this->assertNotNull($entity);
