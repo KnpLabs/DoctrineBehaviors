@@ -24,7 +24,7 @@
         "symfony/string": "^5.0",
         "symplify/package-builder": "^7.2",
         "nette/utils": "^3.0",
-        "ramsey/uuid": "^3.9|^4"
+        "ramsey/uuid": "^3.9|^4.0"
     },
     "require-dev": {
         "ext-pdo_sqlite": "*",
