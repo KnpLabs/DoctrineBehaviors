@@ -42,3 +42,5 @@ parameters:
 
         - '#Property Knp\\DoctrineBehaviors\\Provider\\LocaleProvider\:\:\$translator has no typehint specified#'
         - '#PHPDoc tag @var has invalid value \(TranslatorInterface&LocaleAwareInterface\|null\)\: Unexpected token "\|", expected TOKEN_OTHER at offset \d+#'
+
+        - '#Call to method getUuid\(\) on an unknown class Knp\\DoctrineBehaviors\\Model\\Uuidable\\UuidableTrait#'
