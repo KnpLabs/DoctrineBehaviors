@@ -6,8 +6,9 @@ namespace Knp\DoctrineBehaviors\Repository;
 
 use Doctrine\ORM\EntityManagerInterface;
 use Knp\DoctrineBehaviors\Contract\Entity\SluggableInterface;
+use Knp\DoctrineBehaviors\Contract\Repository\SluggableRepositoryInterface;
 
-final class DefaultSluggableRepository
+final class DefaultSluggableRepository implements SluggableRepositoryInterface
 {
     /**
      * @var EntityManagerInterface

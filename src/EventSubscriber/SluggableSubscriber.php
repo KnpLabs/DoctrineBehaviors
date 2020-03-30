@@ -11,7 +11,7 @@ use Doctrine\ORM\Event\LoadClassMetadataEventArgs;
 use Doctrine\ORM\Events;
 use Doctrine\ORM\Mapping\ClassMetadataInfo;
 use Knp\DoctrineBehaviors\Contract\Entity\SluggableInterface;
-use Knp\DoctrineBehaviors\Repository\DefaultSluggableRepository;
+use Knp\DoctrineBehaviors\Contract\Repository\SluggableRepositoryInterface;
 
 final class SluggableSubscriber implements EventSubscriber
 {
@@ -21,7 +21,7 @@ final class SluggableSubscriber implements EventSubscriber
     private const SLUG = 'slug';
 
     /**
-     * @var DefaultSluggableRepository
+     * @var SluggableRepositoryInterface
      */
     private $defaultSluggableRepository;
 
@@ -32,7 +32,7 @@ final class SluggableSubscriber implements EventSubscriber
 
     public function __construct(
         EntityManagerInterface $entityManager,
-        DefaultSluggableRepository $defaultSluggableRepository
+        SluggableRepositoryInterface $defaultSluggableRepository
     ) {
         $this->defaultSluggableRepository = $defaultSluggableRepository;
         $this->entityManager = $entityManager;
