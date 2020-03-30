@@ -41,4 +41,9 @@ final class DefaultSluggableRepository implements SluggableRepositoryInterface
         return ! (bool) $queryBuilder->getQuery()
             ->getSingleScalarResult();
     }
+
+    public function isSlugUnique(string $uniqueSlug, SluggableInterface $newOrUpdated, SluggableInterface $exisiting): bool
+    {
+        return $uniqueSlug === $exisiting->getSlug();
+    }
 }
