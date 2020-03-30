@@ -42,8 +42,11 @@ final class DefaultSluggableRepository implements SluggableRepositoryInterface
             ->getSingleScalarResult();
     }
 
-    public function isSlugUnique(string $uniqueSlug, SluggableInterface $newOrUpdated, SluggableInterface $exisiting): bool
-    {
+    public function isSlugUnique(
+        string $uniqueSlug,
+        SluggableInterface $newOrUpdated,
+        SluggableInterface $exisiting
+    ): bool {
         return $uniqueSlug === $exisiting->getSlug();
     }
 }

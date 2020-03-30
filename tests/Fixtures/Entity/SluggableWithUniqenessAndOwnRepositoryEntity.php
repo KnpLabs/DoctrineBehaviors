@@ -50,17 +50,11 @@ class SluggableWithUniqenessAndOwnRepositoryEntity implements SluggableInterface
         $this->name = $name;
     }
 
-    /**
-     * @return int
-     */
     public function getSlugContext(): int
     {
         return $this->slugContext;
     }
 
-    /**
-     * @param int $slugContext
-     */
     public function setSlugContext(int $slugContext): void
     {
         $this->slugContext = $slugContext;

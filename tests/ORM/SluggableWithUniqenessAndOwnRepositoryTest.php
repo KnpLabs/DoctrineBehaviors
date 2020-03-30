@@ -27,11 +27,11 @@ final class SluggableWithUniqenessAndOwnRepositoryTest extends AbstractBehaviorT
     public function testSlugSameContextSameUnitOfWork(): void
     {
         $entity1 = new SluggableWithUniqenessAndOwnRepositoryEntity();
-        $entity1->setName("Lorem ipsum");
+        $entity1->setName('Lorem ipsum');
         $entity1->setSlugContext(1);
 
         $entity2 = new SluggableWithUniqenessAndOwnRepositoryEntity();
-        $entity2->setName("Lorem ipsum");
+        $entity2->setName('Lorem ipsum');
         $entity2->setSlugContext(1);
 
         $this->entityManager->persist($entity1);
@@ -46,8 +46,8 @@ final class SluggableWithUniqenessAndOwnRepositoryTest extends AbstractBehaviorT
 
         $this->entityManager->clear();
 
-        $entity1   = $this->repository->find($id1);
-        $entity2   = $this->repository->find($id2);
+        $entity1 = $this->repository->find($id1);
+        $entity2 = $this->repository->find($id2);
 
         $this->assertNotNull($entity1);
         $this->assertNotNull($entity2);
@@ -63,11 +63,11 @@ final class SluggableWithUniqenessAndOwnRepositoryTest extends AbstractBehaviorT
     public function testSlugDifferentContextSameUnitOfWork(): void
     {
         $entity1 = new SluggableWithUniqenessAndOwnRepositoryEntity();
-        $entity1->setName("Lorem ipsum");
+        $entity1->setName('Lorem ipsum');
         $entity1->setSlugContext(1);
 
         $entity2 = new SluggableWithUniqenessAndOwnRepositoryEntity();
-        $entity2->setName("Lorem ipsum");
+        $entity2->setName('Lorem ipsum');
         $entity2->setSlugContext(2);
 
         $this->entityManager->persist($entity1);
@@ -82,8 +82,8 @@ final class SluggableWithUniqenessAndOwnRepositoryTest extends AbstractBehaviorT
 
         $this->entityManager->clear();
 
-        $entity1   = $this->repository->find($id1);
-        $entity2   = $this->repository->find($id2);
+        $entity1 = $this->repository->find($id1);
+        $entity2 = $this->repository->find($id2);
 
         $this->assertNotNull($entity1);
         $this->assertNotNull($entity2);
@@ -99,13 +99,13 @@ final class SluggableWithUniqenessAndOwnRepositoryTest extends AbstractBehaviorT
     public function testSlugSameContextDifferentUnitOfWork(): void
     {
         $entity1 = new SluggableWithUniqenessAndOwnRepositoryEntity();
-        $entity1->setName("Lorem ipsum");
+        $entity1->setName('Lorem ipsum');
         $entity1->setSlugContext(1);
         $this->entityManager->persist($entity1);
         $this->entityManager->flush();
 
         $entity2 = new SluggableWithUniqenessAndOwnRepositoryEntity();
-        $entity2->setName("Lorem ipsum");
+        $entity2->setName('Lorem ipsum');
         $entity2->setSlugContext(1);
 
         $this->entityManager->persist($entity2);
@@ -119,8 +119,8 @@ final class SluggableWithUniqenessAndOwnRepositoryTest extends AbstractBehaviorT
 
         $this->entityManager->clear();
 
-        $entity1   = $this->repository->find($id1);
-        $entity2   = $this->repository->find($id2);
+        $entity1 = $this->repository->find($id1);
+        $entity2 = $this->repository->find($id2);
 
         $this->assertNotNull($entity1);
         $this->assertNotNull($entity2);
@@ -136,13 +136,13 @@ final class SluggableWithUniqenessAndOwnRepositoryTest extends AbstractBehaviorT
     public function testSlugDifferentContextDifferentUnitOfWork(): void
     {
         $entity1 = new SluggableWithUniqenessAndOwnRepositoryEntity();
-        $entity1->setName("Lorem ipsum");
+        $entity1->setName('Lorem ipsum');
         $entity1->setSlugContext(1);
         $this->entityManager->persist($entity1);
         $this->entityManager->flush();
 
         $entity2 = new SluggableWithUniqenessAndOwnRepositoryEntity();
-        $entity2->setName("Lorem ipsum");
+        $entity2->setName('Lorem ipsum');
         $entity2->setSlugContext(2);
 
         $this->entityManager->persist($entity2);
@@ -156,8 +156,8 @@ final class SluggableWithUniqenessAndOwnRepositoryTest extends AbstractBehaviorT
 
         $this->entityManager->clear();
 
-        $entity1   = $this->repository->find($id1);
-        $entity2   = $this->repository->find($id2);
+        $entity1 = $this->repository->find($id1);
+        $entity2 = $this->repository->find($id2);
 
         $this->assertNotNull($entity1);
         $this->assertNotNull($entity2);

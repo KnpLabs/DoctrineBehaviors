@@ -14,30 +14,36 @@ final class SluggableWithUniqenessAndOwnRepositoryRepository extends EntityRepos
 {
     public function isSlugUniqueFor(SluggableInterface $sluggable, string $uniqueSlug): bool
     {
-        $entityClass = get_class($sluggable);
+        if ($sluggable instanceof SluggableWithUniqenessAndOwnRepositoryEntity) {
+            $entityClass = get_class($sluggable);
 
-        $queryBuilder = $this->getEntityManager()->createQueryBuilder()
-                                            ->select('e')
-                                            ->from($entityClass, 'e')
-                                            ->select('COUNT(e)')
-                                            ->andWhere('e.slug = :slug')
-                                            ->andWhere('e.slugContext = :slugContext')
-                                            ->setParameter('slug', $uniqueSlug)
-                                            ->setParameter('slugContext', $sluggable->getSlugContext());
+            $queryBuilder = $this->getEntityManager()->createQueryBuilder()
+                ->select('e')
+                ->from($entityClass, 'e')
+                ->select('COUNT(e)')
+                ->andWhere('e.slug = :slug')
+                ->andWhere('e.slugContext = :slugContext')
+                ->setParameter('slug', $uniqueSlug)
+                ->setParameter('slugContext', $sluggable->getSlugContext());
 
-        $id = $sluggable->getId();
-        if ($id !== null) {
-            $queryBuilder
-                ->andWhere('e.id != :id')
-                ->setParameter('id', $id);
+            $id = $sluggable->getId();
+            if ($id !== null) {
+                $queryBuilder
+                    ->andWhere('e.id != :id')
+                    ->setParameter('id', $id);
+            }
+
+            return ! (bool) $queryBuilder->getQuery()->getSingleScalarResult();
         }
-
-        return ! (bool) $queryBuilder->getQuery()->getSingleScalarResult();
+        return true;
     }
 
-    public function isSlugUnique(string $uniqueSlug, SluggableInterface $newOrUpdated, SluggableInterface $exisiting): bool
-    {
-        if (!$newOrUpdated instanceof SluggableWithUniqenessAndOwnRepositoryEntity || !$exisiting instanceof SluggableWithUniqenessAndOwnRepositoryEntity) {
+    public function isSlugUnique(
+        string $uniqueSlug,
+        SluggableInterface $newOrUpdated,
+        SluggableInterface $exisiting
+    ): bool {
+        if (! $newOrUpdated instanceof SluggableWithUniqenessAndOwnRepositoryEntity || ! $exisiting instanceof SluggableWithUniqenessAndOwnRepositoryEntity) {
             return true;
         }
         return ($newOrUpdated->getSlugContext() !== $exisiting->getSlugContext()) || ($uniqueSlug !== $exisiting->getSlug());

@@ -100,7 +100,7 @@ final class SluggableSubscriber implements EventSubscriber
         $uniqueSlug = $slug;
 
         $sluggableRepository = $this->entityManager->getRepository(get_class($sluggable));
-        if (!$sluggableRepository instanceof SluggableRepositoryInterface) {
+        if (! $sluggableRepository instanceof SluggableRepositoryInterface) {
             $sluggableRepository = $this->defaultSluggableRepository;
         }
 
@@ -114,11 +114,14 @@ final class SluggableSubscriber implements EventSubscriber
         $sluggable->setSlug($uniqueSlug);
     }
 
-    private function isSlugUniqueInUnitOfWork(SluggableRepositoryInterface $repository, SluggableInterface $sluggable, string $uniqueSlug): bool
-    {
+    private function isSlugUniqueInUnitOfWork(
+        SluggableRepositoryInterface $sluggableRepository,
+        SluggableInterface $sluggable,
+        string $uniqueSlug
+    ): bool {
         $scheduledEntities = $this->getOtherScheduledEntities($sluggable);
         foreach ($scheduledEntities as $entity) {
-            if (!$repository->isSlugUnique($uniqueSlug, $sluggable, $entity)) {
+            if (! $sluggableRepository->isSlugUnique($uniqueSlug, $sluggable, $entity)) {
                 return false;
             }
         }
