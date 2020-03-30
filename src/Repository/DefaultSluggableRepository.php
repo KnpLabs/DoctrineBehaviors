@@ -47,6 +47,6 @@ final class DefaultSluggableRepository implements SluggableRepositoryInterface
         SluggableInterface $newOrUpdated,
         SluggableInterface $exisiting
     ): bool {
-        return $uniqueSlug === $exisiting->getSlug();
+        return $uniqueSlug !== $exisiting->getSlug();
     }
 }
