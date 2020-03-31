@@ -10,6 +10,8 @@ The default naming convention (or its customization via trait methods) avoids yo
 
 ## Entity
 
+You need to add their own id and translatable fields.
+
 ```php
 <?php
 
@@ -29,6 +31,13 @@ class CategoryTranslation implements TranslationInterface
     use TranslationTrait;
 
     /**
+     * @ORM\Id
+     * @ORM\Column(type="integer")
+     * @ORM\GeneratedValue(strategy="AUTO")
+     */
+    private $id;
+
+    /**
      * @ORM\Column(type="string", length=255)
      */
     protected $name;
@@ -37,6 +46,10 @@ class CategoryTranslation implements TranslationInterface
      * @ORM\Column(type="string", length=255)
      */
     protected $description;
+
+    public function getId():?int{
+        return $this->id;
+    }
 
     public function getName(): string
     {
