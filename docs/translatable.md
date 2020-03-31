@@ -47,7 +47,8 @@ class CategoryTranslation implements TranslationInterface
      */
     protected $description;
 
-    public function getId():?int{
+    public function getId(): ?int
+    {
         return $this->id;
     }
 
