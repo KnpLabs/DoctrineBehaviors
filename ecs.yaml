@@ -35,6 +35,11 @@ parameters:
         SlevomatCodingStandard\Sniffs\Classes\UnusedPrivateElementsSniff:
             - "tests/Fixtures/Entity/SluggableWithoutRegenerateEntity.php"
 
+    exclude_files:
+        # Old bundle class name duplicate
+        - "src/Bundle/DoctrineBehaviorsBundle.php"
+        - "src/DoctrineBehaviorsBundle.php"
+
 services:
     Symplify\CodingStandard\Sniffs\CleanCode\ClassCognitiveComplexitySniff:
         max_class_cognitive_complexity: 20
