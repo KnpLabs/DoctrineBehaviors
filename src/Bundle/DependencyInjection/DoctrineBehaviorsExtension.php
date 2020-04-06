@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace Knp\DoctrineBehaviors\Bundle\DependencyInjection;
 
-use Doctrine\Common\EventSubscriber;
+use Knp\DoctrineBehaviors\EventSubscriber\EventSubscriberInterface;
 use Symfony\Component\Config\FileLocator;
 use Symfony\Component\DependencyInjection\ContainerBuilder;
 use Symfony\Component\DependencyInjection\Extension\Extension;
@@ -26,7 +26,7 @@ final class DoctrineBehaviorsExtension extends Extension
         $loader->load('services.yaml');
 
         // @see https://github.com/doctrine/DoctrineBundle/issues/674
-        $containerBuilder->registerForAutoconfiguration(EventSubscriber::class)
+        $containerBuilder->registerForAutoconfiguration(EventSubscriberInterface::class)
             ->addTag(self::DOCTRINE_EVENT_SUBSCRIBER_TAG);
     }
 }
