@@ -201,6 +201,27 @@ final class TreeNodeTest extends AbstractBehaviorTestCase
         $this->assertFalse(isset($tree[2][1]));
     }
 
+    public function testSetChildNodeOf(): void
+    {
+        $root1 = $this->buildNode(['setId' => 1]);
+        $child1 = $this->buildNode(['setId' => 2]);
+
+        $this->assertTrue($root1->isRootNode());
+        $child1->setChildNodeOf($root1);
+        $this->assertTrue($child1->isChildNodeOf($root1));
+        $this->assertSame('/1', $child1->getMaterializedPath());
+
+        $root2 = $this->buildNode(['setId' => 3]);
+        $child2 = $this->buildNode(['setId' => 4]);
+        $root2->setChildNodeOf(null);
+
+        $this->assertTrue($root2->isRootNode());
+        $child2->setChildNodeOf($root2);
+        $this->assertSame($root2->getRealMaterializedPath(), $child2->getParentMaterializedPath());
+        $this->assertTrue($child2->isChildNodeOf($root2));
+        $this->assertSame('/3', $child2->getMaterializedPath());
+    }
+
     public function testTestsetChildNodeOfWithoutId(): void
     {
         $this->expectException(TreeException::class);
