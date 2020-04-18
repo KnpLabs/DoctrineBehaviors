@@ -27,7 +27,7 @@ class Category implements BlameableInterface
 ## How it Works
 
 By default, the current user from Symfony\Security is used.
-If you want to change it, just implement `Knp\DoctrineBehaviors\Contract\Provider\UserProviderInterface` youself and override native service.
+If you want to change it, just implement `Knp\DoctrineBehaviors\Contract\Provider\UserProviderInterface` yourself and override native service.
 
 ## Usage
 
