@@ -8,9 +8,9 @@ use Datetime;
 use Doctrine\ORM\EntityRepository;
 use Doctrine\Persistence\ObjectRepository;
 use Knp\DoctrineBehaviors\Tests\AbstractBehaviorTestCase;
-use Knp\DoctrineBehaviors\Tests\Fixtures\Entity\TimestampableEntity;
+use Knp\DoctrineBehaviors\Tests\Fixtures\Entity\TimestampableCustomFieldsEntity;
 
-final class TimestampableTest extends AbstractBehaviorTestCase
+final class TimestampableCustomFieldsTest extends AbstractBehaviorTestCase
 {
     /**
      * @var ObjectRepository|EntityRepository
@@ -20,61 +20,61 @@ final class TimestampableTest extends AbstractBehaviorTestCase
     protected function setUp(): void
     {
         parent::setUp();
-        $this->timestampableRepository = $this->entityManager->getRepository(TimestampableEntity::class);
+        $this->timestampableRepository = $this->entityManager->getRepository(TimestampableCustomFieldsEntity::class);
     }
 
     public function testItShouldInitializeCreateAndUpdateDatetimeWhenCreated(): void
     {
-        $entity = new TimestampableEntity();
+        $entity = new TimestampableCustomFieldsEntity();
 
         $this->entityManager->persist($entity);
         $this->entityManager->flush();
 
-        $this->assertInstanceOf(Datetime::class, $entity->getCreatedAt());
-        $this->assertInstanceOf(Datetime::class, $entity->getUpdatedAt());
+        $this->assertInstanceOf(Datetime::class, $entity->getServerCreatedAt());
+        $this->assertInstanceOf(Datetime::class, $entity->getServerUpdatedAt());
 
         $this->assertSame(
-            $entity->getCreatedAt(),
-            $entity->getUpdatedAt(),
-            'On creation, createdAt and updatedAt are the same'
+            $entity->getServerCreatedAt(),
+            $entity->getServerUpdatedAt(),
+            'On creation, serverCreatedAt and serverUpdatedAt are the same'
         );
     }
 
     public function testItShouldModifyUpdateDatetimeWhenUpdatedButNotTheCreationDatetime(): void
     {
-        $entity = new TimestampableEntity();
+        $entity = new TimestampableCustomFieldsEntity();
 
         $this->entityManager->persist($entity);
         $this->entityManager->flush();
         $this->entityManager->refresh($entity);
         $id = $entity->getId();
-        $createdAt = $entity->getCreatedAt();
+        $createdAt = $entity->getServerCreatedAt();
         $this->entityManager->clear();
 
         // wait for a second:
         sleep(1);
 
-        /** @var TimestampableEntity $entity */
+        /** @var TimestampableCustomFieldsEntity $entity */
         $entity = $this->timestampableRepository->find($id);
 
         $entity->setTitle('test');
         $this->entityManager->flush();
         $this->entityManager->clear();
 
-        /** @var TimestampableEntity $entity */
+        /** @var TimestampableCustomFieldsEntity $entity */
         $entity = $this->timestampableRepository->find($id);
-        $this->assertEquals($createdAt, $entity->getCreatedAt(), 'createdAt is constant');
+        $this->assertSame($createdAt, $entity->getServerCreatedAt(), 'serverCreatedAt is constant');
 
         $this->assertNotSame(
-            $entity->getCreatedAt(),
-            $entity->getUpdatedAt(),
-            'createdAt and updatedAt have diverged since new update'
+            $entity->getServerCreatedAt(),
+            $entity->getServerUpdatedAt(),
+            'serverCreatedAt and serverUpdatedAt have diverged since new update'
         );
     }
 
     public function testItShouldReturnTheSameDatetimeWhenNotUpdated(): void
     {
-        $entity = new TimestampableEntity();
+        $entity = new TimestampableCustomFieldsEntity();
 
         $this->entityManager->persist($entity);
         $this->entityManager->flush();
@@ -82,53 +82,53 @@ final class TimestampableTest extends AbstractBehaviorTestCase
 
         $id = $entity->getId();
 
-        $createdAt = $entity->getCreatedAt();
-        $updatedAt = $entity->getUpdatedAt();
+        $createdAt = $entity->getServerCreatedAt();
+        $updatedAt = $entity->getServerUpdatedAt();
 
         $this->entityManager->clear();
 
         sleep(1);
 
-        /** @var TimestampableEntity $entity */
+        /** @var TimestampableCustomFieldsEntity $entity */
         $entity = $this->timestampableRepository->find($id);
 
         $this->entityManager->persist($entity);
         $this->entityManager->flush();
         $this->entityManager->clear();
 
-        $this->assertEquals($entity->getCreatedAt(), $createdAt, 'Creation timestamp has changed');
-        $this->assertEquals($entity->getUpdatedAt(), $updatedAt, 'Update timestamp has changed');
+        $this->assertSame($entity->getServerCreatedAt(), $createdAt, 'Creation timestamp has changed');
+        $this->assertSame($entity->getServerUpdatedAt(), $updatedAt, 'Update timestamp has changed');
     }
 
     public function testItShouldModifyUpdateDatetimeOnlyOnce(): void
     {
-        $entity = new TimestampableEntity();
+        $entity = new TimestampableCustomFieldsEntity();
 
         $this->entityManager->persist($entity);
         $this->entityManager->flush();
         $this->entityManager->refresh($entity);
 
         $id = $entity->getId();
-        $createdAt = $entity->getCreatedAt();
+        $createdAt = $entity->getServerCreatedAt();
 
         $this->entityManager->clear();
 
         sleep(1);
 
-        /** @var TimestampableEntity $entity */
+        /** @var TimestampableCustomFieldsEntity $entity */
         $entity = $this->timestampableRepository->find($id);
 
         $entity->setTitle('test');
         $this->entityManager->flush();
 
-        $updatedAt = $entity->getUpdatedAt();
+        $updatedAt = $entity->getServerUpdatedAt();
 
         sleep(1);
 
         $this->entityManager->flush();
 
         // different object, but values are the same
-        $this->assertEquals($entity->getCreatedAt(), $createdAt, 'Creation timestamp has changed');
-        $this->assertEquals($entity->getUpdatedAt(), $updatedAt, 'Update timestamp has changed');
+        $this->assertSame($entity->getServerCreatedAt(), $createdAt, 'Creation timestamp has changed');
+        $this->assertSame($entity->getServerUpdatedAt(), $updatedAt, 'Update timestamp has changed');
     }
 }

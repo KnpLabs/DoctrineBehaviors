@@ -16,7 +16,7 @@ interface TimestampableInterface
     /**
      * Returns a DateTimeInterface object with the current timestamp.
      */
-    public static function getCurrentDateTime(): ?DateTimeInterface;
+    public function getCurrentDateTime(): DateTimeInterface;
 
     /**
      * Returns an array of createdAt properties.

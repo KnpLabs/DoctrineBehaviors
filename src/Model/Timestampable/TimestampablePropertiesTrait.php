@@ -9,12 +9,12 @@ use DateTimeInterface;
 trait TimestampablePropertiesTrait
 {
     /**
-     * @var DateTimeInterface
+     * @var DateTimeInterface|null
      */
     protected $createdAt;
 
     /**
-     * @var DateTimeInterface
+     * @var DateTimeInterface|null
      */
     protected $updatedAt;
 }
