@@ -27,7 +27,7 @@ trait TimestampableMethodsTrait
             }
         }
 
-        $updatedAtProperties = static::getCreatedAtProperties();
+        $updatedAtProperties = static::getUpdatedAtProperties();
         foreach ($updatedAtProperties as $updatedAtProperty) {
             $this->{$updatedAtProperty} = $dateTime;
         }

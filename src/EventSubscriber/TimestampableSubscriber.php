@@ -41,6 +41,11 @@ final class TimestampableSubscriber implements EventSubscriber
         // Merge properties and ensure they are correctly merged in case associative arrays are returned.
         $properties = array_merge(array_values($createdAtProperties), array_values($updatedAtProperties));
 
+        // If there are no timestampable properties, there is no need to register the the events.
+        if (empty($properties)) {
+            return;
+        }
+
         $classMetadata->addLifecycleCallback('updateTimestamps', Events::prePersist);
         $classMetadata->addLifecycleCallback('updateTimestamps', Events::preUpdate);
 
