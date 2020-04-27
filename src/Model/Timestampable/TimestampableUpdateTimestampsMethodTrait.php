@@ -4,6 +4,8 @@ declare(strict_types=1);
 
 namespace Knp\DoctrineBehaviors\Model\Timestampable;
 
+use DateTimeInterface;
+
 trait TimestampableUpdateTimestampsMethodTrait
 {
     /**
@@ -12,15 +14,23 @@ trait TimestampableUpdateTimestampsMethodTrait
     public function updateTimestamps(): void
     {
         $dateTime = $this->getCurrentDateTime();
+        $this->updatedCreatedAtFields($dateTime);
+        $this->updatedUpdatedAtFields($dateTime);
+    }
 
-        $createdAtProperties = static::getCreatedAtProperties();
+    protected function updatedCreatedAtFields(DateTimeInterface $dateTime): void
+    {
+        $createdAtProperties = $this->getCreatedAtProperties();
         foreach ($createdAtProperties as $createdAtProperty) {
             if ($this->{$createdAtProperty} === null) {
                 $this->{$createdAtProperty} = $dateTime;
             }
         }
+    }
 
-        $updatedAtProperties = static::getUpdatedAtProperties();
+    protected function updatedUpdatedAtFields(DateTimeInterface $dateTime): void
+    {
+        $updatedAtProperties = $this->getUpdatedAtProperties();
         foreach ($updatedAtProperties as $updatedAtProperty) {
             $this->{$updatedAtProperty} = $dateTime;
         }

@@ -11,7 +11,7 @@ trait TimestampablePropertiesMetadataTrait
      *
      * @return string[]
      */
-    public static function getCreatedAtProperties(): array
+    public function getCreatedAtProperties(): array
     {
         return ['createdAt'];
     }
@@ -21,7 +21,7 @@ trait TimestampablePropertiesMetadataTrait
      *
      * @return string[]
      */
-    public static function getUpdatedAtProperties(): array
+    public function getUpdatedAtProperties(): array
     {
         return ['updatedAt'];
     }

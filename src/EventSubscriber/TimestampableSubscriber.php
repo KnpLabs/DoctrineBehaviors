@@ -11,6 +11,8 @@ use Doctrine\ORM\EntityManagerInterface;
 use Doctrine\ORM\Event\LoadClassMetadataEventArgs;
 use Doctrine\ORM\Events;
 use Knp\DoctrineBehaviors\Contract\Entity\TimestampableInterface;
+use ReflectionClass;
+use ReflectionException;
 
 final class TimestampableSubscriber implements EventSubscriber
 {
@@ -66,21 +68,26 @@ final class TimestampableSubscriber implements EventSubscriber
 
     /**
      * @return string[]
+     *
+     * @throws ReflectionException
      */
     private function getTimestampableProperties(string $className): array
     {
-        $properties = [];
-        foreach (['getCreatedAtProperties', 'getUpdatedAtProperties'] as $method) {
-            $callable = [$className, $method];
-            if (is_callable($callable)) {
-                // Merge additional properties to existing properties and ensure,
-                // we have a non associative array as otherwise array_merge does not work as we want here.
-                $additionalProperties = array_values(call_user_func($callable));
-                $properties = array_values(array_unique(array_merge($properties, $additionalProperties)));
-            }
+        if (! class_exists($className)) {
+            return [];
         }
 
-        return $properties;
+        $reflectionClass = new ReflectionClass($className);
+        $entity = $reflectionClass->newInstanceWithoutConstructor();
+        if (! $entity instanceof TimestampableInterface) {
+            return [];
+        }
+
+        // Use array_values to ensure a non-associative array so that array_merge works as we want it to.
+        $createdAtProperties = array_values($entity->getCreatedAtProperties());
+        $updatedAtProperties = array_values($entity->getUpdatedAtProperties());
+
+        return array_unique(array_merge($createdAtProperties, $updatedAtProperties));
     }
 
     private function getFieldType(): string

@@ -78,7 +78,7 @@ class TimestampableCustomFieldsEntity implements TimestampableInterface
     /**
      * @return string[]
      */
-    public static function getCreatedAtProperties(): array
+    public function getCreatedAtProperties(): array
     {
         return ['serverCreatedAt'];
     }
@@ -86,7 +86,7 @@ class TimestampableCustomFieldsEntity implements TimestampableInterface
     /**
      * @return string[]
      */
-    public static function getUpdatedAtProperties(): array
+    public function getUpdatedAtProperties(): array
     {
         return ['serverUpdatedAt'];
     }
