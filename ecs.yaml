@@ -25,6 +25,7 @@ parameters:
 
         PhpCsFixer\Fixer\PhpUnit\PhpUnitStrictFixer:
             - "tests/ORM/TimestampableTest.php"
+            - "tests/ORM/TimestampableCustomFieldsTest.php"
 
         # weird naming
         Symplify\CodingStandard\Fixer\Naming\PropertyNameMatchingTypeFixer:
