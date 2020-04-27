@@ -50,6 +50,8 @@ trait TimestampableMethodsTrait
         }
 
         $dateTime->setTimezone(new DateTimeZone(date_default_timezone_get()));
+
+        return $dateTime;
     }
 
     /**
