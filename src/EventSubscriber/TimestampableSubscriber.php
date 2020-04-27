@@ -7,9 +7,9 @@ namespace Knp\DoctrineBehaviors\EventSubscriber;
 use Doctrine\Common\EventSubscriber;
 use Doctrine\ORM\Event\LoadClassMetadataEventArgs;
 use Doctrine\ORM\Events;
+use Doctrine\ORM\Mapping\ClassMetadata;
 use Knp\DoctrineBehaviors\Contract\Entity\TimestampableInterface;
 use ReflectionClass;
-use ReflectionException;
 
 final class TimestampableSubscriber implements EventSubscriber
 {
@@ -26,17 +26,20 @@ final class TimestampableSubscriber implements EventSubscriber
     public function loadClassMetadata(LoadClassMetadataEventArgs $loadClassMetadataEventArgs): void
     {
         $classMetadata = $loadClassMetadataEventArgs->getClassMetadata();
-        if ($classMetadata->reflClass === null) {
+
+        /** @var ReflectionClass|null $reflectionClass */
+        $reflectionClass = $classMetadata->getReflectionClass();
+        if ($reflectionClass === null) {
             // Class has not yet been fully built, ignore this event
             return;
         }
 
-        $className = $classMetadata->reflClass->getName();
+        $className = $reflectionClass->getName();
         if (! is_a($className, TimestampableInterface::class, true)) {
             return;
         }
 
-        $properties = $this->getTimestampableProperties($className);
+        $properties = $this->getTimestampableProperties($classMetadata);
         if (empty($properties)) {
             return;
         }
@@ -65,17 +68,10 @@ final class TimestampableSubscriber implements EventSubscriber
 
     /**
      * @return string[]
-     *
-     * @throws ReflectionException
      */
-    private function getTimestampableProperties(string $className): array
+    private function getTimestampableProperties(ClassMetadata $classMetadata): array
     {
-        if (! class_exists($className)) {
-            return [];
-        }
-
-        $reflectionClass = new ReflectionClass($className);
-        $entity = $reflectionClass->newInstanceWithoutConstructor();
+        $entity = $classMetadata->newInstance();
         if (! $entity instanceof TimestampableInterface) {
             return [];
         }
