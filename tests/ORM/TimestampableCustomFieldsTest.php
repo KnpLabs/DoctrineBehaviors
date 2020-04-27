@@ -63,7 +63,7 @@ final class TimestampableCustomFieldsTest extends AbstractBehaviorTestCase
 
         /** @var TimestampableCustomFieldsEntity $entity */
         $entity = $this->timestampableRepository->find($id);
-        $this->assertSame($createdAt, $entity->getServerCreatedAt(), 'serverCreatedAt is constant');
+        $this->assertEquals($createdAt, $entity->getServerCreatedAt(), 'serverCreatedAt is constant');
 
         $this->assertNotSame(
             $entity->getServerCreatedAt(),
@@ -96,8 +96,8 @@ final class TimestampableCustomFieldsTest extends AbstractBehaviorTestCase
         $this->entityManager->flush();
         $this->entityManager->clear();
 
-        $this->assertSame($entity->getServerCreatedAt(), $createdAt, 'Creation timestamp has changed');
-        $this->assertSame($entity->getServerUpdatedAt(), $updatedAt, 'Update timestamp has changed');
+        $this->assertEquals($entity->getServerCreatedAt(), $createdAt, 'Creation timestamp has changed');
+        $this->assertEquals($entity->getServerUpdatedAt(), $updatedAt, 'Update timestamp has changed');
     }
 
     public function testItShouldModifyUpdateDatetimeOnlyOnce(): void
@@ -128,7 +128,7 @@ final class TimestampableCustomFieldsTest extends AbstractBehaviorTestCase
         $this->entityManager->flush();
 
         // different object, but values are the same
-        $this->assertSame($entity->getServerCreatedAt(), $createdAt, 'Creation timestamp has changed');
-        $this->assertSame($entity->getServerUpdatedAt(), $updatedAt, 'Update timestamp has changed');
+        $this->assertEquals($entity->getServerCreatedAt(), $createdAt, 'Creation timestamp has changed');
+        $this->assertEquals($entity->getServerUpdatedAt(), $updatedAt, 'Update timestamp has changed');
     }
 }
