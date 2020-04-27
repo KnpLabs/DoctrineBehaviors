@@ -50,7 +50,7 @@ final class TimestampableSubscriber implements EventSubscriber
                 $classMetadata->mapField([
                     'fieldName' => $field,
                     'type' => $this->getFieldType(),
-                    'nullable' => true,
+                    'nullable' => false,
                 ]);
             }
         }
