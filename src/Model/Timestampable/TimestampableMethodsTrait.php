@@ -37,8 +37,6 @@ trait TimestampableMethodsTrait
      * Returns a DateTimeInterface object with the current timestamp.
      *
      * @throws ShouldNotHappenException
-     *
-     * @return DateTimeInterface|null
      */
     public static function getCurrentDateTime(): ?DateTimeInterface
     {
@@ -56,8 +54,6 @@ trait TimestampableMethodsTrait
 
     /**
      * Returns an array of createdAt properties.
-     *
-     * @return array
      */
     public static function getCreatedAtProperties(): array
     {
@@ -66,8 +62,6 @@ trait TimestampableMethodsTrait
 
     /**
      * Returns an array of updatedAt properties.
-     *
-     * @return array
      */
     public static function getUpdatedAtProperties(): array
     {
