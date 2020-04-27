@@ -11,32 +11,38 @@ use Knp\DoctrineBehaviors\Exception\ShouldNotHappenException;
 
 trait TimestampableMethodsTrait
 {
-    public function getCreatedAt(): DateTimeInterface
-    {
-        return $this->createdAt;
-    }
-
-    public function getUpdatedAt(): DateTimeInterface
-    {
-        return $this->updatedAt;
-    }
-
-    public function setCreatedAt(DateTimeInterface $createdAt): void
-    {
-        $this->createdAt = $createdAt;
-    }
-
-    public function setUpdatedAt(DateTimeInterface $updatedAt): void
-    {
-        $this->updatedAt = $updatedAt;
-    }
-
     /**
-     * Updates createdAt and updatedAt timestamps.
+     * Updates timestamps for createdAt and updatedAt properties.
+     *
+     * @throws ShouldNotHappenException
      */
     public function updateTimestamps(): void
     {
-        // Create a datetime with microseconds
+        $dateTime = static::getCurrentDateTime();
+
+        $createdAtProperties = static::getCreatedAtProperties();
+        foreach ($createdAtProperties as $createdAtProperty) {
+            if ($this->{$createdAtProperty} === null) {
+                $this->{$createdAtProperty} = $dateTime;
+            }
+        }
+
+        $updatedAtProperties = static::getCreatedAtProperties();
+        foreach ($updatedAtProperties as $updatedAtProperty) {
+            $this->{$updatedAtProperty} = $dateTime;
+        }
+    }
+
+    /**
+     * Returns a DateTimeInterface object with the current timestamp.
+     *
+     * @throws ShouldNotHappenException
+     *
+     * @return DateTimeInterface|null
+     */
+    public static function getCurrentDateTime(): ?DateTimeInterface
+    {
+        // Create a datetime with microseconds.
         $dateTime = DateTime::createFromFormat('U.u', sprintf('%.6F', microtime(true)));
 
         if ($dateTime === false) {
@@ -44,11 +50,25 @@ trait TimestampableMethodsTrait
         }
 
         $dateTime->setTimezone(new DateTimeZone(date_default_timezone_get()));
+    }
 
-        if ($this->createdAt === null) {
-            $this->createdAt = $dateTime;
-        }
+    /**
+     * Returns an array of createdAt properties.
+     *
+     * @return array
+     */
+    public static function getCreatedAtProperties(): array
+    {
+        return ['createdAt'];
+    }
 
-        $this->updatedAt = $dateTime;
+    /**
+     * Returns an array of updatedAt properties.
+     *
+     * @return array
+     */
+    public static function getUpdatedAtProperties(): array
+    {
+        return ['updatedAt'];
     }
 }

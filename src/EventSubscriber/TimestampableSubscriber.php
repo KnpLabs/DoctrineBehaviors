@@ -36,10 +36,15 @@ final class TimestampableSubscriber implements EventSubscriber
             return;
         }
 
+        $createdAtProperties = call_user_func([$classMetadata->reflClass->getName(), 'getCreatedAtProperties']);
+        $updatedAtProperties = call_user_func([$classMetadata->reflClass->getName(), 'getUpdatedAtProperties']);
+        // Merge properties and ensure they are correctly merged in case associative arrays are returned.
+        $properties = array_merge(array_values($createdAtProperties), array_values($updatedAtProperties));
+
         $classMetadata->addLifecycleCallback('updateTimestamps', Events::prePersist);
         $classMetadata->addLifecycleCallback('updateTimestamps', Events::preUpdate);
 
-        foreach (['createdAt', 'updatedAt'] as $field) {
+        foreach ($properties as $field) {
             if (! $classMetadata->hasField($field)) {
                 $classMetadata->mapField([
                     'fieldName' => $field,

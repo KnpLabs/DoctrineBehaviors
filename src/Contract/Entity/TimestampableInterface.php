@@ -8,13 +8,29 @@ use DateTimeInterface;
 
 interface TimestampableInterface
 {
+    /**
+     * Updates timestamps for createdAt and updatedAt properties.
+     */
     public function updateTimestamps(): void;
 
-    public function getCreatedAt(): DateTimeInterface;
+    /**
+     * Returns a DateTimeInterface object with the current timestamp.
+     *
+     * @return DateTimeInterface|null
+     */
+    public static function getCurrentDateTime(): ?DateTimeInterface;
 
-    public function setCreatedAt(DateTimeInterface $createdAt): void;
+    /**
+     * Returns an array of createdAt properties.
+     *
+     * @return array
+     */
+    public static function getCreatedAtProperties(): array;
 
-    public function getUpdatedAt(): DateTimeInterface;
-
-    public function setUpdatedAt(DateTimeInterface $updatedAt): void;
+    /**
+     * Returns an array of updatedAt properties.
+     *
+     * @return array
+     */
+    public static function getUpdatedAtProperties(): array;
 }
