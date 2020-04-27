@@ -55,24 +55,20 @@ class TimestampableCustomFieldsEntity implements TimestampableInterface
         $this->title = $title;
     }
 
-
     public function getServerCreatedAt(): ?DateTimeInterface
     {
         return $this->serverCreatedAt;
     }
-
 
     public function setServerCreatedAt(DateTimeInterface $serverCreatedAt): void
     {
         $this->serverCreatedAt = $serverCreatedAt;
     }
 
-
     public function getServerUpdatedAt(): ?DateTimeInterface
     {
         return $this->serverUpdatedAt;
     }
-
 
     public function setServerUpdatedAt(DateTimeInterface $serverUpdatedAt): void
     {
