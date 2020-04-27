@@ -32,16 +32,12 @@ final class TimestampableSubscriber implements EventSubscriber
             return;
         }
 
-        if (! is_a($classMetadata->reflClass->getName(), TimestampableInterface::class, true)) {
+        $className = $classMetadata->reflClass->getName();
+        if (! is_a($className, TimestampableInterface::class, true)) {
             return;
         }
 
-        $createdAtProperties = call_user_func([$classMetadata->reflClass->getName(), 'getCreatedAtProperties']);
-        $updatedAtProperties = call_user_func([$classMetadata->reflClass->getName(), 'getUpdatedAtProperties']);
-        // Merge properties and ensure they are correctly merged in case associative arrays are returned.
-        $properties = array_merge(array_values($createdAtProperties), array_values($updatedAtProperties));
-
-        // If there are no timestampable properties, there is no need to register the the events.
+        $properties = $this->getTimestampableProperties($className);
         if (empty($properties)) {
             return;
         }
@@ -66,6 +62,25 @@ final class TimestampableSubscriber implements EventSubscriber
     public function getSubscribedEvents(): array
     {
         return [Events::loadClassMetadata];
+    }
+
+    /**
+     * @return string[]
+     */
+    private function getTimestampableProperties(string $className): array
+    {
+        $properties = [];
+        foreach (['getCreatedAtProperties', 'getUpdatedAtProperties'] as $method) {
+            $callable = [$className, $method];
+            if (is_callable($callable)) {
+                // Merge additional properties to existing properties and ensure,
+                // we have a non associative array as otherwise array_merge does not work as we want here.
+                $additionalProperties = array_values(call_user_func($callable));
+                $properties = array_values(array_unique(array_merge($properties, $additionalProperties)));
+            }
+        }
+
+        return $properties;
     }
 
     private function getFieldType(): string

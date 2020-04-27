@@ -20,11 +20,15 @@ interface TimestampableInterface
 
     /**
      * Returns an array of createdAt properties.
+     *
+     * @return string[]
      */
     public static function getCreatedAtProperties(): array;
 
     /**
      * Returns an array of updatedAt properties.
+     *
+     * @return string[]
      */
     public static function getUpdatedAtProperties(): array;
 }

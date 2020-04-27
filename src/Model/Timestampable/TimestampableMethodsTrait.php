@@ -38,7 +38,7 @@ trait TimestampableMethodsTrait
      *
      * @throws ShouldNotHappenException
      */
-    public static function getCurrentDateTime(): ?DateTimeInterface
+    public static function getCurrentDateTime(): DateTimeInterface
     {
         // Create a datetime with microseconds.
         $dateTime = DateTime::createFromFormat('U.u', sprintf('%.6F', microtime(true)));
@@ -54,6 +54,8 @@ trait TimestampableMethodsTrait
 
     /**
      * Returns an array of createdAt properties.
+     *
+     * @return string[]
      */
     public static function getCreatedAtProperties(): array
     {
@@ -62,6 +64,8 @@ trait TimestampableMethodsTrait
 
     /**
      * Returns an array of updatedAt properties.
+     *
+     * @return string[]
      */
     public static function getUpdatedAtProperties(): array
     {
