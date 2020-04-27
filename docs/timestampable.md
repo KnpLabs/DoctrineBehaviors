@@ -41,3 +41,12 @@ var_dump($category->getCreatedAt());
 var_dump($category->getUpdatedAt());
 // instanceof "DateTime"
 ```
+## Configuration
+
+By default, timestampable use `datetime` field type. If you want use `datetimetz`, just modify parameters in your config:
+
+```yaml
+# services.yaml
+parameters:
+    doctrine_behaviors_timestampable_date_field_type: "datetimetz"
+```
