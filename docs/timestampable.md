@@ -46,8 +46,8 @@ var_dump($category->getUpdatedAt());
 By default, timestampable use `datetime` field type. If you want use `datetimetz`, just modify parameters in your config:
 
 ```yaml
-# doctrine_behaviors.yaml
-doctrine_behaviors:
+# knp_doctrine_behaviors.yaml
+knp_doctrine_behaviors:
     # ...
     timestampable:
         date_field_type: "datetimetz"

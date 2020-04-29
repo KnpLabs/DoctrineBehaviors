@@ -54,8 +54,8 @@ var_dump($updatedBy);
 By default, no user entity is provided. You need to specify the User class with a new parameter in your config:
 
 ```yaml
-# doctrine_behaviors.yaml
-doctrine_behaviors:
+# knp_doctrine_behaviors.yaml
+knp_doctrine_behaviors:
     blameable:
         user_entity: App\Entity\User
     # ...

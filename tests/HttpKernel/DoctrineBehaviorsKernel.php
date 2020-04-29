@@ -5,7 +5,7 @@ declare(strict_types=1);
 namespace Knp\DoctrineBehaviors\Tests\HttpKernel;
 
 use Doctrine\Bundle\DoctrineBundle\DoctrineBundle;
-use Knp\DoctrineBehaviors\DoctrineBehaviorsBundle;
+use Knp\DoctrineBehaviors\KnpDoctrineBehaviorsBundle;
 use Symfony\Bundle\FrameworkBundle\FrameworkBundle;
 use Symfony\Component\Config\Loader\LoaderInterface;
 use Symfony\Component\HttpKernel\Bundle\BundleInterface;
@@ -24,7 +24,7 @@ final class DoctrineBehaviorsKernel extends Kernel implements ExtraConfigAwareKe
      */
     public function registerBundles(): array
     {
-        return [new DoctrineBundle(), new FrameworkBundle(), new DoctrineBehaviorsBundle()];
+        return [new DoctrineBundle(), new FrameworkBundle(), new KnpDoctrineBehaviorsBundle()];
     }
 
     public function getCacheDir(): string

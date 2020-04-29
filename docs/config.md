@@ -1,9 +1,9 @@
-#Configuration reference
+# Configuration reference
 
 The full configuration with default values
 
 ```yaml
-doctrine_behaviors:
+knp_doctrine_behaviors:
     translatable:
         translatable_fetch_mode: 'LAZY' # Can be one of 'LAZY', 'EAGER', 'EXTRA_LAZY'
         translation_fetch_mode: 'LAZY' # Can be one of 'LAZY', 'EAGER', 'EXTRA_LAZY'

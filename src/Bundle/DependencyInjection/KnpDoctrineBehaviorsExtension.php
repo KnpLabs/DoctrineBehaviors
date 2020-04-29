@@ -9,7 +9,7 @@ use Symfony\Component\DependencyInjection\ContainerBuilder;
 use Symfony\Component\DependencyInjection\Extension\Extension;
 use Symfony\Component\DependencyInjection\Loader\YamlFileLoader;
 
-final class DoctrineBehaviorsExtension extends Extension
+final class KnpDoctrineBehaviorsExtension extends Extension
 {
     /**
      * @param string[] $configs

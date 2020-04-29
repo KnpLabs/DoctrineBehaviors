@@ -222,10 +222,9 @@ class SomeClass
 By default, translation relations are lazy loaded. To change that, just modify parameters in your config:
 
 ```yaml
-# doctrine_behaviors.yaml
-doctrine_behaviors:
-    doctrine_behaviors:
-        translatable:
-            translatable_fetch_mode: 'LAZY'
-            translation_fetch_mode: 'LAZY'
+# knp_doctrine_behaviors.yaml
+knp_doctrine_behaviors:
+    translatable:
+        translatable_fetch_mode: 'LAZY'
+        translation_fetch_mode: 'LAZY'
 ```

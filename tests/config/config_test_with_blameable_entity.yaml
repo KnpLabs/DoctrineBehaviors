@@ -1,4 +1,4 @@
-doctrine_behaviors:
+knp_doctrine_behaviors:
     blameable:
         user_entity: Knp\DoctrineBehaviors\Tests\Fixtures\Entity\UserEntity
 

@@ -45,6 +45,7 @@ parameters:
         # Old bundle class name duplicate
         - "src/Bundle/DoctrineBehaviorsBundle.php"
         - "src/DoctrineBehaviorsBundle.php"
+        - "src/KnpDoctrineBehaviorsBundle.php"
 
 services:
     Symplify\CodingStandard\Sniffs\CleanCode\ClassCognitiveComplexitySniff:

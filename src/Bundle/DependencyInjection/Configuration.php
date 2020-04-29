@@ -11,7 +11,7 @@ final class Configuration implements ConfigurationInterface
 {
     public function getConfigTreeBuilder()
     {
-        $treeBuilder = new TreeBuilder('doctrine_behaviors');
+        $treeBuilder = new TreeBuilder('knp_doctrine_behaviors');
 
         $treeBuilder->getRootNode()
             ->children()

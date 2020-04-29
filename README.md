@@ -22,7 +22,7 @@ It currently handles:
 composer require knplabs/doctrine-behaviors
 ```
 
-##Configure
+## Configure
 
 Configuration reference is available [here](/docs/config.md)
 
