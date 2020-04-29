@@ -7,7 +7,7 @@ namespace Knp\DoctrineBehaviors\Bundle\DependencyInjection;
 use Symfony\Component\Config\FileLocator;
 use Symfony\Component\DependencyInjection\ContainerBuilder;
 use Symfony\Component\DependencyInjection\Extension\Extension;
-use Symfony\Component\DependencyInjection\Loader\XmlFileLoader;
+use Symfony\Component\DependencyInjection\Loader\YamlFileLoader;
 
 final class DoctrineBehaviorsExtension extends Extension
 {
@@ -16,8 +16,8 @@ final class DoctrineBehaviorsExtension extends Extension
      */
     public function load(array $configs, ContainerBuilder $containerBuilder): void
     {
-        $loader = new XmlFileLoader($containerBuilder, new FileLocator(dirname(__DIR__) . '/../Resources/config'));
-        $loader->load('services.xml');
+        $loader = new YamlFileLoader($containerBuilder, new FileLocator(dirname(__DIR__) . '/../Resources/config'));
+        $loader->load('services.yaml');
 
         $configuration = new Configuration();
         $config = $this->processConfiguration($configuration, $configs);

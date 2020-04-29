@@ -1,0 +1,80 @@
+services:
+    _defaults:
+        public: false
+        autowire: false
+        autoconfigure: false
+
+    knp_doctrine_behaviors.user_provider:
+        class: Knp\DoctrineBehaviors\Provider\UserProvider
+        arguments:
+            - 'security.helper'
+            - ~ # Replaced by knp_doctrine_behaviors.blameable.user_entity
+        tags: ['doctrine.event_subscriber']
+
+    knp_doctrine_behaviors.locale_provider:
+        class: Knp\DoctrineBehaviors\Provider\LocaleProvider
+        arguments:
+            - '@request_stack'
+            - '@parameter_bag'
+            - '@translator'
+        tags: ['doctrine.event_subscriber']
+
+    knp_doctrine_behaviors.repository.default_sluggable:
+        class: Knp\DoctrineBehaviors\Repository\DefaultSluggableRepository
+        arguments:
+            - '@doctrine.orm.entity_manager'
+
+    knp_doctrine_behaviors.event_subscriber.blameable:
+        class: Knp\DoctrineBehaviors\EventSubscriber\BlameableSubscriber
+        arguments:
+            - '@knp_doctrine_behaviors.user_provider'
+            - '@doctrine.orm.entity_manager'
+            - ~ # Replaced by knp_doctrine_behaviors.blameable.user_entity
+        tags:
+            - 'doctrine.event_subscriber'
+
+    knp_doctrine_behaviors.event_subscriber.loggable:
+        class: Knp\DoctrineBehaviors\EventSubscriber\LoggableSubscriber
+        arguments:
+            - '@logger'
+        tags:
+            - 'doctrine.event_subscriber'
+
+    knp_doctrine_behaviors.event_subscriber.sluggable:
+        class: Knp\DoctrineBehaviors\EventSubscriber\SluggableSubscriber
+        arguments:
+            - '@doctrine.orm.entity_manager'
+            - '@knp_doctrine_behaviors.repository.default_sluggable'
+        tags:
+            - 'doctrine.event_subscriber'
+
+    knp_doctrine_behaviors.event_subscriber.soft_deleteable:
+        class: Knp\DoctrineBehaviors\EventSubscriber\SoftDeletableSubscriber
+        tags:
+            - 'doctrine.event_subscriber'
+
+    knp_doctrine_behaviors.event_subscriber.timestampable:
+        class: Knp\DoctrineBehaviors\EventSubscriber\TimestampableSubscriber
+        arguments:
+            - ~ # Replaced by knp_doctrine_behaviors.timestampable.date_field_type
+        tags:
+            - 'doctrine.event_subscriber'
+
+    knp_doctrine_behaviors.event_subscriber.translatable:
+        class: Knp\DoctrineBehaviors\EventSubscriber\TranslatableSubscriber
+        arguments:
+            - '@knp_doctrine_behaviors.locale_provider'
+            - ~ # Replaced by knp_doctrine_behaviors.translatable.translatable_fetch_mode
+            - ~ # Replaced by knp_doctrine_behaviors.translatable.translation_fetch_mode
+        tags:
+            - 'doctrine.event_subscriber'
+
+    knp_doctrine_behaviors.event_subscriber.tree:
+        class: Knp\DoctrineBehaviors\EventSubscriber\TreeSubscriber
+        tags:
+            - 'doctrine.event_subscriber'
+
+    knp_doctrine_behaviors.event_subscriber.uuidable:
+        class: Knp\DoctrineBehaviors\EventSubscriber\UuidableSubscriber
+        tags:
+            - 'doctrine.event_subscriber'
