@@ -1,3 +1,6 @@
+framework:
+    test: true
+
 parameters:
     env(DB_ENGINE): "pdo_sqlite" # also pdo_pgsql, pdo_mysql
     env(DB_HOST): "localhost"
@@ -10,7 +13,7 @@ parameters:
 
 services:
     _defaults:
-        public: true
+        public: false
         autowire: true
 
     Symfony\Component\Security\Core\Security: null
@@ -18,13 +21,14 @@ services:
 
     # for translatable
     Knp\DoctrineBehaviors\Tests\Provider\TestLocaleProvider: null
-    Knp\DoctrineBehaviors\Contract\Provider\LocaleProviderInterface: '@Knp\DoctrineBehaviors\Tests\Provider\TestLocaleProvider'
+    knp_doctrine_behaviors.locale_provider: '@Knp\DoctrineBehaviors\Tests\Provider\TestLocaleProvider'
 
     # for blameable
     Knp\DoctrineBehaviors\Tests\Provider\TestUserProvider: null
-    Knp\DoctrineBehaviors\Contract\Provider\UserProviderInterface: '@Knp\DoctrineBehaviors\Tests\Provider\TestUserProvider'
+    knp_doctrine_behaviors.user_provider: '@Knp\DoctrineBehaviors\Tests\Provider\TestUserProvider'
 
-    Knp\DoctrineBehaviors\Tests\DatabaseLoader:  null
+    Knp\DoctrineBehaviors\Tests\DatabaseLoader:
+        public: true
 
     Knp\DoctrineBehaviors\EventSubscriber\LoggableSubscriber:
         arguments:

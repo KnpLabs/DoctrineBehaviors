@@ -35,6 +35,12 @@ parameters:
         SlevomatCodingStandard\Sniffs\Classes\UnusedPrivateElementsSniff:
             - "tests/Fixtures/Entity/SluggableWithoutRegenerateEntity.php"
 
+        PhpCsFixer\Fixer\Whitespace\MethodChainingIndentationFixer:
+            - "src/Bundle/DependencyInjection/Configuration.php"
+
+        Symplify\CodingStandard\Sniffs\Architecture\DuplicatedClassShortNameSniff:
+            - "src/Bundle/DependencyInjection/Configuration.php"
+
     exclude_files:
         # Old bundle class name duplicate
         - "src/Bundle/DoctrineBehaviorsBundle.php"

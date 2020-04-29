@@ -21,6 +21,7 @@ parameters:
         - '#Call to an undefined method Knp\\DoctrineBehaviors\\Contract\\Entity\\SluggableInterface::getId\(\)#'
         - '#Call to an undefined method Knp\\DoctrineBehaviors\\Contract\\Entity\\TreeNodeInterface::getId\(\)#'
         - '#Call to an undefined method Knp\\DoctrineBehaviors\\Contract\\Entity\\TreeNodeInterface::to(Flat)?Array\(\)#'
+        - '#Call to an undefined method Symfony\\Component\\Config\\Definition\\Builder\\NodeDefinition\:\:children\(\)#'
 
         # buggy
         - '#of function call_user_func_array expects callable#'

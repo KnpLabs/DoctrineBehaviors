@@ -4,29 +4,44 @@ declare(strict_types=1);
 
 namespace Knp\DoctrineBehaviors\Bundle\DependencyInjection;
 
-use Doctrine\Common\EventSubscriber;
 use Symfony\Component\Config\FileLocator;
 use Symfony\Component\DependencyInjection\ContainerBuilder;
 use Symfony\Component\DependencyInjection\Extension\Extension;
-use Symfony\Component\DependencyInjection\Loader\YamlFileLoader;
+use Symfony\Component\DependencyInjection\Loader\XmlFileLoader;
 
 final class DoctrineBehaviorsExtension extends Extension
 {
-    /**
-     * @var string
-     */
-    private const DOCTRINE_EVENT_SUBSCRIBER_TAG = 'doctrine.event_subscriber';
-
     /**
      * @param string[] $configs
      */
     public function load(array $configs, ContainerBuilder $containerBuilder): void
     {
-        $loader = new YamlFileLoader($containerBuilder, new FileLocator(__DIR__ . '/../../../config'));
-        $loader->load('services.yaml');
+        $loader = new XmlFileLoader($containerBuilder, new FileLocator(dirname(__DIR__) . '/../Resources/config'));
+        $loader->load('services.xml');
 
-        // @see https://github.com/doctrine/DoctrineBundle/issues/674
-        $containerBuilder->registerForAutoconfiguration(EventSubscriber::class)
-            ->addTag(self::DOCTRINE_EVENT_SUBSCRIBER_TAG);
+        $configuration = new Configuration();
+        $config = $this->processConfiguration($configuration, $configs);
+
+        $this->loadProviders($config, $containerBuilder);
+        $this->loadSubscribers($config, $containerBuilder);
+    }
+
+    private function loadProviders(array $config, ContainerBuilder $containerBuilder): void
+    {
+        $definition = $containerBuilder->getDefinition('knp_doctrine_behaviors.user_provider');
+        $definition->replaceArgument(1, $config['blameable']['user_entity']);
+    }
+
+    private function loadSubscribers(array $config, ContainerBuilder $containerBuilder): void
+    {
+        $definition = $containerBuilder->getDefinition('knp_doctrine_behaviors.event_subscriber.blameable');
+        $definition->replaceArgument(2, $config['blameable']['user_entity']);
+
+        $definition = $containerBuilder->getDefinition('knp_doctrine_behaviors.event_subscriber.timestampable');
+        $definition->replaceArgument(0, $config['timestampable']['date_field_type']);
+
+        $definition = $containerBuilder->getDefinition('knp_doctrine_behaviors.event_subscriber.translatable');
+        $definition->replaceArgument(1, $config['translatable']['translatable_fetch_mode']);
+        $definition->replaceArgument(2, $config['translatable']['translation_fetch_mode']);
     }
 }

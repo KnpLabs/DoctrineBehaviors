@@ -3,7 +3,11 @@
      colors="true"
      bootstrap="tests/bootstrap.php"
 >
-
+    <php>
+        <server name="APP_ENV" value="test" force="true" />
+        <server name="SHELL_VERBOSITY" value="-1" />
+        <server name="KERNEL_CLASS" value="Knp\DoctrineBehaviors\Tests\HttpKernel\DoctrineBehaviorsKernel" />
+    </php>
     <testsuites>
         <testsuite name="Knp Doctrine2 Behaviors">
             <directory>tests</directory>

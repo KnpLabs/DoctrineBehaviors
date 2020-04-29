@@ -1,5 +1,6 @@
-parameters:
-    doctrine_behaviors_blameable_user_entity: Knp\DoctrineBehaviors\Tests\Fixtures\Entity\UserEntity
+doctrine_behaviors:
+    blameable:
+        user_entity: Knp\DoctrineBehaviors\Tests\Fixtures\Entity\UserEntity
 
 services:
     _defaults:
@@ -7,4 +8,4 @@ services:
         autowire: true
 
     Knp\DoctrineBehaviors\Tests\Provider\EntityUserProvider: null
-    Knp\DoctrineBehaviors\Contract\Provider\UserProviderInterface: '@Knp\DoctrineBehaviors\Tests\Provider\EntityUserProvider'
+    knp_doctrine_behaviors.user_provider: '@Knp\DoctrineBehaviors\Tests\Provider\EntityUserProvider'

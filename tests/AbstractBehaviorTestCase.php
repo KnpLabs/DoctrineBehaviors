@@ -27,9 +27,9 @@ abstract class AbstractBehaviorTestCase extends AbstractKernelTestCase
     {
         $customConfig = $this->provideCustomConfig();
         if ($customConfig !== null) {
-            self::bootKernelWithConfigs(DoctrineBehaviorsKernel::class, [$customConfig]);
+            $this->bootKernelWithConfigs(DoctrineBehaviorsKernel::class, [$customConfig]);
         } else {
-            self::bootKernel(DoctrineBehaviorsKernel::class);
+            $this->bootKernel(DoctrineBehaviorsKernel::class);
         }
 
         $this->entityManager = static::$container->get('doctrine.orm.entity_manager');

@@ -26,7 +26,7 @@ final class BlameableTest extends AbstractBehaviorTestCase
     {
         parent::setUp();
 
-        $this->userProvider = static::$container->get(UserProviderInterface::class);
+        $this->userProvider = static::$container->get('knp_doctrine_behaviors.user_provider');
         $this->blameableRepository = $this->entityManager->getRepository(BlameableEntity::class);
     }
 

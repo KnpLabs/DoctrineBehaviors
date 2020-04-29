@@ -22,6 +22,10 @@ It currently handles:
 composer require knplabs/doctrine-behaviors
 ```
 
+##Configure
+
+Configuration reference is available [here](/docs/config.md)
+
 ## Usage
 
 All you have to do is to define a Doctrine entity:
