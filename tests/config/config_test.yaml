@@ -15,6 +15,7 @@ services:
 
     Symfony\Component\Security\Core\Security: null
     Psr\Log\Test\TestLogger: null
+    Roukmoute\HashidsBundle\Hashids: null
 
     # for translatable
     Knp\DoctrineBehaviors\Tests\Provider\TestLocaleProvider: null
@@ -29,6 +30,10 @@ services:
     Knp\DoctrineBehaviors\EventSubscriber\LoggableSubscriber:
         arguments:
             $logger: '@Psr\Log\Test\TestLogger'
+        tags:
+            - { name: "doctrine.event_subscriber"}
+
+    Knp\DoctrineBehaviors\EventSubscriber\HashidableSubscriber:
         tags:
             - { name: "doctrine.event_subscriber"}
 

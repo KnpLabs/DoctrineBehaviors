@@ -6,7 +6,7 @@ namespace Knp\DoctrineBehaviors\Model\Hashidable;
 
 trait HashidableMethodsTrait
 {
-    public function getHashId(): string
+    public function getHashId(): ?string
     {
         return $this->hashId;
     }

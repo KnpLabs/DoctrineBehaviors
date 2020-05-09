@@ -24,3 +24,6 @@ services:
     Knp\DoctrineBehaviors\EventSubscriber\UuidableSubscriber:
         tags:
             - { name: 'doctrine.event_subscriber' }
+    Knp\DoctrineBehaviors\EventSubscriber\HashidableSubscriber:
+        tags:
+            - { name: 'doctrine.event_subscriber' }

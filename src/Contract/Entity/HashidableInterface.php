@@ -11,7 +11,7 @@ interface HashidableInterface
      */
     public function getHashidableField(): string;
 
-    public function getHashId(): string;
+    public function getHashId(): ?string;
 
     public function setHashId(string $hashId): void;
 }

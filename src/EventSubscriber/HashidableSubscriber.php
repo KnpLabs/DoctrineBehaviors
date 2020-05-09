@@ -10,8 +10,8 @@ use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\EntityManagerInterface;
 use Doctrine\ORM\Event\LoadClassMetadataEventArgs;
 use Doctrine\ORM\Events;
-use Hashids\HashidsInterface;
 use Knp\DoctrineBehaviors\Contract\Entity\HashidableInterface;
+use Roukmoute\HashidsBundle\Hashids;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 
 final class HashidableSubscriber implements EventSubscriber
@@ -27,14 +27,14 @@ final class HashidableSubscriber implements EventSubscriber
     private $entityManager;
 
     /**
-     * @var ContainerInterface
+     * @var Hashids
      */
-    private $container;
+    private $hashIds;
 
-    public function __construct(EntityManagerInterface $entityManager, ContainerInterface $container)
+    public function __construct(EntityManagerInterface $entityManager, Hashids $hashIds)
     {
         $this->entityManager = $entityManager;
-        $this->container = $container;
+        $this->hashIds = $hashIds;
     }
 
     public function loadClassMetadata(LoadClassMetadataEventArgs $loadClassMetadataEventArgs): void
@@ -72,25 +72,18 @@ final class HashidableSubscriber implements EventSubscriber
             return;
         }
 
-        /** @var HashidsInterface $hashIds */
-        $hashids = $this->container->get('hashids');
-        $hashId = $hashids->encode($this->resolveFieldValue($entity->getHashidableField()));
-
+        $hashId = $this->hashIds->encode($this->resolveFieldValue($entity->getHashidableField(), $entity));
         $entity->setHashId($hashId);
 
         $this->entityManager->persist($entity);
         $this->entityManager->flush();
     }
 
-    private function resolveFieldValue(string $field)
+    private function resolveFieldValue(string $field, $entity)
     {
-        if (property_exists($this, $field)) {
-            return $this->{$field};
-        }
-
         $methodName = 'get' . ucfirst($field);
-        if (method_exists($this, $methodName)) {
-            return $this->{$methodName}();
+        if (method_exists($entity, $methodName)) {
+            return $entity->{$methodName}();
         }
 
         return null;
