@@ -1,4 +1,4 @@
-# Uuidable
+# Hashidable
 
 Hashidable generates hashIds for an entity. Will automatically generate on persist.
 
