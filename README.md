@@ -15,6 +15,7 @@ It currently handles:
  * [Timestampable](/docs/timestampable.md)
  * [Translatable](/docs/translatable.md)
  * [Tree](/docs/tree.md)
+ * [Hashidable](/docs/hashidable.md)
 
 ## Install
 
@@ -25,9 +26,9 @@ composer require knplabs/doctrine-behaviors
 ## Usage
 
 All you have to do is to define a Doctrine entity:
- 
+
 - implemented interface
-- add a trait 
+- add a trait
 
 For some behaviors like tree, you can use repository traits:
 
@@ -36,7 +37,7 @@ For some behaviors like tree, you can use repository traits:
 
 declare(strict_types=1);
 
-namespace App\Repository;  
+namespace App\Repository;
 
 use Doctrine\ORM\EntityRepository;
 use Knp\DoctrineBehaviors\ORM\Tree\TreeTrait;
@@ -76,10 +77,10 @@ includes:
     composer fix-cs
     composer phpstan
     ```
- 
+
 ## Upgrade 1.x to 2
 
-There have been many changes between 1 and 2, but don't worry. 
+There have been many changes between 1 and 2, but don't worry.
 This package uses [Rector](https://github.com/rectorphp/rector), that handles upgrade for you.
 
 ```bash
