@@ -24,7 +24,7 @@
         "symfony/string": "^5.0",
         "symplify/package-builder": "^7.2",
         "nette/utils": "^3.0",
-        "ramsey/uuid": "^3.9",
+        "ramsey/uuid": "^3.9|^4.0",
         "roukmoute/hashids-bundle": "^2.3"
     },
     "require-dev": {
@@ -46,7 +46,8 @@
     },
     "autoload": {
         "psr-4": {
-            "Knp\\DoctrineBehaviors\\": "src"
+            "Knp\\DoctrineBehaviors\\": "src",
+            "Knp\\DoctrineBehaviors\\PHPStan\\": "utils/phpstan-behaviors/src"
         }
     },
     "autoload-dev": {

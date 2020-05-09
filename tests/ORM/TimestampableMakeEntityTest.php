@@ -29,9 +29,4 @@ final class TimestampableMakeEntityTest extends AbstractBehaviorTestCase
         $doctrineEventManager->dispatchEvent(Events::loadClassMetadata, $eventArgs);
         $this->expectNotToPerformAssertions();
     }
-
-    protected function provideCustomConfig(): ?string
-    {
-        return __DIR__ . '/../config/config_test_with_timestampable_entity.yaml';
-    }
 }

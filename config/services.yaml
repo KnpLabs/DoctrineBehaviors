@@ -2,6 +2,7 @@ parameters:
     doctrine_behaviors_translatable_fetch_mode: "LAZY"
     doctrine_behaviors_translation_fetch_mode: "LAZY"
     doctrine_behaviors_blameable_user_entity: ~
+    doctrine_behaviors_timestampable_date_field_type: "datetime"
 
 services:
     _defaults:
@@ -12,6 +13,7 @@ services:
             $translatableFetchMode: "%doctrine_behaviors_translatable_fetch_mode%"
             $translationFetchMode: "%doctrine_behaviors_translation_fetch_mode%"
             $blameableUserEntity: "%doctrine_behaviors_blameable_user_entity%"
+            $timestampableDateFieldType: "%doctrine_behaviors_timestampable_date_field_type%"
 
     Knp\DoctrineBehaviors\:
         resource: "../src"
@@ -19,4 +21,3 @@ services:
             - "../src/Bundle/*"
             - "../src/DoctrineBehaviorsBundle.php"
             - "../src/Exception/*"
-            - "../src/PHPStan/*"
