@@ -12,7 +12,6 @@ use Doctrine\ORM\Event\LoadClassMetadataEventArgs;
 use Doctrine\ORM\Events;
 use Knp\DoctrineBehaviors\Contract\Entity\HashidableInterface;
 use Roukmoute\HashidsBundle\Hashids;
-use Symfony\Component\DependencyInjection\ContainerInterface;
 
 final class HashidableSubscriber implements EventSubscriber
 {
@@ -29,12 +28,12 @@ final class HashidableSubscriber implements EventSubscriber
     /**
      * @var Hashids
      */
-    private $hashIds;
+    private $hashids;
 
-    public function __construct(EntityManagerInterface $entityManager, Hashids $hashIds)
+    public function __construct(EntityManagerInterface $entityManager, Hashids $hashids)
     {
         $this->entityManager = $entityManager;
-        $this->hashIds = $hashIds;
+        $this->hashids = $hashids;
     }
 
     public function loadClassMetadata(LoadClassMetadataEventArgs $loadClassMetadataEventArgs): void
@@ -72,7 +71,7 @@ final class HashidableSubscriber implements EventSubscriber
             return;
         }
 
-        $hashId = $this->hashIds->encode($this->resolveFieldValue($entity->getHashidableField(), $entity));
+        $hashId = $this->hashids->encode($this->resolveFieldValue($entity->getHashidableField(), $entity));
         $entity->setHashId($hashId);
 
         $this->entityManager->persist($entity);
