@@ -6,7 +6,6 @@ namespace Knp\DoctrineBehaviors\EventSubscriber;
 
 use Doctrine\Common\EventSubscriber;
 use Doctrine\Common\Persistence\Event\LifecycleEventArgs;
-use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\EntityManagerInterface;
 use Doctrine\ORM\Event\LoadClassMetadataEventArgs;
 use Doctrine\ORM\Events;
@@ -50,7 +49,7 @@ final class HashidableSubscriber implements EventSubscriber
 
         $classMetadata->mapField([
             'fieldName' => self::HASH_ID_FIELD_NAME,
-            'type' => Types::STRING,
+            'type' => 'string',
             'nullable' => true,
             'unique' => true,
         ]);
