@@ -11,7 +11,7 @@
         { "name": "Knplabs", "homepage": "http://knplabs.com" }
     ],
     "require": {
-        "php": "^7.*",
+        "php": "~7.1",
         "doctrine/common": "^2.7 || ^3.0",
         "doctrine/persistence": "^1.3.4 || ^2.0", 
         "doctrine/dbal": "^2.9",
