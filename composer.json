@@ -37,9 +37,9 @@
         "phpstan/phpstan": "^0.12.14",
         "phpunit/phpunit": "^8.5",
         "rector/rector": "^0.7.6",
-        "symplify/changelog-linker": "^7.2",
-        "symplify/easy-coding-standard": "^7.2",
-        "symplify/phpstan-extensions": "^7.2",
+        "symplify/changelog-linker": "^7.2 || ^8.0",
+        "symplify/easy-coding-standard": "^7.2 || ^8.0",
+        "symplify/phpstan-extensions": "^7.2 || ^8.0",
         "phpstan/phpstan-doctrine": "^0.12.4",
         "phpstan/phpstan-phpunit": "^0.12.2"
     },
