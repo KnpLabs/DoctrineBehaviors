@@ -9,11 +9,6 @@ use Symfony\Component\String\Slugger\AsciiSlugger;
 
 trait SluggableMethodsTrait
 {
-    /**
-     * @return string[]
-     */
-    abstract public function getSluggableFields(): array;
-
     public function setSlug(string $slug): void
     {
         $this->slug = $slug;
