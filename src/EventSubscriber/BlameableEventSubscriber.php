@@ -14,7 +14,7 @@ use Doctrine\ORM\UnitOfWork;
 use Knp\DoctrineBehaviors\Contract\Entity\BlameableInterface;
 use Knp\DoctrineBehaviors\Contract\Provider\UserProviderInterface;
 
-final class BlameableSubscriber implements EventSubscriber
+final class BlameableEventSubscriber implements EventSubscriber
 {
     /**
      * @var string

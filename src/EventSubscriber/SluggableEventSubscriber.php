@@ -13,7 +13,7 @@ use Doctrine\ORM\Mapping\ClassMetadataInfo;
 use Knp\DoctrineBehaviors\Contract\Entity\SluggableInterface;
 use Knp\DoctrineBehaviors\Repository\DefaultSluggableRepository;
 
-final class SluggableSubscriber implements EventSubscriber
+final class SluggableEventSubscriber implements EventSubscriber
 {
     /**
      * @var string
