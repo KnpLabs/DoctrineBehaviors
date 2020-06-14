@@ -17,18 +17,18 @@ class TreeNodeEntity implements TreeNodeInterface, ArrayAccess
     use TreeNodeTrait;
 
     /**
-     * @ORM\Column(type="string", length=255, nullable=true)
-     * @var string
-     */
-    private $name;
-
-    /**
      * @ORM\Id
      * @ORM\Column(type="integer")
      * @ORM\GeneratedValue(strategy="NONE")
      * @var int|null
      */
     private $id;
+
+    /**
+     * @ORM\Column(type="string", length=255, nullable=true)
+     * @var string
+     */
+    private $name;
 
     public function __toString(): string
     {
