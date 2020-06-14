@@ -47,7 +47,14 @@ parameters:
         - '#Call to method getUuid\(\) on an unknown class Knp\\DoctrineBehaviors\\Model\\Uuidable\\UuidableTrait#'
 
         # resolve in follow up PR
-        - '#Use explicit (.*?) names over dynamic#'
         - '#Use explicit return value over magic &reference#'
         - '#Class "(.*?)" with static method must have "static" in its name#'
 
+        # used-defined fields
+        -
+            path: 'src/EventSubscriber/HashidableEventSubscriber.php'
+            message: '#Use explicit method names over dynamic#'
+
+        -
+            path: 'src/Model/Sluggable/SluggableMethodsTrait.php'
+            message: '#Use explicit (method|property fetch names over dynamic#'

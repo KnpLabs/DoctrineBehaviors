@@ -16,50 +16,49 @@ final class TreeNodeTest extends AbstractBehaviorTestCase
 {
     public function testBuildTree(): void
     {
-        $root = $this->buildNode([
-            'setMaterializedPath' => '',
-            'setName' => 'root',
-            'setId' => 1,
-        ]);
+        $rootTreeNodeEntity = new TreeNodeEntity();
+        $rootTreeNodeEntity->setId(1);
+        $rootTreeNodeEntity->setMaterializedPath('');
+        $rootTreeNodeEntity->setName('root');
 
-        $flatTree = [
-            $this->buildNode([
-                'setMaterializedPath' => '/1',
-                'setName' => 'Villes',
-                'setId' => 2,
-            ]),
-            $this->buildNode([
-                'setMaterializedPath' => '/1/2',
-                'setName' => 'Nantes',
-                'setId' => 3,
-            ]),
-            $this->buildNode([
-                'setMaterializedPath' => '/1/2/3',
-                'setName' => 'Nantes Est',
-                'setId' => 4,
-            ]),
-            $this->buildNode([
-                'setMaterializedPath' => '/1/2/3',
-                'setName' => 'Nantes Nord',
-                'setId' => 5,
-            ]),
-            $this->buildNode([
-                'setMaterializedPath' => '/1/2/3/5',
-                'setName' => 'St-Mihiel',
-                'setId' => 6,
-            ]),
-        ];
+        $treeNodeEntity2 = new TreeNodeEntity();
+        $treeNodeEntity2->setMaterializedPath('/1');
+        $treeNodeEntity2->setId(2);
+        $treeNodeEntity2->setName('Villes');
 
-        $root->buildTree($flatTree);
-        $this->assertCount(1, $root->getChildNodes());
+        $treeNodeEntity3 = new TreeNodeEntity();
+        $treeNodeEntity3->setId(3);
+        $treeNodeEntity3->setMaterializedPath('/1/2');
+        $treeNodeEntity3->setName('Nantes');
 
-        $this->assertCount(1, $root->getChildNodes()->first()->getChildNodes());
-        $this->assertCount(2, $root->getChildNodes()->first()->getChildNodes()->first()->getChildNodes());
+        $treeNodeEntity4 = new TreeNodeEntity();
+        $treeNodeEntity4->setId(4);
+        $treeNodeEntity4->setMaterializedPath('/1/2/3');
+        $treeNodeEntity4->setName('Nantes Est');
 
-        $this->assertSame(1, $root->getNodeLevel());
+        $treeNodeEntity5 = new TreeNodeEntity();
+        $treeNodeEntity5->setId(5);
+        $treeNodeEntity5->setMaterializedPath('/1/2/3');
+        $treeNodeEntity5->setName('Nantes Nord');
+
+        $treeNodeEntity6 = new TreeNodeEntity();
+        $treeNodeEntity6->setId(6);
+        $treeNodeEntity6->setMaterializedPath('/1/2/3/5');
+        $treeNodeEntity6->setName('St-Mihiel');
+
+        $flatTree = [$treeNodeEntity2, $treeNodeEntity3, $treeNodeEntity4, $treeNodeEntity5, $treeNodeEntity6];
+
+        $rootTreeNodeEntity->buildTree($flatTree);
+
+        $this->assertCount(1, $rootTreeNodeEntity->getChildNodes());
+
+        $this->assertCount(1, $rootTreeNodeEntity->getChildNodes()->first()->getChildNodes());
+        $this->assertCount(2, $rootTreeNodeEntity->getChildNodes()->first()->getChildNodes()->first()->getChildNodes());
+
+        $this->assertSame(1, $rootTreeNodeEntity->getNodeLevel());
         $this->assertSame(
             4,
-            $root->getChildNodes()->first()->getChildNodes()->first()->getChildNodes()->first()->getNodeLevel()
+            $rootTreeNodeEntity->getChildNodes()->first()->getChildNodes()->first()->getChildNodes()->first()->getNodeLevel()
         );
     }
 
@@ -91,11 +90,16 @@ final class TreeNodeTest extends AbstractBehaviorTestCase
 
     public function provideRootPaths(): Iterator
     {
-        yield [$this->buildNode(['setMaterializedPath' => '/0/1']), '/0'];
-        yield [$this->buildNode(['setMaterializedPath' => '/']), '/'];
-        yield [$this->buildNode(['setMaterializedPath' => '']), '/'];
-        yield [$this->buildNode(['setMaterializedPath' => '/test']), '/test'];
-        yield [$this->buildNode(['setMaterializedPath' => '/0/1/2/3/4/5/6/']), '/0'];
+        yield [$treeNodeEntity = new TreeNodeEntity(), '/0'];
+        $treeNodeEntity->setMaterializedPath('/0/1');
+        yield [$treeNodeEntity = new TreeNodeEntity(), '/'];
+        $treeNodeEntity->setMaterializedPath('/');
+        yield [$treeNodeEntity = new TreeNodeEntity(), '/'];
+        $treeNodeEntity->setMaterializedPath('');
+        yield [$treeNodeEntity = new TreeNodeEntity(), '/test'];
+        $treeNodeEntity->setMaterializedPath('/test');
+        yield [$treeNodeEntity = new TreeNodeEntity(), '/0'];
+        $treeNodeEntity->setMaterializedPath('/0/1/2/3/4/5/6/');
     }
 
     /**
@@ -186,12 +190,24 @@ final class TreeNodeTest extends AbstractBehaviorTestCase
     {
         $tree = $this->buildTree();
 
-        $tree[] = $this->buildNode(['setId' => 45]);
-        $tree[] = $this->buildNode(['setId' => 46]);
+        $treeNodeEntity45 = new TreeNodeEntity();
+        $treeNodeEntity45->setId(45);
+        $tree[] = $treeNodeEntity45;
+
+        $treeNodeEntity46 = new TreeNodeEntity();
+        $treeNodeEntity46->setId(46);
+        $tree[] = $treeNodeEntity46;
+
         $this->assertSame(4, $tree->getChildNodes()->count());
 
-        $tree[2][] = $this->buildNode(['setId' => 47]);
-        $tree[2][] = $this->buildNode(['setId' => 48]);
+        $treeNodeEntity47 = new TreeNodeEntity();
+        $treeNodeEntity47->setId(47);
+        $tree[2][] = $treeNodeEntity47;
+
+        $treeNodeEntity48 = new TreeNodeEntity();
+        $treeNodeEntity48->setId(48);
+        $tree[2][] = $treeNodeEntity48;
+
         $this->assertSame(2, $tree[2]->getChildNodes()->count());
 
         $this->assertTrue(isset($tree[2][1]));
@@ -203,16 +219,22 @@ final class TreeNodeTest extends AbstractBehaviorTestCase
 
     public function testSetChildNodeOf(): void
     {
-        $root1 = $this->buildNode(['setId' => 1]);
-        $child1 = $this->buildNode(['setId' => 2]);
+        $root1 = new TreeNodeEntity();
+        $root1->setId(1);
+
+        $child1 = new TreeNodeEntity();
+        $child1->setId(2);
 
         $this->assertTrue($root1->isRootNode());
         $child1->setChildNodeOf($root1);
         $this->assertTrue($child1->isChildNodeOf($root1));
         $this->assertSame('/1', $child1->getMaterializedPath());
 
-        $root2 = $this->buildNode(['setId' => 3]);
-        $child2 = $this->buildNode(['setId' => 4]);
+        $root2 = new TreeNodeEntity();
+        $root2->setId(3);
+
+        $child2 = new TreeNodeEntity();
+        $child2->setId(4);
         $root2->setChildNodeOf(null);
 
         $this->assertTrue($root2->isRootNode());
@@ -227,9 +249,12 @@ final class TreeNodeTest extends AbstractBehaviorTestCase
         $this->expectException(TreeException::class);
         $this->expectExceptionMessage('You must provide an id for this node if you want it to be part of a tree.');
 
-        $this->buildNode(['setMaterializedPath' => '/0/1'])->setChildNodeOf(
-            $this->buildNode(['setMaterializedPath' => '/0'])
-        );
+        $parentTreeNode = new TreeNodeEntity();
+        $parentTreeNode->setMaterializedPath('/0');
+
+        $childTreeNode = new TreeNodeEntity();
+        $childTreeNode->setMaterializedPath('/0/1');
+        $childTreeNode->setChildNodeOf($parentTreeNode);
     }
 
     public function testChildrenCount(): void
@@ -316,38 +341,28 @@ final class TreeNodeTest extends AbstractBehaviorTestCase
         $this->assertSame($root[0][0], $entity[0][0]);
     }
 
-    private function buildNode(array $values = []): TreeNodeEntity
-    {
-        $node = new TreeNodeEntity();
-        foreach ($values as $method => $value) {
-            $node->{$method}($value);
-        }
-
-        return $node;
-    }
-
     private function buildTree(): TreeNodeEntity
     {
-        $item = $this->buildNode();
+        $item = new TreeNodeEntity();
         $item->setMaterializedPath('');
         $item->setId(1);
 
-        $childItem = $this->buildNode();
+        $childItem = new TreeNodeEntity();
         $childItem->setMaterializedPath('/1');
         $childItem->setId(2);
         $childItem->setChildNodeOf($item);
 
-        $secondChildItem = $this->buildNode();
+        $secondChildItem = new TreeNodeEntity();
         $secondChildItem->setMaterializedPath('/1');
         $secondChildItem->setId(3);
         $secondChildItem->setChildNodeOf($item);
 
-        $childChildItem = $this->buildNode();
+        $childChildItem = new TreeNodeEntity();
         $childChildItem->setId(4);
         $childChildItem->setMaterializedPath('/1/2');
         $childChildItem->setChildNodeOf($childItem);
 
-        $childChildChildItem = $this->buildNode();
+        $childChildChildItem = new TreeNodeEntity();
         $childChildChildItem->setId(5);
         $childChildChildItem->setMaterializedPath('/1/2/4');
         $childChildChildItem->setChildNodeOf($childChildItem);

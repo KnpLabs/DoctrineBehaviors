@@ -1,0 +1,10 @@
+parameters:
+    paths:
+        - "src"
+        - "tests"
+
+    exclude_paths:
+        - 'src/Model/Translatable/TranslatableMethodsTrait.php'
+
+services:
+    Knp\DoctrineBehaviors\Utils\Rector\Rector\ChangeBuilderNodeToEntityRector: null
