@@ -9,7 +9,7 @@ use Doctrine\ORM\Event\LoadClassMetadataEventArgs;
 use Doctrine\ORM\Events;
 use Knp\DoctrineBehaviors\Contract\Entity\TimestampableInterface;
 
-final class TimestampableSubscriber implements EventSubscriber
+final class TimestampableEventSubscriber implements EventSubscriber
 {
     /**
      * @var string

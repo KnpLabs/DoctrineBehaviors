@@ -5,11 +5,12 @@ declare(strict_types=1);
 namespace Knp\DoctrineBehaviors\EventSubscriber;
 
 use Doctrine\Common\EventSubscriber;
+use Doctrine\ORM\Event\LifecycleEventArgs;
 use Doctrine\ORM\Event\LoadClassMetadataEventArgs;
 use Doctrine\ORM\Events;
-use Knp\DoctrineBehaviors\Contract\Entity\TreeNodeInterface;
+use Knp\DoctrineBehaviors\Contract\Entity\UuidableInterface;
 
-final class TreeSubscriber implements EventSubscriber
+final class UuidableEventSubscriber implements EventSubscriber
 {
     public function loadClassMetadata(LoadClassMetadataEventArgs $loadClassMetadataEventArgs): void
     {
@@ -19,19 +20,29 @@ final class TreeSubscriber implements EventSubscriber
             return;
         }
 
-        if (! is_a($classMetadata->reflClass->getName(), TreeNodeInterface::class, true)) {
+        if (! is_a($classMetadata->reflClass->getName(), UuidableInterface::class, true)) {
             return;
         }
 
-        if ($classMetadata->hasField('materializedPath')) {
+        if ($classMetadata->hasField('uuid')) {
             return;
         }
 
         $classMetadata->mapField([
-            'fieldName' => 'materializedPath',
+            'fieldName' => 'uuid',
             'type' => 'string',
-            'length' => 255,
+            'nullable' => true,
         ]);
+    }
+
+    public function prePersist(LifecycleEventArgs $lifecycleEventArgs): void
+    {
+        $entity = $lifecycleEventArgs->getEntity();
+        if (! $entity instanceof UuidableInterface) {
+            return;
+        }
+
+        $entity->generateUuid();
     }
 
     /**
@@ -39,6 +50,6 @@ final class TreeSubscriber implements EventSubscriber
      */
     public function getSubscribedEvents(): array
     {
-        return [Events::loadClassMetadata];
+        return [Events::loadClassMetadata, Events::prePersist];
     }
 }

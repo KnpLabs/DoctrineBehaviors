@@ -11,7 +11,7 @@ use Knp\DoctrineBehaviors\Contract\Entity\LoggableInterface;
 use Psr\Log\LoggerInterface;
 use Psr\Log\LogLevel;
 
-final class LoggableSubscriber implements EventSubscriber
+final class LoggableEventSubscriber implements EventSubscriber
 {
     /**
      * @var LoggerInterface

@@ -12,7 +12,7 @@ use Doctrine\ORM\Events;
 use Knp\DoctrineBehaviors\Contract\Entity\HashidableInterface;
 use Roukmoute\HashidsBundle\Hashids;
 
-final class HashidableSubscriber implements EventSubscriber
+final class HashidableEventSubscriber implements EventSubscriber
 {
     /**
      * @var string

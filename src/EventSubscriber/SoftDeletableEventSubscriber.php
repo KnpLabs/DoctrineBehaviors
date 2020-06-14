@@ -10,7 +10,7 @@ use Doctrine\ORM\Event\OnFlushEventArgs;
 use Doctrine\ORM\Events;
 use Knp\DoctrineBehaviors\Contract\Entity\SoftDeletableInterface;
 
-final class SoftDeletableSubscriber implements EventSubscriber
+final class SoftDeletableEventSubscriber implements EventSubscriber
 {
     /**
      * @var string
