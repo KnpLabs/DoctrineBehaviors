@@ -45,3 +45,9 @@ parameters:
         - '#PHPDoc tag @var has invalid value \(TranslatorInterface&LocaleAwareInterface\|null\)\: Unexpected token "\|", expected TOKEN_OTHER at offset \d+#'
 
         - '#Call to method getUuid\(\) on an unknown class Knp\\DoctrineBehaviors\\Model\\Uuidable\\UuidableTrait#'
+
+        # resolve in follow up PR
+        - '#Use explicit (.*?) names over dynamic#'
+        - '#Use explicit return value over magic &reference#'
+        - '#Class "(.*?)" with static method must have "static" in its name#'
+
