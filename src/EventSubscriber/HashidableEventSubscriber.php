@@ -65,7 +65,7 @@ final class HashidableEventSubscriber implements EventSubscriber
 
     public function postPersist(LifecycleEventArgs $lifecycleEventArgs): void
     {
-        $entity = $lifecycleEventArgs->getEntity();
+        $entity = $lifecycleEventArgs->getObject();
         if (! $entity instanceof HashidableInterface) {
             return;
         }
