@@ -42,34 +42,14 @@ final class LoggableTest extends AbstractBehaviorTestCase
         );
     }
 
-    /**
-     * @dataProvider dataProviderValues()
-     */
-    public function testShouldLogChangesetMessageWhenCreated(string $field, $value, string $expected): void
+    public function testArrayShouldLogChangesetMessageWhenCreated(): void
     {
         $entity = new LoggableEntity();
+        $entity->setTitle('test');
+        $entity->setRoles(['x' => 'y']);
 
-        $setterMethodName = 'set' . ucfirst($field);
-        $entity->{$setterMethodName}($value);
-
-        $this->entityManager->persist($entity);
-        $this->entityManager->flush();
-
-        $this->assertCount(2, $this->testLogger->records);
-
-        $this->assertSame(
-            sprintf('%s #1 created', LoggableEntity::class),
-            $this->testLogger->records[0]['message']
-        );
-
-        $expectedMessage = sprintf(
-            '%s #1 : property "%s" changed from "" to "%s"',
-            LoggableEntity::class,
-            $field,
-            $expected
-        );
-
-        $this->assertStringContainsString($expectedMessage, $this->testLogger->records[1]['message']);
+        $this->doTestChangesetMessage($entity, 'title', 'test');
+        $this->doTestChangesetMessage($entity, 'roles', 'an array');
     }
 
     /**
@@ -138,5 +118,27 @@ final class LoggableTest extends AbstractBehaviorTestCase
     {
         yield ['title', 'test', 'test'];
         yield ['roles', ['x' => 'y'], 'an array'];
+    }
+
+    private function doTestChangesetMessage(LoggableEntity $entity, string $field, string $expected): void
+    {
+        $this->entityManager->persist($entity);
+        $this->entityManager->flush();
+
+        $this->assertCount(2, $this->testLogger->records);
+
+        $this->assertSame(
+            sprintf('%s #1 created', LoggableEntity::class),
+            $this->testLogger->records[0]['message']
+        );
+
+        $expectedMessage = sprintf(
+            '%s #1 : property "%s" changed from "" to "%s"',
+            LoggableEntity::class,
+            $field,
+            $expected
+        );
+
+        $this->assertStringContainsString($expectedMessage, $this->testLogger->records[1]['message']);
     }
 }
