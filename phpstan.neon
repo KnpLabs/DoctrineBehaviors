@@ -57,4 +57,4 @@ parameters:
 
         -
             path: 'src/Model/Sluggable/SluggableMethodsTrait.php'
-            message: '#Use explicit (method|property fetch names over dynamic#'
+            message: '#Use explicit (method|property fetch) names over dynamic#'
