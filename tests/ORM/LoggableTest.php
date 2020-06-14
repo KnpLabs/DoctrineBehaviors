@@ -4,7 +4,6 @@ declare(strict_types=1);
 
 namespace Knp\DoctrineBehaviors\Tests\ORM;
 
-use Iterator;
 use Knp\DoctrineBehaviors\Tests\AbstractBehaviorTestCase;
 use Knp\DoctrineBehaviors\Tests\Fixtures\Entity\LoggableEntity;
 use Psr\Log\Test\TestLogger;
@@ -42,7 +41,7 @@ final class LoggableTest extends AbstractBehaviorTestCase
         );
     }
 
-    public function testArrayShouldLogChangesetMessageWhenCreated(): void
+    public function testLogChangesetMessageWhenCreated(): void
     {
         $entity = new LoggableEntity();
         $entity->setTitle('test');
@@ -52,19 +51,16 @@ final class LoggableTest extends AbstractBehaviorTestCase
         $this->doTestChangesetMessage($entity, 'roles', 'an array');
     }
 
-    /**
-     * @dataProvider dataProviderValues()
-     */
-    public function testShouldLogChangesetMessageWhenUpdated($field, $value, $expected): void
+    public function testLogChangesetMessageWhenUpdated(): void
     {
         $entity = new LoggableEntity();
 
         $this->entityManager->persist($entity);
         $this->entityManager->flush();
 
-        $set = 'set' . ucfirst($field);
+        $entity->setTitle('test');
+        $entity->setRoles(['x' => 'y']);
 
-        $entity->{$set}($value);
         $this->entityManager->flush();
 
         $expectedRecordCount = $this->isPostgreSql() ? 3 : 2;
@@ -75,11 +71,18 @@ final class LoggableTest extends AbstractBehaviorTestCase
         $expectedMessage = sprintf(
             '%s #1 : property "%s" changed from "" to "%s"',
             LoggableEntity::class,
-            $field,
-            $expected
+            'title',
+            'test'
         );
+        $this->assertStringContainsString($expectedMessage, $lastRecord['message']);
 
-        $this->assertSame($expectedMessage, $lastRecord['message']);
+        $expectedMessage = sprintf(
+            '%s #1 : property "%s" changed from "" to "%s"',
+            LoggableEntity::class,
+            'roles',
+            'an array'
+        );
+        $this->assertStringContainsString($expectedMessage, $lastRecord['message']);
     }
 
     public function testShouldNotLogChangesetMessageWhenNoChange(): void
@@ -112,12 +115,6 @@ final class LoggableTest extends AbstractBehaviorTestCase
 
         $lastRecord = array_pop($this->testLogger->records);
         $this->assertSame(sprintf('%s #1 removed', LoggableEntity::class), $lastRecord['message']);
-    }
-
-    public function dataProviderValues(): Iterator
-    {
-        yield ['title', 'test', 'test'];
-        yield ['roles', ['x' => 'y'], 'an array'];
     }
 
     private function doTestChangesetMessage(LoggableEntity $entity, string $field, string $expected): void
