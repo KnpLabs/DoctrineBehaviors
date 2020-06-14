@@ -27,13 +27,13 @@ services:
 
     Knp\DoctrineBehaviors\Tests\DatabaseLoader:  null
 
-    Knp\DoctrineBehaviors\EventSubscriber\LoggableSubscriber:
+    Knp\DoctrineBehaviors\EventSubscriber\LoggableEventSubscriber:
         arguments:
             $logger: '@Psr\Log\Test\TestLogger'
         tags:
             - { name: "doctrine.event_subscriber"}
 
-    Knp\DoctrineBehaviors\EventSubscriber\HashidableSubscriber:
+    Knp\DoctrineBehaviors\EventSubscriber\HashidableEventSubscriber:
         tags:
             - { name: "doctrine.event_subscriber"}
 
