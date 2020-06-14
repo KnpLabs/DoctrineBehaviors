@@ -3,7 +3,7 @@
     "description": "Doctrine Behavior Traits",
     "type": "symfony-bundle",
     "keywords": [
-        "behaviors", "doctrine", "timestampable", "translatable", "blameable", "softdeletable", "tree", "uuid"
+        "behaviors", "doctrine", "timestampable", "translatable", "blameable", "softdeletable", "tree", "uuid", "hashidable", "hashid"
     ],
     "homepage": "http://knplabs.com",
     "license": "MIT",
@@ -24,7 +24,8 @@
         "symfony/string": "^5.0",
         "symplify/package-builder": "^7.2",
         "nette/utils": "^3.0",
-        "ramsey/uuid": "^3.9|^4.0"
+        "ramsey/uuid": "^3.9|^4.0",
+        "roukmoute/hashids-bundle": "^2.3"
     },
     "require-dev": {
         "ext-pdo_sqlite": "*",
@@ -36,7 +37,7 @@
         "jakub-onderka/php-parallel-lint": "^1.0",
         "phpstan/phpstan": "^0.12.14",
         "phpunit/phpunit": "^8.5",
-        "rector/rector": "^0.7.6",
+        "rector/rector": "^0.7.7",
         "symplify/changelog-linker": "^7.2",
         "symplify/easy-coding-standard": "^7.2",
         "symplify/phpstan-extensions": "^7.2",
