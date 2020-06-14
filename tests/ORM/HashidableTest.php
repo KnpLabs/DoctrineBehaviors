@@ -23,10 +23,12 @@ final class HashidableTest extends AbstractBehaviorTestCase
 
         $id = $entity->getId();
         $this->assertNotNull($id);
+        $this->assertSame($id, 1);
 
         $hashId = $entity->getHashId();
         $this->assertNotNull($hashId);
         $this->assertNotEmpty($hashId);
+        $this->assertSame($hashId, 'jR');
 
         $this->entityManager->clear();
     }
