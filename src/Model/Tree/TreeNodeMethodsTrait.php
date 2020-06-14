@@ -213,7 +213,7 @@ trait TreeNodeMethodsTrait
 
     /**
      * @param Closure $prepare a function to prepare the node before putting into the result
-     * @param array    $tree    a reference to an array, used internally for recursion
+     * @param array $tree a reference to an array, used internally for recursion
      */
     public function toFlatArray(?Closure $prepare = null, ?array &$tree = null): array
     {

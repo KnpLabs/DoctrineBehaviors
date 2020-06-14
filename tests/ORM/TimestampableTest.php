@@ -20,6 +20,7 @@ final class TimestampableTest extends AbstractBehaviorTestCase
     protected function setUp(): void
     {
         parent::setUp();
+
         $this->timestampableRepository = $this->entityManager->getRepository(TimestampableEntity::class);
     }
 

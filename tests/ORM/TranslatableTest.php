@@ -138,7 +138,8 @@ final class TranslatableTest extends AbstractBehaviorTestCase
     public function testSubscriberShouldConfigureEntityWithDefaultLocale(): void
     {
         $entity = new TranslatableEntity();
-        $entity->setTitle('test'); // magic method
+        // magic method
+        $entity->setTitle('test');
         $entity->mergeNewTranslations();
         $this->entityManager->persist($entity);
         $this->entityManager->flush();
