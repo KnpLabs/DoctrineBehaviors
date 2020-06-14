@@ -41,11 +41,11 @@ parameters:
         - "src/DoctrineBehaviorsBundle.php"
 
 services:
-    Symplify\CodingStandard\Sniffs\CleanCode\ClassCognitiveComplexitySniff:
-        max_class_cognitive_complexity: 20
-
-    Symplify\CodingStandard\Sniffs\CleanCode\CognitiveComplexitySniff:
-        max_cognitive_complexity: 8
+#    Symplify\CodingStandard\Sniffs\CleanCode\ClassCognitiveComplexitySniff:
+#        max_class_cognitive_complexity: 20
+#
+#    Symplify\CodingStandard\Sniffs\CleanCode\CognitiveComplexitySniff:
+#        max_cognitive_complexity: 8
 
     PhpCsFixer\Fixer\ClassNotation\FinalClassFixer: ~
 

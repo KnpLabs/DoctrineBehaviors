@@ -3,6 +3,7 @@ includes:
     - vendor/symplify/phpstan-extensions/config/config.neon
     - vendor/phpstan/phpstan-doctrine/extension.neon
     - vendor/phpstan/phpstan-phpunit/extension.neon
+    - vendor/symplify/coding-standard/config/symplify-rules.neon
 
 parameters:
     paths:
