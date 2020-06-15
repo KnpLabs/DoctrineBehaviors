@@ -94,11 +94,23 @@ use Knp\DoctrineBehaviors\Model\Translatable\TranslatableTrait;
 class Category implements TranslatableInterface
 {
     use TranslatableTrait;
+    
+    /**
+     * @ORM\Id
+     * @ORM\Column(type="integer")
+     * @ORM\GeneratedValue(strategy="AUTO")
+     */
+    private $id;
 
     /**
      * @ORM\Column(type="string", length=255)
      */
     protected $someFieldYouDoNotNeedToTranslate;
+    
+    public function getId(): ?int
+    {
+        return $this->id;
+    }
 }
 ```
 
