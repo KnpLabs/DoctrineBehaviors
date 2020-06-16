@@ -129,19 +129,19 @@ final class TranslatableEventSubscriber implements EventSubscriber
 
     private function mapTranslation(ClassMetadataInfo $classMetadataInfo): void
     {
-        if (! $classMetadataInfo->hasAssociation('translatable')) {
+         if (!$classMetadataInfo->hasAssociation('translatable')) {
             $classMetadataInfo->mapManyToOne([
                 'fieldName' => 'translatable',
                 'inversedBy' => 'translations',
                 'cascade' => ['persist', 'merge'],
                 'fetch' => $this->translationFetchMode,
-                'joinColumns' => array_map(function($identifier){
+                'joinColumns' => array_map(function ($identifier) {
                     return [
-                        'name' => 'translatable_'.$identifier,
+                        'name' => 'translatable_' . $identifier,
                         'referencedColumnName' => $identifier,
                         'onDelete' => 'CASCADE',
                     ];
-                },$classMetadataInfo->getIdentifier()),
+                }, $classMetadataInfo->getIdentifier()),
                 'targetEntity' => $classMetadataInfo->getReflectionClass()->getMethod(
                     'getTranslatableEntityClass'
                 )->invoke(null),
@@ -149,13 +149,16 @@ final class TranslatableEventSubscriber implements EventSubscriber
         }
 
         $name = $classMetadataInfo->getTableName() . '_unique_translation';
-        if (! $this->hasUniqueTranslationConstraint($classMetadataInfo, $name)) {
+        if (!$this->hasUniqueTranslationConstraint($classMetadataInfo, $name)) {
             $classMetadataInfo->table['uniqueConstraints'][$name] = [
-                'columns' => array_map(function($identifier){ return 'translatable_'.$identifier; },
-                                       $classMetadataInfo->getIdentifier())+[self::LOCALE],
+                'columns' => array_map(
+                        function ($identifier) {
+                            return 'translatable_' . $identifier;
+                        }, $classMetadataInfo->getIdentifier()
+                    ) + [self::LOCALE],
             ];
         }
-
+        
         if (! $classMetadataInfo->hasField(self::LOCALE) && ! $classMetadataInfo->hasAssociation(self::LOCALE)) {
             $classMetadataInfo->mapField([
                 'fieldName' => self::LOCALE,
