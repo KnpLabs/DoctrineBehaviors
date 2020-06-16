@@ -13,7 +13,7 @@ use Knp\DoctrineBehaviors\Contract\Entity\TranslatableInterface;
 use Knp\DoctrineBehaviors\Contract\Entity\TranslationInterface;
 use Knp\DoctrineBehaviors\Contract\Provider\LocaleProviderInterface;
 
-final class TranslatableEventSubscriber implements EventSubscriber
+final class TranslatableSubscriber implements EventSubscriber
 {
     /**
      * @var string
@@ -135,11 +135,13 @@ final class TranslatableEventSubscriber implements EventSubscriber
                 'inversedBy' => 'translations',
                 'cascade' => ['persist', 'merge'],
                 'fetch' => $this->translationFetchMode,
-                'joinColumns' => [[
-                    'name' => 'translatable_id',
-                    'referencedColumnName' => 'id',
-                    'onDelete' => 'CASCADE',
-                ]],
+                'joinColumns' => array_map(function($identifier){
+                    return [
+                        'name' => 'translatable_'.$identifier,
+                        'referencedColumnName' => $identifier,
+                        'onDelete' => 'CASCADE',
+                    ];
+                },$classMetadataInfo->getIdentifier()),
                 'targetEntity' => $classMetadataInfo->getReflectionClass()->getMethod(
                     'getTranslatableEntityClass'
                 )->invoke(null),
@@ -149,7 +151,7 @@ final class TranslatableEventSubscriber implements EventSubscriber
         $name = $classMetadataInfo->getTableName() . '_unique_translation';
         if (! $this->hasUniqueTranslationConstraint($classMetadataInfo, $name)) {
             $classMetadataInfo->table['uniqueConstraints'][$name] = [
-                'columns' => ['translatable_id', self::LOCALE],
+                'columns' => array_map(function($identifier){ return 'translatable_'.$identifier; },$classMetadataInfo->getIdentifier())+[self::LOCALE],
             ];
         }
 
