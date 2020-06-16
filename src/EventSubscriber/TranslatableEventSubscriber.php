@@ -129,7 +129,7 @@ final class TranslatableEventSubscriber implements EventSubscriber
 
     private function mapTranslation(ClassMetadataInfo $classMetadataInfo): void
     {
-         if (!$classMetadataInfo->hasAssociation('translatable')) {
+        if (! $classMetadataInfo->hasAssociation('translatable')) {
             $classMetadataInfo->mapManyToOne([
                 'fieldName' => 'translatable',
                 'inversedBy' => 'translations',
@@ -149,7 +149,8 @@ final class TranslatableEventSubscriber implements EventSubscriber
         }
 
         $name = $classMetadataInfo->getTableName() . '_unique_translation';
-        if (!$this->hasUniqueTranslationConstraint($classMetadataInfo, $name)) {
+        
+        if (! $this->hasUniqueTranslationConstraint($classMetadataInfo, $name)) {
             $classMetadataInfo->table['uniqueConstraints'][$name] = [
                 'columns' => array_map(
                         function ($identifier) {
@@ -159,7 +160,9 @@ final class TranslatableEventSubscriber implements EventSubscriber
             ];
         }
         
-        if (! $classMetadataInfo->hasField(self::LOCALE) && ! $classMetadataInfo->hasAssociation(self::LOCALE)) {
+         if (! $classMetadataInfo->hasField(self::LOCALE) && ! $classMetadataInfo->hasAssociation(
+             self::LOCALE
+         )) {
             $classMetadataInfo->mapField([
                 'fieldName' => self::LOCALE,
                 'type' => 'string',
