@@ -13,7 +13,7 @@ use Knp\DoctrineBehaviors\Contract\Entity\TranslatableInterface;
 use Knp\DoctrineBehaviors\Contract\Entity\TranslationInterface;
 use Knp\DoctrineBehaviors\Contract\Provider\LocaleProviderInterface;
 
-final class TranslatableSubscriber implements EventSubscriber
+final class TranslatableEventSubscriber implements EventSubscriber
 {
     /**
      * @var string
@@ -151,7 +151,8 @@ final class TranslatableSubscriber implements EventSubscriber
         $name = $classMetadataInfo->getTableName() . '_unique_translation';
         if (! $this->hasUniqueTranslationConstraint($classMetadataInfo, $name)) {
             $classMetadataInfo->table['uniqueConstraints'][$name] = [
-                'columns' => array_map(function($identifier){ return 'translatable_'.$identifier; },$classMetadataInfo->getIdentifier())+[self::LOCALE],
+                'columns' => array_map(function($identifier){ return 'translatable_'.$identifier; },
+                                       $classMetadataInfo->getIdentifier())+[self::LOCALE],
             ];
         }
 
