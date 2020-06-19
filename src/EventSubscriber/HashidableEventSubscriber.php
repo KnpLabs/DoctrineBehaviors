@@ -9,8 +9,8 @@ use Doctrine\Common\Persistence\Event\LifecycleEventArgs;
 use Doctrine\ORM\EntityManagerInterface;
 use Doctrine\ORM\Event\LoadClassMetadataEventArgs;
 use Doctrine\ORM\Events;
+use Hashids\HashidsInterface;
 use Knp\DoctrineBehaviors\Contract\Entity\HashidableInterface;
-use Roukmoute\HashidsBundle\Hashids;
 
 final class HashidableEventSubscriber implements EventSubscriber
 {
@@ -25,11 +25,11 @@ final class HashidableEventSubscriber implements EventSubscriber
     private $entityManager;
 
     /**
-     * @var Hashids
+     * @var HashidsInterface
      */
     private $hashids;
 
-    public function __construct(EntityManagerInterface $entityManager, Hashids $hashids)
+    public function __construct(EntityManagerInterface $entityManager, HashidsInterface $hashids)
     {
         $this->entityManager = $entityManager;
         $this->hashids = $hashids;
