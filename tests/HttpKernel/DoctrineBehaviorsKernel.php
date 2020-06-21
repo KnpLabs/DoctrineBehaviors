@@ -6,6 +6,7 @@ namespace Knp\DoctrineBehaviors\Tests\HttpKernel;
 
 use Doctrine\Bundle\DoctrineBundle\DoctrineBundle;
 use Knp\DoctrineBehaviors\DoctrineBehaviorsBundle;
+use Roukmoute\HashidsBundle\RoukmouteHashidsBundle;
 use Symfony\Bundle\FrameworkBundle\FrameworkBundle;
 use Symfony\Component\Config\Loader\LoaderInterface;
 use Symfony\Component\HttpKernel\Bundle\BundleInterface;
@@ -24,7 +25,13 @@ final class DoctrineBehaviorsKernel extends Kernel implements ExtraConfigAwareKe
      */
     public function registerBundles(): array
     {
-        return [new DoctrineBehaviorsBundle(), new DoctrineBundle(), new FrameworkBundle()];
+        return [
+            new DoctrineBehaviorsBundle(),
+            new DoctrineBundle(),
+            new FrameworkBundle(),
+            // for hashids
+            new RoukmouteHashidsBundle(),
+        ];
     }
 
     public function getCacheDir(): string

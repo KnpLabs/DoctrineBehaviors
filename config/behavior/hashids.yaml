@@ -1,0 +1,7 @@
+services:
+    _defaults:
+        public: true
+        autowire: true
+        autoconfigure: true
+
+    Knp\DoctrineBehaviors\EventSubscriber\HashidableEventSubscriber: null
