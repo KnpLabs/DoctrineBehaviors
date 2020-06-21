@@ -1,5 +1,14 @@
 # Hashidable
 
+To enable this behavior, make sure `RoukmouteHashidsBundle` is registered in your bundles:
+
+```php
+// bundles.php
+return [
+    Roukmoute\HashidsBundle\RoukmouteHashidsBundle::class => ['all' => true],
+];
+```
+
 Hashidable generates hashIds for an entity. Will automatically generate on persist.
 
 ```php
