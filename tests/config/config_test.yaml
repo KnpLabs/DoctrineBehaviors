@@ -32,15 +32,6 @@ services:
         tags:
             - { name: "doctrine.event_subscriber"}
 
-    # for hashidable
-    Hashids\HashidsInterface:
-        class: 'Hashids\Hashids'
-        public: true
-
-    Knp\DoctrineBehaviors\EventSubscriber\HashidableEventSubscriber:
-        tags:
-            - { name: "doctrine.event_subscriber"}
-
 doctrine:
     dbal:
         dbname: "%env(DB_NAME)%"

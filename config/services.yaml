@@ -21,3 +21,5 @@ services:
             - "../src/Bundle/*"
             - "../src/DoctrineBehaviorsBundle.php"
             - "../src/Exception/*"
+            # part of behavior/hashids.yaml - optional on/off with bundle registration
+            - "../src/EventSubscriber/HashidableEventSubscriber.php"

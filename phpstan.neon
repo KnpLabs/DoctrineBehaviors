@@ -58,3 +58,6 @@ parameters:
         -
             path: 'src/Model/Sluggable/SluggableMethodsTrait.php'
             message: '#Use explicit (method|property fetch) names over dynamic#'
+
+        # deprecated class
+        - '#Class with base "DoctrineBehaviorsBundle" name is already used in "Knp\\DoctrineBehaviors\\DoctrineBehaviorsBundle", "Knp\\DoctrineBehaviors\\Bundle\\DoctrineBehaviorsBundle"\. Use unique name to make classes easy to recognize#'

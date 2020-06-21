@@ -9,11 +9,6 @@ use Knp\DoctrineBehaviors\Tests\Fixtures\Entity\HashidableEntity;
 
 final class HashidableTest extends AbstractBehaviorTestCase
 {
-    protected function setUp(): void
-    {
-        parent::setUp();
-    }
-
     public function testAutoSettingHashId(): void
     {
         $entity = new HashidableEntity();
@@ -23,12 +18,10 @@ final class HashidableTest extends AbstractBehaviorTestCase
 
         $id = $entity->getId();
         $this->assertNotNull($id);
-        $this->assertSame($id, 1);
+        $this->assertSame(1, $id);
 
         $hashId = $entity->getHashId();
-        $this->assertNotNull($hashId);
-        $this->assertNotEmpty($hashId);
-        $this->assertSame($hashId, 'jR');
+        $this->assertSame('jR', $hashId);
 
         $this->entityManager->clear();
     }
