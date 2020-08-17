@@ -71,7 +71,9 @@ final class LoggableEventSubscriber implements EventSubscriber
         $entityManager = $lifecycleEventArgs->getEntityManager();
         $unitOfWork = $entityManager->getUnitOfWork();
         $entity = $lifecycleEventArgs->getEntity();
-        $classMetadata = $entityManager->getClassMetadata(get_class($entity));
+
+        $entityClass = get_class($entity);
+        $classMetadata = $entityManager->getClassMetadata($entityClass);
 
         /** @var LoggableInterface $entity */
         $unitOfWork->computeChangeSet($classMetadata, $entity);

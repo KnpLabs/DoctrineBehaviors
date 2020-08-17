@@ -337,7 +337,6 @@ final class TreeNodeTest extends AbstractBehaviorTestCase
         $this->entityManager->flush();
 
         $root = $repository->getTree();
-
         $this->assertSame($root[0][0], $entity[0][0]);
     }
 

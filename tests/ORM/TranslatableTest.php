@@ -180,7 +180,10 @@ final class TranslatableTest extends AbstractBehaviorTestCase
         $entity->translate('fr')->setTitle('fabuleux3');
 
         $this->assertSame('fabuleux3', $entity->translate('fr')->getTitle());
-        $this->assertSame(spl_object_hash($entity->translate('fr')), spl_object_hash($translation));
+
+        $givenObjectHash = spl_object_hash($entity->translate('fr'));
+        $translationObjectHash = spl_object_hash($translation);
+        $this->assertSame($givenObjectHash, $translationObjectHash);
     }
 
     public function testShouldRemoveTranslation(): void

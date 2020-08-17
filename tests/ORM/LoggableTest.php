@@ -35,10 +35,8 @@ final class LoggableTest extends AbstractBehaviorTestCase
         $expectedRecordCount = $this->isPostgreSql() ? 2 : 1;
         $this->assertCount($expectedRecordCount, $this->testLogger->records);
 
-        $this->assertSame(
-            sprintf('%s #1 created', LoggableEntity::class),
-            $this->testLogger->records[0]['message']
-        );
+        $expectedMessage = sprintf('%s #1 created', LoggableEntity::class);
+        $this->assertSame($expectedMessage, $this->testLogger->records[0]['message']);
     }
 
     public function testLogChangesetMessageWhenCreated(): void
@@ -114,7 +112,9 @@ final class LoggableTest extends AbstractBehaviorTestCase
         $this->assertCount($expectedRecordCount, $this->testLogger->records);
 
         $lastRecord = array_pop($this->testLogger->records);
-        $this->assertSame(sprintf('%s #1 removed', LoggableEntity::class), $lastRecord['message']);
+
+        $expectedMessage = sprintf('%s #1 removed', LoggableEntity::class);
+        $this->assertSame($expectedMessage, $lastRecord['message']);
     }
 
     private function doTestChangesetMessage(LoggableEntity $entity, string $field, string $expected): void
@@ -124,10 +124,8 @@ final class LoggableTest extends AbstractBehaviorTestCase
 
         $this->assertCount(2, $this->testLogger->records);
 
-        $this->assertSame(
-            sprintf('%s #1 created', LoggableEntity::class),
-            $this->testLogger->records[0]['message']
-        );
+        $expectedMessage = sprintf('%s #1 created', LoggableEntity::class);
+        $this->assertSame($expectedMessage, $this->testLogger->records[0]['message']);
 
         $expectedMessage = sprintf(
             '%s #1 : property "%s" changed from "" to "%s"',
@@ -135,7 +133,6 @@ final class LoggableTest extends AbstractBehaviorTestCase
             $field,
             $expected
         );
-
         $this->assertStringContainsString($expectedMessage, $this->testLogger->records[1]['message']);
     }
 }

@@ -61,3 +61,11 @@ parameters:
 
         # deprecated class
         - '#Class with base "DoctrineBehaviorsBundle" name is already used in "Knp\\DoctrineBehaviors\\DoctrineBehaviorsBundle", "Knp\\DoctrineBehaviors\\Bundle\\DoctrineBehaviorsBundle"\. Use unique name to make classes easy to recognize#'
+        - '#Use explicit methods, over array acccess on object#'
+
+        # magic
+        -
+            message: '#Use strict comparison instead of empty#'
+            paths:
+                - 'src/Model/Sluggable/SluggableMethodsTrait.php'
+                - 'src/Model/Translatable/TranslationMethodsTrait.php'
