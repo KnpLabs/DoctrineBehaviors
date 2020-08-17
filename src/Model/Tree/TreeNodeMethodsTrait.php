@@ -112,7 +112,7 @@ trait TreeNodeMethodsTrait
     public function setChildNodeOf(?TreeNodeInterface $treeNode = null): void
     {
         $id = $this->getNodeId();
-        if (empty($id)) {
+        if ($id === '' || $id === null) {
             throw new TreeException('You must provide an id for this node if you want it to be part of a tree.');
         }
 

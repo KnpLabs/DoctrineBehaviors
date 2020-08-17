@@ -23,10 +23,10 @@ final class TimestampableMakeEntityTest extends AbstractBehaviorTestCase
     public function testMakeEntityEmptyEvent(): void
     {
         $className = 'App\Entity\MyClass';
-        $class = new ClassMetadata($className);
-        $eventArgs = new LoadClassMetadataEventArgs($class, $this->entityManager);
+        $classMetadata = new ClassMetadata($className);
+        $loadClassMetadataEventArgs = new LoadClassMetadataEventArgs($classMetadata, $this->entityManager);
         $doctrineEventManager = $this->entityManager->getEventManager();
-        $doctrineEventManager->dispatchEvent(Events::loadClassMetadata, $eventArgs);
+        $doctrineEventManager->dispatchEvent(Events::loadClassMetadata, $loadClassMetadataEventArgs);
         $this->expectNotToPerformAssertions();
     }
 }

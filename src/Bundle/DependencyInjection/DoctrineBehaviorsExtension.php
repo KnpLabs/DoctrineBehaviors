@@ -8,7 +8,7 @@ use Doctrine\Common\EventSubscriber;
 use Symfony\Component\Config\FileLocator;
 use Symfony\Component\DependencyInjection\ContainerBuilder;
 use Symfony\Component\DependencyInjection\Extension\Extension;
-use Symfony\Component\DependencyInjection\Loader\YamlFileLoader;
+use Symfony\Component\DependencyInjection\Loader\PhpFileLoader;
 
 final class DoctrineBehaviorsExtension extends Extension
 {
@@ -22,8 +22,8 @@ final class DoctrineBehaviorsExtension extends Extension
      */
     public function load(array $configs, ContainerBuilder $containerBuilder): void
     {
-        $loader = new YamlFileLoader($containerBuilder, new FileLocator(__DIR__ . '/../../../config'));
-        $loader->load('services.yaml');
+        $phpFileLoader = new PhpFileLoader($containerBuilder, new FileLocator(__DIR__ . '/../../../config'));
+        $phpFileLoader->load('services.php');
 
         // @see https://github.com/doctrine/DoctrineBundle/issues/674
         $containerBuilder->registerForAutoconfiguration(EventSubscriber::class)

@@ -37,7 +37,7 @@ final class EntityUserProvider implements UserProviderInterface
 
     public function changeUser($userEntity): void
     {
-        if (! empty($this->userEntities) && array_key_exists($userEntity, $this->userEntities)) {
+        if ($this->userEntities !== [] && array_key_exists($userEntity, $this->userEntities)) {
             $this->userEntity = $this->userEntities[$userEntity];
         }
     }

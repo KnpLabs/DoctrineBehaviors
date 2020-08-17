@@ -48,19 +48,19 @@ final class SluggableWithoutRegenerateTest extends AbstractBehaviorTestCase
 
     public function testNotUpdatedSlug(): void
     {
-        $entity = new SluggableWithoutRegenerateEntity();
-        $entity->setName('The name');
+        $sluggableWithoutRegenerateEntity = new SluggableWithoutRegenerateEntity();
+        $sluggableWithoutRegenerateEntity->setName('The name');
 
-        $this->entityManager->persist($entity);
+        $this->entityManager->persist($sluggableWithoutRegenerateEntity);
         $this->entityManager->flush();
 
-        $this->assertSame('the-name', $entity->getSlug());
+        $this->assertSame('the-name', $sluggableWithoutRegenerateEntity->getSlug());
 
-        $entity->setName('The name 2');
+        $sluggableWithoutRegenerateEntity->setName('The name 2');
 
-        $this->entityManager->persist($entity);
+        $this->entityManager->persist($sluggableWithoutRegenerateEntity);
         $this->entityManager->flush();
 
-        $this->assertSame('the-name', $entity->getSlug());
+        $this->assertSame('the-name', $sluggableWithoutRegenerateEntity->getSlug());
     }
 }

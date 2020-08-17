@@ -83,47 +83,47 @@ final class SoftDeletableTest extends AbstractBehaviorTestCase
 
     public function testDeleteInheritance(): void
     {
-        $entity = new SoftDeletableEntityInherit();
+        $softDeletableEntityInherit = new SoftDeletableEntityInherit();
 
-        $this->entityManager->persist($entity);
+        $this->entityManager->persist($softDeletableEntityInherit);
         $this->entityManager->flush();
 
-        $this->entityManager->remove($entity);
+        $this->entityManager->remove($softDeletableEntityInherit);
         $this->entityManager->flush();
 
-        $this->assertTrue($entity->isDeleted());
+        $this->assertTrue($softDeletableEntityInherit->isDeleted());
     }
 
     public function testRestore(): void
     {
-        $entity = new SoftDeletableEntityInherit();
+        $softDeletableEntityInherit = new SoftDeletableEntityInherit();
 
-        $this->entityManager->persist($entity);
+        $this->entityManager->persist($softDeletableEntityInherit);
         $this->entityManager->flush();
 
-        $this->entityManager->remove($entity);
+        $this->entityManager->remove($softDeletableEntityInherit);
         $this->entityManager->flush();
 
-        $this->assertTrue($entity->isDeleted());
+        $this->assertTrue($softDeletableEntityInherit->isDeleted());
 
-        $entity->restore();
+        $softDeletableEntityInherit->restore();
 
-        $this->assertFalse($entity->isDeleted());
+        $this->assertFalse($softDeletableEntityInherit->isDeleted());
     }
 
     public function testExtraSqlCalls(): void
     {
-        $entity = new SoftDeletableEntity();
-        $this->entityManager->persist($entity);
+        $softDeletableEntity = new SoftDeletableEntity();
+        $this->entityManager->persist($softDeletableEntity);
         $this->entityManager->flush();
 
-        $id = $entity->getId();
+        $id = $softDeletableEntity->getId();
         $this->assertNotNull($id);
-        $this->assertFalse($entity->isDeleted());
+        $this->assertFalse($softDeletableEntity->isDeleted());
 
         $this->enableDebugStackLogger();
 
-        $this->entityManager->remove($entity);
+        $this->entityManager->remove($softDeletableEntity);
         $this->entityManager->flush();
 
         $this->assertCount(3, $this->debugStack->queries);
