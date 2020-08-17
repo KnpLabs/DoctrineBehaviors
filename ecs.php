@@ -11,6 +11,7 @@ use SlevomatCodingStandard\Sniffs\Classes\UnusedPrivateElementsSniff;
 use SlevomatCodingStandard\Sniffs\TypeHints\PropertyTypeHintSniff;
 use Symfony\Component\DependencyInjection\Loader\Configurator\ContainerConfigurator;
 use Symplify\EasyCodingStandard\Configuration\Option;
+use Symplify\EasyCodingStandard\ValueObject\Set\SetList;
 
 return static function (ContainerConfigurator $containerConfigurator): void {
     $parameters = $containerConfigurator->parameters();
@@ -22,7 +23,14 @@ return static function (ContainerConfigurator $containerConfigurator): void {
         __DIR__ . '/rector-ci.php',
     ]);
 
-    $parameters->set(Option::SETS, ['psr12', 'php70', 'php71', 'symplify', 'common', 'clean-code']);
+    $parameters->set(Option::SETS, [
+        SetList::PSR_12,
+        SetList::PHP_70,
+        SetList::PHP_71,
+        SetList::SYMPLIFY,
+        SetList::COMMON,
+        SetList::CLEAN_CODE,
+    ]);
 
     $parameters->set(Option::SKIP, [
         UnaryOperatorSpacesFixer::class => null,
