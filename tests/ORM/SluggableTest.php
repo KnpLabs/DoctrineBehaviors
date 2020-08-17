@@ -50,18 +50,18 @@ final class SluggableTest extends AbstractBehaviorTestCase
      */
     public function testNotUpdatedSlug(string $value, string $expectedSlug): void
     {
-        $entity = new SluggableEntity();
-        $entity->setName($value);
+        $sluggableEntity = new SluggableEntity();
+        $sluggableEntity->setName($value);
 
-        $this->entityManager->persist($entity);
+        $this->entityManager->persist($sluggableEntity);
         $this->entityManager->flush();
 
-        $entity->setDate(new DateTime());
+        $sluggableEntity->setDate(new DateTime());
 
-        $this->entityManager->persist($entity);
+        $this->entityManager->persist($sluggableEntity);
         $this->entityManager->flush();
 
-        $this->assertSame($expectedSlug, $entity->getSlug());
+        $this->assertSame($expectedSlug, $sluggableEntity->getSlug());
     }
 
     public function provideDataForTest(): Iterator
@@ -75,19 +75,19 @@ final class SluggableTest extends AbstractBehaviorTestCase
 
     public function testUpdatedSlug(): void
     {
-        $entity = new SluggableEntity();
-        $entity->setName('The name');
+        $sluggableEntity = new SluggableEntity();
+        $sluggableEntity->setName('The name');
 
-        $this->entityManager->persist($entity);
+        $this->entityManager->persist($sluggableEntity);
         $this->entityManager->flush();
 
-        $this->assertSame('the-name', $entity->getSlug());
+        $this->assertSame('the-name', $sluggableEntity->getSlug());
 
-        $entity->setName('The name 2');
+        $sluggableEntity->setName('The name 2');
 
-        $this->entityManager->persist($entity);
+        $this->entityManager->persist($sluggableEntity);
         $this->entityManager->flush();
 
-        $this->assertSame('the-name-2', $entity->getSlug());
+        $this->assertSame('the-name-2', $sluggableEntity->getSlug());
     }
 }

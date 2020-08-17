@@ -30,8 +30,8 @@ final class LoggableEventSubscriber implements EventSubscriber
             return;
         }
 
-        $message = $entity->getCreateLogMessage();
-        $this->logger->log(LogLevel::INFO, $message);
+        $createLogMessage = $entity->getCreateLogMessage();
+        $this->logger->log(LogLevel::INFO, $createLogMessage);
 
         $this->logChangeSet($lifecycleEventArgs);
     }

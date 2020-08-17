@@ -108,9 +108,9 @@ final class TranslatableTest extends AbstractBehaviorTestCase
 
     public function testTranslateMethodShouldAlwaysReturnTranslationObject(): void
     {
-        $entity = new TranslatableEntity();
+        $translatableEntity = new TranslatableEntity();
 
-        $this->assertInstanceOf(TranslatableEntityTranslation::class, $entity->translate('fr'));
+        $this->assertInstanceOf(TranslatableEntityTranslation::class, $translatableEntity->translate('fr'));
     }
 
     public function testSubscriberShouldConfigureEntityWithCurrentLocale(): void
@@ -177,44 +177,44 @@ final class TranslatableTest extends AbstractBehaviorTestCase
 
     public function testShouldCreateOnlyOneTimeTheSameTranslation(): void
     {
-        $entity = new TranslatableEntity();
-        $translation = $entity->translate('fr');
-        $translation->setTitle('fabuleux');
-        $entity->translate('fr')->setTitle('fabuleux2');
-        $entity->translate('fr')->setTitle('fabuleux3');
+        $translatableEntity = new TranslatableEntity();
+        $translatableEntityTranslation = $translatableEntity->translate('fr');
+        $translatableEntityTranslation->setTitle('fabuleux');
+        $translatableEntity->translate('fr')->setTitle('fabuleux2');
+        $translatableEntity->translate('fr')->setTitle('fabuleux3');
 
-        $this->assertSame('fabuleux3', $entity->translate('fr')->getTitle());
+        $this->assertSame('fabuleux3', $translatableEntity->translate('fr')->getTitle());
 
-        $givenObjectHash = spl_object_hash($entity->translate('fr'));
-        $translationObjectHash = spl_object_hash($translation);
+        $givenObjectHash = spl_object_hash($translatableEntity->translate('fr'));
+        $translationObjectHash = spl_object_hash($translatableEntityTranslation);
         $this->assertSame($givenObjectHash, $translationObjectHash);
     }
 
     public function testShouldRemoveTranslation(): void
     {
-        $entity = new TranslatableEntity();
-        $entity->translate('en')->setTitle('Hello');
-        $entity->translate('nl')->setTitle('Hallo');
-        $entity->mergeNewTranslations();
-        $this->entityManager->persist($entity);
+        $translatableEntity = new TranslatableEntity();
+        $translatableEntity->translate('en')->setTitle('Hello');
+        $translatableEntity->translate('nl')->setTitle('Hallo');
+        $translatableEntity->mergeNewTranslations();
+        $this->entityManager->persist($translatableEntity);
         $this->entityManager->flush();
 
-        $nlTranslation = $entity->translate('nl');
-        $entity->removeTranslation($nlTranslation);
+        $translatableEntityTranslation = $translatableEntity->translate('nl');
+        $translatableEntity->removeTranslation($translatableEntityTranslation);
         $this->entityManager->flush();
 
-        $this->entityManager->refresh($entity);
-        $this->assertNotSame('Hallo', $entity->translate('nl')->getTitle());
+        $this->entityManager->refresh($translatableEntity);
+        $this->assertNotSame('Hallo', $translatableEntity->translate('nl')->getTitle());
     }
 
     public function testSetTranslations(): void
     {
-        $entity = new TranslatableEntity();
-        $translation = $entity->translate('en');
+        $translatableEntity = new TranslatableEntity();
+        $translatableEntityTranslation = $translatableEntity->translate('en');
 
-        $entity->setTranslations([$translation]);
+        $translatableEntity->setTranslations([$translatableEntityTranslation]);
 
-        $this->assertCount(1, $entity->getTranslations());
+        $this->assertCount(1, $translatableEntity->getTranslations());
     }
 
     public function testShouldNotPersistNewEmptyTranslations(): void

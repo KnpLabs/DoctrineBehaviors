@@ -18,6 +18,7 @@ return static function (ContainerConfigurator $containerConfigurator): void {
         SetList::CODE_QUALITY,
         SetList::CODING_STYLE,
         SetList::NETTE_UTILS_CODE_QUALITY,
+        SetList::NAMING,
     ]);
 
     $parameters->set(Option::EXCLUDE_RECTORS, [

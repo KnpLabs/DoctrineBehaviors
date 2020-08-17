@@ -64,28 +64,31 @@ final class TreeNodeTest extends AbstractBehaviorTestCase
 
     public function testIsRoot(): void
     {
-        $tree = $this->buildTree();
+        $treeNodeEntity = $this->buildTree();
 
-        $this->assertTrue($tree->getRootNode()->isRootNode());
-        $this->assertTrue($tree->isRootNode());
+        $this->assertTrue($treeNodeEntity->getRootNode()->isRootNode());
+        $this->assertTrue($treeNodeEntity->isRootNode());
     }
 
     public function testIsLeaf(): void
     {
-        $tree = $this->buildTree();
+        $treeNodeEntity = $this->buildTree();
 
-        $this->assertTrue($tree[0][0][0]->isLeafNode());
-        $this->assertTrue($tree[1]->isLeafNode());
+        $this->assertTrue($treeNodeEntity[0][0][0]->isLeafNode());
+        $this->assertTrue($treeNodeEntity[1]->isLeafNode());
     }
 
     public function testGetRoot(): void
     {
-        $tree = $this->buildTree();
+        $treeNodeEntity = $this->buildTree();
 
-        $this->assertSame($tree, $tree->getRootNode());
-        $this->assertNull($tree->getRootNode()->getParentNode());
+        $this->assertSame($treeNodeEntity, $treeNodeEntity->getRootNode());
+        $this->assertNull($treeNodeEntity->getRootNode()->getParentNode());
 
-        $this->assertSame($tree, $tree->getChildNodes()->get(0)->getChildNodes()->get(0)->getRootNode());
+        $this->assertSame(
+            $treeNodeEntity,
+            $treeNodeEntity->getChildNodes()->get(0)->getChildNodes()->get(0)->getRootNode()
+        );
     }
 
     public function provideRootPaths(): Iterator
@@ -112,12 +115,12 @@ final class TreeNodeTest extends AbstractBehaviorTestCase
 
     public function provideIsChildNodeOf(): Iterator
     {
-        $tree = $this->buildTree();
+        $treeNodeEntity = $this->buildTree();
 
-        yield [$tree[0][0], $tree[0], true];
-        yield [$tree[0][0][0], $tree[0][0], true];
-        yield [$tree[0][0][0], $tree[0], false];
-        yield [$tree[0][0][0], $tree[0][0][0], false];
+        yield [$treeNodeEntity[0][0], $treeNodeEntity[0], true];
+        yield [$treeNodeEntity[0][0][0], $treeNodeEntity[0][0], true];
+        yield [$treeNodeEntity[0][0][0], $treeNodeEntity[0], false];
+        yield [$treeNodeEntity[0][0][0], $treeNodeEntity[0][0][0], false];
     }
 
     public function provideToArray(): array
@@ -161,16 +164,16 @@ final class TreeNodeTest extends AbstractBehaviorTestCase
     public function testToArray(): void
     {
         $expected = $this->provideToArray();
-        $tree = $this->buildTree();
+        $treeNodeEntity = $this->buildTree();
 
-        $this->assertSame($expected, $tree->toArray());
+        $this->assertSame($expected, $treeNodeEntity->toArray());
     }
 
     public function testToJson(): void
     {
         $expected = $this->provideToArray();
-        $tree = $this->buildTree();
-        $this->assertSame(Json::encode($expected), $tree->toJson());
+        $treeNodeEntity = $this->buildTree();
+        $this->assertSame(Json::encode($expected), $treeNodeEntity->toJson());
     }
 
     public function testToFlatArray(): void
@@ -260,27 +263,34 @@ final class TreeNodeTest extends AbstractBehaviorTestCase
 
     public function testChildrenCount(): void
     {
-        $tree = $this->buildTree();
+        $treeNodeEntity = $this->buildTree();
 
-        $this->assertSame(2, $tree->getChildNodes()->count());
-        $this->assertSame(1, $tree->getChildNodes()->get(0)->getChildNodes()->count());
+        $this->assertSame(2, $treeNodeEntity->getChildNodes()->count());
+        $this->assertSame(1, $treeNodeEntity->getChildNodes()->get(0)->getChildNodes()->count());
     }
 
     public function testGetPath(): void
     {
-        $tree = $this->buildTree();
+        $treeNodeEntity = $this->buildTree();
 
-        $this->assertSame('/1', $tree->getRealMaterializedPath());
-        $this->assertSame('/1/2', $tree->getChildNodes()->get(0)->getRealMaterializedPath());
-        $this->assertSame('/1/2/4', $tree->getChildNodes()->get(0)->getChildNodes()->get(0)->getRealMaterializedPath());
+        $this->assertSame('/1', $treeNodeEntity->getRealMaterializedPath());
+        $this->assertSame('/1/2', $treeNodeEntity->getChildNodes()->get(0)->getRealMaterializedPath());
+        $this->assertSame(
+            '/1/2/4',
+            $treeNodeEntity->getChildNodes()->get(0)->getChildNodes()->get(0)->getRealMaterializedPath()
+        );
         $this->assertSame(
             '/1/2/4/5',
-            $tree->getChildNodes()->get(0)->getChildNodes()->get(0)->getChildNodes()->get(0)->getRealMaterializedPath()
+            $treeNodeEntity->getChildNodes()->get(0)->getChildNodes()->get(0)->getChildNodes()->get(
+                0
+            )->getRealMaterializedPath()
         );
 
-        $childChildItem = $tree->getChildNodes()->get(0)->getChildNodes()->get(0);
-        $childChildChildItem = $tree->getChildNodes()->get(0)->getChildNodes()->get(0)->getChildNodes()->get(0);
-        $childChildItem->setChildNodeOf($tree);
+        $childChildItem = $treeNodeEntity->getChildNodes()->get(0)->getChildNodes()->get(0);
+        $childChildChildItem = $treeNodeEntity->getChildNodes()->get(0)->getChildNodes()->get(0)->getChildNodes()->get(
+            0
+        );
+        $childChildItem->setChildNodeOf($treeNodeEntity);
         $this->assertSame('/1/4', $childChildItem->getRealMaterializedPath(), 'The path has been updated fo the node');
         $this->assertSame(
             '/1/4/5',
@@ -288,20 +298,22 @@ final class TreeNodeTest extends AbstractBehaviorTestCase
             'The path has been updated fo the node and all its descendants'
         );
         $this->assertTrue(
-            $tree->getChildNodes()->contains($childChildItem),
+            $treeNodeEntity->getChildNodes()->contains($childChildItem),
             'The children collection has been updated to reference the moved node'
         );
     }
 
     public function testMoveChildren(): void
     {
-        $tree = $this->buildTree();
+        $treeNodeEntity = $this->buildTree();
 
-        $childChildItem = $tree->getChildNodes()->get(0)->getChildNodes()->get(0);
-        $childChildChildItem = $tree->getChildNodes()->get(0)->getChildNodes()->get(0)->getChildNodes()->get(0);
+        $childChildItem = $treeNodeEntity->getChildNodes()->get(0)->getChildNodes()->get(0);
+        $childChildChildItem = $treeNodeEntity->getChildNodes()->get(0)->getChildNodes()->get(0)->getChildNodes()->get(
+            0
+        );
         $this->assertSame(4, $childChildChildItem->getNodeLevel(), 'The level is well calcuated');
 
-        $childChildItem->setChildNodeOf($tree);
+        $childChildItem->setChildNodeOf($treeNodeEntity);
         $this->assertSame('/1/4', $childChildItem->getRealMaterializedPath(), 'The path has been updated fo the node');
         $this->assertSame(
             '/1/4/5',
@@ -309,7 +321,7 @@ final class TreeNodeTest extends AbstractBehaviorTestCase
             'The path has been updated fo the node and all its descendants'
         );
         $this->assertTrue(
-            $tree->getChildNodes()->contains($childChildItem),
+            $treeNodeEntity->getChildNodes()->contains($childChildItem),
             'The children collection has been updated to reference the moved node'
         );
 
@@ -337,8 +349,8 @@ final class TreeNodeTest extends AbstractBehaviorTestCase
         $this->entityManager->persist($entity[0][0]);
         $this->entityManager->flush();
 
-        $root = $repository->getTree();
-        $this->assertSame($root[0][0], $entity[0][0]);
+        $tree = $repository->getTree();
+        $this->assertSame($tree[0][0], $entity[0][0]);
     }
 
     private function buildTree(): TreeNodeEntity

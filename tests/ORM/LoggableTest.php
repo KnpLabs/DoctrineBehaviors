@@ -28,8 +28,8 @@ final class LoggableTest extends AbstractBehaviorTestCase
 
     public function testCreated(): void
     {
-        $entity = new LoggableEntity();
-        $this->entityManager->persist($entity);
+        $loggableEntity = new LoggableEntity();
+        $this->entityManager->persist($loggableEntity);
         $this->entityManager->flush();
 
         $expectedRecordCount = $this->isPostgreSql() ? 2 : 1;
@@ -41,23 +41,23 @@ final class LoggableTest extends AbstractBehaviorTestCase
 
     public function testLogChangesetMessageWhenCreated(): void
     {
-        $entity = new LoggableEntity();
-        $entity->setTitle('test');
-        $entity->setRoles(['x' => 'y']);
+        $loggableEntity = new LoggableEntity();
+        $loggableEntity->setTitle('test');
+        $loggableEntity->setRoles(['x' => 'y']);
 
-        $this->doTestChangesetMessage($entity, 'title', 'test');
-        $this->doTestChangesetMessage($entity, 'roles', 'an array');
+        $this->doTestChangesetMessage($loggableEntity, 'title', 'test');
+        $this->doTestChangesetMessage($loggableEntity, 'roles', 'an array');
     }
 
     public function testLogChangesetMessageWhenUpdated(): void
     {
-        $entity = new LoggableEntity();
+        $loggableEntity = new LoggableEntity();
 
-        $this->entityManager->persist($entity);
+        $this->entityManager->persist($loggableEntity);
         $this->entityManager->flush();
 
-        $entity->setTitle('test');
-        $entity->setRoles(['x' => 'y']);
+        $loggableEntity->setTitle('test');
+        $loggableEntity->setRoles(['x' => 'y']);
 
         $this->entityManager->flush();
 
@@ -85,13 +85,13 @@ final class LoggableTest extends AbstractBehaviorTestCase
 
     public function testShouldNotLogChangesetMessageWhenNoChange(): void
     {
-        $entity = new LoggableEntity();
+        $loggableEntity = new LoggableEntity();
 
-        $this->entityManager->persist($entity);
+        $this->entityManager->persist($loggableEntity);
         $this->entityManager->flush();
 
-        $entity->setTitle('test2');
-        $entity->setTitle(null);
+        $loggableEntity->setTitle('test2');
+        $loggableEntity->setTitle(null);
 
         $this->entityManager->flush();
 
@@ -101,12 +101,12 @@ final class LoggableTest extends AbstractBehaviorTestCase
 
     public function testShouldLogRemovalMessageWhenDeleted(): void
     {
-        $entity = new LoggableEntity();
+        $loggableEntity = new LoggableEntity();
 
-        $this->entityManager->persist($entity);
+        $this->entityManager->persist($loggableEntity);
         $this->entityManager->flush();
 
-        $this->entityManager->remove($entity);
+        $this->entityManager->remove($loggableEntity);
         $this->entityManager->flush();
 
         $expectedRecordCount = $this->isPostgreSql() ? 3 : 2;
@@ -118,9 +118,9 @@ final class LoggableTest extends AbstractBehaviorTestCase
         $this->assertSame($expectedMessage, $lastRecord['message']);
     }
 
-    private function doTestChangesetMessage(LoggableEntity $entity, string $field, string $expected): void
+    private function doTestChangesetMessage(LoggableEntity $loggableEntity, string $field, string $expected): void
     {
-        $this->entityManager->persist($entity);
+        $this->entityManager->persist($loggableEntity);
         $this->entityManager->flush();
 
         $this->assertCount(2, $this->testLogger->records);
