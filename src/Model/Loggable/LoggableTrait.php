@@ -12,9 +12,13 @@ trait LoggableTrait
     {
         $message = [];
         foreach ($changeSets as $property => $changeSet) {
-            for ($i = 0, $s = sizeof($changeSet); $i < $s; $i++) {
-                if ($changeSet[$i] instanceof DateTime) {
-                    $changeSet[$i] = $changeSet[$i]->format('Y-m-d H:i:s.u');
+            $itemCount = count($changeSet);
+
+            for ($i = 0, $s = $itemCount; $i < $s; $i++) {
+                $item = $changeSet[$i];
+
+                if ($item instanceof DateTime) {
+                    $changeSet[$i] = $item->format('Y-m-d H:i:s.u');
                 }
             }
 

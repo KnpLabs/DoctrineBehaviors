@@ -48,6 +48,7 @@ final class TimestampableTest extends AbstractBehaviorTestCase
         $this->entityManager->persist($entity);
         $this->entityManager->flush();
         $this->entityManager->refresh($entity);
+
         $id = $entity->getId();
         $createdAt = $entity->getCreatedAt();
         $this->entityManager->clear();
@@ -59,7 +60,9 @@ final class TimestampableTest extends AbstractBehaviorTestCase
         $entity = $this->timestampableRepository->find($id);
 
         $entity->setTitle('test');
+
         $this->entityManager->flush();
+
         $this->entityManager->clear();
 
         /** @var TimestampableEntity $entity */
@@ -120,6 +123,7 @@ final class TimestampableTest extends AbstractBehaviorTestCase
         $entity = $this->timestampableRepository->find($id);
 
         $entity->setTitle('test');
+
         $this->entityManager->flush();
 
         $updatedAt = $entity->getUpdatedAt();

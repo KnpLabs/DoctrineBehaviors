@@ -235,6 +235,7 @@ final class TreeNodeTest extends AbstractBehaviorTestCase
 
         $child2 = new TreeNodeEntity();
         $child2->setId(4);
+
         $root2->setChildNodeOf(null);
 
         $this->assertTrue($root2->isRootNode());

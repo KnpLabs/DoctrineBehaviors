@@ -48,6 +48,7 @@ final class BlameableTest extends AbstractBehaviorTestCase
 
         $this->entityManager->persist($entity);
         $this->entityManager->flush();
+
         $id = $entity->getId();
         $createdBy = $entity->getCreatedBy();
         $this->entityManager->clear();
@@ -91,6 +92,7 @@ final class BlameableTest extends AbstractBehaviorTestCase
 
         $this->entityManager->persist($entity);
         $this->entityManager->flush();
+
         $id = $entity->getId();
         $this->entityManager->clear();
 

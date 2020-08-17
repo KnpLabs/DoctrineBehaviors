@@ -121,7 +121,9 @@ final class TranslatableTest extends AbstractBehaviorTestCase
         $entity->setTitle('test');
 
         $entity->mergeNewTranslations();
+
         $this->entityManager->persist($entity);
+
         $this->entityManager->flush();
 
         $id = $entity->getId();
@@ -141,7 +143,9 @@ final class TranslatableTest extends AbstractBehaviorTestCase
         // magic method
         $entity->setTitle('test');
         $entity->mergeNewTranslations();
+
         $this->entityManager->persist($entity);
+
         $this->entityManager->flush();
 
         $id = $entity->getId();

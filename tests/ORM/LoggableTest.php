@@ -92,6 +92,7 @@ final class LoggableTest extends AbstractBehaviorTestCase
 
         $entity->setTitle('test2');
         $entity->setTitle(null);
+
         $this->entityManager->flush();
 
         $expectedRecordCount = $this->isPostgreSql() ? 2 : 1;
