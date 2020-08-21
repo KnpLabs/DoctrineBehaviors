@@ -84,5 +84,5 @@ This package uses [Rector](https://github.com/rectorphp/rector), that handles up
 
 ```bash
 composer require rector/rector --dev
-vendor/bin/rector process src --config vendor/rector/rector/config/set/knplabs/doctrine-behaviors-20.yaml
+vendor/bin/rector process src --config vendor/rector/rector/config/set/doctrine-behaviors-20.yaml
 ```
