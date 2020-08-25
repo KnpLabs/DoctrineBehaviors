@@ -272,16 +272,16 @@ final class TranslatableTest extends AbstractBehaviorTestCase
 
     public function testPhpStanExtensionOnInterfaces(): void
     {
-        /** @var TranslationInterface $translationEntity */
-        $translationEntity = new TranslatableEntityTranslation();
-        $translationEntity->setLocale('fr');
+        /** @var TranslationInterface $translatableEntityTranslation */
+        $translatableEntityTranslation = new TranslatableEntityTranslation();
+        $translatableEntityTranslation->setLocale('fr');
 
         /** @var TranslatableInterface $translatableEntity */
         $translatableEntity = new TranslatableEntity();
-        $translatableEntity->addTranslation($translationEntity);
+        $translatableEntity->addTranslation($translatableEntityTranslation);
 
-        $this->assertSame($translatableEntity, $translationEntity->getTranslatable());
-        $this->assertSame($translationEntity, $translatableEntity->getTranslations()->get('fr'));
+        $this->assertSame($translatableEntity, $translatableEntityTranslation->getTranslatable());
+        $this->assertSame($translatableEntityTranslation, $translatableEntity->getTranslations()->get('fr'));
     }
 
     /**
