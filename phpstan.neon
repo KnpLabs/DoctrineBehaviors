@@ -46,6 +46,8 @@ parameters:
 
         - '#Call to method getUuid\(\) on an unknown class Knp\\DoctrineBehaviors\\Model\\Uuidable\\UuidableTrait#'
 
+        - '#Do not use "\$entityManager->getRepository\(\)" outside of the constructor of repository service#'
+
         # resolve in follow up PR
         - '#Use explicit return value over magic &reference#'
         - '#Class "(.*?)" with static method must have "static" in its name#'
