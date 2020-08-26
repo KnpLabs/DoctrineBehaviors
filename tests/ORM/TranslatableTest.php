@@ -7,6 +7,8 @@ namespace Knp\DoctrineBehaviors\Tests\ORM;
 use Doctrine\ORM\EntityRepository;
 use Doctrine\ORM\Mapping\ClassMetadataInfo;
 use Doctrine\Persistence\ObjectRepository;
+use Knp\DoctrineBehaviors\Contract\Entity\TranslatableInterface;
+use Knp\DoctrineBehaviors\Contract\Entity\TranslationInterface;
 use Knp\DoctrineBehaviors\Tests\AbstractBehaviorTestCase;
 use Knp\DoctrineBehaviors\Tests\Fixtures\Entity\TranslatableCustomizedEntity;
 use Knp\DoctrineBehaviors\Tests\Fixtures\Entity\TranslatableEntity;
@@ -266,6 +268,20 @@ final class TranslatableTest extends AbstractBehaviorTestCase
         $this->assertSame('fabuleux', $entity->translate('fr')->getTitle());
         $this->assertNull($entity->translate('en')->getTitle());
         $this->assertSame('удивительный', $entity->translate('ru')->getTitle());
+    }
+
+    public function testPhpStanExtensionOnInterfaces(): void
+    {
+        /** @var TranslationInterface $translatableEntityTranslation */
+        $translatableEntityTranslation = new TranslatableEntityTranslation();
+        $translatableEntityTranslation->setLocale('fr');
+
+        /** @var TranslatableInterface $translatableEntity */
+        $translatableEntity = new TranslatableEntity();
+        $translatableEntity->addTranslation($translatableEntityTranslation);
+
+        $this->assertSame($translatableEntity, $translatableEntityTranslation->getTranslatable());
+        $this->assertSame($translatableEntityTranslation, $translatableEntity->getTranslations()->get('fr'));
     }
 
     /**
