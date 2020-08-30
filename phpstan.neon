@@ -71,3 +71,12 @@ parameters:
             paths:
                 - 'src/Model/Sluggable/SluggableMethodsTrait.php'
                 - 'src/Model/Translatable/TranslationMethodsTrait.php'
+
+
+        -
+            message: '#Array with keys is not allowed\. Use value object to pass data instead#'
+            paths:
+                # node tree in array
+                - 'src/Model/Tree/TreeNodeMethodsTrait.php'
+                # annotation mapping
+                - src/EventSubscriber/TranslatableEventSubscriber.php
