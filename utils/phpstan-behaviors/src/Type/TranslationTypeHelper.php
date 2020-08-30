@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace Knp\DoctrineBehaviors\PHPStan\Type;
 
+use Exception;
 use Knp\DoctrineBehaviors\Contract\Entity\TranslatableInterface;
 use Knp\DoctrineBehaviors\Contract\Entity\TranslationInterface;
 use PhpParser\Node\Expr\MethodCall;
@@ -23,7 +24,7 @@ final class TranslationTypeHelper
                 return TranslationInterface::class;
             }
 
-            throw new \Exception(sprintf(
+            throw new Exception(sprintf(
                 'Unable to find the Translation class associated to the Translatable class "%s".',
                 $reflection->getName()
             ));
@@ -45,7 +46,7 @@ final class TranslationTypeHelper
                 return TranslatableInterface::class;
             }
 
-            throw new \Exception(sprintf(
+            throw new Exception(sprintf(
                 'Unable to find the Translatable class associated to the Translation class "%s".',
                 $reflection->getName()
             ));
