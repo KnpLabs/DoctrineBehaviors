@@ -47,7 +47,7 @@ final class CategoryRepository extends EntityRepository
 }
 ```
 
-Voilá!
+Voilà!
 
 You now have a working `Category` that behaves like.
 
