@@ -25,14 +25,20 @@ final class TranslatableInheritanceTest extends AbstractBehaviorTestCase
     public function testShouldPersistTranslationsWithInheritance(): void
     {
         $entity = new ExtendedTranslatableEntity();
-        $entity->translate('fr')->setTitle('fabuleux');
-        $entity->translate('fr')->setExtendedTitle('fabuleux');
+        $entity->translate('fr')
+            ->setTitle('fabuleux');
+        $entity->translate('fr')
+            ->setExtendedTitle('fabuleux');
 
-        $entity->translate('en')->setTitle('awesome');
-        $entity->translate('en')->setExtendedTitle('awesome');
+        $entity->translate('en')
+            ->setTitle('awesome');
+        $entity->translate('en')
+            ->setExtendedTitle('awesome');
 
-        $entity->translate('ru')->setTitle('удивительный');
-        $entity->translate('ru')->setExtendedTitle('удивительный');
+        $entity->translate('ru')
+            ->setTitle('удивительный');
+        $entity->translate('ru')
+            ->setExtendedTitle('удивительный');
         $entity->mergeNewTranslations();
 
         $this->entityManager->persist($entity);

@@ -121,7 +121,8 @@ final class TranslatableEventSubscriber implements EventSubscriber
             'cascade' => ['persist', 'merge', 'remove'],
             'fetch' => $this->translatableFetchMode,
             'targetEntity' => $classMetadataInfo->getReflectionClass()
-                ->getMethod('getTranslationEntityClass')->invoke(null),
+                ->getMethod('getTranslationEntityClass')
+                ->invoke(null),
             'orphanRemoval' => true,
         ]);
     }
@@ -140,7 +141,8 @@ final class TranslatableEventSubscriber implements EventSubscriber
                     'onDelete' => 'CASCADE',
                 ]],
                 'targetEntity' => $classMetadataInfo->getReflectionClass()
-                    ->getMethod('getTranslatableEntityClass')->invoke(null),
+                    ->getMethod('getTranslatableEntityClass')
+                    ->invoke(null),
             ]);
         }
 

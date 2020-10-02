@@ -17,7 +17,8 @@ final class TranslationTypeHelper
     {
         $type = $scope->getType($methodCall->var);
         $translatableClass = $type->getReferencedClasses()[0];
-        $reflection = $broker->getClass($translatableClass)->getNativeReflection();
+        $reflection = $broker->getClass($translatableClass)
+            ->getNativeReflection();
 
         if ($reflection->isInterface()) {
             if ($reflection->getName() === TranslatableInterface::class) {
@@ -39,7 +40,8 @@ final class TranslationTypeHelper
     {
         $type = $scope->getType($methodCall->var);
         $translationClass = $type->getReferencedClasses()[0];
-        $reflection = $broker->getClass($translationClass)->getNativeReflection();
+        $reflection = $broker->getClass($translationClass)
+            ->getNativeReflection();
 
         if ($reflection->isInterface()) {
             if ($reflection->getName() === TranslationInterface::class) {

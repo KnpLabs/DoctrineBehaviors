@@ -72,7 +72,6 @@ parameters:
                 - 'src/Model/Sluggable/SluggableMethodsTrait.php'
                 - 'src/Model/Translatable/TranslationMethodsTrait.php'
 
-
         -
             message: '#Array with keys is not allowed\. Use value object to pass data instead#'
             paths:
@@ -84,7 +83,6 @@ parameters:
         # symplify set
         - '#Class "Knp\\DoctrineBehaviors\\Tests\\Fixtures\\Repository\\TreeNodeRepository" inherits from forbidden parent class "Doctrine\\ORM\\EntityRepository"\. Use "composition over inheritance" instead#'
         - '#Too many public elements on class \- \d+\. Try narrow it down under 10#'
-
 
         -
             message: '#Do not use static calls#'
