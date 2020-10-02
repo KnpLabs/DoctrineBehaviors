@@ -14,7 +14,7 @@ trait LoggableTrait
         foreach ($changeSets as $property => $changeSet) {
             $itemCount = count($changeSet);
 
-            for ($i = 0, $s = $itemCount; $i < $s; $i++) {
+            for ($i = 0, $s = $itemCount; $i < $s; ++$i) {
                 $item = $changeSet[$i];
 
                 if ($item instanceof DateTime) {

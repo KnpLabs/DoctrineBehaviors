@@ -10,7 +10,7 @@ use PhpCsFixer\Fixer\PhpUnit\PhpUnitStrictFixer;
 use SlevomatCodingStandard\Sniffs\Classes\UnusedPrivateElementsSniff;
 use SlevomatCodingStandard\Sniffs\TypeHints\PropertyTypeHintSniff;
 use Symfony\Component\DependencyInjection\Loader\Configurator\ContainerConfigurator;
-use Symplify\EasyCodingStandard\Configuration\Option;
+use Symplify\EasyCodingStandard\ValueObject\Option;
 use Symplify\EasyCodingStandard\ValueObject\Set\SetList;
 
 return static function (ContainerConfigurator $containerConfigurator): void {
@@ -49,7 +49,9 @@ return static function (ContainerConfigurator $containerConfigurator): void {
     $services = $containerConfigurator->services();
     $services->set(FinalClassFixer::class);
     $services->set(HeaderCommentFixer::class)
-        ->call('configure', [['header' => '']]);
+        ->call('configure', [[
+            'header' => '',
+        ]]);
 
     $services->set(GeneralPhpdocAnnotationRemoveFixer::class)
         ->call('configure', [[

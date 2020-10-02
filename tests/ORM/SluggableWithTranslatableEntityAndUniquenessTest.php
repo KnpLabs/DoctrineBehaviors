@@ -26,8 +26,10 @@ final class SluggableWithTranslatableEntityAndUniquenessTest extends AbstractBeh
     public function testSlugLoading(): void
     {
         $entity = new SluggableTranslatableEntity();
-        $entity->translate('fr')->setTitle('Lorem ipsum');
-        $entity->translate('en')->setTitle('Lorem ipsum');
+        $entity->translate('fr')
+            ->setTitle('Lorem ipsum');
+        $entity->translate('en')
+            ->setTitle('Lorem ipsum');
         $entity->mergeNewTranslations();
 
         $this->entityManager->persist($entity);
@@ -53,8 +55,10 @@ final class SluggableWithTranslatableEntityAndUniquenessTest extends AbstractBeh
     public function testNotUpdatedSlug(): void
     {
         $sluggableTranslatableEntity = new SluggableTranslatableEntity();
-        $sluggableTranslatableEntity->translate('fr')->setTitle('Lorem ipsum');
-        $sluggableTranslatableEntity->translate('en')->setTitle('Lorem ipsum');
+        $sluggableTranslatableEntity->translate('fr')
+            ->setTitle('Lorem ipsum');
+        $sluggableTranslatableEntity->translate('en')
+            ->setTitle('Lorem ipsum');
         $sluggableTranslatableEntity->mergeNewTranslations();
 
         $this->entityManager->persist($sluggableTranslatableEntity);
@@ -65,8 +69,10 @@ final class SluggableWithTranslatableEntityAndUniquenessTest extends AbstractBeh
 
         $this->assertSame('lorem-ipsum', $sluggableTranslatableEntityTranslation->getSlug());
         $this->assertSame('lorem-ipsum-1', $entityEN->getSlug());
-        $sluggableTranslatableEntity->translate('fr')->setTitle('Mon titre');
-        $sluggableTranslatableEntity->translate('en')->setTitle('My title');
+        $sluggableTranslatableEntity->translate('fr')
+            ->setTitle('Mon titre');
+        $sluggableTranslatableEntity->translate('en')
+            ->setTitle('My title');
 
         $this->assertSame('lorem-ipsum', $sluggableTranslatableEntityTranslation->getSlug());
         $this->assertSame('lorem-ipsum-1', $entityEN->getSlug());

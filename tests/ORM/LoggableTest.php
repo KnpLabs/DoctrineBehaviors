@@ -43,7 +43,9 @@ final class LoggableTest extends AbstractBehaviorTestCase
     {
         $loggableEntity = new LoggableEntity();
         $loggableEntity->setTitle('test');
-        $loggableEntity->setRoles(['x' => 'y']);
+        $loggableEntity->setRoles([
+            'x' => 'y',
+        ]);
 
         $this->doTestChangesetMessage($loggableEntity, 'title', 'test');
         $this->doTestChangesetMessage($loggableEntity, 'roles', 'an array');
@@ -57,7 +59,9 @@ final class LoggableTest extends AbstractBehaviorTestCase
         $this->entityManager->flush();
 
         $loggableEntity->setTitle('test');
-        $loggableEntity->setRoles(['x' => 'y']);
+        $loggableEntity->setRoles([
+            'x' => 'y',
+        ]);
 
         $this->entityManager->flush();
 
