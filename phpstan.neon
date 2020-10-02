@@ -102,3 +102,8 @@ parameters:
         - '#Instead of "DateTime" class/interface use "Nette\\Utils\\DateTime"#'
         - '#Do not use trait#'
         - '#Do not use setter on a service#'
+
+        -
+            message: '#Node "empty" is fobidden to use#'
+            paths:
+                - src/Model/*/*Trait.php

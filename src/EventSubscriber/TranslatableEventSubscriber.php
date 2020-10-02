@@ -96,16 +96,15 @@ final class TranslatableEventSubscriber implements EventSubscriber
             return $fetchMode;
         }
 
-        switch ($fetchMode) {
-            case 'LAZY':
-                return ClassMetadataInfo::FETCH_LAZY;
-            case 'EAGER':
-                return ClassMetadataInfo::FETCH_EAGER;
-            case 'EXTRA_LAZY':
-                return ClassMetadataInfo::FETCH_EXTRA_LAZY;
-            default:
-                return ClassMetadataInfo::FETCH_LAZY;
+        if ($fetchMode === 'EAGER') {
+            return ClassMetadataInfo::FETCH_EAGER;
         }
+
+        if ($fetchMode === 'EXTRA_LAZY') {
+            return ClassMetadataInfo::FETCH_EXTRA_LAZY;
+        }
+
+        return ClassMetadataInfo::FETCH_LAZY;
     }
 
     private function mapTranslatable(ClassMetadataInfo $classMetadataInfo): void
