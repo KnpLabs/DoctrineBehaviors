@@ -80,3 +80,27 @@ parameters:
                 - 'src/Model/Tree/TreeNodeMethodsTrait.php'
                 # annotation mapping
                 - src/EventSubscriber/TranslatableEventSubscriber.php
+
+        # symplify set
+        - '#Class "Knp\\DoctrineBehaviors\\Tests\\Fixtures\\Repository\\TreeNodeRepository" inherits from forbidden parent class "Doctrine\\ORM\\EntityRepository"\. Use "composition over inheritance" instead#'
+        - '#Too many public elements on class \- \d+\. Try narrow it down under 10#'
+
+
+        -
+            message: '#Do not use static calls#'
+            paths:
+                - src/Model/Uuidable/UuidableMethodsTrait.php # 20
+                - src/Model/Uuidable/UuidableMethodsTrait.php # 32
+                - tests/bootstrap.php # 14
+
+        -
+            message: '#Do not use factory in constructor#'
+            paths:
+                - tests/DatabaseLoader.php # 18
+                - tests/Fixtures/Entity/SluggableEntity.php # 40
+                - tests/Fixtures/Entity/SluggableMultiEntity.php # 40
+
+        - '#Do not use scalar or array as constructor parameter\. Use ParameterProvider service instead#'
+        - '#Instead of "DateTime" class/interface use "Nette\\Utils\\DateTime"#'
+        - '#Do not use trait#'
+        - '#Do not use setter on a service#'

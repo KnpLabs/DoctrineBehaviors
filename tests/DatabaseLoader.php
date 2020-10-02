@@ -20,12 +20,14 @@ final class DatabaseLoader
         $this->entityManager = $entityManager;
 
         // @see https://stackoverflow.com/a/35222045/1348344
-        $connection->getConfiguration()->setSQLLogger(null);
+        $connection->getConfiguration()
+            ->setSQLLogger(null);
     }
 
     public function reload(): void
     {
-        $allMetadata = $this->entityManager->getMetadataFactory()->getAllMetadata();
+        $allMetadata = $this->entityManager->getMetadataFactory()
+            ->getAllMetadata();
 
         $entityClasses = [];
         foreach ($allMetadata as $classMetadata) {

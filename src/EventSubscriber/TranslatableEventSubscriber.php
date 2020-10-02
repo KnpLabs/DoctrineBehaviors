@@ -120,9 +120,8 @@ final class TranslatableEventSubscriber implements EventSubscriber
             'indexBy' => self::LOCALE,
             'cascade' => ['persist', 'merge', 'remove'],
             'fetch' => $this->translatableFetchMode,
-            'targetEntity' => $classMetadataInfo->getReflectionClass()->getMethod('getTranslationEntityClass')->invoke(
-                null
-            ),
+            'targetEntity' => $classMetadataInfo->getReflectionClass()
+                ->getMethod('getTranslationEntityClass')->invoke(null),
             'orphanRemoval' => true,
         ]);
     }
@@ -140,9 +139,8 @@ final class TranslatableEventSubscriber implements EventSubscriber
                     'referencedColumnName' => 'id',
                     'onDelete' => 'CASCADE',
                 ]],
-                'targetEntity' => $classMetadataInfo->getReflectionClass()->getMethod(
-                    'getTranslatableEntityClass'
-                )->invoke(null),
+                'targetEntity' => $classMetadataInfo->getReflectionClass()
+                    ->getMethod('getTranslatableEntityClass')->invoke(null),
             ]);
         }
 

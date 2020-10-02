@@ -52,13 +52,15 @@ trait TranslatableMethodsTrait
 
     public function addTranslation(TranslationInterface $translation): void
     {
-        $this->getTranslations()->set((string) $translation->getLocale(), $translation);
+        $this->getTranslations()
+            ->set((string) $translation->getLocale(), $translation);
         $translation->setTranslatable($this);
     }
 
     public function removeTranslation(TranslationInterface $translation): void
     {
-        $this->getTranslations()->removeElement($translation);
+        $this->getTranslations()
+            ->removeElement($translation);
     }
 
     /**
@@ -82,7 +84,8 @@ trait TranslatableMethodsTrait
         foreach ($this->getNewTranslations() as $newTranslation) {
             if (! $this->getTranslations()->contains($newTranslation) && ! $newTranslation->isEmpty()) {
                 $this->addTranslation($newTranslation);
-                $this->getNewTranslations()->removeElement($newTranslation);
+                $this->getNewTranslations()
+                    ->removeElement($newTranslation);
             }
         }
 
@@ -159,7 +162,8 @@ trait TranslatableMethodsTrait
         $translation = new $class();
         $translation->setLocale($locale);
 
-        $this->getNewTranslations()->set((string) $translation->getLocale(), $translation);
+        $this->getNewTranslations()
+            ->set((string) $translation->getLocale(), $translation);
         $translation->setTranslatable($this);
 
         return $translation;
@@ -187,14 +191,16 @@ trait TranslatableMethodsTrait
      */
     protected function findTranslationByLocale(string $locale, bool $withNewTranslations = true): ?TranslationInterface
     {
-        $translation = $this->getTranslations()->get($locale);
+        $translation = $this->getTranslations()
+            ->get($locale);
 
         if ($translation) {
             return $translation;
         }
 
         if ($withNewTranslations) {
-            return $this->getNewTranslations()->get($locale);
+            return $this->getNewTranslations()
+                ->get($locale);
         }
 
         return null;

@@ -58,7 +58,13 @@ final class TreeNodeTest extends AbstractBehaviorTestCase
         $this->assertSame(1, $rootTreeNodeEntity->getNodeLevel());
         $this->assertSame(
             4,
-            $rootTreeNodeEntity->getChildNodes()->first()->getChildNodes()->first()->getChildNodes()->first()->getNodeLevel()
+            $rootTreeNodeEntity->getChildNodes()
+                ->first()
+                ->getChildNodes()
+                ->first()
+                ->getChildNodes()
+                ->first()
+                ->getNodeLevel()
         );
     }
 
@@ -87,7 +93,8 @@ final class TreeNodeTest extends AbstractBehaviorTestCase
 
         $this->assertSame(
             $treeNodeEntity,
-            $treeNodeEntity->getChildNodes()->get(0)->getChildNodes()->get(0)->getRootNode()
+            $treeNodeEntity->getChildNodes()
+                ->get(0)->getChildNodes()->get(0)->getRootNode()
         );
     }
 
@@ -129,34 +136,33 @@ final class TreeNodeTest extends AbstractBehaviorTestCase
             1 => [
                 'node' => '',
                 'children' =>
-                [
-                    2 =>
-                    [
-                        'node' => '',
-                        'children' =>
-                        [
-                            4 =>
-                            [
-                                'node' => '',
-                                'children' =>
-                                [
-                                    5 =>
-                                    [
-                                        'node' => '',
-                                        'children' =>
-                                        [],
-                                    ],
-                                ],
-                            ],
-                        ],
-                    ],
-                    3 =>
-                    [
-                        'node' => '',
-                        'children' =>
-                        [],
-                    ],
-                ],
+                                                                                [
+                                                                                    2 =>
+                                                                                [
+                                                                                    'node' => '',
+                                                                                    'children' =>
+                                                                                                                                                                                                                                                                    [
+                                                                                                                                                                                                                                                                        4 =>
+                                                                                                                                                                                                                                                                    [
+                                                                                                                                                                                                                                                                        'node' => '',
+                                                                                                                                                                                                                                                                        'children' =>
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                [
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                    5 =>
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                [
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                    'node' => '',
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                    'children' =>
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                            [],
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                ],
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                ],
+                                                                                                                                                                                                                                                                    ],
+                                                                                                                                                                                                                                                                    ],
+                                                                                ],
+                                                                                    3 =>
+                                                                                                                                                                                                                                                                    [
+                                                                                                                                                                                                                                                                        'node' => '',
+                                                                                                                                                                                                                                                                        'children' => [],
+                                                                                                                                                                                                                                                                    ],
+                                                                                ],
             ],
         ];
     }
@@ -277,19 +283,19 @@ final class TreeNodeTest extends AbstractBehaviorTestCase
         $this->assertSame('/1/2', $treeNodeEntity->getChildNodes()->get(0)->getRealMaterializedPath());
         $this->assertSame(
             '/1/2/4',
-            $treeNodeEntity->getChildNodes()->get(0)->getChildNodes()->get(0)->getRealMaterializedPath()
+            $treeNodeEntity->getChildNodes()
+                ->get(0)->getChildNodes()->get(0)->getRealMaterializedPath()
         );
         $this->assertSame(
             '/1/2/4/5',
-            $treeNodeEntity->getChildNodes()->get(0)->getChildNodes()->get(0)->getChildNodes()->get(
-                0
-            )->getRealMaterializedPath()
+            $treeNodeEntity->getChildNodes()
+                ->get(0)->getChildNodes()->get(0)->getChildNodes()->get(0)->getRealMaterializedPath()
         );
 
-        $childChildItem = $treeNodeEntity->getChildNodes()->get(0)->getChildNodes()->get(0);
-        $childChildChildItem = $treeNodeEntity->getChildNodes()->get(0)->getChildNodes()->get(0)->getChildNodes()->get(
-            0
-        );
+        $childChildItem = $treeNodeEntity->getChildNodes()
+            ->get(0)->getChildNodes()->get(0);
+        $childChildChildItem = $treeNodeEntity->getChildNodes()
+            ->get(0)->getChildNodes()->get(0)->getChildNodes()->get(0);
         $childChildItem->setChildNodeOf($treeNodeEntity);
         $this->assertSame('/1/4', $childChildItem->getRealMaterializedPath(), 'The path has been updated fo the node');
         $this->assertSame(
@@ -298,7 +304,8 @@ final class TreeNodeTest extends AbstractBehaviorTestCase
             'The path has been updated fo the node and all its descendants'
         );
         $this->assertTrue(
-            $treeNodeEntity->getChildNodes()->contains($childChildItem),
+            $treeNodeEntity->getChildNodes()
+                ->contains($childChildItem),
             'The children collection has been updated to reference the moved node'
         );
     }
@@ -307,10 +314,10 @@ final class TreeNodeTest extends AbstractBehaviorTestCase
     {
         $treeNodeEntity = $this->buildTree();
 
-        $childChildItem = $treeNodeEntity->getChildNodes()->get(0)->getChildNodes()->get(0);
-        $childChildChildItem = $treeNodeEntity->getChildNodes()->get(0)->getChildNodes()->get(0)->getChildNodes()->get(
-            0
-        );
+        $childChildItem = $treeNodeEntity->getChildNodes()
+            ->get(0)->getChildNodes()->get(0);
+        $childChildChildItem = $treeNodeEntity->getChildNodes()
+            ->get(0)->getChildNodes()->get(0)->getChildNodes()->get(0);
         $this->assertSame(4, $childChildChildItem->getNodeLevel(), 'The level is well calcuated');
 
         $childChildItem->setChildNodeOf($treeNodeEntity);
@@ -321,7 +328,8 @@ final class TreeNodeTest extends AbstractBehaviorTestCase
             'The path has been updated fo the node and all its descendants'
         );
         $this->assertTrue(
-            $treeNodeEntity->getChildNodes()->contains($childChildItem),
+            $treeNodeEntity->getChildNodes()
+                ->contains($childChildItem),
             'The children collection has been updated to reference the moved node'
         );
 
