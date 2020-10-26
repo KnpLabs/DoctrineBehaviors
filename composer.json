@@ -23,7 +23,6 @@
         "symfony/framework-bundle": "^4.4|^5.1",
         "symfony/string": "^5.0",
         "symfony/translation-contracts": "^2.1",
-        "symplify/package-builder": "^8.3.25",
         "nette/utils": "^3.0",
         "ramsey/uuid": "^3.9|^4.0",
         "symfony/polyfill-php80": "^1.18"
@@ -44,7 +43,8 @@
         "symplify/phpstan-extensions": "^8.3.25",
         "phpstan/phpstan-doctrine": "^0.12.15",
         "phpstan/phpstan-phpunit": "^0.12.11",
-        "slevomat/coding-standard": "^6.3.11"
+        "slevomat/coding-standard": "^6.3.11",
+        "symplify/package-builder": "^8.3.25"
     },
     "autoload": {
         "psr-4": {
