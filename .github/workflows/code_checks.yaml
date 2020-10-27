@@ -1,0 +1,38 @@
+name: Code Checks
+
+on:
+    pull_request: null
+    push:
+        branches:
+            - master
+
+jobs:
+    code_checks:
+        strategy:
+            matrix:
+                actions:
+                    -
+                        name: 'PHPStan'
+                        run: composer phpstan
+
+                    -
+                        name: 'Coding Standard'
+                        run: composer check-cs
+
+                    -
+                        name: 'Rector CI'
+                        run: composer rector
+
+        name: ${{ matrix.actions.name }}
+        runs-on: ubuntu-latest
+
+        steps:
+            -   uses: actions/checkout@v2
+            -   uses: shivammathur/setup-php@v1
+                with:
+                    php-version: 7.3
+                    coverage: none
+
+            -   run: composer install --no-progress
+
+            -   run: ${{ matrix.actions.run }}
