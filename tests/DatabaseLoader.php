@@ -20,8 +20,8 @@ final class DatabaseLoader
         $this->entityManager = $entityManager;
 
         // @see https://stackoverflow.com/a/35222045/1348344
-        $connection->getConfiguration()
-            ->setSQLLogger(null);
+        $configuration = $connection->getConfiguration();
+        $configuration->setSQLLogger(null);
     }
 
     public function reload(): void
