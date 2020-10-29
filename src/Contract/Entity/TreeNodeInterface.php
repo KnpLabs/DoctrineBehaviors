@@ -36,7 +36,7 @@ interface TreeNodeInterface
 
     public function setParentMaterializedPath(string $path): void;
 
-    public function getParentNode(): ?self;
+    public function getParentNode(): ?TreeNodeInterface;
 
     /**
      * @param string $path the materialized path, eg: the the materialized path to its parent
@@ -51,9 +51,9 @@ interface TreeNodeInterface
      *    - Remove this node from the children of the old parent
      *    - Modify the materialized path of this node and all its children, recursively
      */
-    public function setChildNodeOf(?self $node = null): void;
+    public function setChildNodeOf(?TreeNodeInterface $node = null): void;
 
-    public function addChildNode(self $node): void;
+    public function addChildNode(TreeNodeInterface $node): void;
 
     public function getChildNodes(): Collection;
 
@@ -61,9 +61,9 @@ interface TreeNodeInterface
 
     public function isRootNode(): bool;
 
-    public function getRootNode(): self;
+    public function getRootNode(): TreeNodeInterface;
 
-    public function isChildNodeOf(self $node): bool;
+    public function isChildNodeOf(TreeNodeInterface $node): bool;
 
     public function getNodeLevel(): int;
 

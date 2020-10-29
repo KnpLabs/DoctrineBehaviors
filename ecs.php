@@ -3,6 +3,7 @@
 declare(strict_types=1);
 
 use PhpCsFixer\Fixer\ClassNotation\FinalClassFixer;
+use PhpCsFixer\Fixer\ClassNotation\SelfAccessorFixer;
 use PhpCsFixer\Fixer\Comment\HeaderCommentFixer;
 use PhpCsFixer\Fixer\Operator\UnaryOperatorSpacesFixer;
 use PhpCsFixer\Fixer\Phpdoc\GeneralPhpdocAnnotationRemoveFixer;
@@ -39,6 +40,7 @@ return static function (ContainerConfigurator $containerConfigurator): void {
         PropertyTypeHintSniff::class => null,
         PhpUnitStrictFixer::class => ['tests/ORM/TimestampableTest.php'],
         UnusedPrivateElementsSniff::class => ['tests/Fixtures/Entity/SluggableWithoutRegenerateEntity.php'],
+        SelfAccessorFixer::class => ['src/Contract/Entity/TreeNodeInterface.php'],
     ]);
 
     $parameters->set(Option::EXCLUDE_PATHS, [
