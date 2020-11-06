@@ -12,7 +12,7 @@ use DateTimeInterface;
 /**
  * @ORM\MappedSuperclass
  */
-class TimestampableMappedSuperclassEntity implements TimestampableInterface
+abstract class TimestampableMappedSuperclassEntity implements TimestampableInterface
 {
     use TimestampableTrait;
 

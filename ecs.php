@@ -40,7 +40,6 @@ return static function (ContainerConfigurator $containerConfigurator): void {
         PropertyTypeHintSniff::class => null,
         PhpUnitStrictFixer::class => ['tests/ORM/TimestampableTest.php'],
         UnusedPrivateElementsSniff::class => ['tests/Fixtures/Entity/SluggableWithoutRegenerateEntity.php'],
-        FinalClassFixer::class => ['tests/Fixtures/Entity/TimestampableMappedSuperclassEntity.php'],
         OrderedImportsFixer::class => ['tests/Fixtures/Entity/TimestampableMappedSuperclassEntity.php'],
     ]);
 
