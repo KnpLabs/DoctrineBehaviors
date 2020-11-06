@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 use PhpCsFixer\Fixer\ClassNotation\FinalClassFixer;
 use PhpCsFixer\Fixer\Comment\HeaderCommentFixer;
+use PhpCsFixer\Fixer\Import\OrderedImportsFixer;
 use PhpCsFixer\Fixer\Operator\UnaryOperatorSpacesFixer;
 use PhpCsFixer\Fixer\Phpdoc\GeneralPhpdocAnnotationRemoveFixer;
 use PhpCsFixer\Fixer\PhpUnit\PhpUnitStrictFixer;
@@ -39,6 +40,8 @@ return static function (ContainerConfigurator $containerConfigurator): void {
         PropertyTypeHintSniff::class => null,
         PhpUnitStrictFixer::class => ['tests/ORM/TimestampableTest.php'],
         UnusedPrivateElementsSniff::class => ['tests/Fixtures/Entity/SluggableWithoutRegenerateEntity.php'],
+        FinalClassFixer::class => ['tests/Fixtures/Entity/TimestampableMappedSuperclassEntity.php'],
+        OrderedImportsFixer::class => ['tests/Fixtures/Entity/TimestampableMappedSuperclassEntity.php'],
     ]);
 
     $parameters->set(Option::EXCLUDE_PATHS, [
