@@ -40,7 +40,7 @@ return static function (ContainerConfigurator $containerConfigurator): void {
         PropertyTypeHintSniff::class => null,
         PhpUnitStrictFixer::class => ['tests/ORM/TimestampableTest.php'],
         UnusedPrivateElementsSniff::class => ['tests/Fixtures/Entity/SluggableWithoutRegenerateEntity.php'],
-        OrderedImportsFixer::class => ['tests/Fixtures/Entity/TimestampableMappedSuperclassEntity.php'],
+        OrderedImportsFixer::class => ['tests/Fixtures/Entity/AbstractTimestampableMappedSuperclassEntity.php'],
     ]);
 
     $parameters->set(Option::EXCLUDE_PATHS, [

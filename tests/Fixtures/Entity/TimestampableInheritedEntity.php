@@ -9,7 +9,7 @@ use Doctrine\ORM\Mapping as ORM;
 /**
  * @ORM\Entity
  */
-class TimestampableInheritedEntity extends TimestampableMappedSuperclassEntity
+class TimestampableInheritedEntity extends AbstractTimestampableMappedSuperclassEntity
 {
     /**
      * @ORM\Column(type="string", nullable=true)
