@@ -14,6 +14,7 @@ services:
         autowire: true
 
     Symfony\Component\Security\Core\Security: null
+    Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorage: null
     Psr\Log\Test\TestLogger: null
 
     # for translatable
@@ -23,6 +24,9 @@ services:
     # for blameable
     Knp\DoctrineBehaviors\Tests\Provider\TestUserProvider: null
     Knp\DoctrineBehaviors\Contract\Provider\UserProviderInterface: '@Knp\DoctrineBehaviors\Tests\Provider\TestUserProvider'
+    Knp\DoctrineBehaviors\Provider\UserProvider:
+        arguments:
+            $tokenStorage: '@Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorage'
 
     Knp\DoctrineBehaviors\Tests\DatabaseLoader:  null
 

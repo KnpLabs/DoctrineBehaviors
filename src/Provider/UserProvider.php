@@ -5,7 +5,7 @@ declare(strict_types=1);
 namespace Knp\DoctrineBehaviors\Provider;
 
 use Knp\DoctrineBehaviors\Contract\Provider\UserProviderInterface;
-use Symfony\Component\Security\Core\Security;
+use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInterface;
 
 final class UserProvider implements UserProviderInterface
 {
@@ -15,19 +15,19 @@ final class UserProvider implements UserProviderInterface
     private $blameableUserEntity;
 
     /**
-     * @var Security
+     * @var TokenStorageInterface
      */
-    private $security;
+    private $tokenStorage;
 
-    public function __construct(Security $security, ?string $blameableUserEntity = null)
+    public function __construct(TokenStorageInterface $tokenStorage, ?string $blameableUserEntity = null)
     {
-        $this->security = $security;
+        $this->tokenStorage = $tokenStorage;
         $this->blameableUserEntity = $blameableUserEntity;
     }
 
     public function provideUser()
     {
-        $token = $this->security->getToken();
+        $token = $this->tokenStorage->getToken();
         if ($token !== null) {
             $user = $token->getUser();
             if ($this->blameableUserEntity) {
