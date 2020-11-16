@@ -13,7 +13,6 @@ services:
         public: true
         autowire: true
 
-    Symfony\Component\Security\Core\Security: null
     Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorage: null
     Psr\Log\Test\TestLogger: null
 
