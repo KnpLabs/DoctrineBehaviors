@@ -79,6 +79,29 @@ final class TranslatableTest extends AbstractBehaviorTestCase
         $this->assertSame('cornet', $entity->translate('fr_CH')->getTitle());
     }
 
+    public function testShouldFallbackToDefaultLocaleIfNoCountryLocaleTranslation(): void
+    {
+        $entity = new TranslatableEntity();
+        $entity->translate('en', false)
+            ->setTitle('plastic bag');
+        $entity->translate('fr_CH', false)
+            ->setTitle('cornet');
+        $entity->mergeNewTranslations();
+
+        $this->entityManager->persist($entity);
+        $this->entityManager->flush();
+
+        $id = $entity->getId();
+        $this->entityManager->clear();
+
+        /** @var TranslatableEntity $entity */
+        $entity = $this->translatableRepository->find($id);
+
+        $this->assertSame('plastic bag', $entity->translate('de')->getTitle());
+        $this->assertSame('plastic bag', $entity->translate('fr_FR')->getTitle());
+        $this->assertSame('cornet', $entity->translate('fr_CH')->getTitle());
+    }
+
     public function testShouldUpdateAndAddNewTranslations(): void
     {
         $entity = new TranslatableEntity();
