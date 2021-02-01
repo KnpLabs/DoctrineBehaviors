@@ -33,6 +33,10 @@ final class TimestampableEventSubscriber implements EventSubscriber
             return;
         }
 
+        if ($classMetadata->isMappedSuperclass) {
+            return;
+        }
+
         $classMetadata->addLifecycleCallback('updateTimestamps', Events::prePersist);
         $classMetadata->addLifecycleCallback('updateTimestamps', Events::preUpdate);
 

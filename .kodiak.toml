@@ -1,0 +1,5 @@
+# see https://kodiakhq.com/docs/quickstart?installation_id=8093536&setup_action=install
+# Minimal config. version is the only required field.
+version = 1
+
+merge.delete_branch_on_merge = true

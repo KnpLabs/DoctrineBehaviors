@@ -15,7 +15,6 @@ It currently handles:
  * [Timestampable](/docs/timestampable.md)
  * [Translatable](/docs/translatable.md)
  * [Tree](/docs/tree.md)
- * [Hashidable](/docs/hashidable.md)
 
 ## Install
 
@@ -48,7 +47,7 @@ final class CategoryRepository extends EntityRepository
 }
 ```
 
-Voilá!
+Voilà!
 
 You now have a working `Category` that behaves like.
 
@@ -85,5 +84,5 @@ This package uses [Rector](https://github.com/rectorphp/rector), that handles up
 
 ```bash
 composer require rector/rector --dev
-vendor/bin/rector process src --config vendor/rector/rector/config/set/knplabs/doctrine-behaviors-20.yaml
+vendor/bin/rector process src --config vendor/rector/rector/config/set/doctrine-behaviors-20.yaml
 ```

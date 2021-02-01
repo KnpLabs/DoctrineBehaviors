@@ -77,7 +77,8 @@ trait TreeNodeMethodsTrait
 
     public function isLeafNode(): bool
     {
-        return $this->getChildNodes()->count() === 0;
+        return $this->getChildNodes()
+            ->count() === 0;
     }
 
     /**
@@ -95,7 +96,8 @@ trait TreeNodeMethodsTrait
 
     public function addChildNode(TreeNodeInterface $treeNode): void
     {
-        $this->getChildNodes()->add($treeNode);
+        $this->getChildNodes()
+            ->add($treeNode);
     }
 
     public function isIndirectChildNodeOf(TreeNodeInterface $treeNode): bool
@@ -112,7 +114,7 @@ trait TreeNodeMethodsTrait
     public function setChildNodeOf(?TreeNodeInterface $treeNode = null): void
     {
         $id = $this->getNodeId();
-        if (empty($id)) {
+        if ($id === '' || $id === null) {
             throw new TreeException('You must provide an id for this node if you want it to be part of a tree.');
         }
 
@@ -122,7 +124,8 @@ trait TreeNodeMethodsTrait
         $this->setMaterializedPath($path);
 
         if ($this->parentNode !== null) {
-            $this->parentNode->getChildNodes()->removeElement($this);
+            $this->parentNode->getChildNodes()
+                ->removeElement($this);
         }
 
         $this->parentNode = $treeNode;
@@ -160,7 +163,8 @@ trait TreeNodeMethodsTrait
 
     public function buildTree(array $results): void
     {
-        $this->getChildNodes()->clear();
+        $this->getChildNodes()
+            ->clear();
         foreach ($results as $node) {
             if ($node->getMaterializedPath() === $this->getRealMaterializedPath()) {
                 $node->setParentNode($this);
@@ -226,7 +230,9 @@ trait TreeNodeMethodsTrait
         }
 
         if ($tree === null) {
-            $tree = [$this->getNodeId() => $prepare($this)];
+            $tree = [
+                $this->getNodeId() => $prepare($this),
+            ];
         }
 
         foreach ($this->getChildNodes() as $node) {

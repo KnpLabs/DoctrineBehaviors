@@ -52,7 +52,10 @@ class SluggableWithoutRegenerateEntity implements SluggableInterface
         return ['name'];
     }
 
-    private function shouldRegenerateSlugOnUpdate(): bool
+    /**
+     * Private access by trait
+     */
+    protected function shouldRegenerateSlugOnUpdate(): bool
     {
         return false;
     }

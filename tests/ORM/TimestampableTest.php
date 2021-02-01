@@ -26,17 +26,17 @@ final class TimestampableTest extends AbstractBehaviorTestCase
 
     public function testItShouldInitializeCreateAndUpdateDatetimeWhenCreated(): void
     {
-        $entity = new TimestampableEntity();
+        $timestampableEntity = new TimestampableEntity();
 
-        $this->entityManager->persist($entity);
+        $this->entityManager->persist($timestampableEntity);
         $this->entityManager->flush();
 
-        $this->assertInstanceOf(Datetime::class, $entity->getCreatedAt());
-        $this->assertInstanceOf(Datetime::class, $entity->getUpdatedAt());
+        $this->assertInstanceOf(Datetime::class, $timestampableEntity->getCreatedAt());
+        $this->assertInstanceOf(Datetime::class, $timestampableEntity->getUpdatedAt());
 
         $this->assertSame(
-            $entity->getCreatedAt(),
-            $entity->getUpdatedAt(),
+            $timestampableEntity->getCreatedAt(),
+            $timestampableEntity->getUpdatedAt(),
             'On creation, createdAt and updatedAt are the same'
         );
     }
@@ -48,6 +48,7 @@ final class TimestampableTest extends AbstractBehaviorTestCase
         $this->entityManager->persist($entity);
         $this->entityManager->flush();
         $this->entityManager->refresh($entity);
+
         $id = $entity->getId();
         $createdAt = $entity->getCreatedAt();
         $this->entityManager->clear();
@@ -59,7 +60,9 @@ final class TimestampableTest extends AbstractBehaviorTestCase
         $entity = $this->timestampableRepository->find($id);
 
         $entity->setTitle('test');
+
         $this->entityManager->flush();
+
         $this->entityManager->clear();
 
         /** @var TimestampableEntity $entity */
@@ -120,6 +123,7 @@ final class TimestampableTest extends AbstractBehaviorTestCase
         $entity = $this->timestampableRepository->find($id);
 
         $entity->setTitle('test');
+
         $this->entityManager->flush();
 
         $updatedAt = $entity->getUpdatedAt();

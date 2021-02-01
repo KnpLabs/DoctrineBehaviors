@@ -96,16 +96,15 @@ final class TranslatableEventSubscriber implements EventSubscriber
             return $fetchMode;
         }
 
-        switch ($fetchMode) {
-            case 'LAZY':
-                return ClassMetadataInfo::FETCH_LAZY;
-            case 'EAGER':
-                return ClassMetadataInfo::FETCH_EAGER;
-            case 'EXTRA_LAZY':
-                return ClassMetadataInfo::FETCH_EXTRA_LAZY;
-            default:
-                return ClassMetadataInfo::FETCH_LAZY;
+        if ($fetchMode === 'EAGER') {
+            return ClassMetadataInfo::FETCH_EAGER;
         }
+
+        if ($fetchMode === 'EXTRA_LAZY') {
+            return ClassMetadataInfo::FETCH_EXTRA_LAZY;
+        }
+
+        return ClassMetadataInfo::FETCH_LAZY;
     }
 
     private function mapTranslatable(ClassMetadataInfo $classMetadataInfo): void
@@ -120,9 +119,9 @@ final class TranslatableEventSubscriber implements EventSubscriber
             'indexBy' => self::LOCALE,
             'cascade' => ['persist', 'merge', 'remove'],
             'fetch' => $this->translatableFetchMode,
-            'targetEntity' => $classMetadataInfo->getReflectionClass()->getMethod('getTranslationEntityClass')->invoke(
-                null
-            ),
+            'targetEntity' => $classMetadataInfo->getReflectionClass()
+                ->getMethod('getTranslationEntityClass')
+                ->invoke(null),
             'orphanRemoval' => true,
         ]);
     }
@@ -142,14 +141,13 @@ final class TranslatableEventSubscriber implements EventSubscriber
                         'onDelete' => 'CASCADE',
                     ];
                 }, $classMetadataInfo->getIdentifier()),
-                'targetEntity' => $classMetadataInfo->getReflectionClass()->getMethod(
-                    'getTranslatableEntityClass'
-                )->invoke(null),
+                'targetEntity' => $classMetadataInfo->getReflectionClass()
+                    ->getMethod('getTranslatableEntityClass')
+                    ->invoke(null),
             ]);
         }
 
         $name = $classMetadataInfo->getTableName() . '_unique_translation';
-        
         if (! $this->hasUniqueTranslationConstraint($classMetadataInfo, $name)) {
             $classMetadataInfo->table['uniqueConstraints'][$name] = [
                 'columns' => array_map(
@@ -159,10 +157,8 @@ final class TranslatableEventSubscriber implements EventSubscriber
                     ) + [self::LOCALE],
             ];
         }
-        
-         if (! $classMetadataInfo->hasField(self::LOCALE) && ! $classMetadataInfo->hasAssociation(
-             self::LOCALE
-         )) {
+
+        if (! $classMetadataInfo->hasField(self::LOCALE) && ! $classMetadataInfo->hasAssociation(self::LOCALE)) {
             $classMetadataInfo->mapField([
                 'fieldName' => self::LOCALE,
                 'type' => 'string',

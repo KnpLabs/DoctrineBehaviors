@@ -35,11 +35,11 @@ class SluggableEntity implements SluggableInterface
      * @ORM\Column(type="datetime")
      * @var DateTimeInterface
      */
-    private $date;
+    private $dateTime;
 
     public function __construct()
     {
-        $this->date = (new DateTime())->modify('-1 year');
+        $this->dateTime = (new DateTime())->modify('-1 year');
     }
 
     public function getId(): int
@@ -59,12 +59,12 @@ class SluggableEntity implements SluggableInterface
 
     public function getDate(): DateTimeInterface
     {
-        return $this->date;
+        return $this->dateTime;
     }
 
-    public function setDate(DateTimeInterface $date): void
+    public function setDate(DateTimeInterface $dateTime): void
     {
-        $this->date = $date;
+        $this->dateTime = $dateTime;
     }
 
     /**

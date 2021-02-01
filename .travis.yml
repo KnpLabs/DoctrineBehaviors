@@ -7,12 +7,17 @@ install:
 
 jobs:
     include:
-        -
+        - &SQLITE_JOB
             stage: test
             name: "SQLite"
             php: '7.2'
             script:
                 - vendor/bin/phpunit
+        -
+            <<: *SQLITE_JOB
+            php: '7.2'
+            install:
+                - composer update --prefer-lowest
 
         # PostgreSQL
         - &POSTGRES_JOB
@@ -30,7 +35,7 @@ jobs:
                 - DB_MEMORY=false
             php: '7.2'
             install:
-                - composer update --prefer-lowest
+                - composer update ${COMPOSER_FLAGS}
             before_script:
                 - psql -c 'CREATE DATABASE orm_behaviors_test' -U postgres
                 # see https://www.guru99.com/postgresql-create-alter-add-user.html step 5)
@@ -42,11 +47,27 @@ jobs:
 
         -
             <<: *POSTGRES_JOB
+            php: '7.2'
+            env:
+                - COMPOSER_FLAGS=--prefer-lowest
+        -
+            <<: *POSTGRES_JOB
             php: '7.3'
 
         -
             <<: *POSTGRES_JOB
+            php: '7.3'
+            env:
+                - COMPOSER_FLAGS=--prefer-lowest
+        -
+            <<: *POSTGRES_JOB
             php: '7.4'
+
+        -
+            <<: *POSTGRES_JOB
+            php: '7.4'
+            env:
+                - COMPOSER_FLAGS=--prefer-lowest
 
         # MySQL
         - &MYSQL_JOB
@@ -64,7 +85,7 @@ jobs:
                 - DB_MEMORY=false
             php: '7.2'
             install:
-                - composer update --prefer-lowest
+                - composer update ${COMPOSER_FLAGS}
             before_script:
                 - mysql -e 'create database IF NOT EXISTS orm_behaviors_test' -uroot
             script:
@@ -72,11 +93,29 @@ jobs:
 
         -
             <<: *MYSQL_JOB
+            php: '7.2'
+            env:
+                - COMPOSER_FLAGS=--prefer-lowest
+
+        -
+            <<: *MYSQL_JOB
             php: '7.3'
 
         -
             <<: *MYSQL_JOB
+            php: '7.3'
+            env:
+                - COMPOSER_FLAGS=--prefer-lowest
+
+        -
+            <<: *MYSQL_JOB
             php: '7.4'
+
+        -
+            <<: *MYSQL_JOB
+            php: '7.4'
+            env:
+                - COMPOSER_FLAGS=--prefer-lowest
 
 cache:
     directories:

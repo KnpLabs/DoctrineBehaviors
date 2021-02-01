@@ -3,7 +3,7 @@
     "description": "Doctrine Behavior Traits",
     "type": "symfony-bundle",
     "keywords": [
-        "behaviors", "doctrine", "timestampable", "translatable", "blameable", "softdeletable", "tree", "uuid", "hashidable", "hashid"
+        "behaviors", "doctrine", "timestampable", "translatable", "blameable", "softdeletable", "tree", "uuid"
     ],
     "homepage": "http://knplabs.com",
     "license": "MIT",
@@ -11,22 +11,21 @@
         { "name": "Knplabs", "homepage": "http://knplabs.com" }
     ],
     "require": {
-        "php": "^7.2",
-        "doctrine/common": "^2.7",
-        "doctrine/persistence": "^1.3.4",
+        "php": "^7.2|^8.0",
+        "doctrine/common": "^2.7|^3.0",
+        "doctrine/persistence": "^1.3.4|^2.0",
         "doctrine/dbal": "^2.9",
         "doctrine/orm": "^2.7",
-        "symfony/cache": "^4.4|^5.0",
-        "symfony/dependency-injection": "^4.4|^5.0",
-        "symfony/http-kernel": "^4.4|^5.0",
-        "symfony/security-core": "^4.4|^5.0",
-        "symfony/framework-bundle": "^4.4|^5.0",
+        "symfony/cache": "^4.4|^5.1",
+        "symfony/dependency-injection": "^4.4|^5.1",
+        "symfony/http-kernel": "^4.4|^5.1",
+        "symfony/security-core": "^4.4|^5.1",
+        "symfony/framework-bundle": "^4.4|^5.1",
         "symfony/string": "^5.0",
         "symfony/translation-contracts": "^2.1",
-        "symplify/package-builder": "^8.0",
         "nette/utils": "^3.0",
         "ramsey/uuid": "^3.9|^4.0",
-        "roukmoute/hashids-bundle": "^2.3"
+        "symfony/polyfill-php80": "^1.18"
     },
     "require-dev": {
         "ext-pdo_sqlite": "*",
@@ -36,15 +35,16 @@
         "doctrine/annotations": "^1.8",
         "doctrine/doctrine-bundle": "^2.0",
         "jakub-onderka/php-parallel-lint": "^1.0",
-        "phpstan/phpstan": "^0.12.28",
-        "phpunit/phpunit": "^8.5",
-        "rector/rector": "^0.7.33",
-        "symplify/changelog-linker": "^8.0",
-        "symplify/easy-coding-standard": "^8.0",
-        "symplify/phpstan-extensions": "^8.0",
+        "phpstan/phpstan": "^0.12.40",
+        "phpunit/phpunit": "^8.5|^9.2",
+        "rector/rector": "^0.8.7",
+        "symplify/changelog-linker": "^8.3.25",
+        "symplify/easy-coding-standard": "^8.3.25",
+        "symplify/phpstan-extensions": "^8.3.25",
         "phpstan/phpstan-doctrine": "^0.12.15",
         "phpstan/phpstan-phpunit": "^0.12.11",
-        "slevomat/coding-standard": "dev-master"
+        "slevomat/coding-standard": "^6.3.11",
+        "symplify/package-builder": "^8.3.25"
     },
     "autoload": {
         "psr-4": {
@@ -61,7 +61,7 @@
         "check-cs": "vendor/bin/ecs check --ansi",
         "fix-cs": "vendor/bin/ecs check --fix --ansi",
         "phpstan": "vendor/bin/phpstan analyse --ansi --error-format symplify",
-        "rector": "vendor/bin/rector process --config rector-ci.yaml",
+        "rector": "vendor/bin/rector process --config rector-ci.php",
         "changelog": [
             "vendor/bin/changelog-linker dump-merges --in-categories --ansi",
             "vendor/bin/changelog-linker link --ansi",
