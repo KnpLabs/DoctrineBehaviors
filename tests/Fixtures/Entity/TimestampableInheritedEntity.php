@@ -15,7 +15,7 @@ class TimestampableInheritedEntity extends AbstractTimestampableMappedSuperclass
      * @ORM\Column(type="string", nullable=true)
      * @var string
      */
-    protected $title;
+    private $title;
 
     public function getTitle(): string
     {

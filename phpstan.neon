@@ -3,14 +3,28 @@ includes:
     - vendor/symplify/phpstan-extensions/config/config.neon
     - vendor/phpstan/phpstan-doctrine/extension.neon
     - vendor/phpstan/phpstan-phpunit/extension.neon
-    - vendor/symplify/coding-standard/config/symplify-rules.neon
+
+    # see https://github.com/symplify/coding-standard
+    - vendor/symplify/phpstan-rules/config/services/services.neon
+    - vendor/symplify/phpstan-rules/packages/cognitive-complexity/config/cognitive-complexity-services.neon
+
+    - vendor/symplify/phpstan-rules/config/static-rules.neon
+    - vendor/symplify/phpstan-rules/config/array-rules.neon
+    - vendor/symplify/phpstan-rules/config/doctrine-rules.neon
+    - vendor/symplify/phpstan-rules/config/regex-rules.neon
+    - vendor/symplify/phpstan-rules/config/services-rules.neon
+    - vendor/symplify/phpstan-rules/config/size-rules.neon
+    - vendor/symplify/phpstan-rules/config/forbidden-static-rules.neon
+    - vendor/symplify/phpstan-rules/config/string-to-constant-rules.neon
+    - vendor/symplify/phpstan-rules/config/symfony-rules.neon
+    - vendor/symplify/phpstan-rules/config/test-rules.neon
 
 parameters:
     paths:
-        - "src"
-        - "tests"
+        - src
+        - tests
 
-    level: 8
+    level: max
     checkGenericClassInNonGenericObjectType: false
 
     # to allow installing with various phsptan versions without reporting old errors here
@@ -30,11 +44,9 @@ parameters:
         - '#has no return typehint specified#'
         - '#return type has no value type specified#'
         - '#has parameter (.*?) with no (typehint|value type) specified#'
-        - '#Parameter \#1 \$input of function array_filter expects array, array<int, string\>\|false given#'
-        - '#PHPDoc tag @var for variable \$entity has invalid type Knp\\DoctrineBehaviors\\Model\\Uuidable\\UuidableTrait#'
         # cache buggy
         - '#Access to an undefined property Knp\\DoctrineBehaviors\\Tests\\Fixtures\\Entity\\TreeNodeEntity\:\:\$parentNodePath#'
-        - '#Property Knp\\DoctrineBehaviors\\Tests\\Fixtures\\Entity\\GeocodableEntity\:\:\$location has no typehint specified#'
+        - '#Property with protected modifier is not allowed\. Use interface contract method instead#'
 
         # tests
         - '#Offset 0 does not exist on array<Knp\\DoctrineBehaviors\\Contract\\Entity\\TreeNodeInterface\>\|ArrayAccess\|null#'
@@ -44,34 +56,16 @@ parameters:
         - '#Property Knp\\DoctrineBehaviors\\Provider\\LocaleProvider\:\:\$translator has no typehint specified#'
         - '#PHPDoc tag @var has invalid value \(TranslatorInterface&LocaleAwareInterface\|null\)\: Unexpected token "\|", expected TOKEN_OTHER at offset \d+#'
 
-        - '#Call to method getUuid\(\) on an unknown class Knp\\DoctrineBehaviors\\Model\\Uuidable\\UuidableTrait#'
-
         - '#Do not use "\$entityManager->getRepository\(\)" outside of the constructor of repository service#'
 
         # resolve in follow up PR
         - '#Use explicit return value over magic &reference#'
-        - '#Class "(.*?)" with static method must have "static" in its name#'
-
-        # used-defined fields
-        -
-            path: 'src/EventSubscriber/HashidableEventSubscriber.php'
-            message: '#Use explicit method names over dynamic#'
-
-        -
-            path: 'src/Model/Sluggable/SluggableMethodsTrait.php'
-            message: '#Use explicit (method|property fetch) names over dynamic#'
 
         # deprecated class
         - '#Class with base "DoctrineBehaviorsBundle" name is already used in "Knp\\DoctrineBehaviors\\DoctrineBehaviorsBundle", "Knp\\DoctrineBehaviors\\Bundle\\DoctrineBehaviorsBundle"\. Use unique name to make classes easy to recognize#'
-        - '#Use explicit methods, over array acccess on object#'
+        - '#Do not use scalar or array as constructor parameter\. Use "Symplify\\PackageBuilder\\Parameter\\ParameterProvider" service instead#'
 
         # magic
-        -
-            message: '#Use strict comparison instead of empty#'
-            paths:
-                - 'src/Model/Sluggable/SluggableMethodsTrait.php'
-                - 'src/Model/Translatable/TranslationMethodsTrait.php'
-
         -
             message: '#Array with keys is not allowed\. Use value object to pass data instead#'
             paths:
@@ -80,42 +74,27 @@ parameters:
                 # annotation mapping
                 - src/EventSubscriber/TranslatableEventSubscriber.php
 
-        # symplify set
-        - '#Class "Knp\\DoctrineBehaviors\\Tests\\Fixtures\\Repository\\TreeNodeRepository" inherits from forbidden parent class "Doctrine\\ORM\\EntityRepository"\. Use "composition over inheritance" instead#'
-        - '#Too many public elements on class \- \d+\. Try narrow it down under 10#'
-
-        -
-            message: '#Do not use static calls#'
-            paths:
-                - src/Model/Uuidable/UuidableMethodsTrait.php # 20
-                - src/Model/Uuidable/UuidableMethodsTrait.php # 32
-                - tests/bootstrap.php # 14
-
-        -
-            message: '#Do not use factory in constructor#'
-            paths:
-                - tests/DatabaseLoader.php # 18
-                - tests/Fixtures/Entity/SluggableEntity.php # 40
-                - tests/Fixtures/Entity/SluggableMultiEntity.php # 40
-
-        - '#Do not use scalar or array as constructor parameter\. Use ParameterProvider service instead#'
-        - '#Instead of "DateTime" class/interface use "Nette\\Utils\\DateTime"#'
         - '#Do not use trait#'
         - '#Do not use setter on a service#'
-
-        -
-            message: '#Node "empty" is fobidden to use#'
-            paths:
-                - src/Model/*/*Trait.php
 
         -
             message: '#Do not use @method tag in class docblock#'
             paths:
                 - tests/Fixtures/Entity/TranslatableEntity.php
 
-        -
-            message: '#Do not use factory/method call in constructor, put factory in config and get service with dependency injection#'
-            paths:
-                - tests/DatabaseLoader.php
+        - '#"Doctrine\\ORM\\EntityManagerInterface" dependency is allowed only in "\*Repository" types#'
 
-        - '#Property with protected modifier is not allowed\. Use interface instead#'
+        -
+            message: '#Use explicit methods over array access on object#'
+            paths:
+                - tests/ORM/TreeNodeTest.php
+
+        - '#"%s" in sprintf\(\) format must be quoted#'
+        - '#Method call on new expression is not allowed#'
+        - '#Do not use factory/method call in constructor\. Put factory in config and get service with dependency injection#'
+        - '#Property Knp\\DoctrineBehaviors\\Tests\\ORM\\BlameableWithEntityTest\:\:\$userEntity \(Knp\\DoctrineBehaviors\\Tests\\Fixtures\\Entity\\UserEntity\) does not accept object\|string\|null#'
+        - '#\$this as argument is not allowed\. Refactor method to service composition#'
+        - '#Use separate function calls with readable variable names#'
+        - '#Constant string value need to only have small letters, _, \-, \. and numbers#'
+        - '#Property Knp\\DoctrineBehaviors\\Tests\\AbstractBehaviorTestCase\:\:\$entityManager \(Doctrine\\ORM\\EntityManagerInterface\) does not accept object\|null#'
+        - '#Parameter \#1 \$input of function array_filter expects array, array<int, string\>\|false given#'

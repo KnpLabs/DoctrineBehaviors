@@ -22,6 +22,7 @@ trait TranslatablePropertiesTrait
 
     /**
      * currentLocale is a non persisted field configured during postLoad event
+     *
      * @var string|null
      */
     protected $currentLocale;
