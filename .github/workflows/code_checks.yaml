@@ -21,7 +21,7 @@ jobs:
 
                     -
                         name: 'Rector CI'
-                        run: composer rector
+                        run: vendor/bin/rector process --dry-run --ansi
 
         name: ${{ matrix.actions.name }}
         runs-on: ubuntu-latest
