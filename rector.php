@@ -5,7 +5,6 @@ declare(strict_types=1);
 use Rector\Core\Configuration\Option;
 use Rector\DeadCode\Rector\Class_\RemoveUnusedDoctrineEntityMethodAndPropertyRector;
 use Rector\Set\ValueObject\SetList;
-use Rector\SOLID\Rector\ClassMethod\UseInterfaceOverImplementationInConstructorRector;
 use Symfony\Component\DependencyInjection\Loader\Configurator\ContainerConfigurator;
 
 return static function (ContainerConfigurator $containerConfigurator): void {
@@ -21,10 +20,8 @@ return static function (ContainerConfigurator $containerConfigurator): void {
         SetList::NAMING,
     ]);
 
-    $parameters->set(Option::EXCLUDE_RECTORS, [
+    $parameters->set(Option::SKIP, [
         RemoveUnusedDoctrineEntityMethodAndPropertyRector::class,
-        UseInterfaceOverImplementationInConstructorRector::class,
+        __DIR__ . '/src/Model/Translatable/TranslatableMethodsTrait.php',
     ]);
-
-    $parameters->set(Option::EXCLUDE_PATHS, [__DIR__ . '/src/Model/Translatable/TranslatableMethodsTrait.php']);
 };

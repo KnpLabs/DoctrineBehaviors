@@ -29,8 +29,8 @@ trait SluggableMethodsTrait
         }
 
         $values = [];
-        foreach ($this->getSluggableFields() as $field) {
-            $values[] = $this->resolveFieldValue($field);
+        foreach ($this->getSluggableFields() as $sluggableField) {
+            $values[] = $this->resolveFieldValue($sluggableField);
         }
 
         $this->slug = $this->generateSlugValue($values);

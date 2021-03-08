@@ -49,8 +49,8 @@ trait LoggableTrait
             self::class,
             $this->getId(),
             $property,
-            ! is_array($changeSet[0]) ? $changeSet[0] : 'an array',
-            ! is_array($changeSet[1]) ? $changeSet[1] : 'an array'
+            is_array($changeSet[0]) ? 'an array' : $changeSet[0],
+            is_array($changeSet[1]) ? 'an array' : $changeSet[1]
         );
     }
 }

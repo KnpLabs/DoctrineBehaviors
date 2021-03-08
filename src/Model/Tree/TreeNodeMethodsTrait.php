@@ -134,9 +134,9 @@ trait TreeNodeMethodsTrait
             $this->parentNode->addChildNode($this);
         }
 
-        foreach ($this->getChildNodes() as $child) {
+        foreach ($this->getChildNodes() as $childNode) {
             /** @var TreeNodeInterface $this */
-            $child->setChildNodeOf($this);
+            $childNode->setChildNodeOf($this);
         }
     }
 
@@ -203,13 +203,13 @@ trait TreeNodeMethodsTrait
             ];
         }
 
-        foreach ($this->getChildNodes() as $node) {
-            $tree[$this->getNodeId()]['children'][$node->getNodeId()] = [
-                'node' => $prepare($node),
+        foreach ($this->getChildNodes() as $childNode) {
+            $tree[$this->getNodeId()]['children'][$childNode->getNodeId()] = [
+                'node' => $prepare($childNode),
                 'children' => [],
             ];
 
-            $node->toArray($prepare, $tree[$this->getNodeId()]['children']);
+            $childNode->toArray($prepare, $tree[$this->getNodeId()]['children']);
         }
 
         return $tree;
@@ -235,9 +235,9 @@ trait TreeNodeMethodsTrait
             ];
         }
 
-        foreach ($this->getChildNodes() as $node) {
-            $tree[$node->getNodeId()] = $prepare($node);
-            $node->toFlatArray($prepare, $tree);
+        foreach ($this->getChildNodes() as $childNode) {
+            $tree[$childNode->getNodeId()] = $prepare($childNode);
+            $childNode->toFlatArray($prepare, $tree);
         }
 
         return $tree;

@@ -22,7 +22,7 @@ return static function (ContainerConfigurator $containerConfigurator): void {
         __DIR__ . '/tests',
         __DIR__ . '/utils',
         __DIR__ . '/ecs.php',
-        __DIR__ . '/rector-ci.php',
+        __DIR__ . '/rector.php',
     ]);
 
     $parameters->set(Option::SETS, [SetList::PSR_12, SetList::SYMPLIFY, SetList::COMMON, SetList::CLEAN_CODE]);

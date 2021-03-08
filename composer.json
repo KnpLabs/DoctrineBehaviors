@@ -34,14 +34,14 @@
         "psr/log": "^1.1",
         "doctrine/annotations": "^1.8",
         "doctrine/doctrine-bundle": "^2.0",
-        "jakub-onderka/php-parallel-lint": "^1.0",
+        "php-parallel-lint/php-parallel-lint": "^1.2",
         "phpstan/phpstan": "^0.12.80",
         "phpunit/phpunit": "^8.5|^9.2",
         "rector/rector-prefixed": "^0.9",
         "symplify/easy-coding-standard": "^9.2",
         "symplify/phpstan-extensions": "^9.2",
-        "phpstan/phpstan-doctrine": "^0.12.15",
-        "phpstan/phpstan-phpunit": "^0.12.11",
+        "phpstan/phpstan-doctrine": "^0.12.33",
+        "phpstan/phpstan-phpunit": "^0.12.18",
         "slevomat/coding-standard": "^6.4",
         "symplify/package-builder": "^9.2",
         "symplify/phpstan-rules": "^9.2"
@@ -61,6 +61,6 @@
         "check-cs": "vendor/bin/ecs check --ansi",
         "fix-cs": "vendor/bin/ecs check --fix --ansi",
         "phpstan": "vendor/bin/phpstan analyse --ansi --error-format symplify",
-        "rector": "vendor/bin/rector process --config rector-ci.php"
+        "rector": "vendor/bin/rector process --dry-run"
     }
 }
