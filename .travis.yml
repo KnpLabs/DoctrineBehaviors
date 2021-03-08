@@ -7,14 +7,15 @@ install:
 
 jobs:
     include:
-        - &SQLITE_JOB
+        -
             stage: test
             name: "SQLite"
             php: '7.2'
             script:
                 - vendor/bin/phpunit
         -
-            <<: *SQLITE_JOB
+            stage: test
+            name: "SQLite"
             php: '7.2'
             install:
                 - composer update --prefer-lowest
@@ -47,27 +48,12 @@ jobs:
 
         -
             <<: *POSTGRES_JOB
-            php: '7.2'
-            env:
-                - COMPOSER_FLAGS=--prefer-lowest
-        -
-            <<: *POSTGRES_JOB
             php: '7.3'
 
         -
             <<: *POSTGRES_JOB
-            php: '7.3'
-            env:
-                - COMPOSER_FLAGS=--prefer-lowest
-        -
-            <<: *POSTGRES_JOB
             php: '7.4'
 
-        -
-            <<: *POSTGRES_JOB
-            php: '7.4'
-            env:
-                - COMPOSER_FLAGS=--prefer-lowest
 
         # MySQL
         - &MYSQL_JOB
@@ -93,30 +79,8 @@ jobs:
 
         -
             <<: *MYSQL_JOB
-            php: '7.2'
-            env:
-                - COMPOSER_FLAGS=--prefer-lowest
-
-        -
-            <<: *MYSQL_JOB
             php: '7.3'
 
         -
             <<: *MYSQL_JOB
-            php: '7.3'
-            env:
-                - COMPOSER_FLAGS=--prefer-lowest
-
-        -
-            <<: *MYSQL_JOB
             php: '7.4'
-
-        -
-            <<: *MYSQL_JOB
-            php: '7.4'
-            env:
-                - COMPOSER_FLAGS=--prefer-lowest
-
-cache:
-    directories:
-        - $HOME/.composer/cache

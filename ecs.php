@@ -28,7 +28,6 @@ return static function (ContainerConfigurator $containerConfigurator): void {
 
     $parameters->set(Option::SKIP, [
         UnaryOperatorSpacesFixer::class,
-        PropertyTypeHintSniff::class,
         PhpUnitStrictFixer::class => [__DIR__ . '/tests/ORM/TimestampableTest.php'],
         OrderedImportsFixer::class => [
             __DIR__ . '/tests/Fixtures/Entity/AbstractTimestampableMappedSuperclassEntity.php',
@@ -48,6 +47,4 @@ return static function (ContainerConfigurator $containerConfigurator): void {
         ->call('configure', [[
             'annotations' => ['author', 'package', 'license', 'link', 'abstract'],
         ]]);
-
-    $services->set(PropertyTypeHintSniff::class);
 };
