@@ -1,0 +1,29 @@
+name: Code Tests
+
+on:
+    pull_request: null
+
+jobs:
+    tests:
+        strategy:
+            matrix:
+                php:
+                    - 7.3
+                    - 7.4
+                    - 8.0
+
+        name: Test ${{ matrix.php }}
+        runs-on: ubuntu-latest
+
+        steps:
+            -   uses: actions/checkout@v2
+
+            -   uses: shivammathur/setup-php@v1
+                with:
+                    php-version: ${{ matrix.php }}
+                    extensions: pdo_sqlite, pdo_mysql, pdo_pgsql
+                    coverage: none
+
+            -   run: composer install --no-progress
+
+            -   run: vendor/bin/phpunit
