@@ -12,9 +12,9 @@ trait TreeNodePropertiesTrait
     protected string $materializedPath = '';
 
     /**
-     * @var Collection<TreeNodeInterface>
+     * @var Collection<TreeNodeInterface>|null
      */
-    private ?Collection $childNodes;
+    private ?Collection $childNodes = null;
 
-    private ?TreeNodeInterface $parentNode;
+    private ?TreeNodeInterface $parentNode = null;
 }

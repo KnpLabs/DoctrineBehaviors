@@ -12,18 +12,18 @@ trait TranslatablePropertiesTrait
     /**
      * @var Collection<TranslationInterface>|null
      */
-    protected ?Collection $translations;
+    protected ?Collection $translations = null;
 
     /**
      * @see mergeNewTranslations
      * @var Collection<TranslationInterface>|null
      */
-    protected ?Collection $newTranslations;
+    protected ?Collection $newTranslations = null;
 
     /**
      * currentLocale is a non persisted field configured during postLoad event
      */
-    protected ?string $currentLocale;
+    protected ?string $currentLocale = null;
 
     protected string $defaultLocale = 'en';
 }

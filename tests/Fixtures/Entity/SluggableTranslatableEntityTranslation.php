@@ -24,19 +24,15 @@ class SluggableTranslatableEntityTranslation implements TranslationInterface, Sl
      * @ORM\Column(type="integer")
      * @ORM\GeneratedValue(strategy="AUTO")
      */
-    private ?int $id;
+    private ?int $id = null;
 
     /**
      * @ORM\Column(type="string")
      */
     private ?string $title;
 
-    public function getId(): int
+    public function getId(): ?int
     {
-        if ($this->id === null) {
-            throw new ShouldNotHappenException();
-        }
-
         return $this->id;
     }
 

@@ -25,7 +25,7 @@ class TranslatableEntityTranslation implements TranslationInterface
     /**
      * @ORM\Column(type="string")
      */
-    private ?string $title;
+    private ?string $title = null;
 
     public function getId(): int
     {

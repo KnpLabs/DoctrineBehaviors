@@ -8,5 +8,5 @@ use DateTimeInterface;
 
 trait SoftDeletablePropertiesTrait
 {
-    protected ?DateTimeInterface $deletedAt;
+    protected ?DateTimeInterface $deletedAt = null;
 }
