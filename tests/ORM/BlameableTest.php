@@ -11,9 +11,9 @@ use Knp\DoctrineBehaviors\Tests\Fixtures\Entity\BlameableEntity;
 
 final class BlameableTest extends AbstractBehaviorTestCase
 {
-    private ?BaseObject $userProvider;
+    private UserProviderInterface $userProvider;
 
-    private ?ObjectRepository $blameableRepository;
+    private ObjectRepository $blameableRepository;
 
     protected function setUp(): void
     {

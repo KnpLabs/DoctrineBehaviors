@@ -43,7 +43,7 @@ class TreeNodeEntity implements TreeNodeInterface, ArrayAccess
         $this->id = $id;
     }
 
-    public function getName(): string
+    public function getName(): ?string
     {
         return $this->name;
     }

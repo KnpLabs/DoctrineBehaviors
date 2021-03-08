@@ -7,6 +7,7 @@ namespace Knp\DoctrineBehaviors\Tests\Fixtures\Entity;
 use Doctrine\ORM\Mapping as ORM;
 use Knp\DoctrineBehaviors\Contract\Entity\SluggableInterface;
 use Knp\DoctrineBehaviors\Contract\Entity\TranslationInterface;
+use Knp\DoctrineBehaviors\Exception\ShouldNotHappenException;
 use Knp\DoctrineBehaviors\Model\Sluggable\SluggableTrait;
 use Knp\DoctrineBehaviors\Model\Translatable\TranslationTrait;
 
@@ -32,6 +33,10 @@ class SluggableTranslatableEntityTranslation implements TranslationInterface, Sl
 
     public function getId(): int
     {
+        if ($this->id === null) {
+            throw new ShouldNotHappenException();
+        }
+
         return $this->id;
     }
 

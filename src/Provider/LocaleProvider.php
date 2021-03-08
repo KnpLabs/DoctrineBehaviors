@@ -45,7 +45,7 @@ final class LocaleProvider implements LocaleProviderInterface
             return $currentLocale;
         }
 
-        if ($this->translator !== null) {
+        if ($this->translator instanceof LocaleAwareInterface) {
             return $this->translator->getLocale();
         }
 

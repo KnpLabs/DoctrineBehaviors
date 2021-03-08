@@ -32,7 +32,7 @@ class SluggableWithoutRegenerateEntity implements SluggableInterface
         return $this->id;
     }
 
-    public function getName(): string
+    public function getName(): ?string
     {
         return $this->name;
     }

@@ -10,7 +10,7 @@ use Knp\DoctrineBehaviors\Tests\Fixtures\Entity\Translatable\ExtendedTranslatabl
 
 final class TranslatableInheritanceTest extends AbstractBehaviorTestCase
 {
-    private ?ObjectRepository $objectRepository;
+    private ObjectRepository $objectRepository;
 
     protected function setUp(): void
     {

@@ -39,7 +39,7 @@ class TranslatableCustomizedEntityTranslation implements TranslationInterface
         return TranslatableCustomizedEntity::class;
     }
 
-    public function getTitle(): string
+    public function getTitle(): ?string
     {
         return $this->title;
     }

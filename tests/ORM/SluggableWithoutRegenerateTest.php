@@ -11,7 +11,7 @@ use Knp\DoctrineBehaviors\Tests\Fixtures\Entity\SluggableWithoutRegenerateEntity
 
 final class SluggableWithoutRegenerateTest extends AbstractBehaviorTestCase
 {
-    private ?ObjectRepository $sluggableWithoutRegenerateRepository;
+    private ObjectRepository $sluggableWithoutRegenerateRepository;
 
     protected function setUp(): void
     {

@@ -12,7 +12,7 @@ use Knp\DoctrineBehaviors\Tests\Fixtures\Entity\SluggableEntity;
 
 final class SluggableTest extends AbstractBehaviorTestCase
 {
-    private ?ObjectRepository $sluggableRepository;
+    private ObjectRepository $sluggableRepository;
 
     protected function setUp(): void
     {

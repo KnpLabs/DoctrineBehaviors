@@ -20,7 +20,7 @@ abstract class AbstractTranslatableEntityTranslation implements TranslationInter
      */
     private ?string $title;
 
-    public function getTitle(): string
+    public function getTitle(): ?string
     {
         return $this->title;
     }

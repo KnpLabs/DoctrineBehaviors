@@ -32,7 +32,7 @@ class BlameableEntityWithUserEntity implements BlameableInterface
         return $this->id;
     }
 
-    public function getTitle(): string
+    public function getTitle(): ?string
     {
         return $this->title;
     }

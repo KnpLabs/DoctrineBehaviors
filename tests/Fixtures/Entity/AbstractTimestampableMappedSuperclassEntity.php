@@ -19,12 +19,12 @@ abstract class AbstractTimestampableMappedSuperclassEntity implements Timestampa
     /**
      * @ORM\Column(type="datetime")
      */
-    protected DateTimeInterface $createdAt;
+    protected ?DateTimeInterface $createdAt;
 
     /**
      * @ORM\Column(type="datetime")
      */
-    protected DateTimeInterface $updatedAt;
+    protected ?DateTimeInterface $updatedAt;
 
     /**
      * @ORM\Id

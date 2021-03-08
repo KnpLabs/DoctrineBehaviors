@@ -44,7 +44,7 @@ class SluggableMultiEntity implements SluggableInterface
         return $this->id;
     }
 
-    public function getName(): string
+    public function getName(): ?string
     {
         return $this->name;
     }
@@ -77,9 +77,6 @@ class SluggableMultiEntity implements SluggableInterface
         return 'title';
     }
 
-    /**
-     * @return mixed|string
-     */
     public function generateSlugValue(array $values): string
     {
         $sluggableText = implode(' ', $values);

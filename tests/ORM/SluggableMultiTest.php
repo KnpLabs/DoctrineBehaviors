@@ -11,7 +11,7 @@ use Knp\DoctrineBehaviors\Tests\Fixtures\Entity\SluggableMultiEntity;
 
 final class SluggableMultiTest extends AbstractBehaviorTestCase
 {
-    private ?ObjectRepository $sluggableRepository;
+    private ObjectRepository $sluggableRepository;
 
     protected function setUp(): void
     {

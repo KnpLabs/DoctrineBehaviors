@@ -11,7 +11,7 @@ use Knp\DoctrineBehaviors\Tests\Fixtures\Entity\TimestampableEntity;
 
 final class TimestampableTest extends AbstractBehaviorTestCase
 {
-    private ?ObjectRepository $timestampableRepository;
+    private ObjectRepository $timestampableRepository;
 
     protected function setUp(): void
     {

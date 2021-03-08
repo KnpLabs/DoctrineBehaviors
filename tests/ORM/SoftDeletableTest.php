@@ -12,7 +12,7 @@ use Knp\DoctrineBehaviors\Tests\Fixtures\Entity\SoftDeletableEntityInherit;
 
 final class SoftDeletableTest extends AbstractBehaviorTestCase
 {
-    private ?ObjectRepository $softDeletableRepository;
+    private ObjectRepository $softDeletableRepository;
 
     protected function setUp(): void
     {

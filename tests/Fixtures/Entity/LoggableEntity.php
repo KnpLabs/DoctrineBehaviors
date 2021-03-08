@@ -30,6 +30,7 @@ class LoggableEntity implements LoggableInterface
 
     /**
      * @ORM\Column(type="array", nullable=true)
+     * @var string[]|null
      */
     private ?array $roles;
 

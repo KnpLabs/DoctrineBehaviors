@@ -10,7 +10,7 @@ use Knp\DoctrineBehaviors\Tests\Fixtures\Entity\SluggableTranslatableEntity;
 
 final class SluggableWithTranslatableEntityAndUniquenessTest extends AbstractBehaviorTestCase
 {
-    private ?ObjectRepository $translatableRepository;
+    private ObjectRepository $translatableRepository;
 
     protected function setUp(): void
     {

@@ -23,7 +23,7 @@ class ExtendedTranslatableEntityTranslation extends AbstractTranslatableEntityTr
      */
     private ?string $extendedTitle;
 
-    public function getExtendedTitle(): string
+    public function getExtendedTitle(): ?string
     {
         return $this->extendedTitle;
     }

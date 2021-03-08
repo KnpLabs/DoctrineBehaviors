@@ -16,7 +16,7 @@ use Knp\DoctrineBehaviors\Tests\Fixtures\Entity\Translation\TranslatableCustomiz
 
 final class TranslatableTest extends AbstractBehaviorTestCase
 {
-    private ?ObjectRepository $translatableRepository;
+    private ObjectRepository $translatableRepository;
 
     protected function setUp(): void
     {
@@ -34,6 +34,7 @@ final class TranslatableTest extends AbstractBehaviorTestCase
             ->setTitle('awesome');
         $entity->translate('ru')
             ->setTitle('удивительный');
+
         $entity->mergeNewTranslations();
 
         $this->entityManager->persist($entity);
