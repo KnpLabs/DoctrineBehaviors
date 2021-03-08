@@ -18,6 +18,10 @@ return static function (ContainerConfigurator $containerConfigurator): void {
         SetList::CODING_STYLE,
         SetList::NETTE_UTILS_CODE_QUALITY,
         SetList::NAMING,
+        SetList::PHP_70,
+        SetList::PHP_71,
+        SetList::PHP_72,
+        SetList::PHP_73,
     ]);
 
     $parameters->set(Option::SKIP, [
