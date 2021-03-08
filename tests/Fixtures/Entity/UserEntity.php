@@ -15,22 +15,20 @@ class UserEntity
      * @ORM\Id
      * @ORM\Column(type="integer")
      * @ORM\GeneratedValue(strategy="AUTO")
-     * @var int
      */
-    private $id;
+    private int $id;
 
     /**
      * @ORM\Column(type="string")
-     * @var string
      */
-    private $username;
+    private ?string $username = null;
 
     public function getId(): int
     {
         return $this->id;
     }
 
-    public function getUsername(): string
+    public function getUsername(): ?string
     {
         return $this->username;
     }

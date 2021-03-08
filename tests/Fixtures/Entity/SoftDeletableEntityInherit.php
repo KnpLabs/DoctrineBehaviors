@@ -13,9 +13,8 @@ class SoftDeletableEntityInherit extends SoftDeletableEntity
 {
     /**
      * @ORM\Column(type="string")
-     * @var string
      */
-    private $name;
+    private string $name;
 
     public function getName(): string
     {

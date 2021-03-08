@@ -19,22 +19,20 @@ class TimestampableEntity implements TimestampableInterface
      * @ORM\Id
      * @ORM\Column(type="integer")
      * @ORM\GeneratedValue(strategy="AUTO")
-     * @var int
      */
-    private $id;
+    private int $id;
 
     /**
      * @ORM\Column(type="string", nullable=true)
-     * @var string
      */
-    private $title;
+    private ?string $title = null;
 
     public function getId(): int
     {
         return $this->id;
     }
 
-    public function getTitle(): string
+    public function getTitle(): ?string
     {
         return $this->title;
     }

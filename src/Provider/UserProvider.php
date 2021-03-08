@@ -9,15 +9,9 @@ use Symfony\Component\Security\Core\Security;
 
 final class UserProvider implements UserProviderInterface
 {
-    /**
-     * @var string|null
-     */
-    private $blameableUserEntity;
+    private ?string $blameableUserEntity;
 
-    /**
-     * @var Security
-     */
-    private $security;
+    private Security $security;
 
     public function __construct(Security $security, ?string $blameableUserEntity = null)
     {

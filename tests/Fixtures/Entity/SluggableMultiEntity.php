@@ -21,21 +21,18 @@ class SluggableMultiEntity implements SluggableInterface
      * @ORM\Id
      * @ORM\Column(type="integer")
      * @ORM\GeneratedValue(strategy="AUTO")
-     * @var int
      */
-    private $id;
+    private int $id;
 
     /**
      * @ORM\Column(type="string")
-     * @var string
      */
-    private $name;
+    private ?string $name = null;
 
     /**
      * @ORM\Column(type="datetime")
-     * @var DateTimeInterface
      */
-    private $dateTime;
+    private DateTimeInterface $dateTime;
 
     public function __construct()
     {
@@ -47,7 +44,7 @@ class SluggableMultiEntity implements SluggableInterface
         return $this->id;
     }
 
-    public function getName(): string
+    public function getName(): ?string
     {
         return $this->name;
     }
@@ -80,10 +77,7 @@ class SluggableMultiEntity implements SluggableInterface
         return 'title';
     }
 
-    /**
-     * @return mixed|string
-     */
-    public function generateSlugValue(array $values)
+    public function generateSlugValue(array $values): string
     {
         $sluggableText = implode(' ', $values);
         $sluggableText = str_replace(' ', '+', $sluggableText);

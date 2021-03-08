@@ -13,15 +13,9 @@ use Symplify\PackageBuilder\Testing\AbstractKernelTestCase;
 
 abstract class AbstractBehaviorTestCase extends AbstractKernelTestCase
 {
-    /**
-     * @var EntityManagerInterface
-     */
-    protected $entityManager;
+    protected EntityManagerInterface $entityManager;
 
-    /**
-     * @var DebugStack
-     */
-    protected $debugStack;
+    protected DebugStack $debugStack;
 
     protected function setUp(): void
     {

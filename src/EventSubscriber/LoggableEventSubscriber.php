@@ -13,10 +13,7 @@ use Psr\Log\LogLevel;
 
 final class LoggableEventSubscriber implements EventSubscriber
 {
-    /**
-     * @var LoggerInterface
-     */
-    private $logger;
+    private LoggerInterface $logger;
 
     public function __construct(LoggerInterface $logger)
     {

@@ -17,24 +17,22 @@ class SluggableWithoutRegenerateEntity implements SluggableInterface
 
     /**
      * @ORM\Column(type="string")
-     * @var string
      */
-    private $name;
+    private ?string $name = null;
 
     /**
      * @ORM\Id
      * @ORM\Column(type="integer")
      * @ORM\GeneratedValue(strategy="AUTO")
-     * @var int
      */
-    private $id;
+    private int $id;
 
     public function getId(): int
     {
         return $this->id;
     }
 
-    public function getName(): string
+    public function getName(): ?string
     {
         return $this->name;
     }

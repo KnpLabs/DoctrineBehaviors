@@ -17,7 +17,7 @@ final class DoctrineBehaviorsKernel extends Kernel implements ExtraConfigAwareKe
     /**
      * @var string[]
      */
-    private $configs = [];
+    private array $configs = [];
 
     /**
      * @return BundleInterface[]

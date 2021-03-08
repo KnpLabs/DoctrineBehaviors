@@ -8,13 +8,7 @@ use DateTimeInterface;
 
 trait TimestampablePropertiesTrait
 {
-    /**
-     * @var DateTimeInterface
-     */
-    protected $createdAt;
+    protected ?DateTimeInterface $createdAt = null;
 
-    /**
-     * @var DateTimeInterface
-     */
-    protected $updatedAt;
+    protected ?DateTimeInterface $updatedAt = null;
 }

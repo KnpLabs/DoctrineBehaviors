@@ -15,17 +15,15 @@ class ExtendedTranslatableEntityTranslation extends AbstractTranslatableEntityTr
      * @ORM\Id
      * @ORM\Column(type="integer")
      * @ORM\GeneratedValue(strategy="AUTO")
-     * @var int
      */
-    private $id;
+    private int $id;
 
     /**
      * @ORM\Column(type="string")
-     * @var string
      */
-    private $extendedTitle;
+    private ?string $extendedTitle = null;
 
-    public function getExtendedTitle(): string
+    public function getExtendedTitle(): ?string
     {
         return $this->extendedTitle;
     }

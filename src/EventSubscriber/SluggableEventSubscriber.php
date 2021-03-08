@@ -20,15 +20,9 @@ final class SluggableEventSubscriber implements EventSubscriber
      */
     private const SLUG = 'slug';
 
-    /**
-     * @var DefaultSluggableRepository
-     */
-    private $defaultSluggableRepository;
+    private DefaultSluggableRepository $defaultSluggableRepository;
 
-    /**
-     * @var EntityManagerInterface
-     */
-    private $entityManager;
+    private EntityManagerInterface $entityManager;
 
     public function __construct(
         EntityManagerInterface $entityManager,
@@ -95,7 +89,11 @@ final class SluggableEventSubscriber implements EventSubscriber
     private function generateUniqueSlugFor(SluggableInterface $sluggable): void
     {
         $i = 0;
+
         $slug = $sluggable->getSlug();
+        if ($slug === null) {
+            return;
+        }
 
         $uniqueSlug = $slug;
 

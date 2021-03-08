@@ -16,10 +16,7 @@ use PHPStan\Type\Type;
 
 final class TranslatableTranslateDynamicMethodReturnTypeExtension implements DynamicMethodReturnTypeExtension, BrokerAwareExtension
 {
-    /**
-     * @var Broker
-     */
-    private $broker;
+    private ?Broker $broker = null;
 
     public function setBroker(Broker $broker): void
     {

@@ -21,9 +21,8 @@ class TranslatableEntity implements TranslatableInterface
      * @ORM\Id
      * @ORM\Column(type="integer")
      * @ORM\GeneratedValue(strategy="AUTO")
-     * @var int
      */
-    private $id;
+    private int $id;
 
     public function __call($method, $arguments)
     {
