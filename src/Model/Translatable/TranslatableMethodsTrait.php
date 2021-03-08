@@ -233,10 +233,13 @@ trait TranslatableMethodsTrait
     {
         $fallbackLocale = $this->computeFallbackLocale($locale);
 
-        if ($fallbackLocale === null) {
-            return $this->findTranslationByLocale($this->getDefaultLocale(), false);
+        if ($fallbackLocale !== null) {
+            $translation = $this->findTranslationByLocale($fallbackLocale);
+            if ($translation && ! $translation->isEmpty()) {
+                return $translation;
+            }
         }
 
-        return $this->findTranslationByLocale($fallbackLocale);
+        return $this->findTranslationByLocale($this->getDefaultLocale(), false);
     }
 }
