@@ -89,7 +89,11 @@ final class SluggableEventSubscriber implements EventSubscriber
     private function generateUniqueSlugFor(SluggableInterface $sluggable): void
     {
         $i = 0;
+
         $slug = $sluggable->getSlug();
+        if ($slug === null) {
+            return;
+        }
 
         $uniqueSlug = $slug;
 

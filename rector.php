@@ -34,8 +34,6 @@ return static function (ContainerConfigurator $containerConfigurator): void {
         RemoveUnusedDoctrineEntityMethodAndPropertyRector::class,
         __DIR__ . '/src/Model/Translatable/TranslatableMethodsTrait.php',
 
-        ParamTypeDeclarationRector::class => [
-            __DIR__ . '/src/Model/Tree/TreeNodeMethodsTrait.php'
-        ],
+        ParamTypeDeclarationRector::class => [__DIR__ . '/src/Model/Tree/TreeNodeMethodsTrait.php'],
     ]);
 };

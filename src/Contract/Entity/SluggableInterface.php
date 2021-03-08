@@ -15,7 +15,7 @@ interface SluggableInterface
 
     public function setSlug(string $slug): void;
 
-    public function getSlug(): string;
+    public function getSlug(): ?string;
 
     /**
      * Generates and sets the entity's slug
