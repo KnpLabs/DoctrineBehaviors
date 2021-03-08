@@ -3,14 +3,28 @@ includes:
     - vendor/symplify/phpstan-extensions/config/config.neon
     - vendor/phpstan/phpstan-doctrine/extension.neon
     - vendor/phpstan/phpstan-phpunit/extension.neon
-    - vendor/symplify/coding-standard/config/symplify-rules.neon
+
+    # see https://github.com/symplify/coding-standard
+    - vendor/symplify/phpstan-rules/config/services/services.neon
+    - vendor/symplify/phpstan-rules/packages/cognitive-complexity/config/cognitive-complexity-services.neon
+
+    - vendor/symplify/phpstan-rules/config/static-rules.neon
+    - vendor/symplify/phpstan-rules/config/array-rules.neon
+    - vendor/symplify/phpstan-rules/config/doctrine-rules.neon
+    - vendor/symplify/phpstan-rules/config/regex-rules.neon
+    - vendor/symplify/phpstan-rules/config/services-rules.neon
+    - vendor/symplify/phpstan-rules/config/size-rules.neon
+    - vendor/symplify/phpstan-rules/config/forbidden-static-rules.neon
+    - vendor/symplify/phpstan-rules/config/string-to-constant-rules.neon
+    - vendor/symplify/phpstan-rules/config/symfony-rules.neon
+    - vendor/symplify/phpstan-rules/config/test-rules.neon
 
 parameters:
     paths:
-        - "src"
-        - "tests"
+        - src
+        - tests
 
-    level: 8
+    level: max
     checkGenericClassInNonGenericObjectType: false
 
     # to allow installing with various phsptan versions without reporting old errors here
@@ -119,3 +133,23 @@ parameters:
                 - tests/DatabaseLoader.php
 
         - '#Property with protected modifier is not allowed\. Use interface instead#'
+        - '#Do not inherit from abstract class, better use composition#'
+        - '#"Doctrine\\ORM\\EntityManagerInterface" dependency is allowed only in "\*Repository" types#'
+
+        -
+            message: '#Use explicit methods over array access on object#'
+            paths:
+                - tests/ORM/TreeNodeTest.php
+
+        - '#Do not use chained method calls\. Put each on separated lines#'
+        - '#"%s" in sprintf\(\) format must be quoted#'
+        - '#Decouple method call in assert to standalone line to make test core more readable#'
+        - '#Method call on new expression is not allowed#'
+        - '#Property with protected modifier is not allowed\. Use interface contract method instead#'
+        - '#Do not use factory/method call in constructor\. Put factory in config and get service with dependency injection#'
+        - '#Property Knp\\DoctrineBehaviors\\Tests\\ORM\\BlameableWithEntityTest\:\:\$userEntity \(Knp\\DoctrineBehaviors\\Tests\\Fixtures\\Entity\\UserEntity\) does not accept object\|string\|null#'
+        - '#\$this as argument is not allowed\. Refactor method to service composition#'
+        - '#Use separate function calls with readable variable names#'
+        - '#Do not use scalar or array as constructor parameter\. Use "Symplify\\PackageBuilder\\Parameter\\ParameterProvider" service instead#'
+        - '#Constant string value need to only have small letters, _, \-, \. and numbers#'
+        - '#Property Knp\\DoctrineBehaviors\\Tests\\AbstractBehaviorTestCase\:\:\$entityManager \(Doctrine\\ORM\\EntityManagerInterface\) does not accept object\|null#'

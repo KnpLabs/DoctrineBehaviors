@@ -33,7 +33,7 @@ final class TestUserProvider implements UserProviderInterface
         return $this->userEntity;
     }
 
-    public function changeUserEntity(?string $userEntity): void
+    public function changeUserEntity(string $userEntity): void
     {
         $this->userEntity = $userEntity;
     }

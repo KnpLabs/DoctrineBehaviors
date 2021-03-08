@@ -86,7 +86,8 @@ class SluggableMultiEntity implements SluggableInterface
     public function generateSlugValue(array $values)
     {
         $sluggableText = implode(' ', $values);
+        $sluggableText = str_replace(' ', '+', $sluggableText);
 
-        return strtolower(str_replace(' ', '+', $sluggableText));
+        return strtolower($sluggableText);
     }
 }

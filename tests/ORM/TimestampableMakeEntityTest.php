@@ -13,7 +13,7 @@ use Knp\DoctrineBehaviors\Tests\AbstractBehaviorTestCase;
  * When console make:entity creates a new class, the event arguments are not fully populated
  *
  * This test emulates the event dispatch near the end of method
- *   Doctrine\ORM\Mapping\ClassMetadataFactory::doLoadMetadata()
+ * Doctrine\ORM\Mapping\ClassMetadataFactory::doLoadMetadata()
  */
 final class TimestampableMakeEntityTest extends AbstractBehaviorTestCase
 {

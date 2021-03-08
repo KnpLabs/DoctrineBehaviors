@@ -10,9 +10,9 @@ use Doctrine\Common\Cache\ArrayCache;
 define('TESTS_PATH', __DIR__);
 define('VENDOR_PATH', realpath(__DIR__ . '/../vendor'));
 
-AnnotationRegistry::registerFile(
-    __DIR__ . '/../vendor/doctrine/orm/lib/Doctrine/ORM/Mapping/Driver/DoctrineAnnotations.php'
-);
+//AnnotationRegistry::registerFile(
+//    __DIR__ . '/../vendor/doctrine/orm/lib/Doctrine/ORM/Mapping/Driver/DoctrineAnnotations.php'
+//);
 
 $reader = new AnnotationReader();
 $reader = new CachedReader($reader, new ArrayCache());

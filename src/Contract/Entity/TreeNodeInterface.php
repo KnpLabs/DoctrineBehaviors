@@ -7,8 +7,7 @@ namespace Knp\DoctrineBehaviors\Contract\Entity;
 use Doctrine\Common\Collections\Collection;
 
 /**
- * Tree\Node defines a set of needed methods
- * to work with materialized path tree nodes
+ * Tree\Node defines a set of needed methods to work with materialized path tree nodes
  */
 interface TreeNodeInterface
 {

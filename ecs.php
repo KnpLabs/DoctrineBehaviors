@@ -8,7 +8,6 @@ use PhpCsFixer\Fixer\Import\OrderedImportsFixer;
 use PhpCsFixer\Fixer\Operator\UnaryOperatorSpacesFixer;
 use PhpCsFixer\Fixer\Phpdoc\GeneralPhpdocAnnotationRemoveFixer;
 use PhpCsFixer\Fixer\PhpUnit\PhpUnitStrictFixer;
-use SlevomatCodingStandard\Sniffs\Classes\UnusedPrivateElementsSniff;
 use SlevomatCodingStandard\Sniffs\TypeHints\PropertyTypeHintSniff;
 use Symfony\Component\DependencyInjection\Loader\Configurator\ContainerConfigurator;
 use Symplify\EasyCodingStandard\ValueObject\Option;
@@ -26,24 +25,15 @@ return static function (ContainerConfigurator $containerConfigurator): void {
         __DIR__ . '/rector-ci.php',
     ]);
 
-    $parameters->set(Option::SETS, [
-        SetList::PSR_12,
-        SetList::PHP_70,
-        SetList::PHP_71,
-        SetList::SYMPLIFY,
-        SetList::COMMON,
-        SetList::CLEAN_CODE,
-    ]);
+    $parameters->set(Option::SETS, [SetList::PSR_12, SetList::SYMPLIFY, SetList::COMMON, SetList::CLEAN_CODE]);
 
     $parameters->set(Option::SKIP, [
-        UnaryOperatorSpacesFixer::class => null,
-        PropertyTypeHintSniff::class => null,
-        PhpUnitStrictFixer::class => ['tests/ORM/TimestampableTest.php'],
-        UnusedPrivateElementsSniff::class => ['tests/Fixtures/Entity/SluggableWithoutRegenerateEntity.php'],
-        OrderedImportsFixer::class => ['tests/Fixtures/Entity/AbstractTimestampableMappedSuperclassEntity.php'],
-    ]);
-
-    $parameters->set(Option::EXCLUDE_PATHS, [
+        UnaryOperatorSpacesFixer::class,
+        PropertyTypeHintSniff::class,
+        PhpUnitStrictFixer::class => [__DIR__ . '/tests/ORM/TimestampableTest.php'],
+        OrderedImportsFixer::class => [
+            __DIR__ . '/tests/Fixtures/Entity/AbstractTimestampableMappedSuperclassEntity.php',
+        ],
         __DIR__ . '/src/Bundle/DoctrineBehaviorsBundle.php',
         __DIR__ . '/src/DoctrineBehaviorsBundle.php',
     ]);
