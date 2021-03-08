@@ -18,7 +18,7 @@ abstract class AbstractTranslatableEntityTranslation implements TranslationInter
     /**
      * @ORM\Column(type="string")
      */
-    private ?string $title;
+    private ?string $title = null;
 
     public function getTitle(): ?string
     {

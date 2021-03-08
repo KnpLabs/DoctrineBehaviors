@@ -13,7 +13,7 @@ final class TestUserProvider implements UserProviderInterface
      */
     private string $user = 'user';
 
-    private ?string $userEntity;
+    private ?string $userEntity = null;
 
     public function changeUser(string $user): void
     {

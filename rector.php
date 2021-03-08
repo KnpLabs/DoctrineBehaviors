@@ -5,6 +5,7 @@ declare(strict_types=1);
 use Rector\Core\Configuration\Option;
 use Rector\DeadCode\Rector\Class_\RemoveUnusedDoctrineEntityMethodAndPropertyRector;
 use Rector\Set\ValueObject\SetList;
+use Rector\TypeDeclaration\Rector\FunctionLike\ParamTypeDeclarationRector;
 use Symfony\Component\DependencyInjection\Loader\Configurator\ContainerConfigurator;
 
 return static function (ContainerConfigurator $containerConfigurator): void {
@@ -32,5 +33,9 @@ return static function (ContainerConfigurator $containerConfigurator): void {
     $parameters->set(Option::SKIP, [
         RemoveUnusedDoctrineEntityMethodAndPropertyRector::class,
         __DIR__ . '/src/Model/Translatable/TranslatableMethodsTrait.php',
+
+        ParamTypeDeclarationRector::class => [
+            __DIR__ . '/src/Model/Tree/TreeNodeMethodsTrait.php'
+        ],
     ]);
 };

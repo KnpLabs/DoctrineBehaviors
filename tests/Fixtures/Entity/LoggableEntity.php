@@ -19,7 +19,7 @@ class LoggableEntity implements LoggableInterface
     /**
      * @ORM\Column(type="string", nullable=true)
      */
-    private ?string $title;
+    private ?string $title = null;
 
     /**
      * @ORM\Id
@@ -32,12 +32,12 @@ class LoggableEntity implements LoggableInterface
      * @ORM\Column(type="array", nullable=true)
      * @var string[]|null
      */
-    private ?array $roles;
+    private ?array $roles = null;
 
     /**
      * @ORM\Column(type="date", nullable=true)
      */
-    private ?DateTimeInterface $dateTime;
+    private ?DateTimeInterface $dateTime = null;
 
     public function getId(): int
     {

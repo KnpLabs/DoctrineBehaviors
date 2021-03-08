@@ -25,7 +25,7 @@ class UuidableEntity implements UuidableInterface
     /**
      * @ORM\Column(type="string")
      */
-    private ?string $name;
+    private ?string $name = null;
 
     public function getId(): int
     {

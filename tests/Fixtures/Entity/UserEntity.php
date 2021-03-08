@@ -21,7 +21,7 @@ class UserEntity
     /**
      * @ORM\Column(type="string")
      */
-    private ?string $username;
+    private ?string $username = null;
 
     public function getId(): int
     {

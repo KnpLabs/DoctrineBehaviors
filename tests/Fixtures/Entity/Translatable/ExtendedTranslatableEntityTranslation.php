@@ -21,7 +21,7 @@ class ExtendedTranslatableEntityTranslation extends AbstractTranslatableEntityTr
     /**
      * @ORM\Column(type="string")
      */
-    private ?string $extendedTitle;
+    private ?string $extendedTitle = null;
 
     public function getExtendedTitle(): ?string
     {

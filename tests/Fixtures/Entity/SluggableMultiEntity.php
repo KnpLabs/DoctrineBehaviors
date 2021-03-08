@@ -27,7 +27,7 @@ class SluggableMultiEntity implements SluggableInterface
     /**
      * @ORM\Column(type="string")
      */
-    private ?string $name;
+    private ?string $name = null;
 
     /**
      * @ORM\Column(type="datetime")

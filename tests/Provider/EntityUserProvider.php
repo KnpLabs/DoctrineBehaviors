@@ -17,7 +17,7 @@ final class EntityUserProvider implements UserProviderInterface
      */
     private array $userEntities = [];
 
-    private ?UserEntity $userEntity;
+    private ?UserEntity $userEntity = null;
 
     private EntityManagerInterface $entityManager;
 

@@ -25,7 +25,7 @@ class TimestampableEntity implements TimestampableInterface
     /**
      * @ORM\Column(type="string", nullable=true)
      */
-    private ?string $title;
+    private ?string $title = null;
 
     public function getId(): int
     {

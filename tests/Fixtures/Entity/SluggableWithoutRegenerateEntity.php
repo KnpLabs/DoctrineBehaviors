@@ -18,7 +18,7 @@ class SluggableWithoutRegenerateEntity implements SluggableInterface
     /**
      * @ORM\Column(type="string")
      */
-    private ?string $name;
+    private ?string $name = null;
 
     /**
      * @ORM\Id
