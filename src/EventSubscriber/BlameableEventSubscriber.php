@@ -31,20 +31,11 @@ final class BlameableEventSubscriber implements EventSubscriber
      */
     private const CREATED_BY = 'createdBy';
 
-    /**
-     * @var string|null
-     */
-    private $blameableUserEntity;
+    private ?string $blameableUserEntity;
 
-    /**
-     * @var UserProviderInterface
-     */
-    private $userProvider;
+    private UserProviderInterface $userProvider;
 
-    /**
-     * @var EntityManagerInterface
-     */
-    private $entityManager;
+    private EntityManagerInterface $entityManager;
 
     public function __construct(
         UserProviderInterface $userProvider,

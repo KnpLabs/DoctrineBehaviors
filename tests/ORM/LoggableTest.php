@@ -10,10 +10,7 @@ use Psr\Log\Test\TestLogger;
 
 final class LoggableTest extends AbstractBehaviorTestCase
 {
-    /**
-     * @var TestLogger
-     */
-    private $testLogger;
+    private ?BaseObject $testLogger;
 
     protected function setUp(): void
     {

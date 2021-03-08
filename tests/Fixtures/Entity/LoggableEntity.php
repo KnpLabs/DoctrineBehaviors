@@ -18,29 +18,25 @@ class LoggableEntity implements LoggableInterface
 
     /**
      * @ORM\Column(type="string", nullable=true)
-     * @var string|null
      */
-    private $title;
+    private ?string $title;
 
     /**
      * @ORM\Id
      * @ORM\Column(type="integer")
      * @ORM\GeneratedValue(strategy="AUTO")
-     * @var int
      */
-    private $id;
+    private int $id;
 
     /**
      * @ORM\Column(type="array", nullable=true)
-     * @var string[]|null
      */
-    private $roles;
+    private ?array $roles;
 
     /**
      * @ORM\Column(type="date", nullable=true)
-     * @var DateTimeInterface|null
      */
-    private $dateTime;
+    private ?DateTimeInterface $dateTime;
 
     public function getId(): int
     {
@@ -57,7 +53,7 @@ class LoggableEntity implements LoggableInterface
         $this->title = $title;
     }
 
-    public function getRoles()
+    public function getRoles(): ?array
     {
         return $this->roles;
     }
@@ -67,13 +63,13 @@ class LoggableEntity implements LoggableInterface
         $this->roles = $roles;
     }
 
-    public function getDate()
+    public function getDate(): ?DateTimeInterface
     {
         return $this->dateTime;
     }
 
-    public function setDate($date): void
+    public function setDate(?DateTimeInterface $dateTime): void
     {
-        $this->dateTime = $date;
+        $this->dateTime = $dateTime;
     }
 }

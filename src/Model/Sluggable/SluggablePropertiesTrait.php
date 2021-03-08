@@ -6,8 +6,5 @@ namespace Knp\DoctrineBehaviors\Model\Sluggable;
 
 trait SluggablePropertiesTrait
 {
-    /**
-     * @var string
-     */
-    protected $slug;
+    protected string $slug;
 }

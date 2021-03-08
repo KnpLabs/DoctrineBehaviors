@@ -10,25 +10,20 @@ use Knp\DoctrineBehaviors\Contract\Entity\TranslationInterface;
 trait TranslatablePropertiesTrait
 {
     /**
-     * @var TranslationInterface[]|Collection
+     * @var Collection<TranslationInterface>
      */
-    protected $translations;
+    protected Collection $translations;
 
     /**
      * @see mergeNewTranslations
-     * @var TranslationInterface[]|Collection
+     * @var Collection<TranslationInterface>
      */
-    protected $newTranslations;
+    protected Collection $newTranslations;
 
     /**
      * currentLocale is a non persisted field configured during postLoad event
-     *
-     * @var string|null
      */
-    protected $currentLocale;
+    protected ?string $currentLocale;
 
-    /**
-     * @var string
-     */
-    protected $defaultLocale = 'en';
+    protected string $defaultLocale = 'en';
 }

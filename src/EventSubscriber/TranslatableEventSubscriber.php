@@ -20,20 +20,11 @@ final class TranslatableEventSubscriber implements EventSubscriber
      */
     public const LOCALE = 'locale';
 
-    /**
-     * @var int
-     */
-    private $translatableFetchMode;
+    private int $translatableFetchMode;
 
-    /**
-     * @var int
-     */
-    private $translationFetchMode;
+    private int $translationFetchMode;
 
-    /**
-     * @var LocaleProviderInterface
-     */
-    private $localeProvider;
+    private LocaleProviderInterface $localeProvider;
 
     public function __construct(
         LocaleProviderInterface $localeProvider,

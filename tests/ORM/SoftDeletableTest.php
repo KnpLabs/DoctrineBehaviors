@@ -5,7 +5,6 @@ declare(strict_types=1);
 namespace Knp\DoctrineBehaviors\Tests\ORM;
 
 use DateTime;
-use Doctrine\ORM\EntityRepository;
 use Doctrine\Persistence\ObjectRepository;
 use Knp\DoctrineBehaviors\Tests\AbstractBehaviorTestCase;
 use Knp\DoctrineBehaviors\Tests\Fixtures\Entity\SoftDeletableEntity;
@@ -13,10 +12,7 @@ use Knp\DoctrineBehaviors\Tests\Fixtures\Entity\SoftDeletableEntityInherit;
 
 final class SoftDeletableTest extends AbstractBehaviorTestCase
 {
-    /**
-     * @var ObjectRepository|EntityRepository
-     */
-    private $softDeletableRepository;
+    private ?ObjectRepository $softDeletableRepository;
 
     protected function setUp(): void
     {

@@ -7,21 +7,16 @@ namespace Knp\DoctrineBehaviors\Tests;
 use Doctrine\DBAL\Connection;
 use Doctrine\DBAL\Logging\DebugStack;
 use Doctrine\DBAL\Platforms\PostgreSqlPlatform;
+use Doctrine\ORM\EntityManager;
 use Doctrine\ORM\EntityManagerInterface;
 use Knp\DoctrineBehaviors\Tests\HttpKernel\DoctrineBehaviorsKernel;
 use Symplify\PackageBuilder\Testing\AbstractKernelTestCase;
 
 abstract class AbstractBehaviorTestCase extends AbstractKernelTestCase
 {
-    /**
-     * @var EntityManagerInterface
-     */
-    protected $entityManager;
+    protected ?EntityManagerInterface $entityManager;
 
-    /**
-     * @var DebugStack
-     */
-    protected $debugStack;
+    protected ?DebugStack $debugStack;
 
     protected function setUp(): void
     {

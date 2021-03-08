@@ -133,6 +133,9 @@ final class TreeNodeTest extends AbstractBehaviorTestCase
         yield [$treeNodeEntity[0][0][0], $treeNodeEntity[0][0][0], false];
     }
 
+    /**
+     * @return array<mixed>
+     */
     public function provideToArray(): array
     {
         return [

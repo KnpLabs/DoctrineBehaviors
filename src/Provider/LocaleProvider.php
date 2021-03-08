@@ -17,17 +17,11 @@ final class LocaleProvider implements LocaleProviderInterface
     /**
      * @var TranslatorInterface&LocaleAwareInterface|null
      */
-    private $translator;
+    private ?TranslatorInterface $translator;
 
-    /**
-     * @var ParameterBagInterface
-     */
-    private $parameterBag;
+    private ParameterBagInterface $parameterBag;
 
-    /**
-     * @var RequestStack
-     */
-    private $requestStack;
+    private RequestStack $requestStack;
 
     public function __construct(
         RequestStack $requestStack,

@@ -9,21 +9,18 @@ use Knp\DoctrineBehaviors\Contract\Provider\UserProviderInterface;
 final class TestUserProvider implements UserProviderInterface
 {
     /**
-     * @var mixed User representation
+     * @var string User representation
      */
-    private $user = 'user';
+    private string $user = 'user';
 
-    /**
-     * @var string|null
-     */
-    private $userEntity;
+    private ?string $userEntity;
 
-    public function changeUser($user): void
+    public function changeUser(string $user): void
     {
         $this->user = $user;
     }
 
-    public function provideUser()
+    public function provideUser(): string
     {
         return $this->user;
     }

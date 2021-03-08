@@ -82,7 +82,7 @@ trait TreeNodeMethodsTrait
     }
 
     /**
-     * @return Collection|TreeNodeInterface[]
+     * @return Collection<TreeNodeInterface>
      */
     public function getChildNodes(): Collection
     {
@@ -185,13 +185,12 @@ trait TreeNodeMethodsTrait
 
     /**
      * @param Closure $prepare a function to prepare the node before putting into the result
+     * @return mixed[]
      */
     public function toArray(?Closure $prepare = null, ?array &$tree = null): array
     {
         if ($prepare === null) {
-            $prepare = function (TreeNodeInterface $node) {
-                return (string) $node;
-            };
+            $prepare = fn (TreeNodeInterface $node) => (string) $node;
         }
         if ($tree === null) {
             $tree = [
@@ -218,6 +217,7 @@ trait TreeNodeMethodsTrait
     /**
      * @param Closure $prepare a function to prepare the node before putting into the result
      * @param array $tree a reference to an array, used internally for recursion
+     * @return mixed[]
      */
     public function toFlatArray(?Closure $prepare = null, ?array &$tree = null): array
     {
@@ -244,12 +244,12 @@ trait TreeNodeMethodsTrait
     }
 
     /**
-     * @param TreeNodeInterface $node
+     * @param TreeNodeInterface $treeNode
      */
-    public function offsetSet($offset, $node): void
+    public function offsetSet($offset, $treeNode): void
     {
         /** @var TreeNodeInterface $this */
-        $node->setChildNodeOf($this);
+        $treeNode->setChildNodeOf($this);
     }
 
     public function offsetExists($offset)
@@ -274,8 +274,6 @@ trait TreeNodeMethodsTrait
     {
         $path = explode(static::getMaterializedPathSeparator(), $this->getRealMaterializedPath());
 
-        return array_filter($path, function ($item) {
-            return $item !== '';
-        });
+        return array_filter($path, fn ($item) => $item !== '');
     }
 }

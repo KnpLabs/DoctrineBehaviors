@@ -20,6 +20,9 @@ trait TreeTrait
             ->setParameter('empty', '');
     }
 
+    /**
+     * @return mixed[]
+     */
     public function getRootNodes(string $rootAlias = 't'): array
     {
         return $this->getRootNodesQB($rootAlias)
@@ -86,6 +89,9 @@ trait TreeTrait
         return $queryBuilder;
     }
 
+    /**
+     * @return mixed[]
+     */
     public function getFlatTree(string $path, string $rootAlias = 't', array $extraParams = []): array
     {
         return $this->getFlatTreeQB($path, $rootAlias, $extraParams)

@@ -20,15 +20,13 @@ class TreeNodeEntity implements TreeNodeInterface, ArrayAccess
      * @ORM\Id
      * @ORM\Column(type="integer")
      * @ORM\GeneratedValue(strategy="NONE")
-     * @var int|null
      */
-    private $id;
+    private ?int $id;
 
     /**
      * @ORM\Column(type="string", length=255, nullable=true)
-     * @var string
      */
-    private $name;
+    private ?string $name;
 
     public function __toString(): string
     {
@@ -45,7 +43,7 @@ class TreeNodeEntity implements TreeNodeInterface, ArrayAccess
         $this->id = $id;
     }
 
-    public function getName(): ?string
+    public function getName(): string
     {
         return $this->name;
     }

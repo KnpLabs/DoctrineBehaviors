@@ -19,23 +19,20 @@ class SluggableEntity implements SluggableInterface
 
     /**
      * @ORM\Column(type="string")
-     * @var string
      */
-    private $name;
+    private ?string $name;
 
     /**
      * @ORM\Id
      * @ORM\Column(type="integer")
      * @ORM\GeneratedValue(strategy="AUTO")
-     * @var int
      */
-    private $id;
+    private int $id;
 
     /**
      * @ORM\Column(type="datetime")
-     * @var DateTimeInterface
      */
-    private $dateTime;
+    private DateTimeInterface $dateTime;
 
     public function __construct()
     {

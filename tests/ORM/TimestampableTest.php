@@ -5,17 +5,13 @@ declare(strict_types=1);
 namespace Knp\DoctrineBehaviors\Tests\ORM;
 
 use Datetime;
-use Doctrine\ORM\EntityRepository;
 use Doctrine\Persistence\ObjectRepository;
 use Knp\DoctrineBehaviors\Tests\AbstractBehaviorTestCase;
 use Knp\DoctrineBehaviors\Tests\Fixtures\Entity\TimestampableEntity;
 
 final class TimestampableTest extends AbstractBehaviorTestCase
 {
-    /**
-     * @var ObjectRepository|EntityRepository
-     */
-    private $timestampableRepository;
+    private ?ObjectRepository $timestampableRepository;
 
     protected function setUp(): void
     {

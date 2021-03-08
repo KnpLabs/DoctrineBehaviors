@@ -21,15 +21,13 @@ class TranslatableCustomizedEntityTranslation implements TranslationInterface
      * @ORM\Id
      * @ORM\Column(type="integer")
      * @ORM\GeneratedValue(strategy="AUTO")
-     * @var int
      */
-    private $id;
+    private int $id;
 
     /**
      * @ORM\Column(type="string")
-     * @var string
      */
-    private $title;
+    private ?string $title;
 
     public function getId(): int
     {
@@ -41,7 +39,7 @@ class TranslatableCustomizedEntityTranslation implements TranslationInterface
         return TranslatableCustomizedEntity::class;
     }
 
-    public function getTitle()
+    public function getTitle(): string
     {
         return $this->title;
     }

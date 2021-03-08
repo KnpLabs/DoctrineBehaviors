@@ -9,14 +9,14 @@ use Doctrine\Common\Collections\Collection;
 interface TranslatableInterface
 {
     /**
-     * @return Collection|TranslationInterface[]
+     * @return Collection<TranslationInterface>
      */
-    public function getTranslations();
+    public function getTranslations(): Collection;
 
     /**
-     * @return Collection|TranslationInterface[]
+     * @return Collection<TranslationInterface>
      */
-    public function getNewTranslations();
+    public function getNewTranslations(): Collection;
 
     public function addTranslation(TranslationInterface $translation): void;
 

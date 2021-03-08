@@ -4,7 +4,6 @@ declare(strict_types=1);
 
 namespace Knp\DoctrineBehaviors\Tests\ORM;
 
-use Doctrine\ORM\EntityRepository;
 use Doctrine\ORM\Mapping\ClassMetadataInfo;
 use Doctrine\Persistence\ObjectRepository;
 use Knp\DoctrineBehaviors\Contract\Entity\TranslatableInterface;
@@ -17,10 +16,7 @@ use Knp\DoctrineBehaviors\Tests\Fixtures\Entity\Translation\TranslatableCustomiz
 
 final class TranslatableTest extends AbstractBehaviorTestCase
 {
-    /**
-     * @var ObjectRepository|EntityRepository
-     */
-    private $translatableRepository;
+    private ?ObjectRepository $translatableRepository;
 
     protected function setUp(): void
     {

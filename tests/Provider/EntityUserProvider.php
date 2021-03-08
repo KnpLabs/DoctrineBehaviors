@@ -10,25 +10,16 @@ use Knp\DoctrineBehaviors\Tests\Fixtures\Entity\UserEntity;
 
 final class EntityUserProvider implements UserProviderInterface
 {
-    /**
-     * @var bool
-     */
-    private $isUserEntityPrepared = false;
+    private bool $isUserEntityPrepared = false;
 
     /**
      * @var UserEntity[]
      */
-    private $userEntities = [];
+    private array $userEntities = [];
 
-    /**
-     * @var UserEntity
-     */
-    private $userEntity;
+    private ?UserEntity $userEntity;
 
-    /**
-     * @var EntityManagerInterface
-     */
-    private $entityManager;
+    private EntityManagerInterface $entityManager;
 
     public function __construct(EntityManagerInterface $entityManager)
     {
@@ -42,7 +33,10 @@ final class EntityUserProvider implements UserProviderInterface
         }
     }
 
-    public function provideUser()
+    /**
+     * @return UserEntity
+     */
+    public function provideUser(): ?UserEntity
     {
         $this->prepareUserEntities();
 
