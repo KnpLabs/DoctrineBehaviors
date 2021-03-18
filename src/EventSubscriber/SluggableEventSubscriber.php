@@ -168,7 +168,6 @@ final class SluggableEventSubscriber implements EventSubscriber
 
         $values = [];
         foreach ($sluggable->getSluggableFields() as $sluggableField) {
-//            $values[] = $this->resolveFieldValue($sluggable, $sluggableField);
             $values[] = $this->propertyAccessor->getValue($sluggable, $sluggableField);
         }
 
