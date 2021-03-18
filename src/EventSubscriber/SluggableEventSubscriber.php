@@ -15,6 +15,7 @@ use Knp\DoctrineBehaviors\Exception\SluggableException;
 use Knp\DoctrineBehaviors\Repository\DefaultSluggableRepository;
 use Symfony\Component\String\Slugger\AsciiSlugger;
 use Symfony\Component\DependencyInjection\ParameterBag\ParameterBagInterface;
+use Symfony\Component\PropertyAccess\PropertyAccessorInterface;
 
 final class SluggableEventSubscriber implements EventSubscriber
 {
@@ -30,6 +31,8 @@ final class SluggableEventSubscriber implements EventSubscriber
 
     private ParameterBagInterface $parameterBag;
 
+    private PropertyAccessorInterface $propertyAccessor;
+
     /**
      * @var EntityManagerInterface
      */
@@ -38,10 +41,12 @@ final class SluggableEventSubscriber implements EventSubscriber
     public function __construct(
         EntityManagerInterface $entityManager,
         ParameterBagInterface $parameterBag,
+        PropertyAccessorInterface $propertyAccessor,
         DefaultSluggableRepository $defaultSluggableRepository
     ) {
         $this->defaultSluggableRepository = $defaultSluggableRepository;
         $this->parameterBag = $parameterBag;
+        $this->propertyAccessor = $propertyAccessor;
         $this->entityManager = $entityManager;
     }
 
@@ -92,7 +97,7 @@ final class SluggableEventSubscriber implements EventSubscriber
             return;
         }
 
-        $entity->generateSlug();
+        $this->generateSlug($entity);
 
         if ($entity->shouldGenerateUniqueSlugs()) {
             $this->generateUniqueSlugFor($entity);
@@ -163,24 +168,11 @@ final class SluggableEventSubscriber implements EventSubscriber
 
         $values = [];
         foreach ($sluggable->getSluggableFields() as $sluggableField) {
-            $values[] = $this->resolveFieldValue($sluggableField);
+//            $values[] = $this->resolveFieldValue($sluggable, $sluggableField);
+            $values[] = $this->propertyAccessor->getValue($sluggable, $sluggableField);
         }
 
         $sluggable->setSlug($this->generateSlugValue($values, $sluggable->getSlugDelimiter()));
-    }
-
-    private function resolveFieldValue(string $field)
-    {
-        if (property_exists($this, $field)) {
-            return $this->{$field};
-        }
-
-        $methodName = 'get' . ucfirst($field);
-        if (method_exists($this, $methodName)) {
-            return $this->{$methodName}();
-        }
-
-        return null;
     }
 
     /**

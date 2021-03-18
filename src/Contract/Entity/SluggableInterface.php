@@ -17,11 +17,6 @@ interface SluggableInterface
 
     public function getSlug(): string;
 
-    /**
-     * Generates and sets the entity's slug
-     */
-    public function generateSlug(): void;
-
     public function getSlugDelimiter(): string;
 
     public function shouldGenerateUniqueSlugs(): bool;
