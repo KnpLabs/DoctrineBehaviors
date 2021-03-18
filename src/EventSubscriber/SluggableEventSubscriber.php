@@ -11,7 +11,10 @@ use Doctrine\ORM\Event\LoadClassMetadataEventArgs;
 use Doctrine\ORM\Events;
 use Doctrine\ORM\Mapping\ClassMetadataInfo;
 use Knp\DoctrineBehaviors\Contract\Entity\SluggableInterface;
+use Knp\DoctrineBehaviors\Exception\SluggableException;
 use Knp\DoctrineBehaviors\Repository\DefaultSluggableRepository;
+use Symfony\Component\String\Slugger\AsciiSlugger;
+use Symfony\Component\DependencyInjection\ParameterBag\ParameterBagInterface;
 
 final class SluggableEventSubscriber implements EventSubscriber
 {
@@ -25,6 +28,8 @@ final class SluggableEventSubscriber implements EventSubscriber
      */
     private $defaultSluggableRepository;
 
+    private ParameterBagInterface $parameterBag;
+
     /**
      * @var EntityManagerInterface
      */
@@ -32,9 +37,11 @@ final class SluggableEventSubscriber implements EventSubscriber
 
     public function __construct(
         EntityManagerInterface $entityManager,
+        ParameterBagInterface $parameterBag,
         DefaultSluggableRepository $defaultSluggableRepository
     ) {
         $this->defaultSluggableRepository = $defaultSluggableRepository;
+        $this->parameterBag = $parameterBag;
         $this->entityManager = $entityManager;
     }
 
@@ -143,5 +150,71 @@ final class SluggableEventSubscriber implements EventSubscriber
         }
 
         return $scheduledEntities;
+    }
+
+    /**
+     * @param SluggableInterface $sluggable
+     */
+    public function generateSlug(SluggableInterface $sluggable): void
+    {
+        if ($sluggable->getSlug() !== null && $sluggable->shouldRegenerateSlugOnUpdate() === false) {
+            return;
+        }
+
+        $values = [];
+        foreach ($sluggable->getSluggableFields() as $sluggableField) {
+            $values[] = $this->resolveFieldValue($sluggableField);
+        }
+
+        $sluggable->setSlug($this->generateSlugValue($values, $sluggable->getSlugDelimiter()));
+    }
+
+    private function resolveFieldValue(string $field)
+    {
+        if (property_exists($this, $field)) {
+            return $this->{$field};
+        }
+
+        $methodName = 'get' . ucfirst($field);
+        if (method_exists($this, $methodName)) {
+            return $this->{$methodName}();
+        }
+
+        return null;
+    }
+
+    /**
+     * @return mixed|string
+     */
+    private function generateSlugValue($values, string $delimiter)
+    {
+        $usableValues = [];
+        foreach ($values as $fieldValue) {
+            if (! empty($fieldValue)) {
+                $usableValues[] = $fieldValue;
+            }
+        }
+
+        $this->ensureAtLeastOneUsableValue($values, $usableValues);
+
+        // generate the slug itself
+        $sluggableText = implode(' ', $usableValues);
+
+        $defaultLocale = $this->parameterBag->get('kernel.default_locale');
+        $unicodeString = (new AsciiSlugger($defaultLocale))->slug($sluggableText, $delimiter);
+
+        return strtolower($unicodeString->toString());
+    }
+
+    private function ensureAtLeastOneUsableValue(array $values, array $usableValues): void
+    {
+        if (count($usableValues) >= 1) {
+            return;
+        }
+
+        throw new SluggableException(sprintf(
+            'Sluggable expects to have at least one non-empty field from the following: ["%s"]',
+            implode('", "', array_keys($values))
+        ));
     }
 }

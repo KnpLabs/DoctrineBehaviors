@@ -22,5 +22,9 @@ interface SluggableInterface
      */
     public function generateSlug(): void;
 
+    public function getSlugDelimiter(): string;
+
     public function shouldGenerateUniqueSlugs(): bool;
+
+    public function shouldRegenerateSlugOnUpdate(): bool;
 }
