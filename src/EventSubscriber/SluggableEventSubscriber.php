@@ -30,9 +30,15 @@ final class SluggableEventSubscriber implements EventSubscriber
      */
     private $defaultSluggableRepository;
 
-    private ParameterBagInterface $parameterBag;
+    /**
+     * @var ParameterBagInterface
+     */
+    private $parameterBag;
 
-    private PropertyAccessorInterface $propertyAccessor;
+    /**
+     * @var PropertyAccessorInterface
+     */
+    private $propertyAccessor;
 
     /**
      * @var EntityManagerInterface
