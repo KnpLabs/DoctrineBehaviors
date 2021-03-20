@@ -11,11 +11,12 @@ use Doctrine\ORM\Event\LoadClassMetadataEventArgs;
 use Doctrine\ORM\Events;
 use Doctrine\ORM\Mapping\ClassMetadataInfo;
 use Knp\DoctrineBehaviors\Contract\Entity\SluggableInterface;
+use Knp\DoctrineBehaviors\Contract\Entity\SlugGeneratorInterface;
 use Knp\DoctrineBehaviors\Exception\SluggableException;
 use Knp\DoctrineBehaviors\Repository\DefaultSluggableRepository;
-use Symfony\Component\String\Slugger\AsciiSlugger;
 use Symfony\Component\DependencyInjection\ParameterBag\ParameterBagInterface;
 use Symfony\Component\PropertyAccess\PropertyAccessorInterface;
+use Symfony\Component\String\Slugger\AsciiSlugger;
 
 final class SluggableEventSubscriber implements EventSubscriber
 {
@@ -80,6 +81,24 @@ final class SluggableEventSubscriber implements EventSubscriber
     public function getSubscribedEvents(): array
     {
         return [Events::loadClassMetadata, Events::prePersist, Events::preUpdate];
+    }
+
+    public function generateSlug(SluggableInterface $sluggable): void
+    {
+        if ($sluggable->getSlug() !== null && $sluggable->shouldRegenerateSlugOnUpdate() === false) {
+            return;
+        }
+
+        $values = [];
+        foreach ($sluggable->getSluggableFields() as $sluggableField) {
+            $values[] = $this->propertyAccessor->getValue($sluggable, $sluggableField);
+        }
+
+        if ($sluggable instanceof SlugGeneratorInterface) {
+            $sluggable->setSlug($sluggable->generateSlugValue($values));
+        } else {
+            $sluggable->setSlug($this->generateSlugValue($values, $sluggable->getSlugDelimiter()));
+        }
     }
 
     private function shouldSkip(ClassMetadataInfo $classMetadataInfo): bool
@@ -155,23 +174,6 @@ final class SluggableEventSubscriber implements EventSubscriber
         }
 
         return $scheduledEntities;
-    }
-
-    /**
-     * @param SluggableInterface $sluggable
-     */
-    public function generateSlug(SluggableInterface $sluggable): void
-    {
-        if ($sluggable->getSlug() !== null && $sluggable->shouldRegenerateSlugOnUpdate() === false) {
-            return;
-        }
-
-        $values = [];
-        foreach ($sluggable->getSluggableFields() as $sluggableField) {
-            $values[] = $this->propertyAccessor->getValue($sluggable, $sluggableField);
-        }
-
-        $sluggable->setSlug($this->generateSlugValue($values, $sluggable->getSlugDelimiter()));
     }
 
     /**
