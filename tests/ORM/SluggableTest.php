@@ -67,7 +67,7 @@ final class SluggableTest extends AbstractBehaviorTestCase
     public function provideDataForTest(): Iterator
     {
         yield ['The name', 'the-name'];
-        yield ['Löic & René', 'loic-rene'];
+        yield ['Löic & René', 'loic-and-rene'];
         yield ['Иван Иванович', 'ivan-ivanovic'];
         yield ['Châteauneuf du Pape', 'chateauneuf-du-pape'];
         yield ['Žluťoučký kůň', 'zlutoucky-kun'];

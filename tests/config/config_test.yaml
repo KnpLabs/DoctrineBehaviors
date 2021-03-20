@@ -1,3 +1,6 @@
+framework:
+    default_locale: en
+
 parameters:
     env(DB_ENGINE): "pdo_sqlite" # also pdo_pgsql, pdo_mysql
     env(DB_HOST): "localhost"

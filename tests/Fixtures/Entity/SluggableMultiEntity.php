@@ -8,12 +8,13 @@ use DateTime;
 use DateTimeInterface;
 use Doctrine\ORM\Mapping as ORM;
 use Knp\DoctrineBehaviors\Contract\Entity\SluggableInterface;
+use Knp\DoctrineBehaviors\Contract\Entity\SlugGeneratorInterface;
 use Knp\DoctrineBehaviors\Model\Sluggable\SluggableTrait;
 
 /**
  * @ORM\Entity
  */
-class SluggableMultiEntity implements SluggableInterface
+class SluggableMultiEntity implements SluggableInterface, SlugGeneratorInterface
 {
     use SluggableTrait;
 
@@ -83,7 +84,7 @@ class SluggableMultiEntity implements SluggableInterface
     /**
      * @return mixed|string
      */
-    public function generateSlugValue(array $values)
+    public function generateSlugValue(array $values): string
     {
         $sluggableText = implode(' ', $values);
         $sluggableText = str_replace(' ', '+', $sluggableText);
