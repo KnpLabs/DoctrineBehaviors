@@ -134,6 +134,10 @@ final class SluggableEventSubscriber implements EventSubscriber
         $i = 0;
         $slug = $sluggable->getSlug();
 
+        if ($slug === null) {
+            return;
+        }
+
         $uniqueSlug = $slug;
 
         while (! (
