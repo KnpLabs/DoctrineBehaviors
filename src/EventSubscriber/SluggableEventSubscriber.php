@@ -91,7 +91,7 @@ final class SluggableEventSubscriber implements EventSubscriber
 
     public function generateSlug(SluggableInterface $sluggable): void
     {
-        if ($sluggable->getSlug() !== null && $sluggable->shouldRegenerateSlugOnUpdate() === false) {
+        if ($sluggable->getSlug() !== null && !$sluggable->shouldRegenerateSlugOnUpdate()) {
             return;
         }
 
