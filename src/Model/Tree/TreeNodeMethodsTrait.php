@@ -28,9 +28,13 @@ trait TreeNodeMethodsTrait
 
     public function getRealMaterializedPath(): string
     {
-        if ($this->getMaterializedPath() === self::getMaterializedPathSeparator()) {
-            return $this->getMaterializedPath() . $this->getNodeId();
+        $materializedPath = $this->getMaterializedPath();
+        $materializedPathSeparator = self::getMaterializedPathSeparator();
+
+        if ($materializedPath === $materializedPathSeparator) {
+            return $materializedPath . $this->getNodeId();
         }
+
         return $this->getMaterializedPath() . self::getMaterializedPathSeparator() . $this->getNodeId();
     }
 
@@ -72,7 +76,10 @@ trait TreeNodeMethodsTrait
 
     public function isRootNode(): bool
     {
-        return self::getMaterializedPathSeparator() === $this->getParentMaterializedPath();
+        $parentMaterializedPath = $this->getParentMaterializedPath();
+        $materializedPathSeparator = self::getMaterializedPathSeparator();
+
+        return $materializedPathSeparator === $parentMaterializedPath;
     }
 
     public function isLeafNode(): bool

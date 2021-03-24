@@ -82,7 +82,7 @@ class SluggableMultiEntity implements SluggableInterface, SlugGeneratorInterface
     }
 
     /**
-     * @return mixed|string
+     * @return string
      */
     public function generateSlugValue(array $values): string
     {
