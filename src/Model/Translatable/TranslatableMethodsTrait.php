@@ -206,8 +206,10 @@ trait TranslatableMethodsTrait
 
     protected function computeFallbackLocale($locale): ?string
     {
-        if (strrchr($locale, '_') !== false) {
-            return substr($locale, 0, -strlen(strrchr($locale, '_')));
+        $localePart = \strrchr($locale, '_');
+
+        if ($localePart !== false) {
+            return substr($locale, 0, -strlen($localePart));
         }
 
         return null;
