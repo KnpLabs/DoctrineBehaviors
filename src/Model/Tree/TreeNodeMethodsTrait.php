@@ -78,7 +78,6 @@ trait TreeNodeMethodsTrait
     {
         $parentMaterializedPath = $this->getParentMaterializedPath();
         $materializedPathSeparator = self::getMaterializedPathSeparator();
-
         return $materializedPathSeparator === $parentMaterializedPath;
     }
 
