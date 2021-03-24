@@ -81,9 +81,6 @@ class SluggableMultiEntity implements SluggableInterface, SlugGeneratorInterface
         return 'title';
     }
 
-    /**
-     * @return string
-     */
     public function generateSlugValue(array $values): string
     {
         $sluggableText = implode(' ', $values);
