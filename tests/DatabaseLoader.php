@@ -26,11 +26,12 @@ final class DatabaseLoader
 
     public function reload(): void
     {
-        $allMetadata = $this->entityManager->getMetadataFactory()
-            ->getAllMetadata();
+        $classMetadataFactory = $this->entityManager->getMetadataFactory();
+
+        $classesMetadatas = $classMetadataFactory->getAllMetadata();
 
         $entityClasses = [];
-        foreach ($allMetadata as $classMetadata) {
+        foreach ($classesMetadatas as $classMetadata) {
             $entityClasses[] = $classMetadata->getName();
         }
 

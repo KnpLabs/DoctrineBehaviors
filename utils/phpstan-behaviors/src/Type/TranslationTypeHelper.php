@@ -17,21 +17,21 @@ final class TranslationTypeHelper
     {
         $type = $scope->getType($methodCall->var);
         $translatableClass = $type->getReferencedClasses()[0];
-        $reflection = $broker->getClass($translatableClass)
+        $reflectionClass = $broker->getClass($translatableClass)
             ->getNativeReflection();
 
-        if ($reflection->isInterface()) {
-            if ($reflection->getName() === TranslatableInterface::class) {
+        if ($reflectionClass->isInterface()) {
+            if ($reflectionClass->getName() === TranslatableInterface::class) {
                 return TranslationInterface::class;
             }
 
             throw new Exception(sprintf(
                 'Unable to find the Translation class associated to the Translatable class "%s".',
-                $reflection->getName()
+                $reflectionClass->getName()
             ));
         }
 
-        return $reflection
+        return $reflectionClass
             ->getMethod('getTranslationEntityClass')
             ->invoke(null);
     }
@@ -40,21 +40,21 @@ final class TranslationTypeHelper
     {
         $type = $scope->getType($methodCall->var);
         $translationClass = $type->getReferencedClasses()[0];
-        $reflection = $broker->getClass($translationClass)
+        $reflectionClass = $broker->getClass($translationClass)
             ->getNativeReflection();
 
-        if ($reflection->isInterface()) {
-            if ($reflection->getName() === TranslationInterface::class) {
+        if ($reflectionClass->isInterface()) {
+            if ($reflectionClass->getName() === TranslationInterface::class) {
                 return TranslatableInterface::class;
             }
 
             throw new Exception(sprintf(
                 'Unable to find the Translatable class associated to the Translation class "%s".',
-                $reflection->getName()
+                $reflectionClass->getName()
             ));
         }
 
-        return $reflection
+        return $reflectionClass
             ->getMethod('getTranslatableEntityClass')
             ->invoke(null);
     }

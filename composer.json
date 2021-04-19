@@ -34,16 +34,17 @@
         "psr/log": "^1.1",
         "doctrine/annotations": "^1.12",
         "doctrine/doctrine-bundle": "^2.2",
-        "php-parallel-lint/php-parallel-lint": "^1.2",
-        "phpstan/phpstan": "^0.12.80",
+        "php-parallel-lint/php-parallel-lint": "^1.3",
+        "phpstan/phpstan": "^0.12.83",
         "phpunit/phpunit": "^9.5",
-        "rector/rector-prefixed": "^0.9",
-        "symplify/easy-coding-standard": "^9.2.6",
-        "symplify/phpstan-extensions": "^9.2.6",
+        "rector/rector-prefixed": "^0.10.4",
+        "symplify/easy-coding-standard": "^9.2.18",
+        "symplify/phpstan-extensions": "^9.2.18",
         "phpstan/phpstan-doctrine": "^0.12.33",
         "phpstan/phpstan-phpunit": "^0.12.18",
-        "symplify/package-builder": "^9.2.6",
-        "symplify/phpstan-rules": "^9.2.6"
+        "symplify/package-builder": "^9.2.18",
+        "symplify/phpstan-rules": "^9.2.18",
+        "symfony/yaml": "^5.2"
     },
     "autoload": {
         "psr-4": {

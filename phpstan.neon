@@ -98,3 +98,7 @@ parameters:
         - '#Constant string value need to only have small letters, _, \-, \. and numbers#'
         - '#Property Knp\\DoctrineBehaviors\\Tests\\AbstractBehaviorTestCase\:\:\$entityManager \(Doctrine\\ORM\\EntityManagerInterface\) does not accept object\|null#'
         - '#Parameter \#1 \$input of function array_filter expects array, array<int, string\>\|false given#'
+
+        -
+            message: '#Do not compare call directly, use a variable assign#'
+            path: src/Model/*/*MethodsTrait.php

@@ -57,9 +57,9 @@ trait SluggableMethodsTrait
     private function generateSlugValue($values)
     {
         $usableValues = [];
-        foreach ($values as $fieldValue) {
-            if (! empty($fieldValue)) {
-                $usableValues[] = $fieldValue;
+        foreach ($values as $value) {
+            if (! empty($value)) {
+                $usableValues[] = $value;
             }
         }
 
