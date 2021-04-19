@@ -166,10 +166,10 @@ trait TreeNodeMethodsTrait
     {
         $this->getChildNodes()
             ->clear();
-        foreach ($results as $node) {
-            if ($node->getMaterializedPath() === $this->getRealMaterializedPath()) {
-                $node->setParentNode($this);
-                $node->buildTree($results);
+        foreach ($results as $result) {
+            if ($result->getMaterializedPath() === $this->getRealMaterializedPath()) {
+                $result->setParentNode($this);
+                $result->buildTree($results);
             }
         }
     }

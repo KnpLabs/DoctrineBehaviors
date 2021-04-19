@@ -112,8 +112,8 @@ final class SluggableEventSubscriber implements EventSubscriber
     private function isSlugUniqueInUnitOfWork(SluggableInterface $sluggable, string $uniqueSlug): bool
     {
         $scheduledEntities = $this->getOtherScheduledEntities($sluggable);
-        foreach ($scheduledEntities as $entity) {
-            if ($entity->getSlug() === $uniqueSlug) {
+        foreach ($scheduledEntities as $scheduledEntity) {
+            if ($scheduledEntity->getSlug() === $uniqueSlug) {
                 return false;
             }
         }
@@ -136,9 +136,9 @@ final class SluggableEventSubscriber implements EventSubscriber
         );
 
         $scheduledEntities = [];
-        foreach ($uowScheduledEntities as $entity) {
-            if ($entity instanceof SluggableInterface && $sluggable !== $entity) {
-                $scheduledEntities[] = $entity;
+        foreach ($uowScheduledEntities as $uowScheduledEntity) {
+            if ($uowScheduledEntity instanceof SluggableInterface && $sluggable !== $uowScheduledEntity) {
+                $scheduledEntities[] = $uowScheduledEntity;
             }
         }
 
