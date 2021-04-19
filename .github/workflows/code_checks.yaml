@@ -20,7 +20,7 @@ jobs:
                         run: composer check-cs
 
                     -
-                        name: 'Rector CI'
+                        name: 'Rector'
                         run: vendor/bin/rector process --dry-run --ansi
 
         name: ${{ matrix.actions.name }}
