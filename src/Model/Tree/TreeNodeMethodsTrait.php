@@ -31,6 +31,7 @@ trait TreeNodeMethodsTrait
         if ($this->getMaterializedPath() === self::getMaterializedPathSeparator()) {
             return $this->getMaterializedPath() . $this->getNodeId();
         }
+
         return $this->getMaterializedPath() . self::getMaterializedPathSeparator() . $this->getNodeId();
     }
 
