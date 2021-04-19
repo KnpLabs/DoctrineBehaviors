@@ -102,3 +102,10 @@ parameters:
         -
             message: '#Do not compare call directly, use a variable assign#'
             path: src/Model/*/*MethodsTrait.php
+
+        -
+            message: '#For complex configuration use value object over array#'
+            path: tests/config/config_test.php
+
+        - '#Property Knp\\DoctrineBehaviors\\Tests\\AbstractBehaviorTestCase\:\:\$entityManager \(Doctrine\\ORM\\EntityManagerInterface\) does not accept T of object#'
+        - '#Parameter \#1 \$type of method Symplify\\PackageBuilder\\Testing\\AbstractKernelTestCase\:\:getService\(\) expects class\-string<doctrine\.orm\.entity_manager\>, string given#'

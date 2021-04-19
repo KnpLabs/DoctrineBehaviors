@@ -32,7 +32,7 @@ final class BlameableWithEntityTest extends AbstractBehaviorTestCase
     {
         parent::setUp();
 
-        $this->userProvider = static::$container->get(UserProviderInterface::class);
+        $this->userProvider = $this->getService(UserProviderInterface::class);
         $this->blameableRepository = $this->entityManager->getRepository(BlameableEntityWithUserEntity::class);
         $this->userEntity = $this->userProvider->provideUser();
     }
@@ -97,6 +97,6 @@ final class BlameableWithEntityTest extends AbstractBehaviorTestCase
 
     protected function provideCustomConfig(): ?string
     {
-        return __DIR__ . '/../config/config_test_with_blameable_entity.yaml';
+        return __DIR__ . '/../config/config_test_with_blameable_entity.php';
     }
 }

@@ -19,7 +19,7 @@ final class LoggableTest extends AbstractBehaviorTestCase
     {
         parent::setUp();
 
-        $this->testLogger = static::$container->get(TestLogger::class);
+        $this->testLogger = $this->getService(TestLogger::class);
 
         // reset for every run
         $this->testLogger->records = [];
