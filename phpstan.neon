@@ -61,10 +61,6 @@ parameters:
         # resolve in follow up PR
         - '#Use explicit return value over magic &reference#'
 
-        # deprecated class
-        - '#Class with base "DoctrineBehaviorsBundle" name is already used in "Knp\\DoctrineBehaviors\\DoctrineBehaviorsBundle", "Knp\\DoctrineBehaviors\\Bundle\\DoctrineBehaviorsBundle"\. Use unique name to make classes easy to recognize#'
-        - '#Do not use scalar or array as constructor parameter\. Use "Symplify\\PackageBuilder\\Parameter\\ParameterProvider" service instead#'
-
         # magic
         -
             message: '#Array with keys is not allowed\. Use value object to pass data instead#'
@@ -95,10 +91,15 @@ parameters:
         - '#Property Knp\\DoctrineBehaviors\\Tests\\ORM\\BlameableWithEntityTest\:\:\$userEntity \(Knp\\DoctrineBehaviors\\Tests\\Fixtures\\Entity\\UserEntity\) does not accept object\|string\|null#'
         - '#\$this as argument is not allowed\. Refactor method to service composition#'
         - '#Use separate function calls with readable variable names#'
-        - '#Constant string value need to only have small letters, _, \-, \. and numbers#'
-        - '#Property Knp\\DoctrineBehaviors\\Tests\\AbstractBehaviorTestCase\:\:\$entityManager \(Doctrine\\ORM\\EntityManagerInterface\) does not accept object\|null#'
-        - '#Parameter \#1 \$input of function array_filter expects array, array<int, string\>\|false given#'
 
         -
             message: '#Do not compare call directly, use a variable assign#'
             path: src/Model/*/*MethodsTrait.php
+
+        -
+            message: '#For complex configuration use value object over array#'
+            path: tests/config/config_test.php
+
+        - '#Parameter \#1 \$type of method Symplify\\PackageBuilder\\Testing\\AbstractKernelTestCase\:\:getService\(\) expects class\-string<doctrine\.orm\.entity_manager\>, string given#'
+        - '#Property Knp\\DoctrineBehaviors\\Tests\\AbstractBehaviorTestCase\:\:\$entityManager \(Doctrine\\ORM\\EntityManagerInterface\) does not accept T of object#'
+        - '#Parameter \#1 \$input of function array_filter expects array, array<int, string\>\|false given#'
