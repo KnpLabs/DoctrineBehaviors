@@ -4,8 +4,6 @@ declare(strict_types=1);
 
 use PhpCsFixer\Fixer\ClassNotation\FinalClassFixer;
 use PhpCsFixer\Fixer\Comment\HeaderCommentFixer;
-use PhpCsFixer\Fixer\Import\OrderedImportsFixer;
-use PhpCsFixer\Fixer\Operator\UnaryOperatorSpacesFixer;
 use PhpCsFixer\Fixer\Phpdoc\GeneralPhpdocAnnotationRemoveFixer;
 use PhpCsFixer\Fixer\PhpUnit\PhpUnitStrictFixer;
 use Symfony\Component\DependencyInjection\Loader\Configurator\ContainerConfigurator;
@@ -27,11 +25,15 @@ return static function (ContainerConfigurator $containerConfigurator): void {
     $parameters->set(Option::SETS, [SetList::PSR_12, SetList::SYMPLIFY, SetList::COMMON, SetList::CLEAN_CODE]);
 
     $parameters->set(Option::SKIP, [
+<<<<<<< HEAD
         UnaryOperatorSpacesFixer::class,
         PhpUnitStrictFixer::class => [__DIR__ . '/tests/ORM/Timestampable/TimestampableTest.php'],
         OrderedImportsFixer::class => [
             __DIR__ . '/tests/Fixtures/Entity/AbstractTimestampableMappedSuperclassEntity.php',
         ],
+=======
+        PhpUnitStrictFixer::class => [__DIR__ . '/tests/ORM/TimestampableTest.php'],
+>>>>>>> bc8e6bf (cleanup ecs)
         __DIR__ . '/src/Bundle/DoctrineBehaviorsBundle.php',
         __DIR__ . '/src/DoctrineBehaviorsBundle.php',
     ]);
