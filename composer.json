@@ -24,8 +24,7 @@
         "symfony/string": "^5.2",
         "symfony/translation-contracts": "^2.3",
         "nette/utils": "^3.2",
-        "ramsey/uuid": "^4.0",
-        "symfony/polyfill-php80": "^1.22"
+        "ramsey/uuid": "^4.0"
     },
     "require-dev": {
         "ext-pdo_sqlite": "*",
