@@ -8,8 +8,8 @@ use DateTime;
 use Doctrine\ORM\EntityRepository;
 use Doctrine\Persistence\ObjectRepository;
 use Knp\DoctrineBehaviors\Tests\AbstractBehaviorTestCase;
-use Knp\DoctrineBehaviors\Tests\Fixtures\Entity\SoftDeletableEntity;
-use Knp\DoctrineBehaviors\Tests\Fixtures\Entity\SoftDeletableEntityInherit;
+use Knp\DoctrineBehaviors\Tests\Fixtures\Entity\SoftDeletable\SoftDeletableEntity;
+use Knp\DoctrineBehaviors\Tests\Fixtures\Entity\SoftDeletable\SoftDeletableEntityInherit;
 
 final class SoftDeletableTest extends AbstractBehaviorTestCase
 {
@@ -60,7 +60,7 @@ final class SoftDeletableTest extends AbstractBehaviorTestCase
         $this->entityManager->flush();
         $this->entityManager->clear();
 
-        /** @var SoftDeletableEntity $entity */
+        /** @var \Knp\DoctrineBehaviors\Tests\Fixtures\Entity\SoftDeletable\SoftDeletableEntity $entity */
         $entity = $this->softDeletableRepository->find($id);
 
         $this->assertNotNull($entity);
@@ -74,7 +74,7 @@ final class SoftDeletableTest extends AbstractBehaviorTestCase
         $this->entityManager->flush();
         $this->entityManager->clear();
 
-        /** @var SoftDeletableEntity $entity */
+        /** @var \Knp\DoctrineBehaviors\Tests\Fixtures\Entity\SoftDeletable\SoftDeletableEntity $entity */
         $entity = $this->softDeletableRepository->find($id);
 
         $this->assertNotNull($entity);
