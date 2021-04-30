@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace Knp\DoctrineBehaviors\Tests\ORM;
+namespace Knp\DoctrineBehaviors\Tests\ORM\Timestampable;
 
 use DateTime;
 use Knp\DoctrineBehaviors\Tests\AbstractBehaviorTestCase;
