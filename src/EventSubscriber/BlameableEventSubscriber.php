@@ -14,7 +14,7 @@ use Doctrine\ORM\UnitOfWork;
 use Knp\DoctrineBehaviors\Contract\Entity\BlameableInterface;
 use Knp\DoctrineBehaviors\Contract\Provider\UserProviderInterface;
 
-final class BlameableSubscriber implements EventSubscriber
+final class BlameableEventSubscriber implements EventSubscriber
 {
     /**
      * @var string
@@ -93,13 +93,15 @@ final class BlameableSubscriber implements EventSubscriber
         if (! $entity->getCreatedBy()) {
             $entity->setCreatedBy($user);
 
-            $this->getUnitOfWork()->propertyChanged($entity, self::CREATED_BY, null, $user);
+            $this->getUnitOfWork()
+                ->propertyChanged($entity, self::CREATED_BY, null, $user);
         }
 
         if (! $entity->getUpdatedBy()) {
             $entity->setUpdatedBy($user);
 
-            $this->getUnitOfWork()->propertyChanged($entity, self::UPDATED_BY, null, $user);
+            $this->getUnitOfWork()
+                ->propertyChanged($entity, self::UPDATED_BY, null, $user);
         }
     }
 
@@ -121,7 +123,8 @@ final class BlameableSubscriber implements EventSubscriber
         $oldValue = $entity->getUpdatedBy();
         $entity->setUpdatedBy($user);
 
-        $this->getUnitOfWork()->propertyChanged($entity, self::UPDATED_BY, $oldValue, $user);
+        $this->getUnitOfWork()
+            ->propertyChanged($entity, self::UPDATED_BY, $oldValue, $user);
     }
 
     /**
@@ -142,7 +145,8 @@ final class BlameableSubscriber implements EventSubscriber
         $oldValue = $entity->getDeletedBy();
         $entity->setDeletedBy($user);
 
-        $this->getUnitOfWork()->propertyChanged($entity, self::DELETED_BY, $oldValue, $user);
+        $this->getUnitOfWork()
+            ->propertyChanged($entity, self::DELETED_BY, $oldValue, $user);
     }
 
     public function getSubscribedEvents()

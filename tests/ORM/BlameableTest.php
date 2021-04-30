@@ -26,20 +26,20 @@ final class BlameableTest extends AbstractBehaviorTestCase
     {
         parent::setUp();
 
-        $this->userProvider = static::$container->get(UserProviderInterface::class);
+        $this->userProvider = $this->getService(UserProviderInterface::class);
         $this->blameableRepository = $this->entityManager->getRepository(BlameableEntity::class);
     }
 
     public function testCreate(): void
     {
-        $entity = new BlameableEntity();
+        $blameableEntity = new BlameableEntity();
 
-        $this->entityManager->persist($entity);
+        $this->entityManager->persist($blameableEntity);
         $this->entityManager->flush();
 
-        $this->assertSame('user', $entity->getCreatedBy());
-        $this->assertSame('user', $entity->getUpdatedBy());
-        $this->assertNull($entity->getDeletedBy());
+        $this->assertSame('user', $blameableEntity->getCreatedBy());
+        $this->assertSame('user', $blameableEntity->getUpdatedBy());
+        $this->assertNull($blameableEntity->getDeletedBy());
     }
 
     public function testUpdate(): void
@@ -48,6 +48,7 @@ final class BlameableTest extends AbstractBehaviorTestCase
 
         $this->entityManager->persist($entity);
         $this->entityManager->flush();
+
         $id = $entity->getId();
         $createdBy = $entity->getCreatedBy();
         $this->entityManager->clear();
@@ -59,7 +60,8 @@ final class BlameableTest extends AbstractBehaviorTestCase
 
         $this->enableDebugStackLogger();
 
-        $entity->setTitle('test'); // need to modify at least one column to trigger onUpdate
+        // need to modify at least one column to trigger onUpdate
+        $entity->setTitle('test');
         $this->entityManager->flush();
         $this->entityManager->clear();
 
@@ -90,6 +92,7 @@ final class BlameableTest extends AbstractBehaviorTestCase
 
         $this->entityManager->persist($entity);
         $this->entityManager->flush();
+
         $id = $entity->getId();
         $this->entityManager->clear();
 
@@ -107,11 +110,11 @@ final class BlameableTest extends AbstractBehaviorTestCase
 
     public function testExtraSqlCalls(): void
     {
-        $entity = new BlameableEntity();
+        $blameableEntity = new BlameableEntity();
 
         $this->enableDebugStackLogger();
 
-        $this->entityManager->persist($entity);
+        $this->entityManager->persist($blameableEntity);
         $this->entityManager->flush();
 
         $expectedCount = $this->isPostgreSql() ? 4 : 3;

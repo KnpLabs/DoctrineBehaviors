@@ -52,20 +52,21 @@ trait TranslatableMethodsTrait
 
     public function addTranslation(TranslationInterface $translation): void
     {
-        $this->getTranslations()->set((string) $translation->getLocale(), $translation);
+        $this->getTranslations()
+            ->set((string) $translation->getLocale(), $translation);
         $translation->setTranslatable($this);
     }
 
     public function removeTranslation(TranslationInterface $translation): void
     {
-        $this->getTranslations()->removeElement($translation);
+        $this->getTranslations()
+            ->removeElement($translation);
     }
 
     /**
-     * Returns translation for specific locale (creates new one if doesn't exists).
-     * If requested translation doesn't exist, it will first try to fallback default locale
-     * If any translation doesn't exist, it will be added to newTranslations collection.
-     * In order to persist new translations, call mergeNewTranslations method, before flush
+     * Returns translation for specific locale (creates new one if doesn't exists). If requested translation doesn't
+     * exist, it will first try to fallback default locale If any translation doesn't exist, it will be added to
+     * newTranslations collection. In order to persist new translations, call mergeNewTranslations method, before flush
      *
      * @param string $locale The locale (en, ru, fr) | null If null, will try with current locale
      */
@@ -82,7 +83,8 @@ trait TranslatableMethodsTrait
         foreach ($this->getNewTranslations() as $newTranslation) {
             if (! $this->getTranslations()->contains($newTranslation) && ! $newTranslation->isEmpty()) {
                 $this->addTranslation($newTranslation);
-                $this->getNewTranslations()->removeElement($newTranslation);
+                $this->getNewTranslations()
+                    ->removeElement($newTranslation);
             }
         }
 
@@ -124,10 +126,9 @@ trait TranslatableMethodsTrait
     }
 
     /**
-     * Returns translation for specific locale (creates new one if doesn't exists).
-     * If requested translation doesn't exist, it will first try to fallback default locale
-     * If any translation doesn't exist, it will be added to newTranslations collection.
-     * In order to persist new translations, call mergeNewTranslations method, before flush
+     * Returns translation for specific locale (creates new one if doesn't exists). If requested translation doesn't
+     * exist, it will first try to fallback default locale If any translation doesn't exist, it will be added to
+     * newTranslations collection. In order to persist new translations, call mergeNewTranslations method, before flush
      *
      * @param string $locale The locale (en, ru, fr) | null If null, will try with current locale
      */
@@ -159,7 +160,8 @@ trait TranslatableMethodsTrait
         $translation = new $class();
         $translation->setLocale($locale);
 
-        $this->getNewTranslations()->set((string) $translation->getLocale(), $translation);
+        $this->getNewTranslations()
+            ->set((string) $translation->getLocale(), $translation);
         $translation->setTranslatable($this);
 
         return $translation;
@@ -187,14 +189,16 @@ trait TranslatableMethodsTrait
      */
     protected function findTranslationByLocale(string $locale, bool $withNewTranslations = true): ?TranslationInterface
     {
-        $translation = $this->getTranslations()->get($locale);
+        $translation = $this->getTranslations()
+            ->get($locale);
 
         if ($translation) {
             return $translation;
         }
 
         if ($withNewTranslations) {
-            return $this->getNewTranslations()->get($locale);
+            return $this->getNewTranslations()
+                ->get($locale);
         }
 
         return null;
@@ -227,10 +231,13 @@ trait TranslatableMethodsTrait
     {
         $fallbackLocale = $this->computeFallbackLocale($locale);
 
-        if ($fallbackLocale === null) {
-            return $this->findTranslationByLocale($this->getDefaultLocale(), false);
+        if ($fallbackLocale !== null) {
+            $translation = $this->findTranslationByLocale($fallbackLocale);
+            if ($translation && ! $translation->isEmpty()) {
+                return $translation;
+            }
         }
 
-        return $this->findTranslationByLocale($fallbackLocale);
+        return $this->findTranslationByLocale($this->getDefaultLocale(), false);
     }
 }

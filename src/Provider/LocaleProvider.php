@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace Knp\DoctrineBehaviors\Provider;
 
 use Knp\DoctrineBehaviors\Contract\Provider\LocaleProviderInterface;
+use Symfony\Component\DependencyInjection\Exception\InvalidArgumentException;
 use Symfony\Component\DependencyInjection\Exception\ParameterNotFoundException;
 use Symfony\Component\DependencyInjection\ParameterBag\ParameterBagInterface;
 use Symfony\Component\HttpFoundation\RequestStack;
@@ -65,8 +66,12 @@ final class LocaleProvider implements LocaleProviderInterface
         }
 
         try {
-            return $this->parameterBag->get('locale');
-        } catch (ParameterNotFoundException $parameterNotFoundException) {
+            if ($this->parameterBag->has('locale')) {
+                return $this->parameterBag->get('locale');
+            }
+
+            return $this->parameterBag->get('kernel.default_locale');
+        } catch (ParameterNotFoundException | InvalidArgumentException $parameterNotFoundException) {
             return null;
         }
     }

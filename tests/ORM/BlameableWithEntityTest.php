@@ -32,23 +32,23 @@ final class BlameableWithEntityTest extends AbstractBehaviorTestCase
     {
         parent::setUp();
 
-        $this->userProvider = static::$container->get(UserProviderInterface::class);
+        $this->userProvider = $this->getService(UserProviderInterface::class);
         $this->blameableRepository = $this->entityManager->getRepository(BlameableEntityWithUserEntity::class);
         $this->userEntity = $this->userProvider->provideUser();
     }
 
     public function testCreate(): void
     {
-        $entity = new BlameableEntityWithUserEntity();
+        $blameableEntityWithUserEntity = new BlameableEntityWithUserEntity();
 
-        $this->entityManager->persist($entity);
+        $this->entityManager->persist($blameableEntityWithUserEntity);
         $this->entityManager->flush();
 
-        $this->assertInstanceOf(UserEntity::class, $entity->getCreatedBy());
-        $this->assertInstanceOf(UserEntity::class, $entity->getUpdatedBy());
-        $this->assertSame($this->userEntity, $entity->getCreatedBy());
-        $this->assertSame($this->userEntity, $entity->getUpdatedBy());
-        $this->assertNull($entity->getDeletedBy());
+        $this->assertInstanceOf(UserEntity::class, $blameableEntityWithUserEntity->getCreatedBy());
+        $this->assertInstanceOf(UserEntity::class, $blameableEntityWithUserEntity->getUpdatedBy());
+        $this->assertSame($this->userEntity, $blameableEntityWithUserEntity->getCreatedBy());
+        $this->assertSame($this->userEntity, $blameableEntityWithUserEntity->getUpdatedBy());
+        $this->assertNull($blameableEntityWithUserEntity->getDeletedBy());
     }
 
     public function testUpdate(): void
@@ -57,6 +57,7 @@ final class BlameableWithEntityTest extends AbstractBehaviorTestCase
 
         $this->entityManager->persist($entity);
         $this->entityManager->flush();
+
         $id = $entity->getId();
         $createdBy = $entity->getCreatedBy();
 
@@ -96,6 +97,6 @@ final class BlameableWithEntityTest extends AbstractBehaviorTestCase
 
     protected function provideCustomConfig(): ?string
     {
-        return __DIR__ . '/../config/config_test_with_blameable_entity.yaml';
+        return __DIR__ . '/../config/config_test_with_blameable_entity.php';
     }
 }

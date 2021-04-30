@@ -9,11 +9,6 @@ use Symfony\Component\String\Slugger\AsciiSlugger;
 
 trait SluggableMethodsTrait
 {
-    /**
-     * @return string[]
-     */
-    abstract public function getSluggableFields(): array;
-
     public function setSlug(string $slug): void
     {
         $this->slug = $slug;
@@ -34,8 +29,8 @@ trait SluggableMethodsTrait
         }
 
         $values = [];
-        foreach ($this->getSluggableFields() as $field) {
-            $values[] = $this->resolveFieldValue($field);
+        foreach ($this->getSluggableFields() as $sluggableField) {
+            $values[] = $this->resolveFieldValue($sluggableField);
         }
 
         $this->slug = $this->generateSlugValue($values);
@@ -62,9 +57,9 @@ trait SluggableMethodsTrait
     private function generateSlugValue($values)
     {
         $usableValues = [];
-        foreach ($values as $fieldValue) {
-            if (! empty($fieldValue)) {
-                $usableValues[] = $fieldValue;
+        foreach ($values as $value) {
+            if (! empty($value)) {
+                $usableValues[] = $value;
             }
         }
 

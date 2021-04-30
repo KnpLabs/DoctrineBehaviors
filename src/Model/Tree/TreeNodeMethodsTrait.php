@@ -28,6 +28,10 @@ trait TreeNodeMethodsTrait
 
     public function getRealMaterializedPath(): string
     {
+        if ($this->getMaterializedPath() === self::getMaterializedPathSeparator()) {
+            return $this->getMaterializedPath() . $this->getNodeId();
+        }
+
         return $this->getMaterializedPath() . self::getMaterializedPathSeparator() . $this->getNodeId();
     }
 
@@ -74,7 +78,8 @@ trait TreeNodeMethodsTrait
 
     public function isLeafNode(): bool
     {
-        return $this->getChildNodes()->count() === 0;
+        return $this->getChildNodes()
+            ->count() === 0;
     }
 
     /**
@@ -92,14 +97,14 @@ trait TreeNodeMethodsTrait
 
     public function addChildNode(TreeNodeInterface $treeNode): void
     {
-        $this->getChildNodes()->add($treeNode);
+        $this->getChildNodes()
+            ->add($treeNode);
     }
 
     public function isIndirectChildNodeOf(TreeNodeInterface $treeNode): bool
     {
         return $this->getRealMaterializedPath() !== $treeNode->getRealMaterializedPath()
-            && strpos($this->getRealMaterializedPath() . self::getMaterializedPathSeparator(),
-                      $treeNode->getRealMaterializedPath() . self::getMaterializedPathSeparator()) === 0;
+            && strpos($this->getRealMaterializedPath(), (string) $treeNode->getRealMaterializedPath()) === 0;
     }
 
     public function isChildNodeOf(TreeNodeInterface $treeNode): bool
@@ -110,7 +115,7 @@ trait TreeNodeMethodsTrait
     public function setChildNodeOf(?TreeNodeInterface $treeNode = null): void
     {
         $id = $this->getNodeId();
-        if (empty($id)) {
+        if ($id === '' || $id === null) {
             throw new TreeException('You must provide an id for this node if you want it to be part of a tree.');
         }
 
@@ -120,7 +125,8 @@ trait TreeNodeMethodsTrait
         $this->setMaterializedPath($path);
 
         if ($this->parentNode !== null) {
-            $this->parentNode->getChildNodes()->removeElement($this);
+            $this->parentNode->getChildNodes()
+                ->removeElement($this);
         }
 
         $this->parentNode = $treeNode;
@@ -129,9 +135,9 @@ trait TreeNodeMethodsTrait
             $this->parentNode->addChildNode($this);
         }
 
-        foreach ($this->getChildNodes() as $child) {
+        foreach ($this->getChildNodes() as $childNode) {
             /** @var TreeNodeInterface $this */
-            $child->setChildNodeOf($this);
+            $childNode->setChildNodeOf($this);
         }
     }
 
@@ -158,11 +164,12 @@ trait TreeNodeMethodsTrait
 
     public function buildTree(array $results): void
     {
-        $this->getChildNodes()->clear();
-        foreach ($results as $node) {
-            if ($node->getMaterializedPath() === $this->getRealMaterializedPath()) {
-                $node->setParentNode($this);
-                $node->buildTree($results);
+        $this->getChildNodes()
+            ->clear();
+        foreach ($results as $result) {
+            if ($result->getMaterializedPath() === $this->getRealMaterializedPath()) {
+                $result->setParentNode($this);
+                $result->buildTree($results);
             }
         }
     }
@@ -197,13 +204,13 @@ trait TreeNodeMethodsTrait
             ];
         }
 
-        foreach ($this->getChildNodes() as $node) {
-            $tree[$this->getNodeId()]['children'][$node->getNodeId()] = [
-                'node' => $prepare($node),
+        foreach ($this->getChildNodes() as $childNode) {
+            $tree[$this->getNodeId()]['children'][$childNode->getNodeId()] = [
+                'node' => $prepare($childNode),
                 'children' => [],
             ];
 
-            $node->toArray($prepare, $tree[$this->getNodeId()]['children']);
+            $childNode->toArray($prepare, $tree[$this->getNodeId()]['children']);
         }
 
         return $tree;
@@ -211,7 +218,7 @@ trait TreeNodeMethodsTrait
 
     /**
      * @param Closure $prepare a function to prepare the node before putting into the result
-     * @param array    $tree    a reference to an array, used internally for recursion
+     * @param array $tree a reference to an array, used internally for recursion
      */
     public function toFlatArray(?Closure $prepare = null, ?array &$tree = null): array
     {
@@ -224,12 +231,14 @@ trait TreeNodeMethodsTrait
         }
 
         if ($tree === null) {
-            $tree = [$this->getNodeId() => $prepare($this)];
+            $tree = [
+                $this->getNodeId() => $prepare($this),
+            ];
         }
 
-        foreach ($this->getChildNodes() as $node) {
-            $tree[$node->getNodeId()] = $prepare($node);
-            $node->toFlatArray($prepare, $tree);
+        foreach ($this->getChildNodes() as $childNode) {
+            $tree[$childNode->getNodeId()] = $prepare($childNode);
+            $childNode->toFlatArray($prepare, $tree);
         }
 
         return $tree;

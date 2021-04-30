@@ -11,5 +11,5 @@ trait UuidablePropertiesTrait
     /**
      * @var UuidInterface|string|null
      */
-    private $uuid;
+    protected $uuid;
 }

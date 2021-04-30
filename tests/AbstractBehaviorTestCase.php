@@ -9,7 +9,7 @@ use Doctrine\DBAL\Logging\DebugStack;
 use Doctrine\DBAL\Platforms\PostgreSqlPlatform;
 use Doctrine\ORM\EntityManagerInterface;
 use Knp\DoctrineBehaviors\Tests\HttpKernel\DoctrineBehaviorsKernel;
-use Symplify\PackageBuilder\Tests\AbstractKernelTestCase;
+use Symplify\PackageBuilder\Testing\AbstractKernelTestCase;
 
 abstract class AbstractBehaviorTestCase extends AbstractKernelTestCase
 {
@@ -32,14 +32,14 @@ abstract class AbstractBehaviorTestCase extends AbstractKernelTestCase
             self::bootKernel(DoctrineBehaviorsKernel::class);
         }
 
-        $this->entityManager = static::$container->get('doctrine.orm.entity_manager');
+        $this->entityManager = $this->getService('doctrine.orm.entity_manager');
         $this->loadDatabaseFixtures();
     }
 
     protected function loadDatabaseFixtures(): void
     {
         /** @var DatabaseLoader $databaseLoader */
-        $databaseLoader = static::$container->get(DatabaseLoader::class);
+        $databaseLoader = $this->getService(DatabaseLoader::class);
         $databaseLoader->reload();
     }
 

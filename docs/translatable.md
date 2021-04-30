@@ -6,9 +6,11 @@ same folder, e.g.:
 - `app/Entity/Category.php`
 - `app/Entity/CategoryTranslation.php`
 
-The default naming convention (or its customization via trait methods) avoids you to manually handle entity associations. It is handled automatically by the `TranslationSubscriber`.
+The default naming convention (or its customization via trait methods) avoids you to manually handle entity associations. It is handled automatically by the `TranslatableEventSubscriber`.
 
 ## Entity
+
+You need to add their own id and translatable fields.
 
 ```php
 <?php
@@ -29,6 +31,13 @@ class CategoryTranslation implements TranslationInterface
     use TranslationTrait;
 
     /**
+     * @ORM\Id
+     * @ORM\Column(type="integer")
+     * @ORM\GeneratedValue(strategy="AUTO")
+     */
+    private $id;
+
+    /**
      * @ORM\Column(type="string", length=255)
      */
     protected $name;
@@ -37,6 +46,11 @@ class CategoryTranslation implements TranslationInterface
      * @ORM\Column(type="string", length=255)
      */
     protected $description;
+
+    public function getId(): ?int
+    {
+        return $this->id;
+    }
 
     public function getName(): string
     {
@@ -80,11 +94,23 @@ use Knp\DoctrineBehaviors\Model\Translatable\TranslatableTrait;
 class Category implements TranslatableInterface
 {
     use TranslatableTrait;
+    
+    /**
+     * @ORM\Id
+     * @ORM\Column(type="integer")
+     * @ORM\GeneratedValue(strategy="AUTO")
+     */
+    private $id;
 
     /**
      * @ORM\Column(type="string", length=255)
      */
     protected $someFieldYouDoNotNeedToTranslate;
+    
+    public function getId(): ?int
+    {
+        return $this->id;
+    }
 }
 ```
 
@@ -181,7 +207,7 @@ This library provides an interface `Knp\DoctrineBehaviors\Contract\Provider\Loca
 
 An extra feature allows you to proxy translated fields of a translatable entity.
 
-You can use it in the magic `__call` method of you translatable entity
+You can use it in the magic `__call` method of your translatable entity
 so that when you try to call `getName` (for example) it will return you the translated value of the name for current locale:
 
 ```php

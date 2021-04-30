@@ -8,6 +8,7 @@ interface SluggableInterface
 {
     /**
      * Fields used to generate the slug.
+     *
      * @return string[]
      */
     public function getSluggableFields(): array;

@@ -4,14 +4,11 @@ declare(strict_types=1);
 
 namespace Knp\DoctrineBehaviors\Bundle;
 
-use Knp\DoctrineBehaviors\Bundle\DependencyInjection\DoctrineBehaviorsExtension;
-use Symfony\Component\DependencyInjection\Extension\Extension;
-use Symfony\Component\HttpKernel\Bundle\Bundle;
+use Knp\DoctrineBehaviors\DoctrineBehaviorsBundle as NewDoctrineBehaviorsBundle;
 
-final class DoctrineBehaviorsBundle extends Bundle
+/**
+ * @deprecated since 2.0.2, will be removed in 3.0
+ */
+final class DoctrineBehaviorsBundle extends NewDoctrineBehaviorsBundle
 {
-    public function getContainerExtension(): Extension
-    {
-        return new DoctrineBehaviorsExtension();
-    }
 }

@@ -13,7 +13,7 @@ use Knp\DoctrineBehaviors\Contract\Entity\TranslatableInterface;
 use Knp\DoctrineBehaviors\Contract\Entity\TranslationInterface;
 use Knp\DoctrineBehaviors\Contract\Provider\LocaleProviderInterface;
 
-final class TranslatableSubscriber implements EventSubscriber
+final class TranslatableEventSubscriber implements EventSubscriber
 {
     /**
      * @var string
@@ -96,16 +96,15 @@ final class TranslatableSubscriber implements EventSubscriber
             return $fetchMode;
         }
 
-        switch ($fetchMode) {
-            case 'LAZY':
-                return ClassMetadataInfo::FETCH_LAZY;
-            case 'EAGER':
-                return ClassMetadataInfo::FETCH_EAGER;
-            case 'EXTRA_LAZY':
-                return ClassMetadataInfo::FETCH_EXTRA_LAZY;
-            default:
-                return ClassMetadataInfo::FETCH_LAZY;
+        if ($fetchMode === 'EAGER') {
+            return ClassMetadataInfo::FETCH_EAGER;
         }
+
+        if ($fetchMode === 'EXTRA_LAZY') {
+            return ClassMetadataInfo::FETCH_EXTRA_LAZY;
+        }
+
+        return ClassMetadataInfo::FETCH_LAZY;
     }
 
     private function mapTranslatable(ClassMetadataInfo $classMetadataInfo): void
@@ -120,9 +119,9 @@ final class TranslatableSubscriber implements EventSubscriber
             'indexBy' => self::LOCALE,
             'cascade' => ['persist', 'merge', 'remove'],
             'fetch' => $this->translatableFetchMode,
-            'targetEntity' => $classMetadataInfo->getReflectionClass()->getMethod('getTranslationEntityClass')->invoke(
-                null
-            ),
+            'targetEntity' => $classMetadataInfo->getReflectionClass()
+                ->getMethod('getTranslationEntityClass')
+                ->invoke(null),
             'orphanRemoval' => true,
         ]);
     }
@@ -140,9 +139,9 @@ final class TranslatableSubscriber implements EventSubscriber
                     'referencedColumnName' => 'id',
                     'onDelete' => 'CASCADE',
                 ]],
-                'targetEntity' => $classMetadataInfo->getReflectionClass()->getMethod(
-                    'getTranslatableEntityClass'
-                )->invoke(null),
+                'targetEntity' => $classMetadataInfo->getReflectionClass()
+                    ->getMethod('getTranslatableEntityClass')
+                    ->invoke(null),
             ]);
         }
 

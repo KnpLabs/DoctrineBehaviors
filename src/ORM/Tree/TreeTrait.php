@@ -50,6 +50,7 @@ trait TreeTrait
 
     /**
      * Extracts the root node and constructs a tree using flat resultset
+     *
      * @return ArrayAccess|TreeNodeInterface[]|null
      */
     public function buildTree(array $results)
@@ -93,8 +94,7 @@ trait TreeTrait
     }
 
     /**
-     * Manipulates the flat tree query builder before executing it.
-     * Override this method to customize the tree query
+     * Manipulates the flat tree query builder before executing it. Override this method to customize the tree query
      */
     protected function addFlatTreeConditions(QueryBuilder $queryBuilder, array $extraParams): void
     {

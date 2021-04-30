@@ -1,6 +1,5 @@
 # Doctrine Behaviors
 
-[![Build Status](https://img.shields.io/travis/KnpLabs/DoctrineBehaviors/master.svg?style=flat-square)](https://travis-ci.org/KnpLabs/DoctrineBehaviors)
 [![Downloads](https://img.shields.io/packagist/dt/knplabs/doctrine-behaviors.svg?style=flat-square)](https://packagist.org/packages/knplabs/doctrine-behaviors)
 
 This PHP library is a collection of traits and interfaces that add behaviors to Doctrine entities and repositories.
@@ -22,24 +21,12 @@ It currently handles:
 composer require knplabs/doctrine-behaviors
 ```
 
-Register bundle in `config/bundles.php`:
-
-```php
-<?php
-
-return [
-    // ...
-    Knp\DoctrineBehaviors\Bundle\DoctrineBehaviorsBundle::class => ['all' => true],
-    // ...
-];
-```
-
 ## Usage
 
 All you have to do is to define a Doctrine entity:
- 
+
 - implemented interface
-- add a trait 
+- add a trait
 
 For some behaviors like tree, you can use repository traits:
 
@@ -48,7 +35,7 @@ For some behaviors like tree, you can use repository traits:
 
 declare(strict_types=1);
 
-namespace App\Repository;  
+namespace App\Repository;
 
 use Doctrine\ORM\EntityRepository;
 use Knp\DoctrineBehaviors\ORM\Tree\TreeTrait;
@@ -59,7 +46,7 @@ final class CategoryRepository extends EntityRepository
 }
 ```
 
-Voilá!
+Voilà!
 
 You now have a working `Category` that behaves like.
 
@@ -88,13 +75,13 @@ includes:
     composer fix-cs
     composer phpstan
     ```
- 
+
 ## Upgrade 1.x to 2
 
-There have been many changes between 1 and 2, but don't worry. 
+There have been many changes between 1 and 2, but don't worry.
 This package uses [Rector](https://github.com/rectorphp/rector), that handles upgrade for you.
 
 ```bash
 composer require rector/rector --dev
-vendor/bin/rector process src --config vendor/rector/rector/config/set/knplabs/doctrine-behaviors-20.yaml
+vendor/bin/rector process src --config vendor/rector/rector/config/set/doctrine-behaviors-20.yaml
 ```

@@ -40,7 +40,7 @@ class LoggableEntity implements LoggableInterface
      * @ORM\Column(type="date", nullable=true)
      * @var DateTimeInterface|null
      */
-    private $date;
+    private $dateTime;
 
     public function getId(): int
     {
@@ -69,11 +69,11 @@ class LoggableEntity implements LoggableInterface
 
     public function getDate()
     {
-        return $this->date;
+        return $this->dateTime;
     }
 
     public function setDate($date): void
     {
-        $this->date = $date;
+        $this->dateTime = $date;
     }
 }
