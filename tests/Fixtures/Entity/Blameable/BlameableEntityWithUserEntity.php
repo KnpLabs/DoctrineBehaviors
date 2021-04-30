@@ -2,18 +2,18 @@
 
 declare(strict_types=1);
 
-namespace Knp\DoctrineBehaviors\Tests\Fixtures\Entity;
+namespace Knp\DoctrineBehaviors\Tests\Fixtures\Entity\Blameable;
 
 use Doctrine\ORM\Mapping as ORM;
-use Knp\DoctrineBehaviors\Contract\Entity\TimestampableInterface;
-use Knp\DoctrineBehaviors\Model\Timestampable\TimestampableTrait;
+use Knp\DoctrineBehaviors\Contract\Entity\BlameableInterface;
+use Knp\DoctrineBehaviors\Model\Blameable\BlameableTrait;
 
 /**
  * @ORM\Entity
  */
-class TimestampableEntity implements TimestampableInterface
+class BlameableEntityWithUserEntity implements BlameableInterface
 {
-    use TimestampableTrait;
+    use BlameableTrait;
 
     /**
      * @ORM\Id

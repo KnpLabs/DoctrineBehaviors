@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace Knp\DoctrineBehaviors\Tests\Fixtures\Entity;
+namespace Knp\DoctrineBehaviors\Tests\Fixtures\Entity\Sluggable;
 
 use DateTime;
 use DateTimeInterface;
@@ -13,9 +13,15 @@ use Knp\DoctrineBehaviors\Model\Sluggable\SluggableTrait;
 /**
  * @ORM\Entity
  */
-class SluggableMultiEntity implements SluggableInterface
+class SluggableEntity implements SluggableInterface
 {
     use SluggableTrait;
+
+    /**
+     * @ORM\Column(type="string")
+     * @var string
+     */
+    private $name;
 
     /**
      * @ORM\Id
@@ -24,12 +30,6 @@ class SluggableMultiEntity implements SluggableInterface
      * @var int
      */
     private $id;
-
-    /**
-     * @ORM\Column(type="string")
-     * @var string
-     */
-    private $name;
 
     /**
      * @ORM\Column(type="datetime")
@@ -72,22 +72,6 @@ class SluggableMultiEntity implements SluggableInterface
      */
     public function getSluggableFields(): array
     {
-        return ['name', 'title'];
-    }
-
-    public function getTitle(): string
-    {
-        return 'title';
-    }
-
-    /**
-     * @return mixed|string
-     */
-    public function generateSlugValue(array $values)
-    {
-        $sluggableText = implode(' ', $values);
-        $sluggableText = str_replace(' ', '+', $sluggableText);
-
-        return strtolower($sluggableText);
+        return ['name'];
     }
 }
