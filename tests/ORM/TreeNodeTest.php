@@ -202,7 +202,7 @@ final class TreeNodeTest extends AbstractBehaviorTestCase
         $treeNodeEntity46->setId(46);
         $tree[] = $treeNodeEntity46;
 
-        $this->assertSame(4, $tree->getChildNodes()->count());
+        $this->assertCount(4, $tree->getChildNodes());
 
         $treeNodeEntity47 = new TreeNodeEntity();
         $treeNodeEntity47->setId(47);
@@ -266,8 +266,8 @@ final class TreeNodeTest extends AbstractBehaviorTestCase
     {
         $treeNodeEntity = $this->buildTree();
 
-        $this->assertSame(2, $treeNodeEntity->getChildNodes()->count());
-        $this->assertSame(1, $treeNodeEntity->getChildNodes()->get(0)->getChildNodes()->count());
+        $this->assertCount(2, $treeNodeEntity->getChildNodes());
+        $this->assertCount(1, $treeNodeEntity->getChildNodes()->get(0)->getChildNodes());
     }
 
     public function testGetPath(): void

@@ -21,7 +21,7 @@ final class DatabaseLoader
 
         // @see https://stackoverflow.com/a/35222045/1348344
         $configuration = $connection->getConfiguration();
-        $configuration->setSQLLogger(null);
+        $configuration->setSQLLogger();
     }
 
     public function reload(): void
