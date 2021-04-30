@@ -212,7 +212,7 @@ final class TreeNodeTest extends AbstractBehaviorTestCase
         $treeNodeEntity48->setId(48);
         $tree[2][] = $treeNodeEntity48;
 
-        $this->assertSame(2, $tree[2]->getChildNodes()->count());
+        $this->assertCount(2, $tree[2]->getChildNodes());
 
         $this->assertTrue(isset($tree[2][1]));
         $this->assertFalse(isset($tree[2][1][2]));

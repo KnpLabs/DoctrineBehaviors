@@ -14,6 +14,7 @@ It currently handles:
  * [Timestampable](/docs/timestampable.md)
  * [Translatable](/docs/translatable.md)
  * [Tree](/docs/tree.md)
+ * [Versionable](/docs/versionable.md)
 
 ## Install
 

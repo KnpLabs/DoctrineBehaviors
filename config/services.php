@@ -28,5 +28,6 @@ return static function (ContainerConfigurator $containerConfigurator): void {
             __DIR__ . '/../src/Bundle',
             __DIR__ . '/../src/DoctrineBehaviorsBundle.php',
             __DIR__ . '/../src/Exception',
+            __DIR__ . '/../src/Entity',
         ]);
 };

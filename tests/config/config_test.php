@@ -13,6 +13,7 @@ use Symfony\Component\DependencyInjection\Loader\Configurator\ContainerConfigura
 use function Symfony\Component\DependencyInjection\Loader\Configurator\ref;
 use Symfony\Component\Security\Core\Security;
 use Symplify\Amnesia\ValueObject\Symfony\Extension\Doctrine\DBAL;
+use Symplify\Amnesia\ValueObject\Symfony\Extension\Doctrine\Mapping;
 use Symplify\Amnesia\ValueObject\Symfony\Extension\Doctrine\ORM;
 use Symplify\Amnesia\ValueObject\Symfony\Extension\DoctrineExtension;
 
@@ -65,10 +66,25 @@ return static function (ContainerConfigurator $containerConfigurator): void {
             ORM::MAPPINGS => [
                 [
                     'name' => 'DoctrineBehaviors',
-                    'type' => 'annotation',
-                    'prefix' => 'Knp\DoctrineBehaviors\Tests\Fixtures\Entity\\',
-                    'dir' => __DIR__ . '/../../tests/Fixtures/Entity',
-                    'is_bundle' => false,
+                    Mapping::TYPE => 'annotation',
+                    Mapping::PREFIX => 'Knp\DoctrineBehaviors\Tests\Fixtures\Entity\\',
+                    Mapping::DIR => __DIR__ . '/../../tests/Fixtures/Entity',
+                    Mapping::IS_BUNDLE => false,
+                ],
+
+                [
+                    'name' => 'DoctrineBehaviorsVersionable',
+                    Mapping::TYPE => 'annotation',
+                    Mapping::PREFIX => 'Knp\DoctrineBehaviors\Versionable\Entity\\',
+                    Mapping::DIR => __DIR__ . '/../../packages/versionable/src/Entity',
+                    Mapping::IS_BUNDLE => false,
+                ],
+                [
+                    'name' => 'DoctrineBehaviorsVersionableTest',
+                    Mapping::TYPE => 'annotation',
+                    Mapping::PREFIX => 'Knp\DoctrineBehaviors\Versionable\Tests\Entity\\',
+                    Mapping::DIR => __DIR__ . '/../../packages/versionable/tests/Entity',
+                    Mapping::IS_BUNDLE => false,
                 ],
             ],
         ],

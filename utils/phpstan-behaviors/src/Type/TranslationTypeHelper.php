@@ -4,12 +4,13 @@ declare(strict_types=1);
 
 namespace Knp\DoctrineBehaviors\PHPStan\Type;
 
-use Exception;
 use Knp\DoctrineBehaviors\Contract\Entity\TranslatableInterface;
 use Knp\DoctrineBehaviors\Contract\Entity\TranslationInterface;
+use Knp\DoctrineBehaviors\Exception\TranslatableException;
 use PhpParser\Node\Expr\MethodCall;
 use PHPStan\Analyser\Scope;
 use PHPStan\Broker\Broker;
+use PHPStan\ShouldNotHappenException;
 
 final class TranslationTypeHelper
 {
@@ -25,14 +26,13 @@ final class TranslationTypeHelper
                 return TranslationInterface::class;
             }
 
-            throw new Exception(sprintf(
+            throw new ShouldNotHappenException(sprintf(
                 'Unable to find the Translation class associated to the Translatable class "%s".',
                 $reflectionClass->getName()
             ));
         }
 
-        return $reflectionClass
-            ->getMethod('getTranslationEntityClass')
+        return $reflectionClass->getMethod('getTranslationEntityClass')
             ->invoke(null);
     }
 
@@ -48,7 +48,7 @@ final class TranslationTypeHelper
                 return TranslatableInterface::class;
             }
 
-            throw new Exception(sprintf(
+            throw new TranslatableException(sprintf(
                 'Unable to find the Translatable class associated to the Translation class "%s".',
                 $reflectionClass->getName()
             ));

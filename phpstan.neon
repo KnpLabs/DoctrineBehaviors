@@ -1,6 +1,4 @@
 includes:
-    - phpstan-extension.neon
-
     - vendor/symplify/phpstan-rules/config/static-rules.neon
     - vendor/symplify/phpstan-rules/config/array-rules.neon
     - vendor/symplify/phpstan-rules/config/doctrine-rules.neon
@@ -15,13 +13,20 @@ includes:
 parameters:
     paths:
         - src
+        - packages
         - tests
+        - utils
+        - ecs.php
+        - rector.php
 
     level: max
     checkGenericClassInNonGenericObjectType: false
 
     # to allow installing with various phsptan versions without reporting old errors here
     reportUnmatchedIgnoredErrors: false
+
+    excludePaths:
+        - tests/ORM/Versionable/VersionableTest.php
 
     ignoreErrors:
         # traits
@@ -101,3 +106,14 @@ parameters:
         -
             message: '#Use dependency injection instead of dependency juggling#'
             path: tests/DatabaseLoader.php
+
+services:
+    -
+        class: Knp\DoctrineBehaviors\PHPStan\Type\TranslatableTranslateDynamicMethodReturnTypeExtension
+        tags: [phpstan.broker.dynamicMethodReturnTypeExtension]
+    -
+        class: Knp\DoctrineBehaviors\PHPStan\Type\TranslatableGetTranslationsDynamicMethodReturnTypeExtension
+        tags: [phpstan.broker.dynamicMethodReturnTypeExtension]
+    -
+        class: Knp\DoctrineBehaviors\PHPStan\Type\TranslationGetTranslatableDynamicMethodReturnTypeExtension
+        tags: [phpstan.broker.dynamicMethodReturnTypeExtension]

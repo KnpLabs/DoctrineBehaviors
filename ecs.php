@@ -16,6 +16,7 @@ return static function (ContainerConfigurator $containerConfigurator): void {
     $parameters->set(Option::PATHS, [
         __DIR__ . '/config',
         __DIR__ . '/src',
+        __DIR__ . '/packages',
         __DIR__ . '/tests',
         __DIR__ . '/utils',
         __DIR__ . '/ecs.php',
@@ -25,15 +26,7 @@ return static function (ContainerConfigurator $containerConfigurator): void {
     $parameters->set(Option::SETS, [SetList::PSR_12, SetList::SYMPLIFY, SetList::COMMON, SetList::CLEAN_CODE]);
 
     $parameters->set(Option::SKIP, [
-<<<<<<< HEAD
-        UnaryOperatorSpacesFixer::class,
         PhpUnitStrictFixer::class => [__DIR__ . '/tests/ORM/Timestampable/TimestampableTest.php'],
-        OrderedImportsFixer::class => [
-            __DIR__ . '/tests/Fixtures/Entity/AbstractTimestampableMappedSuperclassEntity.php',
-        ],
-=======
-        PhpUnitStrictFixer::class => [__DIR__ . '/tests/ORM/TimestampableTest.php'],
->>>>>>> bc8e6bf (cleanup ecs)
         __DIR__ . '/src/Bundle/DoctrineBehaviorsBundle.php',
         __DIR__ . '/src/DoctrineBehaviorsBundle.php',
     ]);
