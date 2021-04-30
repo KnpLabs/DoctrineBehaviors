@@ -1,12 +1,5 @@
 includes:
     - phpstan-extension.neon
-    - vendor/symplify/phpstan-extensions/config/config.neon
-    - vendor/phpstan/phpstan-doctrine/extension.neon
-    - vendor/phpstan/phpstan-phpunit/extension.neon
-
-    # see https://github.com/symplify/coding-standard
-    - vendor/symplify/phpstan-rules/config/services/services.neon
-    - vendor/symplify/phpstan-rules/packages/cognitive-complexity/config/cognitive-complexity-services.neon
 
     - vendor/symplify/phpstan-rules/config/static-rules.neon
     - vendor/symplify/phpstan-rules/config/array-rules.neon
@@ -88,7 +81,8 @@ parameters:
         - '#"%s" in sprintf\(\) format must be quoted#'
         - '#Method call on new expression is not allowed#'
         - '#Do not use factory/method call in constructor\. Put factory in config and get service with dependency injection#'
-        - '#Property Knp\\DoctrineBehaviors\\Tests\\ORM\\BlameableWithEntityTest\:\:\$userEntity \(Knp\\DoctrineBehaviors\\Tests\\Fixtures\\Entity\\UserEntity\) does not accept object\|string\|null#'
+        - '#Property Knp\\DoctrineBehaviors\\Tests\\ORM\\Blameable\\BlameableWithEntityTest\:\:\$userEntity \(Knp\\DoctrineBehaviors\\Tests\\Fixtures\\Entity\\UserEntity\) does not accept object\|string\|null#'
+
         - '#\$this as argument is not allowed\. Refactor method to service composition#'
         - '#Use separate function calls with readable variable names#'
 
@@ -103,3 +97,7 @@ parameters:
         - '#Parameter \#1 \$type of method Symplify\\PackageBuilder\\Testing\\AbstractKernelTestCase\:\:getService\(\) expects class\-string<doctrine\.orm\.entity_manager\>, string given#'
         - '#Property Knp\\DoctrineBehaviors\\Tests\\AbstractBehaviorTestCase\:\:\$entityManager \(Doctrine\\ORM\\EntityManagerInterface\) does not accept T of object#'
         - '#Parameter \#1 \$input of function array_filter expects array, array<int, string\>\|false given#'
+
+        -
+            message: '#Use dependency injection instead of dependency juggling#'
+            path: tests/DatabaseLoader.php

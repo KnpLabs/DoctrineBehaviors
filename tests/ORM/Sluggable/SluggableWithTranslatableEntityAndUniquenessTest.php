@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace Knp\DoctrineBehaviors\Tests\ORM;
+namespace Knp\DoctrineBehaviors\Tests\ORM\Sluggable;
 
 use Doctrine\ORM\EntityRepository;
 use Doctrine\Persistence\ObjectRepository;

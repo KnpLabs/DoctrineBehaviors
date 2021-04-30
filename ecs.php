@@ -28,7 +28,7 @@ return static function (ContainerConfigurator $containerConfigurator): void {
 
     $parameters->set(Option::SKIP, [
         UnaryOperatorSpacesFixer::class,
-        PhpUnitStrictFixer::class => [__DIR__ . '/tests/ORM/TimestampableTest.php'],
+        PhpUnitStrictFixer::class => [__DIR__ . '/tests/ORM/Timestampable/TimestampableTest.php'],
         OrderedImportsFixer::class => [
             __DIR__ . '/tests/Fixtures/Entity/AbstractTimestampableMappedSuperclassEntity.php',
         ],

@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace Knp\DoctrineBehaviors\Tests\ORM;
+namespace Knp\DoctrineBehaviors\Tests\ORM\Blameable;
 
 use Doctrine\ORM\EntityRepository;
 use Doctrine\Persistence\ObjectRepository;
@@ -97,6 +97,6 @@ final class BlameableWithEntityTest extends AbstractBehaviorTestCase
 
     protected function provideCustomConfig(): ?string
     {
-        return __DIR__ . '/../config/config_test_with_blameable_entity.php';
+        return __DIR__ . '/../../config/config_test_with_blameable_entity.php';
     }
 }

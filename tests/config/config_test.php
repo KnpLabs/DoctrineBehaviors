@@ -67,7 +67,7 @@ return static function (ContainerConfigurator $containerConfigurator): void {
                     'name' => 'DoctrineBehaviors',
                     'type' => 'annotation',
                     'prefix' => 'Knp\DoctrineBehaviors\Tests\Fixtures\Entity\\',
-                    'dir' => '%kernel.project_dir%/tests/Fixtures/Entity/',
+                    'dir' => __DIR__ . '/../../tests/Fixtures/Entity',
                     'is_bundle' => false,
                 ],
             ],
