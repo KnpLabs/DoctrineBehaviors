@@ -9,7 +9,7 @@ use Doctrine\ORM\EntityRepository;
 use Doctrine\Persistence\ObjectRepository;
 use Iterator;
 use Knp\DoctrineBehaviors\Tests\AbstractBehaviorTestCase;
-use Knp\DoctrineBehaviors\Tests\Fixtures\Entity\SluggableEntity;
+use Knp\DoctrineBehaviors\Tests\Fixtures\Entity\Sluggable\SluggableEntity;
 
 final class SluggableTest extends AbstractBehaviorTestCase
 {
@@ -38,7 +38,7 @@ final class SluggableTest extends AbstractBehaviorTestCase
 
         $this->entityManager->clear();
 
-        /** @var SluggableEntity $entity */
+        /** @var \Knp\DoctrineBehaviors\Tests\Fixtures\Entity\Sluggable\SluggableEntity $entity */
         $entity = $this->sluggableRepository->find($id);
 
         $this->assertNotNull($entity);

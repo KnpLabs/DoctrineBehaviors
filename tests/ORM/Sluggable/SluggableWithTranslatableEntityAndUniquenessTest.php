@@ -7,7 +7,7 @@ namespace Knp\DoctrineBehaviors\Tests\ORM\Sluggable;
 use Doctrine\ORM\EntityRepository;
 use Doctrine\Persistence\ObjectRepository;
 use Knp\DoctrineBehaviors\Tests\AbstractBehaviorTestCase;
-use Knp\DoctrineBehaviors\Tests\Fixtures\Entity\SluggableTranslatableEntity;
+use Knp\DoctrineBehaviors\Tests\Fixtures\Entity\Sluggable\SluggableTranslatableEntity;
 
 final class SluggableWithTranslatableEntityAndUniquenessTest extends AbstractBehaviorTestCase
 {
@@ -40,7 +40,7 @@ final class SluggableWithTranslatableEntityAndUniquenessTest extends AbstractBeh
 
         $this->entityManager->clear();
 
-        /** @var SluggableTranslatableEntity $entity */
+        /** @var \Knp\DoctrineBehaviors\Tests\Fixtures\Entity\Sluggable\SluggableTranslatableEntity $entity */
         $entity = $this->translatableRepository->find($id);
         $sluggableTranslatableEntityTranslation = $entity->translate('fr');
         $entityEN = $entity->translate('en');
