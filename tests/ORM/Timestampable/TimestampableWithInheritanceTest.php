@@ -6,7 +6,7 @@ namespace Knp\DoctrineBehaviors\Tests\ORM\Timestampable;
 
 use DateTime;
 use Knp\DoctrineBehaviors\Tests\AbstractBehaviorTestCase;
-use Knp\DoctrineBehaviors\Tests\Fixtures\Entity\TimestampableInheritedEntity;
+use Knp\DoctrineBehaviors\Tests\Fixtures\Entity\Timestampable\TimestampableInheritedEntity;
 
 final class TimestampableWithInheritanceTest extends AbstractBehaviorTestCase
 {
