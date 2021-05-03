@@ -5,10 +5,6 @@ Loggable is able to track lifecycle modifications and log them using any third p
 ## Entity
 
 ```php
-<?php
- 
-declare(strict_types=1);
-
 namespace App\Entity;
 
 use Doctrine\ORM\Mapping as ORM;

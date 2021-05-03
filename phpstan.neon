@@ -18,6 +18,7 @@ parameters:
         - utils
         - ecs.php
         - rector.php
+        - config
 
     level: max
     checkGenericClassInNonGenericObjectType: false
@@ -106,6 +107,17 @@ parameters:
         -
             message: '#Use dependency injection instead of dependency juggling#'
             path: tests/DatabaseLoader.php
+
+        # fix in symplify dev-main
+        -
+            message: '#For complex configuration use value object over array#'
+            path: packages/versionable/tests/config/versionable_config.php
+
+        # fixed in dev-main
+        -
+            message: '#Use another value object over array with string\-keys and objects, array<string, ValueObject\>#'
+            path: packages/versionable/src/EventSubscriber/VersionableEventSubscriber.php
+
 
 services:
     -

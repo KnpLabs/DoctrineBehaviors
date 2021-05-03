@@ -32,6 +32,7 @@ return static function (ContainerConfigurator $containerConfigurator): void {
     ]);
 
     $services = $containerConfigurator->services();
+
     $services->set(FinalClassFixer::class);
     $services->set(HeaderCommentFixer::class)
         ->call('configure', [[

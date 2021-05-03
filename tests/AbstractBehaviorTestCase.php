@@ -4,7 +4,6 @@ declare(strict_types=1);
 
 namespace Knp\DoctrineBehaviors\Tests;
 
-use Doctrine\Common\EventManager;
 use Doctrine\DBAL\Connection;
 use Doctrine\DBAL\Logging\DebugStack;
 use Doctrine\DBAL\Platforms\PostgreSqlPlatform;
@@ -24,11 +23,6 @@ abstract class AbstractBehaviorTestCase extends AbstractKernelTestCase
      */
     protected $debugStack;
 
-    /**
-     * @var EventManager
-     */
-    protected $eventManager;
-
     protected function setUp(): void
     {
         $customConfig = $this->provideCustomConfig();
@@ -39,12 +33,11 @@ abstract class AbstractBehaviorTestCase extends AbstractKernelTestCase
         }
 
         $this->entityManager = $this->getService('doctrine.orm.entity_manager');
-        $this->eventManager = $this->entityManager->getEventManager();
 
-        $this->loadDatabaseFixtures();
+        $this->loadDatabase();
     }
 
-    protected function loadDatabaseFixtures(): void
+    protected function loadDatabase(): void
     {
         /** @var DatabaseLoader $databaseLoader */
         $databaseLoader = $this->getService(DatabaseLoader::class);
@@ -71,5 +64,11 @@ abstract class AbstractBehaviorTestCase extends AbstractKernelTestCase
         $this->entityManager->getConnection()
             ->getConfiguration()
             ->setSQLLogger($this->debugStack);
+    }
+
+    protected function persistAndFlush(object $object): void
+    {
+        $this->entityManager->persist($object);
+        $this->entityManager->flush();
     }
 }

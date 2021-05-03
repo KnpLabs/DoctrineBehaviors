@@ -10,6 +10,7 @@ use Doctrine\ORM\Event\OnFlushEventArgs;
 use Doctrine\ORM\Events;
 use Doctrine\ORM\Mapping\ClassMetadata;
 use Doctrine\ORM\Mapping\Version;
+use Doctrine\ORM\UnitOfWork;
 use Knp\DoctrineBehaviors\Versionable\Contract\VersionableInterface;
 use Knp\DoctrineBehaviors\Versionable\Entity\ResourceVersion;
 use Knp\DoctrineBehaviors\Versionable\Exception\VersionableException;
@@ -34,40 +35,54 @@ final class VersionableEventSubscriber implements EventSubscriber
         return [Events::onFlush];
     }
 
-    public function onFlush(OnFlushEventArgs $args): void
+    public function onFlush(OnFlushEventArgs $onFlushEventArgs): void
     {
-        $unitOfWork = $this->entityManager->getUnitOfWork();
+        $entityManager = $onFlushEventArgs->getEntityManager();
+        $unitOfWork = $entityManager->getUnitOfWork();
 
-        $resourceClass = $this->entityManager->getClassMetadata(ResourceVersion::class);
+        $versionableEntities = $this->resolveUpdatedVersionableEntities($unitOfWork);
+        if ($versionableEntities === []) {
+            return;
+        }
 
-        foreach ($unitOfWork->getScheduledEntityUpdates() as $entity) {
-            if (! $entity instanceof VersionableInterface) {
-                continue;
-            }
+        $resourceVersionClassMetadata = $entityManager->getClassMetadata(ResourceVersion::class);
 
-            $entityClass = $this->entityManager->getClassMetadata(get_class($entity));
-            $this->ensureEntityHasVersionProperty($entityClass);
+        foreach ($versionableEntities as $versionableEntity) {
+            $entityClassMetadata = $entityManager->getClassMetadata(get_class($versionableEntity));
+            $this->ensureEntityHasVersionProperty($entityClassMetadata);
 
-            $entityId = $this->resolveEntityId($entityClass, $entity);
+            $entityId = $this->resolveEntityId($entityClassMetadata, $versionableEntity);
 
             $oldValues = array_map(function (array $changeSetField) {
                 return $changeSetField[0];
-            }, $unitOfWork->getEntityChangeSet($entity));
+            }, $unitOfWork->getEntityChangeSet($versionableEntity));
 
-            if (! isset($entityClass->reflFields[$entityClass->versionField])) {
+            if (! isset($entityClassMetadata->reflFields[$entityClassMetadata->versionField])) {
                 continue;
             }
 
-            $entityVersion = $entityClass->reflFields[$entityClass->versionField]->getValue($entity);
+            $entityVersion = $entityClassMetadata->reflFields[$entityClassMetadata->versionField]->getValue(
+                $versionableEntity
+            );
 
-            unset($oldValues[$entityClass->versionField]);
-            unset($oldValues[$entityClass->getSingleIdentifierFieldName()]);
+            unset($oldValues[$entityClassMetadata->versionField]);
+            unset($oldValues[$entityClassMetadata->getSingleIdentifierFieldName()]);
 
-            $resourceVersion = new ResourceVersion($entityClass->name, $entityId, $oldValues, $entityVersion);
-
+            $resourceVersion = new ResourceVersion($entityClassMetadata->name, $entityId, $oldValues, $entityVersion);
             $this->entityManager->persist($resourceVersion);
-            $unitOfWork->computeChangeSet($resourceClass, $resourceVersion);
+
+            $unitOfWork->computeChangeSet($resourceVersionClassMetadata, $resourceVersion);
         }
+    }
+
+    /**
+     * @return VersionableInterface[]
+     */
+    private function resolveUpdatedVersionableEntities(UnitOfWork $unitOfWork): array
+    {
+        return array_filter($unitOfWork->getScheduledEntityUpdates(), function (object $entity) {
+            return $entity instanceof VersionableInterface;
+        });
     }
 
     private function ensureEntityHasVersionProperty(ClassMetadata $classMetadata): void

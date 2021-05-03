@@ -6,6 +6,7 @@ namespace Knp\DoctrineBehaviors\Versionable\Entity;
 
 use DateTimeInterface;
 use Doctrine\ORM\Mapping as ORM;
+use Knp\DoctrineBehaviors\Versionable\Exception\MissingColumnException;
 
 /**
  * @ORM\Entity
@@ -46,10 +47,10 @@ class ResourceVersion
     private $version;
 
     /**
-     * @ORM\Column(name="snapshot_date", type="datetime")
+     * @ORM\Column(name="created_at", type="datetime")
      * @var DateTimeInterface
      */
-    private $snapshotDate;
+    private $createdAt;
 
     public function __construct(string $resourceName, int $resourceId, array $versionedData, int $version)
     {
@@ -57,10 +58,10 @@ class ResourceVersion
         $this->resourceId = $resourceId;
         $this->versionedData = $versionedData;
         $this->version = $version;
-        $this->snapshotDate = new \DateTime('now');
+        $this->createdAt = new \DateTime('now');
     }
 
-    public function getId()
+    public function getId(): int
     {
         return $this->id;
     }
@@ -91,7 +92,19 @@ class ResourceVersion
      */
     public function getVersionedColumn(string $name)
     {
-        return $this->versionedData[$name] ?? null;
+        // throw exception on missing column
+        if (! array_key_exists($name, $this->versionedData)) {
+            $columnNames = array_keys($this->versionedData);
+            $errorMessage = sprintf(
+                'Column "%s" is not available. Pick one from "%s"',
+                $name,
+                implode('", "', $columnNames)
+            );
+
+            throw new MissingColumnException($errorMessage);
+        }
+
+        return $this->versionedData[$name];
     }
 
     public function getVersion(): int
@@ -99,8 +112,8 @@ class ResourceVersion
         return $this->version;
     }
 
-    public function getSnapshotDate(): DateTimeInterface
+    public function getCreatedAt(): DateTimeInterface
     {
-        return $this->snapshotDate;
+        return $this->createdAt;
     }
 }

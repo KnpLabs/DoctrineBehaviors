@@ -71,21 +71,6 @@ return static function (ContainerConfigurator $containerConfigurator): void {
                     Mapping::DIR => __DIR__ . '/../../tests/Fixtures/Entity',
                     Mapping::IS_BUNDLE => false,
                 ],
-
-                [
-                    'name' => 'DoctrineBehaviorsVersionable',
-                    Mapping::TYPE => 'annotation',
-                    Mapping::PREFIX => 'Knp\DoctrineBehaviors\Versionable\Entity\\',
-                    Mapping::DIR => __DIR__ . '/../../packages/versionable/src/Entity',
-                    Mapping::IS_BUNDLE => false,
-                ],
-                [
-                    'name' => 'DoctrineBehaviorsVersionableTest',
-                    Mapping::TYPE => 'annotation',
-                    Mapping::PREFIX => 'Knp\DoctrineBehaviors\Versionable\Tests\Entity\\',
-                    Mapping::DIR => __DIR__ . '/../../packages/versionable/tests/Entity',
-                    Mapping::IS_BUNDLE => false,
-                ],
             ],
         ],
     ]);

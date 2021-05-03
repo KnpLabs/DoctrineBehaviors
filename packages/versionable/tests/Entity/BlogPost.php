@@ -25,14 +25,24 @@ class BlogPost implements VersionableInterface
     public $id;
 
     /**
-     * @ORM\Column(type="string")
-     * @var string
-     */
-    public $title;
-
-    /**
      * @ORM\Column(type="text")
      * @var string
      */
-    public $content;
+    private $content;
+
+    public function __construct(int $id, string $content)
+    {
+        $this->id = $id;
+        $this->content = $content;
+    }
+
+    public function getContent(): string
+    {
+        return $this->content;
+    }
+
+    public function changeContent(string $content): void
+    {
+        $this->content = $content;
+    }
 }

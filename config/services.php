@@ -5,8 +5,9 @@ declare(strict_types=1);
 use Symfony\Component\DependencyInjection\Loader\Configurator\ContainerConfigurator;
 
 return static function (ContainerConfigurator $containerConfigurator): void {
-    $parameters = $containerConfigurator->parameters();
+    $containerConfigurator->import(__DIR__ . '/../packages/versionable/config/config.php');
 
+    $parameters = $containerConfigurator->parameters();
     $parameters->set('doctrine_behaviors_translatable_fetch_mode', 'LAZY');
     $parameters->set('doctrine_behaviors_translation_fetch_mode', 'LAZY');
     $parameters->set('doctrine_behaviors_blameable_user_entity', null);
@@ -28,6 +29,5 @@ return static function (ContainerConfigurator $containerConfigurator): void {
             __DIR__ . '/../src/Bundle',
             __DIR__ . '/../src/DoctrineBehaviorsBundle.php',
             __DIR__ . '/../src/Exception',
-            __DIR__ . '/../src/Entity',
         ]);
 };

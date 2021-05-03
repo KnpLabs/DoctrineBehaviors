@@ -30,15 +30,15 @@ final class VersionManager
      */
     public function getVersions(VersionableInterface $versionable): array
     {
-        $metadataFactory = $this->entityManager->getMetadataFactory();
+        $classMetadataFactory = $this->entityManager->getMetadataFactory();
         $versionableClassName = get_class($versionable);
-        $versionableClassMetadata = $metadataFactory->getMetadataFor($versionableClassName);
+        $versionableClassMetadata = $classMetadataFactory->getMetadataFor($versionableClassName);
 
         $identifierValues = $versionableClassMetadata->getIdentifierValues($versionable);
 
         $resourceId = current($identifierValues);
 
-        $query = $this->createQuery($versionableClassName, $resourceId);
+        $query = $this->createQuery($versionable, $resourceId);
 
         $resourceVersions = [];
 
@@ -55,38 +55,35 @@ final class VersionManager
         $resourceVersions = $this->getVersions($versionable);
 
         if (! isset($resourceVersions[$targetVersionNumber])) {
-            $errorMessage = sprintf('Trying to access an unknown version "%s"', $targetVersionNumber);
+            $errorMessage = sprintf('Version "%s" was not found', $targetVersionNumber);
             throw new VersionableException($errorMessage);
         }
 
         $resourceVersion = $resourceVersions[$targetVersionNumber];
 
-        $versionableClass = $this->entityManager->getClassMetadata(get_class($versionable));
+        $versionableClassMetadata = $this->entityManager->getClassMetadata(get_class($versionable));
 
         foreach ($resourceVersion->getVersionedData() as $key => $value) {
-            if (! isset($versionableClass->reflFields[$key])) {
+            if (! isset($versionableClassMetadata->reflFields[$key])) {
                 continue;
             }
 
-            $versionableClass->reflFields[$key]->setValue($versionable, $value);
+            $versionableClassMetadata->reflFields[$key]->setValue($versionable, $value);
         }
 
-        if ($versionableClass->changeTrackingPolicy === ClassMetadata::CHANGETRACKING_DEFERRED_EXPLICIT) {
+        if ($versionableClassMetadata->changeTrackingPolicy === ClassMetadata::CHANGETRACKING_DEFERRED_EXPLICIT) {
             $this->entityManager->persist($versionable);
         }
     }
 
-    /**
-     * @param class-string $versionableClassName
-     */
-    private function createQuery(string $versionableClassName, $resourceId): Query
+    private function createQuery(VersionableInterface $versionable, $resourceId): Query
     {
         $queryBuilder = $this->entityManager->createQueryBuilder();
 
         $queryBuilder->select('v')
             ->from(ResourceVersion::class, 'v', 'v.version')
             ->andWhere('v.resourceName = :resourceName')
-            ->setParameter('resourceName', $versionableClassName)
+            ->setParameter('resourceName', get_class($versionable))
             ->andWhere('v.resourceId = :resourceId')
             ->setParameter('resourceId', $resourceId)
             ->orderBy('v.version', 'DESC');
