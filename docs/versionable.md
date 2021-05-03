@@ -9,7 +9,7 @@ Whenever an entity that implements `VersionableInterface` is *updated* all the o
 ### Requirements of your entities are:
 
 * single `@ORM\ID` with string or integer type
-* a `$version` property with `@ORM\Version` annotation (handled by `VersionableTrait)
+* a `$version` property with `@ORM\Version` annotation (handled by `VersionableTrait`)
 
 ```php
 namespace App;
@@ -29,28 +29,38 @@ class BlogPost implements VersionableInterface
 
 You have to add the `DoctrineExtensions\Versionable\Entity\ResourceVersion` entity to your metadata paths.
 It is using the Annotation Metadata driver, so you have to specifiy or configure the path to the directory on the CLI.
-Also if you are using any other metadata driver you have to wrap the `Doctrine\ORM\Mapping\Driver\DriverChain`
-to allow for multiple metadata drivers.
-
-You also have to hook the `VersionListener` into the EntityManager's EventManager explicitly upon construction:
-
-```php
-$eventManager = new EventManager();
-$eventManager->addEventSubscriber(new VersionListener());
-$em = EntityManager::create($connOptions, $config, $eventManager);
-```
 
 Using the `VersionManager` you can now retrieve all the versions of a versionable entity:
 
-```php
-$versionManager = new VersionManager($em);
-$versions = $versionManager->getVersions($blogPost);
-```
+<br>
 
-Or you can revert to a specific version number:
+**@todo consider using 1:m relation entity instead of `VersionManager` service middle man**
+
+<br>
 
 ```php
-$versionManager = new VersionManager($em);
-$versionManager->revert($blogPost, 100);
-$em->flush();
+use Doctrine\ORM\EntityManagerInterface;
+use Knp\DoctrineBehaviors\Versionable\Tests\Entity\BlogPost;
+use Knp\DoctrineBehaviors\Versionable\VersionManager;
+
+final class SomeController
+{
+    public function __construct(
+        private VersionManager $versionManager,
+        private EntityManagerInterface $entityManager,
+    ) {
+    }
+    
+    public function run(BlogPost $blogPost)
+    {
+        // pick all versions of this entity    
+        $versions = $this->versionManager->getVersions($blogPost);
+    
+        // you can revert to a specific version 
+        $this->versionManager->revert($blogPost, 35);
+
+        // don't forget to flush
+        $this->entityManager->flush();
+    }
+}
 ```
