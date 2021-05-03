@@ -63,9 +63,6 @@ final class LoggableEventSubscriber implements EventSubscriber
         return [Events::postPersist, Events::postUpdate, Events::preRemove];
     }
 
-    /**
-     * Logs entity changeset
-     */
     private function logChangeSet(LifecycleEventArgs $lifecycleEventArgs): void
     {
         $entityManager = $lifecycleEventArgs->getEntityManager();

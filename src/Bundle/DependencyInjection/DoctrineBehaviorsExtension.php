@@ -26,7 +26,13 @@ final class DoctrineBehaviorsExtension extends Extension
         $phpFileLoader->load('services.php');
 
         // @see https://github.com/doctrine/DoctrineBundle/issues/674
-        $containerBuilder->registerForAutoconfiguration(EventSubscriber::class)
-            ->addTag(self::DOCTRINE_EVENT_SUBSCRIBER_TAG);
+        $childDefinition = $containerBuilder->registerForAutoconfiguration(EventSubscriber::class);
+
+        // avoid duplication
+        if ($childDefinition->hasTag(self::DOCTRINE_EVENT_SUBSCRIBER_TAG)) {
+            return;
+        }
+
+        $childDefinition->addTag(self::DOCTRINE_EVENT_SUBSCRIBER_TAG);
     }
 }

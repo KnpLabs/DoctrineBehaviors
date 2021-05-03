@@ -24,7 +24,7 @@ final class DoctrineBehaviorsKernel extends Kernel implements ExtraConfigAwareKe
      */
     public function registerBundles(): array
     {
-        return [new DoctrineBehaviorsBundle(), new DoctrineBundle(), new FrameworkBundle()];
+        return [new DoctrineBundle(), new DoctrineBehaviorsBundle(), new FrameworkBundle()];
     }
 
     public function getCacheDir(): string

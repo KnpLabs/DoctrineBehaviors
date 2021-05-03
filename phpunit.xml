@@ -1,12 +1,12 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <phpunit
-     colors="true"
-     bootstrap="vendor/autoload.php"
+    colors="true"
+    bootstrap="vendor/autoload.php"
 >
-
     <testsuites>
         <testsuite name="main">
             <directory>tests</directory>
+            <directory>packages/*/tests</directory>
         </testsuite>
     </testsuites>
 </phpunit>

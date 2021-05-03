@@ -6,7 +6,6 @@ namespace Knp\DoctrineBehaviors\Tests;
 
 use Doctrine\DBAL\Connection;
 use Doctrine\ORM\EntityManagerInterface;
-use Doctrine\ORM\Tools\SchemaTool;
 
 final class DatabaseLoader
 {
@@ -15,9 +14,15 @@ final class DatabaseLoader
      */
     private $entityManager;
 
+    /**
+     * @var SchemaToolFactory
+     */
+    private $schemaToolFactory;
+
     public function __construct(EntityManagerInterface $entityManager, Connection $connection)
     {
         $this->entityManager = $entityManager;
+        $this->schemaToolFactory = new SchemaToolFactory($entityManager);
 
         // @see https://stackoverflow.com/a/35222045/1348344
         $configuration = $connection->getConfiguration();
@@ -48,7 +53,7 @@ final class DatabaseLoader
             $schema[] = $this->entityManager->getClassMetadata($entityClass);
         }
 
-        $schemaTool = new SchemaTool($this->entityManager);
+        $schemaTool = $this->schemaToolFactory->create();
         $schemaTool->dropSchema($schema);
         $schemaTool->createSchema($schema);
     }

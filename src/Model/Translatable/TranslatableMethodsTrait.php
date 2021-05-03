@@ -8,6 +8,7 @@ use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Knp\DoctrineBehaviors\Contract\Entity\TranslationInterface;
 use Knp\DoctrineBehaviors\Exception\TranslatableException;
+use Nette\Utils\Strings;
 
 trait TranslatableMethodsTrait
 {
@@ -207,7 +208,7 @@ trait TranslatableMethodsTrait
     protected function computeFallbackLocale($locale): ?string
     {
         if (strrchr($locale, '_') !== false) {
-            return substr($locale, 0, -strlen(strrchr($locale, '_')));
+            return Strings::substring($locale, 0, -strlen(strrchr($locale, '_')));
         }
 
         return null;
