@@ -22,6 +22,7 @@
         "symfony/security-core": "^4.4|^5.2",
         "symfony/framework-bundle": "^4.4|^5.2",
         "symfony/string": "^5.2",
+        "symfony/uid": "^5.2",
         "symfony/translation-contracts": "^2.3",
         "nette/utils": "^3.2",
         "ramsey/uuid": "^4.0",
