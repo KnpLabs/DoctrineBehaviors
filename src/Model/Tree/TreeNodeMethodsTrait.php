@@ -54,7 +54,7 @@ trait TreeNodeMethodsTrait
         return static::getMaterializedPathSeparator() . implode(static::getMaterializedPathSeparator(), $path);
     }
 
-    public function setParentMaterializedPath($path): void
+    public function setParentMaterializedPath(string $path): void
     {
         $this->parentNodePath = $path;
     }
