@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace Knp\DoctrineBehaviors\Model\Loggable;
 
-use DateTime;
+use DateTimeInterface;
 
 trait LoggableTrait
 {
@@ -17,7 +17,7 @@ trait LoggableTrait
             for ($i = 0, $s = $itemCount; $i < $s; ++$i) {
                 $item = $changeSet[$i];
 
-                if ($item instanceof DateTime) {
+                if ($item instanceof DateTimeInterface) {
                     $changeSet[$i] = $item->format('Y-m-d H:i:s.u');
                 }
             }
