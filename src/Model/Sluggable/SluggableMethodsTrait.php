@@ -9,12 +9,12 @@ use Symfony\Component\String\Slugger\AsciiSlugger;
 
 trait SluggableMethodsTrait
 {
-    public function setSlug(string $slug): void
+    public function setSlug(?string $slug): void
     {
         $this->slug = $slug;
     }
 
-    public function getSlug(): string
+    public function getSlug(): ?string
     {
         return $this->slug;
     }
