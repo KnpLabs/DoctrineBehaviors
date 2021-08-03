@@ -17,8 +17,7 @@ final class TranslationTypeHelper
     {
         $type = $scope->getType($methodCall->var);
         $translatableClass = $type->getReferencedClasses()[0];
-        $reflectionClass = $broker->getClass($translatableClass)
-            ->getNativeReflection();
+        $reflectionClass = new \ReflectionClass($translatableClass);
 
         if ($reflectionClass->isInterface()) {
             if ($reflectionClass->getName() === TranslatableInterface::class) {
