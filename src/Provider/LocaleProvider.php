@@ -8,6 +8,7 @@ use Knp\DoctrineBehaviors\Contract\Provider\LocaleProviderInterface;
 use Symfony\Component\DependencyInjection\Exception\InvalidArgumentException;
 use Symfony\Component\DependencyInjection\Exception\ParameterNotFoundException;
 use Symfony\Component\DependencyInjection\ParameterBag\ParameterBagInterface;
+use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\RequestStack;
 use Symfony\Contracts\Translation\LocaleAwareInterface;
 use Symfony\Contracts\Translation\TranslatorInterface;
@@ -42,7 +43,7 @@ final class LocaleProvider implements LocaleProviderInterface
     public function provideCurrentLocale(): ?string
     {
         $currentRequest = $this->requestStack->getCurrentRequest();
-        if ($currentRequest === null) {
+        if (! $currentRequest instanceof Request) {
             return null;
         }
 
