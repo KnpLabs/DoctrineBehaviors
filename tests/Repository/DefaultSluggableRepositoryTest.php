@@ -1,4 +1,5 @@
 <?php
+
 declare(strict_types=1);
 
 namespace Knp\DoctrineBehaviors\Tests\Repository;
@@ -45,13 +46,11 @@ final class DefaultSluggableRepositoryTest extends TestCase
         $metadata->expects(self::once())
             ->method('getIdentifierValues')
             ->with($sluggable)
-            ->willReturn(
-                [
+            ->willReturn([
                     'id' => null,
                     'slug' => 'foo',
                     'id.id' => '123',
-                ]
-            );
+                ]);
 
         $this->entityManager->expects(self::once())
             ->method('createQueryBuilder')
@@ -69,18 +68,12 @@ final class DefaultSluggableRepositoryTest extends TestCase
 
         $queryBuilder->expects(self::exactly(2))
             ->method('andWhere')
-            ->withConsecutive(
-                ['e.slug = :slug'],
-                ['e.id.id != :id_id']
-            )
+            ->withConsecutive(['e.slug = :slug'], ['e.id.id != :id_id'])
             ->willReturnSelf();
 
         $queryBuilder->expects(self::exactly(2))
             ->method('setParameter')
-            ->withConsecutive(
-                ['slug', $uniqueSlug],
-                ['id_id', '123']
-            )
+            ->withConsecutive(['slug', $uniqueSlug], ['id_id', '123'])
             ->willReturnSelf();
 
         $queryBuilder->expects(self::once())

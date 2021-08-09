@@ -33,7 +33,7 @@ final class DefaultSluggableRepository
             ->getIdentifierValues($sluggable);
 
         foreach ($identifiers as $field => $value) {
-            if (null === $value || 'slug' === $field) {
+            if ($value === null || $field === 'slug') {
                 continue;
             }
 
