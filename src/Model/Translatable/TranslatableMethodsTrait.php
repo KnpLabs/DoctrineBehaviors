@@ -223,7 +223,8 @@ trait TranslatableMethodsTrait
             return;
         }
 
-        throw new TranslatableException(sprintf('$translations parameter must be iterable or %s', Collection::class)
+        throw new TranslatableException(
+            sprintf('$translations parameter must be iterable or %s', Collection::class)
         );
     }
 

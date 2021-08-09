@@ -16,6 +16,7 @@ use Knp\DoctrineBehaviors\Model\Translatable\TranslationTrait;
 class SluggableTranslatableEntityTranslation implements TranslationInterface, SluggableInterface
 {
     use SluggableTrait;
+
     use TranslationTrait;
 
     /**

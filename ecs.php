@@ -2,7 +2,6 @@
 
 declare(strict_types=1);
 
-use PhpCsFixer\Fixer\ClassNotation\FinalClassFixer;
 use PhpCsFixer\Fixer\Comment\HeaderCommentFixer;
 use PhpCsFixer\Fixer\Import\OrderedImportsFixer;
 use PhpCsFixer\Fixer\Operator\UnaryOperatorSpacesFixer;
@@ -13,6 +12,11 @@ use Symplify\EasyCodingStandard\ValueObject\Option;
 use Symplify\EasyCodingStandard\ValueObject\Set\SetList;
 
 return static function (ContainerConfigurator $containerConfigurator): void {
+    $containerConfigurator->import(SetList::PSR_12);
+    $containerConfigurator->import(SetList::SYMPLIFY);
+    $containerConfigurator->import(SetList::COMMON);
+    $containerConfigurator->import(SetList::CLEAN_CODE);
+
     $parameters = $containerConfigurator->parameters();
 
     $parameters->set(Option::PATHS, [
@@ -23,8 +27,6 @@ return static function (ContainerConfigurator $containerConfigurator): void {
         __DIR__ . '/ecs.php',
         __DIR__ . '/rector.php',
     ]);
-
-    $parameters->set(Option::SETS, [SetList::PSR_12, SetList::SYMPLIFY, SetList::COMMON, SetList::CLEAN_CODE]);
 
     $parameters->set(Option::SKIP, [
         UnaryOperatorSpacesFixer::class,

@@ -7,5 +7,6 @@ namespace Knp\DoctrineBehaviors\Model\Sluggable;
 trait SluggableTrait
 {
     use SluggablePropertiesTrait;
+
     use SluggableMethodsTrait;
 }
