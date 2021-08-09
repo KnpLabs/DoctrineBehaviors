@@ -107,10 +107,7 @@ trait TranslatableMethodsTrait
         return $this->currentLocale ?: $this->getDefaultLocale();
     }
 
-    /**
-     * @param mixed $locale the default locale
-     */
-    public function setDefaultLocale($locale): void
+    public function setDefaultLocale(string $locale): void
     {
         $this->defaultLocale = $locale;
     }
@@ -223,7 +220,8 @@ trait TranslatableMethodsTrait
             return;
         }
 
-        throw new TranslatableException(sprintf('$translations parameter must be iterable or %s', Collection::class)
+        throw new TranslatableException(
+            sprintf('$translations parameter must be iterable or %s', Collection::class)
         );
     }
 

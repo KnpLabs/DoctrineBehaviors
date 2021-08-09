@@ -8,6 +8,7 @@ use Closure;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Knp\DoctrineBehaviors\Contract\Entity\TreeNodeInterface;
+use Knp\DoctrineBehaviors\Exception\ShouldNotHappenException;
 use Knp\DoctrineBehaviors\Exception\TreeException;
 use Nette\Utils\Json;
 
@@ -54,7 +55,7 @@ trait TreeNodeMethodsTrait
         return static::getMaterializedPathSeparator() . implode(static::getMaterializedPathSeparator(), $path);
     }
 
-    public function setParentMaterializedPath($path): void
+    public function setParentMaterializedPath(string $path): void
     {
         $this->parentNodePath = $path;
     }
@@ -273,7 +274,12 @@ trait TreeNodeMethodsTrait
      */
     protected function getExplodedPath(): array
     {
-        $path = explode(static::getMaterializedPathSeparator(), $this->getRealMaterializedPath());
+        $separator = static::getMaterializedPathSeparator();
+        if ($separator === '') {
+            throw new ShouldNotHappenException();
+        }
+
+        $path = explode($separator, $this->getRealMaterializedPath());
 
         return array_filter($path, function ($item) {
             return $item !== '';

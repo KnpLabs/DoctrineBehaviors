@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace Knp\DoctrineBehaviors\Model\Uuidable;
 
+use Knp\DoctrineBehaviors\Exception\ShouldNotHappenException;
 use Ramsey\Uuid\Uuid;
 use Ramsey\Uuid\UuidInterface;
 
@@ -17,6 +18,10 @@ trait UuidableMethodsTrait
     public function getUuid(): ?UuidInterface
     {
         if (is_string($this->uuid)) {
+            if ($this->uuid === '') {
+                throw new ShouldNotHappenException();
+            }
+
             return Uuid::fromString($this->uuid);
         }
 
