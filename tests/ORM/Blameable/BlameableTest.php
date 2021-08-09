@@ -4,7 +4,6 @@ declare(strict_types=1);
 
 namespace Knp\DoctrineBehaviors\Tests\ORM\Blameable;
 
-use Doctrine\ORM\EntityRepository;
 use Doctrine\Persistence\ObjectRepository;
 use Knp\DoctrineBehaviors\Contract\Provider\UserProviderInterface;
 use Knp\DoctrineBehaviors\Tests\AbstractBehaviorTestCase;
@@ -18,7 +17,7 @@ final class BlameableTest extends AbstractBehaviorTestCase
     private $userProvider;
 
     /**
-     * @var ObjectRepository|EntityRepository
+     * @var ObjectRepository<BlameableEntity>
      */
     private $blameableRepository;
 

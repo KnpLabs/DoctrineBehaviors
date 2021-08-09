@@ -16,7 +16,7 @@ interface TranslatableInterface
     /**
      * @return Collection<TranslationInterface>
      */
-    public function getNewTranslations();
+    public function getNewTranslations(): Collection;
 
     public function addTranslation(TranslationInterface $translation): void;
 

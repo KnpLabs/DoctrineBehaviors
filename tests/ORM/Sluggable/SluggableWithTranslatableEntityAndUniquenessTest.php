@@ -4,7 +4,6 @@ declare(strict_types=1);
 
 namespace Knp\DoctrineBehaviors\Tests\ORM\Sluggable;
 
-use Doctrine\ORM\EntityRepository;
 use Doctrine\Persistence\ObjectRepository;
 use Knp\DoctrineBehaviors\Tests\AbstractBehaviorTestCase;
 use Knp\DoctrineBehaviors\Tests\Fixtures\Entity\Sluggable\SluggableTranslatableEntity;
@@ -12,7 +11,7 @@ use Knp\DoctrineBehaviors\Tests\Fixtures\Entity\Sluggable\SluggableTranslatableE
 final class SluggableWithTranslatableEntityAndUniquenessTest extends AbstractBehaviorTestCase
 {
     /**
-     * @var ObjectRepository|EntityRepository
+     * @var ObjectRepository<SluggableTranslatableEntity>
      */
     private $translatableRepository;
 
