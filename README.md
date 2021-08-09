@@ -99,7 +99,7 @@ use Symfony\Component\DependencyInjection\Loader\Configurator\ContainerConfigura
 use Rector\Doctrine\Set\DoctrineSetList;
 
 return static function (ContainerConfigurator $containerConfigurator): void {
-    $containerConfigurator->import(\Rector\Doctrine\Set\DoctrineSetList::DOCTRINE_BEHAVIORS_20);
+    $containerConfigurator->import(DoctrineSetList::DOCTRINE_BEHAVIORS_20);
 };
 ```
 
