@@ -40,7 +40,7 @@ trait TranslatableMethodsTrait
     /**
      * @return Collection<TranslationInterface>
      */
-    public function getNewTranslations()
+    public function getNewTranslations(): Collection
     {
         // initialize collection, usually in ctor
         if ($this->newTranslations === null) {

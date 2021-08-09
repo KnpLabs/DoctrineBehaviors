@@ -54,6 +54,9 @@ interface TreeNodeInterface
 
     public function addChildNode(self $node): void;
 
+    /**
+     * @return Collection<TreeNodeInterface>
+     */
     public function getChildNodes(): Collection;
 
     public function isLeafNode(): bool;

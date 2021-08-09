@@ -90,13 +90,7 @@ parameters:
             message: '#Do not compare call directly, use a variable assign#'
             path: src/Model/*/*MethodsTrait.php
 
-        -
-            message: '#For complex configuration use value object over array#'
-            path: tests/config/config_test.php
-
         - '#Parameter \#1 \$type of method Symplify\\PackageBuilder\\Testing\\AbstractKernelTestCase\:\:getService\(\) expects class\-string<doctrine\.orm\.entity_manager\>, string given#'
-        - '#Property Knp\\DoctrineBehaviors\\Tests\\AbstractBehaviorTestCase\:\:\$entityManager \(Doctrine\\ORM\\EntityManagerInterface\) does not accept T of object#'
-        - '#Parameter \#1 \$input of function array_filter expects array, array<int, string\>\|false given#'
 
         -
             message: '#Use dependency injection instead of dependency juggling#'
@@ -104,3 +98,5 @@ parameters:
 
         # known retype
         - '#Cannot cast array\|bool\|float\|int\|string\|null to string#'
+
+        - '#Method Knp\\DoctrineBehaviors\\Tests\\Fixtures\\(.*?) return type with generic interface Doctrine\\Common\\Collections\\Collection does not specify its types\: TKey, T#'

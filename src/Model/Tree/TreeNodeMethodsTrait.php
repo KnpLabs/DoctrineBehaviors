@@ -84,7 +84,7 @@ trait TreeNodeMethodsTrait
     }
 
     /**
-     * @return Collection|TreeNodeInterface[]
+     * @return Collection<TreeNodeInterface>
      */
     public function getChildNodes(): Collection
     {

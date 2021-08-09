@@ -11,7 +11,7 @@ use Knp\DoctrineBehaviors\Tests\Fixtures\Entity\Translatable\ExtendedTranslatabl
 final class TranslatableInheritanceTest extends AbstractBehaviorTestCase
 {
     /**
-     * @var ObjectRepository
+     * @var ObjectRepository<ExtendedTranslatableEntity>
      */
     private $objectRepository;
 
