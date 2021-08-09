@@ -47,10 +47,10 @@ final class DefaultSluggableRepositoryTest extends TestCase
             ->method('getIdentifierValues')
             ->with($sluggable)
             ->willReturn([
-                    'id' => null,
-                    'slug' => 'foo',
-                    'id.id' => '123',
-                ]);
+                'id' => null,
+                'slug' => 'foo',
+                'id.id' => '123',
+            ]);
 
         $this->entityManager->expects(self::once())
             ->method('createQueryBuilder')
