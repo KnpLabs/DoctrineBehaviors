@@ -258,14 +258,7 @@ final class TranslatableTest extends AbstractBehaviorTestCase
 
     public function testShouldNotPersistNewEmptyTranslations(): void
     {
-        $entity = new TranslatableEntity();
-        $entity->translate('fr')
-            ->setTitle('fabuleux');
-        $entity->translate('en')
-            ->setTitle('');
-        $entity->translate('ru')
-            ->setTitle('удивительный');
-        $entity->mergeNewTranslations();
+        $entity = $this->createTranslatableEntity();
 
         $this->entityManager->persist($entity);
         $this->entityManager->flush();
@@ -274,7 +267,10 @@ final class TranslatableTest extends AbstractBehaviorTestCase
         $this->entityManager->clear();
 
         $entity = $this->translatableRepository->find($id);
+        $this->assertIsObject($entity);
+        $this->assertInstanceOf(TranslatableEntity::class, $entity);
 
+        /** @var TranslatableEntity $entity */
         $this->assertSame('fabuleux', $entity->translate('fr')->getTitle());
 
         // empty English translation
@@ -285,14 +281,7 @@ final class TranslatableTest extends AbstractBehaviorTestCase
 
     public function testShouldRemoveTranslationsWhichBecomeEmpty(): void
     {
-        $entity = new TranslatableEntity();
-        $entity->translate('fr')
-            ->setTitle('fabuleux');
-        $entity->translate('en')
-            ->setTitle('awesome');
-        $entity->translate('ru')
-            ->setTitle('удивительный');
-        $entity->mergeNewTranslations();
+        $entity = $this->createTranslatableEntity();
 
         $this->entityManager->persist($entity);
         $this->entityManager->flush();
@@ -309,6 +298,10 @@ final class TranslatableTest extends AbstractBehaviorTestCase
 
         $entity = $this->translatableRepository->find($id);
 
+        $this->assertIsObject($entity);
+        $this->assertInstanceOf(TranslatableEntity::class, $entity);
+
+        /** @var TranslatableEntity $entity */
         $this->assertSame('fabuleux', $entity->translate('fr')->getTitle());
         $this->assertNull($entity->translate('en')->getTitle());
         $this->assertSame('удивительный', $entity->translate('ru')->getTitle());
@@ -342,5 +335,19 @@ final class TranslatableTest extends AbstractBehaviorTestCase
         $this->assertTrue($meta->isAssociationInverseSide('translations'));
 
         $this->assertSame(ClassMetadataInfo::ONE_TO_MANY, $meta->getAssociationMapping('translations')['type']);
+    }
+
+    private function createTranslatableEntity(): TranslatableEntity
+    {
+        $entity = new TranslatableEntity();
+        $entity->translate('fr')
+            ->setTitle('fabuleux');
+        $entity->translate('en')
+            ->setTitle('awesome');
+        $entity->translate('ru')
+            ->setTitle('удивительный');
+        $entity->mergeNewTranslations();
+
+        return $entity;
     }
 }

@@ -101,3 +101,6 @@ parameters:
         -
             message: '#Use dependency injection instead of dependency juggling#'
             path: tests/DatabaseLoader.php
+
+        # known retype
+        - '#Cannot cast array\|bool\|float\|int\|string\|null to string#'

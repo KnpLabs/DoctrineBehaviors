@@ -107,10 +107,7 @@ trait TranslatableMethodsTrait
         return $this->currentLocale ?: $this->getDefaultLocale();
     }
 
-    /**
-     * @param mixed $locale the default locale
-     */
-    public function setDefaultLocale($locale): void
+    public function setDefaultLocale(string $locale): void
     {
         $this->defaultLocale = $locale;
     }
