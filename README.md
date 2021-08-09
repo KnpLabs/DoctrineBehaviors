@@ -83,5 +83,28 @@ This package uses [Rector](https://github.com/rectorphp/rector), that handles up
 
 ```bash
 composer require rector/rector --dev
-vendor/bin/rector process src --config vendor/rector/rector/config/set/doctrine-behaviors-20.yaml
+```
+
+Create `rector.php` config:
+
+```bash
+vendor/bin/rector init
+```
+
+Add Doctrine Behaviors upgrade set to `rector.php`:
+
+```php
+use Rector\Core\Configuration\Option;
+use Symfony\Component\DependencyInjection\Loader\Configurator\ContainerConfigurator;
+use Rector\Doctrine\Set\DoctrineSetList;
+
+return static function (ContainerConfigurator $containerConfigurator): void {
+    $containerConfigurator->import(\Rector\Doctrine\Set\DoctrineSetList::DOCTRINE_BEHAVIORS_20);
+};
+```
+
+Run Rector:
+
+```bash
+vendor/bin/rector process src
 ```
