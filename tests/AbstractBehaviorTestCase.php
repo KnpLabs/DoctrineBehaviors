@@ -18,11 +18,6 @@ abstract class AbstractBehaviorTestCase extends AbstractKernelTestCase
      */
     protected $entityManager;
 
-    /**
-     * @var DebugStack
-     */
-    protected $debugStack;
-
     protected function setUp(): void
     {
         $customConfig = $this->provideCustomConfig();
@@ -56,12 +51,14 @@ abstract class AbstractBehaviorTestCase extends AbstractKernelTestCase
         return null;
     }
 
-    protected function enableDebugStackLogger(): void
+    protected function createAndRegisterDebugStack(): DebugStack
     {
-        $this->debugStack = new DebugStack();
+        $debugStack = new DebugStack();
 
         $this->entityManager->getConnection()
             ->getConfiguration()
-            ->setSQLLogger($this->debugStack);
+            ->setSQLLogger($debugStack);
+
+        return $debugStack;
     }
 }

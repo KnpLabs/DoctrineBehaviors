@@ -12,7 +12,7 @@ use Knp\DoctrineBehaviors\Model\Tree\TreeNodeTrait;
 /**
  * @ORM\Entity(repositoryClass="Knp\DoctrineBehaviors\Tests\Fixtures\Repository\TreeNodeRepository")
  */
-class TreeNodeEntity implements TreeNodeInterface, ArrayAccess
+class TreeNodeEntity implements TreeNodeInterface, ArrayAccess, \Stringable
 {
     use TreeNodeTrait;
 
@@ -20,15 +20,13 @@ class TreeNodeEntity implements TreeNodeInterface, ArrayAccess
      * @ORM\Id
      * @ORM\Column(type="integer")
      * @ORM\GeneratedValue(strategy="NONE")
-     * @var int|null
      */
-    private $id;
+    private ?int $id = null;
 
     /**
      * @ORM\Column(type="string", length=255, nullable=true)
-     * @var string
      */
-    private $name;
+    private ?string $name = null;
 
     public function __toString(): string
     {

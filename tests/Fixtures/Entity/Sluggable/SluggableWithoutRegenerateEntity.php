@@ -6,6 +6,7 @@ namespace Knp\DoctrineBehaviors\Tests\Fixtures\Entity\Sluggable;
 
 use Doctrine\ORM\Mapping as ORM;
 use Knp\DoctrineBehaviors\Contract\Entity\SluggableInterface;
+use Knp\DoctrineBehaviors\Exception\ShouldNotHappenException;
 use Knp\DoctrineBehaviors\Model\Sluggable\SluggableTrait;
 
 /**
@@ -17,17 +18,15 @@ class SluggableWithoutRegenerateEntity implements SluggableInterface
 
     /**
      * @ORM\Column(type="string")
-     * @var string
      */
-    private $name;
+    private ?string $name = null;
 
     /**
      * @ORM\Id
      * @ORM\Column(type="integer")
      * @ORM\GeneratedValue(strategy="AUTO")
-     * @var int
      */
-    private $id;
+    private int $id;
 
     public function getId(): int
     {
@@ -36,6 +35,10 @@ class SluggableWithoutRegenerateEntity implements SluggableInterface
 
     public function getName(): string
     {
+        if ($this->name === null) {
+            throw new ShouldNotHappenException();
+        }
+
         return $this->name;
     }
 

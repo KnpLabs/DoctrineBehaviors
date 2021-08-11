@@ -13,7 +13,7 @@ final class SluggableWithTranslatableEntityAndUniquenessTest extends AbstractBeh
     /**
      * @var ObjectRepository<SluggableTranslatableEntity>
      */
-    private $translatableRepository;
+    private ObjectRepository $translatableRepository;
 
     protected function setUp(): void
     {

@@ -13,8 +13,7 @@ final class UuidableTest extends AbstractBehaviorTestCase
 {
     public function testUuidLoading(): void
     {
-        $entity = new UuidableEntity();
-        $entity->setName('The name');
+        $entity = new UuidableEntity('The name');
 
         $this->entityManager->persist($entity);
         $this->entityManager->flush();

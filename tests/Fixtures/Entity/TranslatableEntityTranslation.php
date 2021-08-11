@@ -19,15 +19,13 @@ class TranslatableEntityTranslation implements TranslationInterface
      * @ORM\Id
      * @ORM\Column(type="integer")
      * @ORM\GeneratedValue(strategy="AUTO")
-     * @var int
      */
-    private $id;
+    private int $id;
 
     /**
      * @ORM\Column(type="string")
-     * @var string|null
      */
-    private $title;
+    private ?string $title = null;
 
     public function getId(): int
     {

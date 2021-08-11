@@ -6,6 +6,7 @@ namespace Knp\DoctrineBehaviors\Tests\Fixtures\Entity\Timestampable;
 
 use Doctrine\ORM\Mapping as ORM;
 use Knp\DoctrineBehaviors\Contract\Entity\TimestampableInterface;
+use Knp\DoctrineBehaviors\Exception\ShouldNotHappenException;
 use Knp\DoctrineBehaviors\Model\Timestampable\TimestampableTrait;
 
 /**
@@ -19,15 +20,13 @@ class TimestampableEntity implements TimestampableInterface
      * @ORM\Id
      * @ORM\Column(type="integer")
      * @ORM\GeneratedValue(strategy="AUTO")
-     * @var int
      */
-    private $id;
+    private int $id;
 
     /**
      * @ORM\Column(type="string", nullable=true)
-     * @var string
      */
-    private $title;
+    private ?string $title = null;
 
     public function getId(): int
     {
@@ -36,6 +35,10 @@ class TimestampableEntity implements TimestampableInterface
 
     public function getTitle(): string
     {
+        if ($this->title === null) {
+            throw new ShouldNotHappenException();
+        }
+
         return $this->title;
     }
 

@@ -14,7 +14,7 @@ final class SluggableWithoutRegenerateTest extends AbstractBehaviorTestCase
     /**
      * @var ObjectRepository<SluggableWithoutRegenerateEntity>
      */
-    private $sluggableWithoutRegenerateRepository;
+    private ObjectRepository $sluggableWithoutRegenerateRepository;
 
     protected function setUp(): void
     {

@@ -26,4 +26,8 @@ return static function (ContainerConfigurator $containerConfigurator): void {
     $containerConfigurator->import(SetList::PHP_71);
     $containerConfigurator->import(SetList::PHP_72);
     $containerConfigurator->import(SetList::PHP_73);
+
+    // for tests only
+    // $containerConfigurator->import(SetList::PHP_74);
+    // $containerConfigurator->import(SetList::PHP_80);
 };

@@ -10,10 +10,7 @@ use Psr\Log\Test\TestLogger;
 
 final class LoggableTest extends AbstractBehaviorTestCase
 {
-    /**
-     * @var TestLogger
-     */
-    private $testLogger;
+    private \Psr\Log\Test\TestLogger $testLogger;
 
     protected function setUp(): void
     {
@@ -129,15 +126,15 @@ final class LoggableTest extends AbstractBehaviorTestCase
 
         $this->assertCount(2, $this->testLogger->records);
 
-        $expectedMessage = sprintf('%s #1 created', LoggableEntity::class);
-        $this->assertSame($expectedMessage, $this->testLogger->records[0]['message']);
+        $firstExpectedMessage = sprintf('%s #1 created', LoggableEntity::class);
+        $this->assertSame($firstExpectedMessage, $this->testLogger->records[0]['message']);
 
-        $expectedMessage = sprintf(
+        $secondExpectedMessage = sprintf(
             '%s #1 : property "%s" changed from "" to "%s"',
             LoggableEntity::class,
             $field,
             $expected
         );
-        $this->assertStringContainsString($expectedMessage, $this->testLogger->records[1]['message']);
+        $this->assertStringContainsString($secondExpectedMessage, $this->testLogger->records[1]['message']);
     }
 }

@@ -19,15 +19,16 @@ class UuidableEntity implements UuidableInterface
      * @ORM\Id
      * @ORM\Column(type="integer")
      * @ORM\GeneratedValue(strategy="AUTO")
-     * @var int
      */
-    private $id;
+    private int $id;
 
-    /**
-     * @ORM\Column(type="string")
-     * @var string
-     */
-    private $name;
+    public function __construct(
+        /**
+         * @ORM\Column(type="string")
+         */
+        private string $name
+    ) {
+    }
 
     public function getId(): int
     {
@@ -37,10 +38,5 @@ class UuidableEntity implements UuidableInterface
     public function getName(): string
     {
         return $this->name;
-    }
-
-    public function setName(string $name): void
-    {
-        $this->name = $name;
     }
 }

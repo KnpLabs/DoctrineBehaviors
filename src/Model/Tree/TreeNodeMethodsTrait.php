@@ -163,15 +163,21 @@ trait TreeNodeMethodsTrait
         return $parent;
     }
 
-    public function buildTree(array $results): void
+    /**
+     * @param TreeNodeInterface[] $treeNodes
+     */
+    public function buildTree(array $treeNodes): void
     {
         $this->getChildNodes()
             ->clear();
-        foreach ($results as $result) {
-            if ($result->getMaterializedPath() === $this->getRealMaterializedPath()) {
-                $result->setParentNode($this);
-                $result->buildTree($results);
+
+        foreach ($treeNodes as $treeNode) {
+            if ($treeNode->getMaterializedPath() !== $this->getRealMaterializedPath()) {
+                continue;
             }
+
+            $treeNode->setParentNode($this);
+            $treeNode->buildTree($treeNodes);
         }
     }
 

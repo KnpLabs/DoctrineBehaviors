@@ -18,17 +18,15 @@ class LoggableEntity implements LoggableInterface
 
     /**
      * @ORM\Column(type="string", nullable=true)
-     * @var string|null
      */
-    private $title;
+    private ?string $title = null;
 
     /**
      * @ORM\Id
      * @ORM\Column(type="integer")
      * @ORM\GeneratedValue(strategy="AUTO")
-     * @var int
      */
-    private $id;
+    private int $id;
 
     /**
      * @ORM\Column(type="array", nullable=true)

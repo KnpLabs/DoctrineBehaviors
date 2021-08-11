@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace Knp\DoctrineBehaviors\Tests\Fixtures\Entity\Timestampable;
 
 use Doctrine\ORM\Mapping as ORM;
+use Knp\DoctrineBehaviors\Exception\ShouldNotHappenException;
 use Knp\DoctrineBehaviors\Tests\Fixtures\Entity\AbstractTimestampableMappedSuperclassEntity;
 
 /**
@@ -14,12 +15,15 @@ class TimestampableInheritedEntity extends AbstractTimestampableMappedSuperclass
 {
     /**
      * @ORM\Column(type="string", nullable=true)
-     * @var string
      */
-    private $title;
+    private ?string $title = null;
 
     public function getTitle(): string
     {
+        if ($this->title === null) {
+            throw new ShouldNotHappenException();
+        }
+
         return $this->title;
     }
 
