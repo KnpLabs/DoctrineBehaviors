@@ -3,6 +3,7 @@
 declare(strict_types=1);
 
 use Rector\Core\Configuration\Option;
+use Rector\Doctrine\Set\DoctrineSetList;
 use Rector\Naming\Rector\Class_\RenamePropertyToMatchTypeRector;
 use Rector\Nette\Set\NetteSetList;
 use Rector\Set\ValueObject\SetList;
@@ -17,6 +18,9 @@ return static function (ContainerConfigurator $containerConfigurator): void {
     $parameters->set(Option::SKIP, [
         RenamePropertyToMatchTypeRector::class => [__DIR__ . '/tests/ORM/'],
     ]);
+
+    // doctrine annotations to attributes
+    $containerConfigurator->import(DoctrineSetList::DOCTRINE_ORM_29);
 
     $containerConfigurator->import(SetList::DEAD_CODE);
     $containerConfigurator->import(SetList::CODE_QUALITY);

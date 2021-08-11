@@ -5,39 +5,38 @@ declare(strict_types=1);
 namespace Knp\DoctrineBehaviors\Tests\Fixtures\Entity;
 
 use DateTimeInterface;
-use Doctrine\ORM\Mapping as ORM;
+use Doctrine\ORM\Mapping\Column;
+use Doctrine\ORM\Mapping\Entity;
+use Doctrine\ORM\Mapping\GeneratedValue;
+use Doctrine\ORM\Mapping\Id;
 use Knp\DoctrineBehaviors\Contract\Entity\LoggableInterface;
 use Knp\DoctrineBehaviors\Model\Loggable\LoggableTrait;
 
-/**
- * @ORM\Entity
- */
+#[Entity]
 class LoggableEntity implements LoggableInterface
 {
     use LoggableTrait;
 
-    /**
-     * @ORM\Column(type="string", nullable=true)
-     */
+    #[Column(type: 'string', nullable: true)]
     private ?string $title = null;
 
-    /**
-     * @ORM\Id
-     * @ORM\Column(type="integer")
-     * @ORM\GeneratedValue(strategy="AUTO")
-     */
+    #[Id]
+    #[Column(type: 'integer')]
+    #[GeneratedValue(strategy: 'AUTO')]
     private int $id;
 
     /**
-     * @ORM\Column(type="array", nullable=true)
      * @var string[]|null
      */
+
+    #[Column(type: 'array', nullable: true)]
     private $roles;
 
     /**
-     * @ORM\Column(type="date", nullable=true)
      * @var DateTimeInterface|null
      */
+
+    #[Column(type: 'date', nullable: true)]
     private $dateTime;
 
     public function getId(): int

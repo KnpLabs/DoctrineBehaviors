@@ -26,7 +26,6 @@ parameters:
     ignoreErrors:
         # traits
         - '#Call to an undefined method Knp\\DoctrineBehaviors\\Contract\\Provider\\UserProviderInterface::changeUser\(\)#'
-        - '#Call to an undefined method Knp\\DoctrineBehaviors\\Contract\\Entity\\SluggableInterface::getId\(\)#'
         - '#Call to an undefined method Knp\\DoctrineBehaviors\\Contract\\Entity\\TreeNodeInterface::getId\(\)#'
         - '#Call to an undefined method Knp\\DoctrineBehaviors\\Contract\\Entity\\TreeNodeInterface::to(Flat)?Array\(\)#'
 
@@ -46,9 +45,6 @@ parameters:
 
         - '#Cannot call method addChildNode\(\) on Knp\\DoctrineBehaviors\\Contract\\Entity\\TreeNodeInterface\|null#'
 
-        - '#Property Knp\\DoctrineBehaviors\\Provider\\LocaleProvider\:\:\$translator has no typehint specified#'
-        - '#PHPDoc tag @var has invalid value \(TranslatorInterface&LocaleAwareInterface\|null\)\: Unexpected token "\|", expected TOKEN_OTHER at offset \d+#'
-
         - '#Do not use "\$entityManager->getRepository\(\)" outside of the constructor of repository service#'
 
         # resolve in follow up PR
@@ -64,14 +60,11 @@ parameters:
                 - src/EventSubscriber/TranslatableEventSubscriber.php
 
         - '#Do not use trait#'
-        - '#Do not use setter on a service#'
 
         -
             message: '#Do not use @method tag in class docblock#'
             paths:
                 - tests/Fixtures/Entity/TranslatableEntity.php
-
-        - '#"Doctrine\\ORM\\EntityManagerInterface" dependency is allowed only in "\*Repository" types#'
 
         -
             message: '#Use explicit methods over array access on object#'
@@ -92,14 +85,8 @@ parameters:
 
         - '#Parameter \#1 \$type of method Symplify\\PackageBuilder\\Testing\\AbstractKernelTestCase\:\:getService\(\) expects class\-string<doctrine\.orm\.entity_manager\>, string given#'
 
-        -
-            message: '#Use dependency injection instead of dependency juggling#'
-            path: tests/DatabaseLoader.php
-
         # known retype
         - '#Cannot cast array\|bool\|float\|int\|string\|null to string#'
-
-        - '#Method Knp\\DoctrineBehaviors\\Tests\\Fixtures\\(.*?) return type with generic interface Doctrine\\Common\\Collections\\Collection does not specify its types\: TKey, T#'
 
         -
             message: '#Use required typed property over of nullable property#'
@@ -111,3 +98,7 @@ parameters:
         -
             message: '#Use required typed property over of nullable property#'
             path: '*/Entity/*'
+
+        -
+            message: '#Attribute key "repositoryClass" cannot be used#'
+            path: tests/Fixtures/Entity/TreeNodeEntity.php

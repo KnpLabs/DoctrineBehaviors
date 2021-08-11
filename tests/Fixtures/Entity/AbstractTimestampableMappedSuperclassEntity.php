@@ -4,35 +4,21 @@ declare(strict_types=1);
 
 namespace Knp\DoctrineBehaviors\Tests\Fixtures\Entity;
 
-use DateTimeInterface;
-use Doctrine\ORM\Mapping as ORM;
+use Doctrine\ORM\Mapping\Id;
+use Doctrine\ORM\Mapping\Column;
+use Doctrine\ORM\Mapping\GeneratedValue;
+use Doctrine\ORM\Mapping\MappedSuperclass;
 use Knp\DoctrineBehaviors\Contract\Entity\TimestampableInterface;
 use Knp\DoctrineBehaviors\Model\Timestampable\TimestampableTrait;
 
-/**
- * @ORM\MappedSuperclass
- */
+#[MappedSuperclass]
 abstract class AbstractTimestampableMappedSuperclassEntity implements TimestampableInterface
 {
     use TimestampableTrait;
 
-    /**
-     * @ORM\Column(type="datetime")
-     * @var DateTimeInterface
-     */
-    protected $createdAt;
-
-    /**
-     * @ORM\Column(type="datetime")
-     * @var DateTimeInterface
-     */
-    protected $updatedAt;
-
-    /**
-     * @ORM\Id
-     * @ORM\Column(type="integer")
-     * @ORM\GeneratedValue(strategy="AUTO")
-     */
+    #[Id]
+    #[Column(type: 'integer')]
+    #[GeneratedValue(strategy: 'AUTO')]
     protected int $id;
 
     public function getId(): int
