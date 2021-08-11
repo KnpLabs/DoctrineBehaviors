@@ -12,7 +12,7 @@ use Knp\DoctrineBehaviors\Contract\Entity\TimestampableInterface;
 final class TimestampableEventSubscriber implements EventSubscriberInterface
 {
     public function __construct(
-        private string $dateFieldType
+        private string $timestampableDateFieldType
     ) {
     }
 
@@ -39,7 +39,7 @@ final class TimestampableEventSubscriber implements EventSubscriberInterface
             if (! $classMetadata->hasField($field)) {
                 $classMetadata->mapField([
                     'fieldName' => $field,
-                    'type' => $this->dateFieldType,
+                    'type' => $this->timestampableDateFieldType,
                     'nullable' => true,
                 ]);
             }
