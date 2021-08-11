@@ -8,11 +8,12 @@ use ArrayAccess;
 use Doctrine\ORM\Mapping as ORM;
 use Knp\DoctrineBehaviors\Contract\Entity\TreeNodeInterface;
 use Knp\DoctrineBehaviors\Model\Tree\TreeNodeTrait;
+use Stringable;
 
 /**
  * @ORM\Entity(repositoryClass="Knp\DoctrineBehaviors\Tests\Fixtures\Repository\TreeNodeRepository")
  */
-class TreeNodeEntity implements TreeNodeInterface, ArrayAccess, \Stringable
+class TreeNodeEntity implements TreeNodeInterface, ArrayAccess, Stringable
 {
     use TreeNodeTrait;
 

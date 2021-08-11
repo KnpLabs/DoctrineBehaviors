@@ -39,7 +39,7 @@ final class SluggableWithTranslatableEntityAndUniquenessTest extends AbstractBeh
 
         $this->entityManager->clear();
 
-        /** @var \Knp\DoctrineBehaviors\Tests\Fixtures\Entity\Sluggable\SluggableTranslatableEntity $entity */
+        /** @var SluggableTranslatableEntity $entity */
         $entity = $this->translatableRepository->find($id);
         $sluggableTranslatableEntityTranslation = $entity->translate('fr');
         $entityEN = $entity->translate('en');

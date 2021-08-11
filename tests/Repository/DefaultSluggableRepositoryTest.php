@@ -20,7 +20,7 @@ final class DefaultSluggableRepositoryTest extends TestCase
      */
     private $entityManager;
 
-    private \Knp\DoctrineBehaviors\Repository\DefaultSluggableRepository $defaultSluggableRepository;
+    private DefaultSluggableRepository $defaultSluggableRepository;
 
     protected function setUp(): void
     {

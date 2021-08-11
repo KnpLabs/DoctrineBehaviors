@@ -11,7 +11,7 @@ use Knp\DoctrineBehaviors\Tests\Fixtures\Entity\Blameable\BlameableEntity;
 
 final class BlameableTest extends AbstractBehaviorTestCase
 {
-    private \Knp\DoctrineBehaviors\Contract\Provider\UserProviderInterface $userProvider;
+    private UserProviderInterface $userProvider;
 
     /**
      * @var ObjectRepository<BlameableEntity>
@@ -51,7 +51,7 @@ final class BlameableTest extends AbstractBehaviorTestCase
 
         $this->userProvider->changeUser('user2');
 
-        /** @var \Knp\DoctrineBehaviors\Tests\Fixtures\Entity\Blameable\BlameableEntity $entity */
+        /** @var BlameableEntity $entity */
         $entity = $this->blameableRepository->find($id);
 
         $debugStack = $this->createAndRegisterDebugStack();
@@ -69,7 +69,7 @@ final class BlameableTest extends AbstractBehaviorTestCase
         );
         $this->assertSame('"COMMIT"', $debugStack->queries[3]['sql']);
 
-        /** @var \Knp\DoctrineBehaviors\Tests\Fixtures\Entity\Blameable\BlameableEntity $entity */
+        /** @var BlameableEntity $entity */
         $entity = $this->blameableRepository->find($id);
 
         $this->assertSame($createdBy, $entity->getCreatedBy(), 'createdBy is constant');
@@ -94,7 +94,7 @@ final class BlameableTest extends AbstractBehaviorTestCase
 
         $this->userProvider->changeUser('user3');
 
-        /** @var \Knp\DoctrineBehaviors\Tests\Fixtures\Entity\Blameable\BlameableEntity $entity */
+        /** @var BlameableEntity $entity */
         $entity = $this->blameableRepository->find($id);
 
         $this->entityManager->remove($entity);

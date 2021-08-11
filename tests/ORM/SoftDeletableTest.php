@@ -59,7 +59,7 @@ final class SoftDeletableTest extends AbstractBehaviorTestCase
         $this->entityManager->flush();
         $this->entityManager->clear();
 
-        /** @var \Knp\DoctrineBehaviors\Tests\Fixtures\Entity\SoftDeletable\SoftDeletableEntity $entity */
+        /** @var SoftDeletableEntity $entity */
         $entity = $this->softDeletableRepository->find($id);
 
         $this->assertNotNull($entity);
@@ -73,7 +73,7 @@ final class SoftDeletableTest extends AbstractBehaviorTestCase
         $this->entityManager->flush();
         $this->entityManager->clear();
 
-        /** @var \Knp\DoctrineBehaviors\Tests\Fixtures\Entity\SoftDeletable\SoftDeletableEntity $entity */
+        /** @var SoftDeletableEntity $entity */
         $entity = $this->softDeletableRepository->find($id);
 
         $this->assertNotNull($entity);

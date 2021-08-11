@@ -37,7 +37,7 @@ final class SluggableTest extends AbstractBehaviorTestCase
 
         $this->entityManager->clear();
 
-        /** @var \Knp\DoctrineBehaviors\Tests\Fixtures\Entity\Sluggable\SluggableEntity $entity */
+        /** @var SluggableEntity $entity */
         $entity = $this->sluggableRepository->find($id);
 
         $this->assertNotNull($entity);

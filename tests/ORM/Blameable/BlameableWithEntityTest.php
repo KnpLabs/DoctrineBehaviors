@@ -12,7 +12,7 @@ use Knp\DoctrineBehaviors\Tests\Fixtures\Entity\UserEntity;
 
 final class BlameableWithEntityTest extends AbstractBehaviorTestCase
 {
-    private \Knp\DoctrineBehaviors\Contract\Provider\UserProviderInterface $userProvider;
+    private UserProviderInterface $userProvider;
 
     /**
      * @var ObjectRepository<BlameableEntityWithUserEntity>
@@ -59,7 +59,7 @@ final class BlameableWithEntityTest extends AbstractBehaviorTestCase
 
         $this->userProvider->changeUser('user2');
 
-        /** @var \Knp\DoctrineBehaviors\Tests\Fixtures\Entity\Blameable\BlameableEntityWithUserEntity $entity */
+        /** @var BlameableEntityWithUserEntity $entity */
         $entity = $this->blameableRepository->find($id);
 
         $debugStack = $this->createAndRegisterDebugStack();
