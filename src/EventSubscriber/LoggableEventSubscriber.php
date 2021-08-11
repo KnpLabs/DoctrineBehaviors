@@ -13,14 +13,9 @@ use Psr\Log\LogLevel;
 
 final class LoggableEventSubscriber implements EventSubscriberInterface
 {
-    /**
-     * @var LoggerInterface
-     */
-    private $logger;
-
-    public function __construct(LoggerInterface $logger)
-    {
-        $this->logger = $logger;
+    public function __construct(
+        private LoggerInterface $logger
+    ) {
     }
 
     public function postPersist(LifecycleEventArgs $lifecycleEventArgs): void
@@ -72,7 +67,7 @@ final class LoggableEventSubscriber implements EventSubscriberInterface
         $unitOfWork = $entityManager->getUnitOfWork();
         $entity = $lifecycleEventArgs->getEntity();
 
-        $entityClass = get_class($entity);
+        $entityClass = $entity::class;
         $classMetadata = $entityManager->getClassMetadata($entityClass);
 
         /** @var LoggableInterface $entity */

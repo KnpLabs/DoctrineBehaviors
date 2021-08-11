@@ -9,19 +9,14 @@ use Knp\DoctrineBehaviors\Contract\Entity\SluggableInterface;
 
 final class DefaultSluggableRepository
 {
-    /**
-     * @var EntityManagerInterface
-     */
-    private $entityManager;
-
-    public function __construct(EntityManagerInterface $entityManager)
-    {
-        $this->entityManager = $entityManager;
+    public function __construct(
+        private EntityManagerInterface $entityManager
+    ) {
     }
 
     public function isSlugUniqueFor(SluggableInterface $sluggable, string $uniqueSlug): bool
     {
-        $entityClass = \get_class($sluggable);
+        $entityClass = $sluggable::class;
 
         $queryBuilder = $this->entityManager->createQueryBuilder()
             ->select('COUNT(e)')

@@ -9,20 +9,10 @@ use Symfony\Component\Security\Core\Security;
 
 final class UserProvider implements UserProviderInterface
 {
-    /**
-     * @var string|null
-     */
-    private $blameableUserEntity;
-
-    /**
-     * @var Security
-     */
-    private $security;
-
-    public function __construct(Security $security, ?string $blameableUserEntity = null)
-    {
-        $this->security = $security;
-        $this->blameableUserEntity = $blameableUserEntity;
+    public function __construct(
+        private Security $security,
+        private ?string $blameableUserEntity = null
+    ) {
     }
 
     public function provideUser()
@@ -50,7 +40,7 @@ final class UserProvider implements UserProviderInterface
         }
 
         if (is_object($user)) {
-            return get_class($user);
+            return $user::class;
         }
 
         return null;

@@ -10,34 +10,15 @@ use Symfony\Component\DependencyInjection\Exception\ParameterNotFoundException;
 use Symfony\Component\DependencyInjection\ParameterBag\ParameterBagInterface;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\RequestStack;
-use Symfony\Contracts\Translation\LocaleAwareInterface;
 use Symfony\Contracts\Translation\TranslatorInterface;
 
 final class LocaleProvider implements LocaleProviderInterface
 {
-    /**
-     * @var TranslatorInterface&LocaleAwareInterface|null
-     */
-    private $translator;
-
-    /**
-     * @var ParameterBagInterface
-     */
-    private $parameterBag;
-
-    /**
-     * @var RequestStack
-     */
-    private $requestStack;
-
     public function __construct(
-        RequestStack $requestStack,
-        ParameterBagInterface $parameterBag,
-        ?TranslatorInterface $translator
+        private RequestStack $requestStack,
+        private ParameterBagInterface $parameterBag,
+        private ?TranslatorInterface $translator
     ) {
-        $this->requestStack = $requestStack;
-        $this->translator = $translator;
-        $this->parameterBag = $parameterBag;
     }
 
     public function provideCurrentLocale(): ?string
@@ -72,7 +53,7 @@ final class LocaleProvider implements LocaleProviderInterface
             }
 
             return (string) $this->parameterBag->get('kernel.default_locale');
-        } catch (ParameterNotFoundException | InvalidArgumentException $parameterNotFoundException) {
+        } catch (ParameterNotFoundException | InvalidArgumentException) {
             return null;
         }
     }

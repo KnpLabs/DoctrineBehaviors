@@ -20,22 +20,10 @@ final class SluggableEventSubscriber implements EventSubscriberInterface
      */
     private const SLUG = 'slug';
 
-    /**
-     * @var DefaultSluggableRepository
-     */
-    private $defaultSluggableRepository;
-
-    /**
-     * @var EntityManagerInterface
-     */
-    private $entityManager;
-
     public function __construct(
-        EntityManagerInterface $entityManager,
-        DefaultSluggableRepository $defaultSluggableRepository
+        private EntityManagerInterface $entityManager,
+        private DefaultSluggableRepository $defaultSluggableRepository
     ) {
-        $this->defaultSluggableRepository = $defaultSluggableRepository;
-        $this->entityManager = $entityManager;
     }
 
     public function loadClassMetadata(LoadClassMetadataEventArgs $loadClassMetadataEventArgs): void
