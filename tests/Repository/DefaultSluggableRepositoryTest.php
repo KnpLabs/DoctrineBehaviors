@@ -20,10 +20,7 @@ final class DefaultSluggableRepositoryTest extends TestCase
      */
     private $entityManager;
 
-    /**
-     * @var DefaultSluggableRepository
-     */
-    private $defaultSluggableRepository;
+    private DefaultSluggableRepository $defaultSluggableRepository;
 
     protected function setUp(): void
     {
@@ -35,7 +32,7 @@ final class DefaultSluggableRepositoryTest extends TestCase
     public function testIsSlugUniqueFor(): void
     {
         $sluggable = $this->createMock(SluggableInterface::class);
-        $entityClass = \get_class($sluggable);
+        $entityClass = $sluggable::class;
         $uniqueSlug = 'foobar';
 
         $this->entityManager->expects(self::once())

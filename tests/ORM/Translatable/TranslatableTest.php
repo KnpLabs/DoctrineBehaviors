@@ -19,7 +19,7 @@ final class TranslatableTest extends AbstractBehaviorTestCase
     /**
      * @var ObjectRepository<TranslatableEntity>
      */
-    private $translatableRepository;
+    private ObjectRepository $translatableRepository;
 
     protected function setUp(): void
     {
@@ -341,14 +341,17 @@ final class TranslatableTest extends AbstractBehaviorTestCase
      */
     private function assertTranslationsOneToManyMapped(string $translatableClass, string $translationClass): void
     {
-        $meta = $this->entityManager->getClassMetadata($translationClass);
-        $this->assertSame($translatableClass, $meta->getAssociationTargetClass('translatable'));
+        $translationClassMetadata = $this->entityManager->getClassMetadata($translationClass);
+        $this->assertSame($translatableClass, $translationClassMetadata->getAssociationTargetClass('translatable'));
 
-        $meta = $this->entityManager->getClassMetadata($translatableClass);
-        $this->assertSame($translationClass, $meta->getAssociationTargetClass('translations'));
+        $translatableClassMetadata = $this->entityManager->getClassMetadata($translatableClass);
+        $this->assertSame($translationClass, $translatableClassMetadata->getAssociationTargetClass('translations'));
 
-        $this->assertTrue($meta->isAssociationInverseSide('translations'));
+        $this->assertTrue($translatableClassMetadata->isAssociationInverseSide('translations'));
 
-        $this->assertSame(ClassMetadataInfo::ONE_TO_MANY, $meta->getAssociationMapping('translations')['type']);
+        $this->assertSame(
+            ClassMetadataInfo::ONE_TO_MANY,
+            $translatableClassMetadata->getAssociationMapping('translations')['type']
+        );
     }
 }

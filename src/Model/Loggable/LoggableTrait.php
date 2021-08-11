@@ -34,23 +34,23 @@ trait LoggableTrait
 
     public function getCreateLogMessage(): string
     {
-        return sprintf('%s #%s created', self::class, $this->getId());
+        return sprintf('%s #%d created', self::class, $this->getId());
     }
 
     public function getRemoveLogMessage(): string
     {
-        return sprintf('%s #%s removed', self::class, $this->getId());
+        return sprintf('%s #%d removed', self::class, $this->getId());
     }
 
     private function createChangeSetMessage(string $property, array $changeSet): string
     {
         return sprintf(
-            '%s #%s : property "%s" changed from "%s" to "%s"',
+            '%s #%d : property "%s" changed from "%s" to "%s"',
             self::class,
             $this->getId(),
             $property,
-            is_array($changeSet[0]) ? 'an array' : $changeSet[0],
-            is_array($changeSet[1]) ? 'an array' : $changeSet[1]
+            is_array($changeSet[0]) ? 'an array' : (string) $changeSet[0],
+            is_array($changeSet[1]) ? 'an array' : (string) $changeSet[1]
         );
     }
 }

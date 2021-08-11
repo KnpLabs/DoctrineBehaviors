@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace Knp\DoctrineBehaviors\Tests\Fixtures\Entity\Translatable;
 
 use Doctrine\ORM\Mapping as ORM;
+use Knp\DoctrineBehaviors\Exception\ShouldNotHappenException;
 
 /**
  * @ORM\Entity
@@ -15,18 +16,20 @@ class ExtendedTranslatableEntityTranslation extends AbstractTranslatableEntityTr
      * @ORM\Id
      * @ORM\Column(type="integer")
      * @ORM\GeneratedValue(strategy="AUTO")
-     * @var int
      */
-    private $id;
+    private int $id;
 
     /**
      * @ORM\Column(type="string")
-     * @var string
      */
-    private $extendedTitle;
+    private ?string $extendedTitle = null;
 
     public function getExtendedTitle(): string
     {
+        if ($this->extendedTitle === null) {
+            throw new ShouldNotHappenException();
+        }
+
         return $this->extendedTitle;
     }
 

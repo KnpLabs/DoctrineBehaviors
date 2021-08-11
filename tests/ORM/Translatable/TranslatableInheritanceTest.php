@@ -13,7 +13,7 @@ final class TranslatableInheritanceTest extends AbstractBehaviorTestCase
     /**
      * @var ObjectRepository<ExtendedTranslatableEntity>
      */
-    private $objectRepository;
+    private ObjectRepository $objectRepository;
 
     protected function setUp(): void
     {

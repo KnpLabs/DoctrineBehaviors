@@ -10,29 +10,18 @@ use Knp\DoctrineBehaviors\Tests\Fixtures\Entity\UserEntity;
 
 final class EntityUserProvider implements UserProviderInterface
 {
-    /**
-     * @var bool
-     */
-    private $isUserEntityPrepared = false;
+    private bool $isUserEntityPrepared = false;
 
     /**
      * @var UserEntity[]
      */
-    private $userEntities = [];
+    private array $userEntities = [];
 
-    /**
-     * @var UserEntity
-     */
-    private $userEntity;
+    private UserEntity $userEntity;
 
-    /**
-     * @var EntityManagerInterface
-     */
-    private $entityManager;
-
-    public function __construct(EntityManagerInterface $entityManager)
-    {
-        $this->entityManager = $entityManager;
+    public function __construct(
+        private EntityManagerInterface $entityManager
+    ) {
     }
 
     public function changeUser($userEntity): void
@@ -60,11 +49,9 @@ final class EntityUserProvider implements UserProviderInterface
             return;
         }
 
-        $userEntity = new UserEntity();
-        $userEntity->setUsername('user');
+        $userEntity = new UserEntity('user');
 
-        $user2Entity = new UserEntity();
-        $user2Entity->setUsername('user2');
+        $user2Entity = new UserEntity('user2');
 
         // persist user
         $this->entityManager->persist($userEntity);

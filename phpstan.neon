@@ -100,3 +100,14 @@ parameters:
         - '#Cannot cast array\|bool\|float\|int\|string\|null to string#'
 
         - '#Method Knp\\DoctrineBehaviors\\Tests\\Fixtures\\(.*?) return type with generic interface Doctrine\\Common\\Collections\\Collection does not specify its types\: TKey, T#'
+
+        -
+            message: '#Use required typed property over of nullable property#'
+            path: tests/Provider/TestUserProvider.php
+
+        - '#"Doctrine\\ORM\\EntityManagerInterface" dependency is allowed only in "\*Repository", "Doctrine\\Bundle\\DoctrineBundle\\EventSubscriber\\EventSubscriberInterface" types#'
+
+        # @todo fix in symplify, common use case for entities
+        -
+            message: '#Use required typed property over of nullable property#'
+            path: '*/Entity/*'

@@ -135,9 +135,9 @@ trait TranslatableMethodsTrait
             $locale = $this->getCurrentLocale();
         }
 
-        $translation = $this->findTranslationByLocale($locale);
-        if ($translation && ! $translation->isEmpty()) {
-            return $translation;
+        $foundTranslation = $this->findTranslationByLocale($locale);
+        if ($foundTranslation && ! $foundTranslation->isEmpty()) {
+            return $foundTranslation;
         }
 
         if ($fallbackToDefault) {
@@ -147,8 +147,8 @@ trait TranslatableMethodsTrait
             }
         }
 
-        if ($translation) {
-            return $translation;
+        if ($foundTranslation) {
+            return $foundTranslation;
         }
 
         $class = static::getTranslationEntityClass();

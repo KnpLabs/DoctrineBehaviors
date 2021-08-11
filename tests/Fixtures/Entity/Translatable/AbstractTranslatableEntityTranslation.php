@@ -6,6 +6,7 @@ namespace Knp\DoctrineBehaviors\Tests\Fixtures\Entity\Translatable;
 
 use Doctrine\ORM\Mapping as ORM;
 use Knp\DoctrineBehaviors\Contract\Entity\TranslationInterface;
+use Knp\DoctrineBehaviors\Exception\ShouldNotHappenException;
 use Knp\DoctrineBehaviors\Model\Translatable\TranslationTrait;
 
 /**
@@ -17,12 +18,15 @@ abstract class AbstractTranslatableEntityTranslation implements TranslationInter
 
     /**
      * @ORM\Column(type="string")
-     * @var string
      */
-    private $title;
+    private ?string $title = null;
 
     public function getTitle(): string
     {
+        if ($this->title === null) {
+            throw new ShouldNotHappenException();
+        }
+
         return $this->title;
     }
 

@@ -11,15 +11,12 @@ use Knp\DoctrineBehaviors\Tests\Fixtures\Entity\Blameable\BlameableEntity;
 
 final class BlameableTest extends AbstractBehaviorTestCase
 {
-    /**
-     * @var UserProviderInterface
-     */
-    private $userProvider;
+    private UserProviderInterface $userProvider;
 
     /**
      * @var ObjectRepository<BlameableEntity>
      */
-    private $blameableRepository;
+    private ObjectRepository $blameableRepository;
 
     protected function setUp(): void
     {
@@ -54,25 +51,25 @@ final class BlameableTest extends AbstractBehaviorTestCase
 
         $this->userProvider->changeUser('user2');
 
-        /** @var \Knp\DoctrineBehaviors\Tests\Fixtures\Entity\Blameable\BlameableEntity $entity */
+        /** @var BlameableEntity $entity */
         $entity = $this->blameableRepository->find($id);
 
-        $this->enableDebugStackLogger();
+        $debugStack = $this->createAndRegisterDebugStack();
 
         // need to modify at least one column to trigger onUpdate
         $entity->setTitle('test');
         $this->entityManager->flush();
         $this->entityManager->clear();
 
-        $this->assertCount(3, $this->debugStack->queries);
-        $this->assertSame('"START TRANSACTION"', $this->debugStack->queries[1]['sql']);
+        $this->assertCount(3, $debugStack->queries);
+        $this->assertSame('"START TRANSACTION"', $debugStack->queries[1]['sql']);
         $this->assertSame(
             'UPDATE BlameableEntity SET title = ?, updatedBy = ? WHERE id = ?',
-            $this->debugStack->queries[2]['sql']
+            $debugStack->queries[2]['sql']
         );
-        $this->assertSame('"COMMIT"', $this->debugStack->queries[3]['sql']);
+        $this->assertSame('"COMMIT"', $debugStack->queries[3]['sql']);
 
-        /** @var \Knp\DoctrineBehaviors\Tests\Fixtures\Entity\Blameable\BlameableEntity $entity */
+        /** @var BlameableEntity $entity */
         $entity = $this->blameableRepository->find($id);
 
         $this->assertSame($createdBy, $entity->getCreatedBy(), 'createdBy is constant');
@@ -97,7 +94,7 @@ final class BlameableTest extends AbstractBehaviorTestCase
 
         $this->userProvider->changeUser('user3');
 
-        /** @var \Knp\DoctrineBehaviors\Tests\Fixtures\Entity\Blameable\BlameableEntity $entity */
+        /** @var BlameableEntity $entity */
         $entity = $this->blameableRepository->find($id);
 
         $this->entityManager->remove($entity);
@@ -111,7 +108,7 @@ final class BlameableTest extends AbstractBehaviorTestCase
     {
         $blameableEntity = new BlameableEntity();
 
-        $this->enableDebugStackLogger();
+        $stackLogger = $this->createAndRegisterDebugStack();
 
         $this->entityManager->persist($blameableEntity);
         $this->entityManager->flush();
@@ -119,10 +116,10 @@ final class BlameableTest extends AbstractBehaviorTestCase
         $expectedCount = $this->isPostgreSql() ? 4 : 3;
         $startKey = $this->isPostgreSql() ? 2 : 1;
 
-        $this->assertCount($expectedCount, $this->debugStack->queries);
-        $this->assertSame('"START TRANSACTION"', $this->debugStack->queries[$startKey]['sql']);
+        $this->assertCount($expectedCount, $stackLogger->queries);
+        $this->assertSame('"START TRANSACTION"', $stackLogger->queries[$startKey]['sql']);
 
-        $sql2 = $this->debugStack->queries[$startKey + 1]['sql'];
+        $sql2 = $stackLogger->queries[$startKey + 1]['sql'];
         if ($this->isPostgreSql()) {
             $this->assertSame(
                 'INSERT INTO BlameableEntity (id, title, createdBy, updatedBy, deletedBy) VALUES (?, ?, ?, ?, ?)',
@@ -135,6 +132,6 @@ final class BlameableTest extends AbstractBehaviorTestCase
             );
         }
 
-        $this->assertSame('"COMMIT"', $this->debugStack->queries[$startKey + 2]['sql']);
+        $this->assertSame('"COMMIT"', $stackLogger->queries[$startKey + 2]['sql']);
     }
 }

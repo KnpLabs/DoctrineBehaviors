@@ -33,16 +33,16 @@ trait SoftDeletableMethodsTrait
         return false;
     }
 
-    public function willBeDeleted(?DateTimeInterface $dateTime = null): bool
+    public function willBeDeleted(?DateTimeInterface $deletedAt = null): bool
     {
         if ($this->deletedAt === null) {
             return false;
         }
-        if ($dateTime === null) {
+        if ($deletedAt === null) {
             return true;
         }
 
-        return $this->deletedAt <= $dateTime;
+        return $this->deletedAt <= $deletedAt;
     }
 
     public function getDeletedAt(): ?DateTimeInterface

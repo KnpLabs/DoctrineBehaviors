@@ -14,7 +14,7 @@ final class TimestampableTest extends AbstractBehaviorTestCase
     /**
      * @var ObjectRepository<TimestampableEntity>
      */
-    private $timestampableRepository;
+    private ObjectRepository $timestampableRepository;
 
     protected function setUp(): void
     {

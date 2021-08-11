@@ -14,7 +14,7 @@ final class SluggableMultiTest extends AbstractBehaviorTestCase
     /**
      * @var ObjectRepository<SluggableMultiEntity>
      */
-    private $sluggableRepository;
+    private ObjectRepository $sluggableRepository;
 
     protected function setUp(): void
     {

@@ -23,6 +23,10 @@ jobs:
                         name: 'Rector'
                         run: vendor/bin/rector process --dry-run --ansi
 
+                    -
+                        name: 'Commented PHP Code'
+                        run: vendor/bin/easy-ci check-commented-code src tests --line-limit 3
+
         name: ${{ matrix.actions.name }}
         runs-on: ubuntu-latest
 
