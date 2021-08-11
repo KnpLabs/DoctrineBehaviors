@@ -6,33 +6,28 @@ namespace Knp\DoctrineBehaviors\Tests\Fixtures\Entity\Sluggable;
 
 use DateTime;
 use DateTimeInterface;
-use Doctrine\ORM\Mapping as ORM;
+use Doctrine\ORM\Mapping\Column;
+use Doctrine\ORM\Mapping\Entity;
+use Doctrine\ORM\Mapping\GeneratedValue;
+use Doctrine\ORM\Mapping\Id;
 use Knp\DoctrineBehaviors\Contract\Entity\SluggableInterface;
 use Knp\DoctrineBehaviors\Exception\ShouldNotHappenException;
 use Knp\DoctrineBehaviors\Model\Sluggable\SluggableTrait;
 
-/**
- * @ORM\Entity
- */
+#[Entity]
 class SluggableMultiEntity implements SluggableInterface
 {
     use SluggableTrait;
 
-    /**
-     * @ORM\Id
-     * @ORM\Column(type="integer")
-     * @ORM\GeneratedValue(strategy="AUTO")
-     */
+    #[Id]
+    #[Column(type: 'integer')]
+    #[GeneratedValue(strategy: 'AUTO')]
     private int $id;
 
-    /**
-     * @ORM\Column(type="string")
-     */
+    #[Column(type: 'string')]
     private ?string $name = null;
 
-    /**
-     * @ORM\Column(type="datetime")
-     */
+    #[Column(type: 'datetime')]
     private \DateTimeInterface|\DateTime $dateTime;
 
     public function __construct()

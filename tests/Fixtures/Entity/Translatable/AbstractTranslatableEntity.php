@@ -4,13 +4,11 @@ declare(strict_types=1);
 
 namespace Knp\DoctrineBehaviors\Tests\Fixtures\Entity\Translatable;
 
-use Doctrine\ORM\Mapping as ORM;
+use Doctrine\ORM\Mapping\MappedSuperclass;
 use Knp\DoctrineBehaviors\Contract\Entity\TranslatableInterface;
 use Knp\DoctrineBehaviors\Model\Translatable\TranslatableTrait;
 
-/**
- * @ORM\MappedSuperclass
- */
+#[MappedSuperclass]
 abstract class AbstractTranslatableEntity implements TranslatableInterface
 {
     use TranslatableTrait;
