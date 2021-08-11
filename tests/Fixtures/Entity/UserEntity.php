@@ -18,11 +18,6 @@ class UserEntity
      */
     private int $id;
 
-//    /**
-//     * @ORM\Column(type="string")
-//     */
-//    private ?string $username = null;
-
     public function __construct(
         /**
          * @ORM\Column(type="string")
@@ -39,10 +34,5 @@ class UserEntity
     public function getUsername(): string
     {
         return $this->username;
-    }
-
-    public function setUsername(string $username): void
-    {
-        $this->username = $username;
     }
 }
