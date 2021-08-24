@@ -119,7 +119,7 @@ trait TranslatableMethodsTrait
 
     public static function getTranslationEntityClass(): string
     {
-        return static::class . 'Translation';
+        return self::class . 'Translation';
     }
 
     /**
