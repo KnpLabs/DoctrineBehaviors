@@ -45,7 +45,8 @@
         "symplify/config-transformer": "^9.4",
         "symplify/amnesia": "^9.4",
         "phpstan/extension-installer": "^1.1",
-        "symplify/easy-ci": "^9.4"
+        "symplify/easy-ci": "^9.4",
+        "rector/rector": "^0.11.51"
     },
     "autoload": {
         "psr-4": {
