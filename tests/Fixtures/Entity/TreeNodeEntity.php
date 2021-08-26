@@ -5,28 +5,25 @@ declare(strict_types=1);
 namespace Knp\DoctrineBehaviors\Tests\Fixtures\Entity;
 
 use ArrayAccess;
-use Doctrine\ORM\Mapping as ORM;
+use Doctrine\ORM\Mapping\Column;
+use Doctrine\ORM\Mapping\Entity;
+use Doctrine\ORM\Mapping\GeneratedValue;
+use Doctrine\ORM\Mapping\Id;
 use Knp\DoctrineBehaviors\Contract\Entity\TreeNodeInterface;
 use Knp\DoctrineBehaviors\Model\Tree\TreeNodeTrait;
 use Stringable;
 
-/**
- * @ORM\Entity(repositoryClass="Knp\DoctrineBehaviors\Tests\Fixtures\Repository\TreeNodeRepository")
- */
+#[Entity(repositoryClass: 'Knp\DoctrineBehaviors\Tests\Fixtures\Repository\TreeNodeRepository')]
 class TreeNodeEntity implements TreeNodeInterface, ArrayAccess, Stringable
 {
     use TreeNodeTrait;
 
-    /**
-     * @ORM\Id
-     * @ORM\Column(type="integer")
-     * @ORM\GeneratedValue(strategy="NONE")
-     */
+    #[Id]
+    #[Column(type: 'integer')]
+    #[GeneratedValue(strategy: 'NONE')]
     private ?int $id = null;
 
-    /**
-     * @ORM\Column(type="string", length=255, nullable=true)
-     */
+    #[Column(type: 'string', length: 255, nullable: true)]
     private ?string $name = null;
 
     public function __toString(): string

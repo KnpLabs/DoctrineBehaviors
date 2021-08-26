@@ -65,7 +65,7 @@ return static function (ContainerConfigurator $containerConfigurator): void {
             ORM::MAPPINGS => [
                 [
                     'name' => 'DoctrineBehaviors',
-                    'type' => 'annotation',
+                    'type' => 'attribute',
                     'prefix' => 'Knp\DoctrineBehaviors\Tests\Fixtures\Entity\\',
                     'dir' => __DIR__ . '/../../tests/Fixtures/Entity',
                     'is_bundle' => false,

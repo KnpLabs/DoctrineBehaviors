@@ -8,10 +8,10 @@ use Symfony\Component\DependencyInjection\Loader\Configurator\ContainerConfigura
 
 return static function (ContainerConfigurator $containerConfigurator): void {
     $parameters = $containerConfigurator->parameters();
-    $parameters->set(Option::PATHS, [
-        __DIR__ . '/src',
-        __DIR__ . '/tests',
-    ]);
+
+    $parameters->set(Option::AUTO_IMPORT_NAMES, true);
+
+    $parameters->set(Option::PATHS, [__DIR__ . '/src', __DIR__ . '/tests']);
 
     $containerConfigurator->import(DoctrineSetList::ENTITY_ANNOTATIONS_TO_ATTRIBUTES);
 };

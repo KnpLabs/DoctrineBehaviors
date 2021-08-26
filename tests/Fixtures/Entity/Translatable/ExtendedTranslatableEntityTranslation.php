@@ -4,24 +4,21 @@ declare(strict_types=1);
 
 namespace Knp\DoctrineBehaviors\Tests\Fixtures\Entity\Translatable;
 
-use Doctrine\ORM\Mapping as ORM;
+use Doctrine\ORM\Mapping\Column;
+use Doctrine\ORM\Mapping\Entity;
+use Doctrine\ORM\Mapping\GeneratedValue;
+use Doctrine\ORM\Mapping\Id;
 use Knp\DoctrineBehaviors\Exception\ShouldNotHappenException;
 
-/**
- * @ORM\Entity
- */
+#[Entity]
 class ExtendedTranslatableEntityTranslation extends AbstractTranslatableEntityTranslation
 {
-    /**
-     * @ORM\Id
-     * @ORM\Column(type="integer")
-     * @ORM\GeneratedValue(strategy="AUTO")
-     */
+    #[Id]
+    #[Column(type: 'integer')]
+    #[GeneratedValue(strategy: 'AUTO')]
     private int $id;
 
-    /**
-     * @ORM\Column(type="string")
-     */
+    #[Column(type: 'string')]
     private ?string $extendedTitle = null;
 
     public function getExtendedTitle(): string

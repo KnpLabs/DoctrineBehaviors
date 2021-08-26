@@ -4,28 +4,25 @@ declare(strict_types=1);
 
 namespace Knp\DoctrineBehaviors\Tests\Fixtures\Entity\Blameable;
 
-use Doctrine\ORM\Mapping as ORM;
+use Doctrine\ORM\Mapping\Column;
+use Doctrine\ORM\Mapping\Entity;
+use Doctrine\ORM\Mapping\GeneratedValue;
+use Doctrine\ORM\Mapping\Id;
 use Knp\DoctrineBehaviors\Contract\Entity\BlameableInterface;
 use Knp\DoctrineBehaviors\Exception\ShouldNotHappenException;
 use Knp\DoctrineBehaviors\Model\Blameable\BlameableTrait;
 
-/**
- * @ORM\Entity
- */
+#[Entity]
 class BlameableEntity implements BlameableInterface
 {
     use BlameableTrait;
 
-    /**
-     * @ORM\Id
-     * @ORM\Column(type="integer")
-     * @ORM\GeneratedValue(strategy="AUTO")
-     */
+    #[Id]
+    #[Column(type: 'integer')]
+    #[GeneratedValue(strategy: 'AUTO')]
     private int $id;
 
-    /**
-     * @ORM\Column(type="string", nullable=true)
-     */
+    #[Column(type: 'string', nullable: true)]
     private ?string $title = null;
 
     public function getId(): int

@@ -4,16 +4,13 @@ declare(strict_types=1);
 
 namespace Knp\DoctrineBehaviors\Tests\Fixtures\Entity\SoftDeletable;
 
-use Doctrine\ORM\Mapping as ORM;
+use Doctrine\ORM\Mapping\Column;
+use Doctrine\ORM\Mapping\Entity;
 
-/**
- * @ORM\Entity
- */
+#[Entity]
 class SoftDeletableEntityInherit extends SoftDeletableEntity
 {
-    /**
-     * @ORM\Column(type="string")
-     */
+    #[Column(type: 'string')]
     private string $name;
 
     public function getName(): string
