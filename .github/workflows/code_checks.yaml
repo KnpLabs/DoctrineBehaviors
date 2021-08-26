@@ -19,9 +19,10 @@ jobs:
                         name: 'Coding Standard'
                         run: composer check-cs
 
-                    -
-                        name: 'Rector'
-                        run: vendor/bin/rector process --dry-run --ansi
+                    # to start from scratch with Rector
+#                    -
+#                        name: 'Rector'
+#                        run: vendor/bin/rector process --dry-run --ansi
 
                     -
                         name: 'Commented PHP Code'
