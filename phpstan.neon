@@ -16,6 +16,7 @@ parameters:
     paths:
         - src
         - tests
+        - rector.php
 
     level: max
     checkGenericClassInNonGenericObjectType: false
