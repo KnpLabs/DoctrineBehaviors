@@ -38,6 +38,7 @@ trait SoftDeletableMethodsTrait
         if ($this->deletedAt === null) {
             return false;
         }
+
         if ($deletedAt === null) {
             return true;
         }
