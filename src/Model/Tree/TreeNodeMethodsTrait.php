@@ -201,6 +201,7 @@ trait TreeNodeMethodsTrait
                 return (string) $node;
             };
         }
+
         if ($tree === null) {
             $tree = [
                 $this->getNodeId() => [

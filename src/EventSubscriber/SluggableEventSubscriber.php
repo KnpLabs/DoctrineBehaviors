@@ -63,6 +63,7 @@ final class SluggableEventSubscriber implements EventSubscriberInterface
         if (! is_a($classMetadataInfo->getName(), SluggableInterface::class, true)) {
             return true;
         }
+
         return $classMetadataInfo->hasField(self::SLUG);
     }
 
