@@ -28,14 +28,12 @@ class LoggableEntity implements LoggableInterface
     /**
      * @var string[]|null
      */
-
     #[Column(type: 'array', nullable: true)]
     private $roles;
 
     /**
      * @var DateTimeInterface|null
      */
-
     #[Column(type: 'date', nullable: true)]
     private $dateTime;
 
