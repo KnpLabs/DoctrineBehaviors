@@ -102,3 +102,9 @@ parameters:
         -
             message: '#Attribute key "repositoryClass" cannot be used#'
             path: tests/Fixtures/Entity/TreeNodeEntity.php
+
+        -
+            message: '#Class has a static method must so must contains "Static" in its name#'
+            paths:
+                - tests/Fixtures/Entity/TranslatableCustomizedEntity.php
+                - tests/Fixtures/Entity/Translation/TranslatableCustomizedEntityTranslation.php
