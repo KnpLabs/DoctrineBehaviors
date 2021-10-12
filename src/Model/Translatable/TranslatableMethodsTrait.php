@@ -53,7 +53,7 @@ trait TranslatableMethodsTrait
     public function addTranslation(TranslationInterface $translation): void
     {
         $this->getTranslations()
-            ->set((string) $translation->getLocale(), $translation);
+            ->set($translation->getLocale(), $translation);
         $translation->setTranslatable($this);
     }
 

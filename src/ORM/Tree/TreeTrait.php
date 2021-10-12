@@ -55,7 +55,7 @@ trait TreeTrait
      */
     public function buildTree(array $results)
     {
-        if (count($results) === 0) {
+        if ($results === []) {
             return null;
         }
 
@@ -76,7 +76,7 @@ trait TreeTrait
             ->setParameter('path', $path . '%');
 
         $parentId = basename($path);
-        if ($parentId) {
+        if ($parentId !== '' && $parentId !== '0') {
             $queryBuilder->orWhere($rootAlias . '.id = :parent')
                 ->setParameter('parent', $parentId);
         }
