@@ -35,6 +35,7 @@ parameters:
         # mixed
         - '#return type has no value type specified#'
         - '#has parameter (.*?) with no (typehint|value type) specified#'
+        - '#Unable to resolve the template type T#'
         # cache buggy
         - '#Access to an undefined property Knp\\DoctrineBehaviors\\Tests\\Fixtures\\Entity\\TreeNodeEntity\:\:\$parentNodePath#'
         - '#Property with protected modifier is not allowed\. Use interface contract method instead#'
