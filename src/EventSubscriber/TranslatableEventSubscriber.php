@@ -9,6 +9,7 @@ use Doctrine\ORM\Event\LifecycleEventArgs;
 use Doctrine\ORM\Event\LoadClassMetadataEventArgs;
 use Doctrine\ORM\Events;
 use Doctrine\ORM\Mapping\ClassMetadataInfo;
+use Doctrine\Persistence\ObjectManager;
 use Knp\DoctrineBehaviors\Contract\Entity\TranslatableInterface;
 use Knp\DoctrineBehaviors\Contract\Entity\TranslationInterface;
 use Knp\DoctrineBehaviors\Contract\Provider\LocaleProviderInterface;
@@ -53,7 +54,7 @@ final class TranslatableEventSubscriber implements EventSubscriberInterface
         }
 
         if (is_a($classMetadata->reflClass->getName(), TranslationInterface::class, true)) {
-            $this->mapTranslation($classMetadata);
+            $this->mapTranslation($classMetadata, $loadClassMetadataEventArgs->getObjectManager());
         }
     }
 
@@ -114,9 +115,17 @@ final class TranslatableEventSubscriber implements EventSubscriberInterface
         ]);
     }
 
-    private function mapTranslation(ClassMetadataInfo $classMetadataInfo): void
+    private function mapTranslation(ClassMetadataInfo $classMetadataInfo, ObjectManager $objectManager): void
     {
         if (! $classMetadataInfo->hasAssociation('translatable')) {
+            $targetEntity = $classMetadataInfo->getReflectionClass()
+                ->getMethod('getTranslatableEntityClass')
+                ->invoke(null);
+
+            /** @var ClassMetadataInfo $targetEntityClassMetadataInfo */
+            $targetEntityClassMetadataInfo = $objectManager->getClassMetadata($targetEntity);
+            $referencedColumnName = $targetEntityClassMetadataInfo->getSingleIdentifierFieldName();
+
             $classMetadataInfo->mapManyToOne([
                 'fieldName' => 'translatable',
                 'inversedBy' => 'translations',
@@ -124,12 +133,10 @@ final class TranslatableEventSubscriber implements EventSubscriberInterface
                 'fetch' => $this->translationFetchMode,
                 'joinColumns' => [[
                     'name' => 'translatable_id',
-                    'referencedColumnName' => 'id',
+                    'referencedColumnName' => $referencedColumnName,
                     'onDelete' => 'CASCADE',
                 ]],
-                'targetEntity' => $classMetadataInfo->getReflectionClass()
-                    ->getMethod('getTranslatableEntityClass')
-                    ->invoke(null),
+                'targetEntity' => $targetEntity,
             ]);
         }
 

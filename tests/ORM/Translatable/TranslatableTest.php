@@ -9,6 +9,7 @@ use Doctrine\Persistence\ObjectRepository;
 use Knp\DoctrineBehaviors\Contract\Entity\TranslatableInterface;
 use Knp\DoctrineBehaviors\Contract\Entity\TranslationInterface;
 use Knp\DoctrineBehaviors\Tests\AbstractBehaviorTestCase;
+use Knp\DoctrineBehaviors\Tests\Fixtures\Entity\TranslatableCustomIdentifierEntity;
 use Knp\DoctrineBehaviors\Tests\Fixtures\Entity\TranslatableCustomizedEntity;
 use Knp\DoctrineBehaviors\Tests\Fixtures\Entity\TranslatableEntity;
 use Knp\DoctrineBehaviors\Tests\Fixtures\Entity\TranslatableEntityTranslation;
@@ -51,6 +52,25 @@ final class TranslatableTest extends AbstractBehaviorTestCase
         $this->assertSame('fabuleux', $translatableEntity->translate('fr')->getTitle());
         $this->assertSame('awesome', $translatableEntity->translate('en')->getTitle());
         $this->assertSame('удивительный', $translatableEntity->translate('ru')->getTitle());
+    }
+
+    public function testShouldPersistWithCustomIdentifier(): void
+    {
+        $translatableEntity = new TranslatableCustomIdentifierEntity();
+        $translatableEntity->translate('en')
+            ->setTitle('awesome');
+        $translatableEntity->mergeNewTranslations();
+
+        $this->entityManager->persist($translatableEntity);
+        $this->entityManager->flush();
+
+        $id = $translatableEntity->getIdColumn();
+        $this->entityManager->clear();
+
+        /** @var TranslatableEntity $translatableEntity */
+        $translatableEntity = $this->entityManager->getRepository(TranslatableCustomIdentifierEntity::class)->find($id);
+
+        $this->assertSame('awesome', $translatableEntity->translate('en')->getTitle());
     }
 
     public function testShouldFallbackCountryLocaleToLanguageOnlyTranslation(): void
