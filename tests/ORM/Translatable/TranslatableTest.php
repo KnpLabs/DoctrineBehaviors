@@ -357,6 +357,8 @@ final class TranslatableTest extends AbstractBehaviorTestCase
 
         $this->assertFalse($translatableEntity->translate('fr')->isEmpty());
         $this->assertFalse($translatableEntity->translate('en')->isEmpty());
+        $this->assertSame('0', $translatableEntity->translate('fr')->getTitle());
+        $this->assertSame('0', $translatableEntity->translate('en')->getTitle());
     }
 
     /**
