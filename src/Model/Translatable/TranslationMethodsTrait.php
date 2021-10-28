@@ -48,6 +48,10 @@ trait TranslationMethodsTrait
                 continue;
             }
 
+            if (is_string($value) && strlen(trim($value)) > 0) {
+                return false;
+            }
+
             if (! empty($value)) {
                 return false;
             }

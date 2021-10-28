@@ -336,6 +336,31 @@ final class TranslatableTest extends AbstractBehaviorTestCase
         $this->assertSame($translatableEntityTranslation, $translatableEntity->getTranslations()->get('fr'));
     }
 
+    public function testTranslationIsNotEmptyWithZeroAsValue(): void
+    {
+        $translatableEntity = new TranslatableEntity();
+        $translatableEntity->translate('fr')
+            ->setTitle('0');
+        $translatableEntity->translate('en')
+            ->setTitle('0');
+
+        $translatableEntity->mergeNewTranslations();
+
+        $this->entityManager->persist($translatableEntity);
+        $this->entityManager->flush();
+
+        $id = $translatableEntity->getId();
+        $this->entityManager->clear();
+
+        /** @var TranslatableEntity $translatableEntity */
+        $translatableEntity = $this->translatableRepository->find($id);
+
+        $this->assertFalse($translatableEntity->translate('fr')->isEmpty());
+        $this->assertFalse($translatableEntity->translate('en')->isEmpty());
+        $this->assertSame('0', $translatableEntity->translate('fr')->getTitle());
+        $this->assertSame('0', $translatableEntity->translate('en')->getTitle());
+    }
+
     /**
      * Asserts that the one to many relationship between translatable and translations is mapped correctly.
      */
