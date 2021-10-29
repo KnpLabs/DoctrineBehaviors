@@ -6,7 +6,7 @@ namespace Knp\DoctrineBehaviors\Tests;
 
 use Doctrine\DBAL\Connection;
 use Doctrine\DBAL\Logging\DebugStack;
-use Doctrine\DBAL\Platforms\PostgreSqlPlatform;
+use Doctrine\DBAL\Platforms\PostgreSQL94Platform;
 use Doctrine\ORM\EntityManagerInterface;
 use Knp\DoctrineBehaviors\Tests\HttpKernel\DoctrineBehaviorsKernel;
 use Symplify\PackageBuilder\Testing\AbstractKernelTestCase;
@@ -43,7 +43,7 @@ abstract class AbstractBehaviorTestCase extends AbstractKernelTestCase
         /** @var Connection $connection */
         $connection = $this->entityManager->getConnection();
 
-        return $connection->getDatabasePlatform() instanceof PostgreSqlPlatform;
+        return $connection->getDatabasePlatform() instanceof PostgreSQL94Platform;
     }
 
     protected function provideCustomConfig(): ?string

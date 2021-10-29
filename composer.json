@@ -14,7 +14,7 @@
         "php": ">=8.0",
         "doctrine/common": "^3.1",
         "doctrine/persistence": "^2.2",
-        "doctrine/dbal": "^2.13",
+        "doctrine/dbal": "^3.1",
         "doctrine/orm": "^2.9.3",
         "doctrine/doctrine-bundle": "^2.4",
         "symfony/cache": "^5.3|^6.0",
