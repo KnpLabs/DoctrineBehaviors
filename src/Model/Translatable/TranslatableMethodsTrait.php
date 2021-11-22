@@ -151,10 +151,10 @@ trait TranslatableMethodsTrait
             return $foundTranslation;
         }
 
-        $class = static::getTranslationEntityClass();
+        $translationEntityClass = static::getTranslationEntityClass();
 
         /** @var TranslationInterface $translation */
-        $translation = new $class();
+        $translation = new $translationEntityClass();
         $translation->setLocale($locale);
 
         $this->getNewTranslations()
