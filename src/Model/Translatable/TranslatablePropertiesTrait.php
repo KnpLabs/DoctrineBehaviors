@@ -10,13 +10,13 @@ use Knp\DoctrineBehaviors\Contract\Entity\TranslationInterface;
 trait TranslatablePropertiesTrait
 {
     /**
-     * @var Collection<TranslationInterface>
+     * @var Collection<string, TranslationInterface>
      */
     protected $translations;
 
     /**
      * @see mergeNewTranslations
-     * @var Collection<TranslationInterface>
+     * @var Collection<string, TranslationInterface>
      */
     protected $newTranslations;
 
