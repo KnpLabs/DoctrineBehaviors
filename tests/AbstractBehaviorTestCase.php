@@ -9,7 +9,12 @@ use Doctrine\DBAL\Logging\DebugStack;
 use Doctrine\DBAL\Platforms\PostgreSQL94Platform;
 use Doctrine\ORM\EntityManagerInterface;
 use Knp\DoctrineBehaviors\Tests\HttpKernel\DoctrineBehaviorsKernel;
+<<<<<<< HEAD
 use Symplify\PackageBuilder\Testing\AbstractKernelTestCase;
+=======
+use PHPUnit\Framework\TestCase;
+use Symfony\Component\DependencyInjection\ContainerInterface;
+>>>>>>> 7050548... fixup! misc
 
 abstract class AbstractBehaviorTestCase extends AbstractKernelTestCase
 {

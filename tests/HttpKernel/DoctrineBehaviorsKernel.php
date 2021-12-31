@@ -5,19 +5,16 @@ declare(strict_types=1);
 namespace Knp\DoctrineBehaviors\Tests\HttpKernel;
 
 use Doctrine\Bundle\DoctrineBundle\DoctrineBundle;
+use Doctrine\Bundle\DoctrineBundle\Twig\DoctrineExtension;
 use Knp\DoctrineBehaviors\DoctrineBehaviorsBundle;
+use Psr\Container\ContainerInterface;
 use Symfony\Bundle\FrameworkBundle\FrameworkBundle;
 use Symfony\Component\Config\Loader\LoaderInterface;
 use Symfony\Component\HttpKernel\Bundle\BundleInterface;
-use Symfony\Component\HttpKernel\Kernel;
+use Symplify\SymplifyKernel\HttpKernel\AbstractSymplifyKernel;
 
-final class DoctrineBehaviorsKernel extends Kernel
+final class DoctrineBehaviorsKernel extends AbstractSymplifyKernel
 {
-    /**
-     * @var string[]
-     */
-    private array $configs = [];
-
     /**
      * @return BundleInterface[]
      */
@@ -26,30 +23,18 @@ final class DoctrineBehaviorsKernel extends Kernel
         return [new DoctrineBehaviorsBundle(), new DoctrineBundle(), new FrameworkBundle()];
     }
 
-    public function getCacheDir(): string
-    {
-        return sys_get_temp_dir() . '/doctrine_behaviors_test';
-    }
-
-    public function getLogDir(): string
-    {
-        return sys_get_temp_dir() . '/doctrine_behaviors_test_log';
-    }
-
-    public function registerContainerConfiguration(LoaderInterface $loader): void
-    {
-        $loader->load(__DIR__ . '/../config/config_test.php');
-
-        foreach ($this->configs as $config) {
-            $loader->load($config);
-        }
-    }
-
     /**
-     * @param string[] $configs
+     * @param string[] $configFiles
      */
-    public function setConfigs(array $configs): void
+    public function createFromConfigs(array $configFiles): ContainerInterface
     {
-        $this->configs = $configs;
+        $configFiles[] = __DIR__ . '/../../config/services.php';
+        $configFiles[] = __DIR__ . '/../config/config_test.php';
+
+        $extensions[] = new \Doctrine\Bundle\DoctrineBundle\DependencyInjection\DoctrineExtension();
+
+        $compilerPasses = [];
+
+        return $this->create($extensions, $compilerPasses, $configFiles);
     }
 }
