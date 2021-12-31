@@ -118,7 +118,7 @@ final class TreeNodeTest extends AbstractBehaviorTestCase
     /**
      * @dataProvider provideIsChildNodeOf()
      */
-    public function testTestisChildNodeOf(TreeNodeInterface $child, TreeNodeInterface $parent, $expected): void
+    public function testTestisChildNodeOf(TreeNodeInterface $child, TreeNodeInterface $parent, bool $expected): void
     {
         $this->assertSame($expected, $child->isChildNodeOf($parent));
     }

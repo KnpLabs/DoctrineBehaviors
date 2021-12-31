@@ -29,13 +29,10 @@ class LoggableEntity implements LoggableInterface
      * @var string[]|null
      */
     #[Column(type: 'array', nullable: true)]
-    private $roles;
+    private array|null $roles = null;
 
-    /**
-     * @var DateTimeInterface|null
-     */
     #[Column(type: 'date', nullable: true)]
-    private $dateTime;
+    private DateTimeInterface|null $dateTime = null;
 
     public function getId(): int
     {
@@ -52,7 +49,7 @@ class LoggableEntity implements LoggableInterface
         $this->title = $title;
     }
 
-    public function getRoles()
+    public function getRoles(): array|null
     {
         return $this->roles;
     }
@@ -62,12 +59,12 @@ class LoggableEntity implements LoggableInterface
         $this->roles = $roles;
     }
 
-    public function getDate()
+    public function getDate(): \DateTimeInterface|null
     {
         return $this->dateTime;
     }
 
-    public function setDate($date): void
+    public function setDate(DateTimeInterface $date): void
     {
         $this->dateTime = $date;
     }

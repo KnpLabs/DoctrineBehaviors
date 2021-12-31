@@ -17,7 +17,7 @@ parameters:
         - src
         - tests
 
-    level: max
+    level: 8
     checkGenericClassInNonGenericObjectType: false
 
     # to allow installing with various phsptan versions without reporting old errors here
@@ -113,3 +113,11 @@ parameters:
         -
             message: '#Cannot call method getName\(\) on ReflectionClass\|null#'
             path: src/EventSubscriber/TranslatableEventSubscriber.php
+
+        # entities
+        -
+            message: '#Property Knp\\DoctrineBehaviors\\Tests\\Fixtures\\Entity\\(.*?)\:\:\$(.*?) is never written, only read#'
+            path: tests/Fixtures/Entity/*
+
+        # not generics
+        - '#Property Knp\\DoctrineBehaviors\\Tests\\AbstractBehaviorTestCase\:\:\$entityManager \(Doctrine\\ORM\\EntityManagerInterface\) does not accept doctrine\.orm\.entity_manager#'

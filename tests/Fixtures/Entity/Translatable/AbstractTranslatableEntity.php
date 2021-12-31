@@ -13,7 +13,10 @@ abstract class AbstractTranslatableEntity implements TranslatableInterface
 {
     use TranslatableTrait;
 
-    public function __call($method, $arguments)
+    /**
+     * @return mixed
+     */
+    public function __call(string $method, array $arguments)
     {
         return $this->proxyCurrentLocaleTranslation($method, $arguments);
     }

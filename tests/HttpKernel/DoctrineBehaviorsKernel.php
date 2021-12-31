@@ -10,9 +10,8 @@ use Symfony\Bundle\FrameworkBundle\FrameworkBundle;
 use Symfony\Component\Config\Loader\LoaderInterface;
 use Symfony\Component\HttpKernel\Bundle\BundleInterface;
 use Symfony\Component\HttpKernel\Kernel;
-use Symplify\PackageBuilder\Contract\HttpKernel\ExtraConfigAwareKernelInterface;
 
-final class DoctrineBehaviorsKernel extends Kernel implements ExtraConfigAwareKernelInterface
+final class DoctrineBehaviorsKernel extends Kernel
 {
     /**
      * @var string[]
