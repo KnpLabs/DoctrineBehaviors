@@ -107,6 +107,10 @@ parameters:
         -
             message: '#Cannot call method getName\(\) on ReflectionClass\|null#'
             path: src/EventSubscriber/TranslatableEventSubscriber.php
+<<<<<<< HEAD
+<<<<<<< HEAD
+=======
+>>>>>>> fix phpstan reports
 
         # entities
         -
@@ -114,9 +118,28 @@ parameters:
             path: tests/Fixtures/Entity/*
 
         # not generics
+<<<<<<< HEAD
+<<<<<<< HEAD
         - '#Property Knp\\DoctrineBehaviors\\Tests\\AbstractBehaviorTestCase\:\:\$entityManager \(Doctrine\\ORM\\EntityManagerInterface\) does not accept doctrine\.orm\.entity_manager#'
 
         - '#Parameter \#1 \$type of method Knp\\DoctrineBehaviors\\Tests\\AbstractBehaviorTestCase\:\:getService\(\) expects class\-string(.*?), string given#'
 
         # specific implementation
         - '#Property Knp\\DoctrineBehaviors\\Tests\\ORM\\Blameable\\BlameableTest\:\:\$userProvider \(Knp\\DoctrineBehaviors\\Tests\\Provider\\EntityUserProvider\) does not accept Knp\\DoctrineBehaviors\\Contract\\Provider\\UserProviderInterface#'
+=======
+>>>>>>> skip false positive phpstan
+=======
+        - '#Property Knp\\DoctrineBehaviors\\Tests\\AbstractBehaviorTestCase\:\:\$entityManager \(Doctrine\\ORM\\EntityManagerInterface\) does not accept doctrine\.orm\.entity_manager#'
+>>>>>>> fix phpstan reports
+=======
+        - '#Property Knp\\DoctrineBehaviors\\Tests\\AbstractBehaviorTestCase\:\:\$entityManager \(Doctrine\\ORM\\EntityManagerInterface\) does not accept doctrine\.orm\.entity_manager#'
+
+        - '#Parameter \#1 \$type of method Knp\\DoctrineBehaviors\\Tests\\AbstractBehaviorTestCase\:\:getService\(\) expects class\-string(.*?), string given#'
+<<<<<<< HEAD
+        - '#Unsafe access to private property Knp\\DoctrineBehaviors\\Tests\\AbstractBehaviorTestCase\:\:\$container through static\:\:#'
+>>>>>>> misc
+=======
+
+        # specific implementation
+        - '#Property Knp\\DoctrineBehaviors\\Tests\\ORM\\Blameable\\BlameableTest\:\:\$userProvider \(Knp\\DoctrineBehaviors\\Tests\\Provider\\EntityUserProvider\) does not accept Knp\\DoctrineBehaviors\\Contract\\Provider\\UserProviderInterface#'
+>>>>>>> fixing blameable test

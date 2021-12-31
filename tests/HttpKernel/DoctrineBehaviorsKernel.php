@@ -14,6 +14,10 @@ use Symfony\Component\HttpKernel\Kernel;
 final class DoctrineBehaviorsKernel extends Kernel
 {
     /**
+<<<<<<< HEAD
+<<<<<<< HEAD
+=======
+>>>>>>> misc
      * @param string[] $configs
      */
     public function __construct(
@@ -23,6 +27,11 @@ final class DoctrineBehaviorsKernel extends Kernel
     }
 
     /**
+<<<<<<< HEAD
+=======
+>>>>>>> upgrade Kernel
+=======
+>>>>>>> misc
      * @return BundleInterface[]
      */
     public function registerBundles(): array
@@ -40,6 +49,17 @@ final class DoctrineBehaviorsKernel extends Kernel
         return sys_get_temp_dir() . '/doctrine_behaviors_test_log';
     }
 
+<<<<<<< HEAD
+<<<<<<< HEAD
+        foreach ($this->configs as $config) {
+            $loader->load($config);
+        }
+=======
+        $compilerPasses = [];
+
+        return $this->create($extensions, $compilerPasses, $configFiles);
+>>>>>>> upgrade Kernel
+=======
     public function registerContainerConfiguration(LoaderInterface $loader): void
     {
         $loader->load(__DIR__ . '/../config/config_test.php');
@@ -47,5 +67,6 @@ final class DoctrineBehaviorsKernel extends Kernel
         foreach ($this->configs as $config) {
             $loader->load($config);
         }
+>>>>>>> misc
     }
 }

@@ -12,18 +12,22 @@
     ],
     "require": {
         "php": ">=8.0",
-        "doctrine/common": "^3.1",
+        "doctrine/common": "^3.2",
         "doctrine/persistence": "^2.2",
-        "doctrine/dbal": "^2.3|^3.1",
+        "doctrine/dbal": "^3.2",
         "doctrine/orm": "^2.10",
-        "doctrine/doctrine-bundle": "^2.4",
+        "doctrine/doctrine-bundle": "^2.5",
         "symfony/cache": "^5.4|^6.0",
         "symfony/dependency-injection": "^5.4|^6.0",
         "symfony/http-kernel": "^5.4|^6.0",
         "symfony/security-core": "^5.4|^6.0",
         "symfony/framework-bundle": "^5.4|^6.0",
         "symfony/string": "^5.4|^6.0",
+<<<<<<< HEAD
         "symfony/translation-contracts": "^2.4|^3.0",
+=======
+        "symfony/translation-contracts": "^2.4",
+>>>>>>> add trusted extensions to composer
         "nette/utils": "^3.2",
         "ramsey/uuid": "^4.2"
     },
@@ -34,9 +38,17 @@
         "psr/log": "^1.1",
         "doctrine/annotations": "^1.13",
         "php-parallel-lint/php-parallel-lint": "^1.3",
-        "phpstan/phpstan": "^1.0",
+        "phpstan/phpstan": "^1.3",
         "phpunit/phpunit": "^9.5",
+<<<<<<< HEAD
+<<<<<<< HEAD
         "rector/rector": "^0.12.10",
+=======
+        "rector/rector": "^0.12",
+>>>>>>> bump Sypmlify, PHPStan and Rector deps
+=======
+        "rector/rector": "^0.12.10",
+>>>>>>> fixing blameable test
         "symplify/easy-coding-standard": "^10.0",
         "symplify/phpstan-extensions": "^10.0",
         "phpstan/phpstan-doctrine": "^1.0",
