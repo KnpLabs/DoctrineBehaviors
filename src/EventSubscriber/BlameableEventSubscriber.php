@@ -131,7 +131,7 @@ final class BlameableEventSubscriber implements EventSubscriberInterface
             ->propertyChanged($entity, self::DELETED_BY, $oldValue, $user);
     }
 
-    public function getSubscribedEvents()
+    public function getSubscribedEvents(): array
     {
         return [Events::prePersist, Events::preUpdate, Events::preRemove, Events::loadClassMetadata];
     }
