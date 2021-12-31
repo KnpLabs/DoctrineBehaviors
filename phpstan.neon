@@ -108,3 +108,8 @@ parameters:
             paths:
                 - tests/Fixtures/Entity/TranslatableCustomizedEntity.php
                 - tests/Fixtures/Entity/Translation/TranslatableCustomizedEntityTranslation.php
+
+        # false positive, already checked for type
+        -
+            message: '#Cannot call method getName\(\) on ReflectionClass\|null#'
+            path: src/EventSubscriber/TranslatableEventSubscriber.php
