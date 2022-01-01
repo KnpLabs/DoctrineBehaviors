@@ -114,9 +114,14 @@ parameters:
             path: tests/Fixtures/Entity/*
 
         # not generics
-        - '#Property Knp\\DoctrineBehaviors\\Tests\\AbstractBehaviorTestCase\:\:\$entityManager \(Doctrine\\ORM\\EntityManagerInterface\) does not accept doctrine\.orm\.entity_manager#'
-
         - '#Parameter \#1 \$type of method Knp\\DoctrineBehaviors\\Tests\\AbstractBehaviorTestCase\:\:getService\(\) expects class\-string(.*?), string given#'
+
+        - '#Property Knp\\DoctrineBehaviors\\Tests\\AbstractBehaviorTestCase\:\:\$entityManager \(Doctrine\\ORM\\EntityManagerInterface\) does not accept doctrine\.orm\.entity_manager#'
 
         # specific implementation
         - '#Property Knp\\DoctrineBehaviors\\Tests\\ORM\\Blameable\\BlameableTest\:\:\$userProvider \(Knp\\DoctrineBehaviors\\Tests\\Provider\\EntityUserProvider\) does not accept Knp\\DoctrineBehaviors\\Contract\\Provider\\UserProviderInterface#'
+
+        # different entity can return differnt types - reusable trait
+        -
+            message: '#sprintf\(\) call mask types does not match provided arguments types#'
+            path: src/Model/Loggable/LoggableTrait.php
