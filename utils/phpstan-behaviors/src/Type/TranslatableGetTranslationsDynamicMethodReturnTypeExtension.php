@@ -9,9 +9,8 @@ use function in_array;
 use Knp\DoctrineBehaviors\Contract\Entity\TranslatableInterface;
 use PhpParser\Node\Expr\MethodCall;
 use PHPStan\Analyser\Scope;
-use PHPStan\Broker\Broker;
-use PHPStan\Reflection\BrokerAwareExtension;
 use PHPStan\Reflection\MethodReflection;
+use PHPStan\Reflection\ReflectionProvider;
 use PHPStan\Type\DynamicMethodReturnTypeExtension;
 use PHPStan\Type\IterableType;
 use PHPStan\Type\MixedType;
@@ -19,13 +18,11 @@ use PHPStan\Type\ObjectType;
 use PHPStan\Type\Type;
 use PHPStan\Type\TypeCombinator;
 
-final class TranslatableGetTranslationsDynamicMethodReturnTypeExtension implements DynamicMethodReturnTypeExtension, BrokerAwareExtension
+final class TranslatableGetTranslationsDynamicMethodReturnTypeExtension implements DynamicMethodReturnTypeExtension
 {
-    private ?Broker $broker = null;
-
-    public function setBroker(Broker $broker): void
-    {
-        $this->broker = $broker;
+    public function __construct(
+        private ReflectionProvider $reflectionProvider
+    ) {
     }
 
     public function getClass(): string
@@ -43,7 +40,7 @@ final class TranslatableGetTranslationsDynamicMethodReturnTypeExtension implemen
         MethodCall $methodCall,
         Scope $scope
     ): Type {
-        $translationClass = TranslationTypeHelper::getTranslationClass($this->broker, $methodCall, $scope);
+        $translationClass = TranslationTypeHelper::getTranslationClass($this->reflectionProvider, $methodCall, $scope);
 
         return TypeCombinator::intersect(
             new ObjectType(Collection::class),

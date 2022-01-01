@@ -9,15 +9,18 @@ use Knp\DoctrineBehaviors\Contract\Entity\TranslatableInterface;
 use Knp\DoctrineBehaviors\Contract\Entity\TranslationInterface;
 use PhpParser\Node\Expr\MethodCall;
 use PHPStan\Analyser\Scope;
-use PHPStan\Broker\Broker;
+use PHPStan\Reflection\ReflectionProvider;
 
 final class TranslationTypeHelper
 {
-    public static function getTranslationClass(Broker $broker, MethodCall $methodCall, Scope $scope): string
-    {
+    public static function getTranslationClass(
+        ReflectionProvider $reflectionProvider,
+        MethodCall $methodCall,
+        Scope $scope
+    ): string {
         $type = $scope->getType($methodCall->var);
         $translatableClass = $type->getReferencedClasses()[0];
-        $reflectionClass = $broker->getClass($translatableClass)
+        $reflectionClass = $reflectionProvider->getClass($translatableClass)
             ->getNativeReflection();
 
         if ($reflectionClass->isInterface()) {
@@ -36,11 +39,14 @@ final class TranslationTypeHelper
             ->invoke(null);
     }
 
-    public static function getTranslatableClass(Broker $broker, MethodCall $methodCall, Scope $scope): string
-    {
+    public static function getTranslatableClass(
+        ReflectionProvider $reflectionProvider,
+        MethodCall $methodCall,
+        Scope $scope
+    ): string {
         $type = $scope->getType($methodCall->var);
         $translationClass = $type->getReferencedClasses()[0];
-        $reflectionClass = $broker->getClass($translationClass)
+        $reflectionClass = $reflectionProvider->getClass($translationClass)
             ->getNativeReflection();
 
         if ($reflectionClass->isInterface()) {
