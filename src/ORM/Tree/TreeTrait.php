@@ -39,8 +39,10 @@ trait TreeTrait
         return $this->buildTree($results);
     }
 
-    public function getTreeExceptNodeAndItsChildrenQB(TreeNodeInterface $treeNode, string $rootAlias = 't')
-    {
+    public function getTreeExceptNodeAndItsChildrenQB(
+        TreeNodeInterface $treeNode,
+        string $rootAlias = 't'
+    ): QueryBuilder {
         return $this->getFlatTreeQB('', $rootAlias)
             ->andWhere($rootAlias . '.materializedPath NOT LIKE :except_path')
             ->andWhere($rootAlias . '.id != :id')
@@ -86,6 +88,10 @@ trait TreeTrait
         return $queryBuilder;
     }
 
+    /**
+     * @param mixed[] $extraParams
+     * @return mixed[]
+     */
     public function getFlatTree(string $path, string $rootAlias = 't', array $extraParams = []): array
     {
         return $this->getFlatTreeQB($path, $rootAlias, $extraParams)

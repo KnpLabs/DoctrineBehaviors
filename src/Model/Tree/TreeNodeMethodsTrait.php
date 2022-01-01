@@ -253,6 +253,7 @@ trait TreeNodeMethodsTrait
     }
 
     /**
+     * @param mixed $offset
      * @param TreeNodeInterface $node
      */
     public function offsetSet($offset, $node): void
@@ -261,16 +262,26 @@ trait TreeNodeMethodsTrait
         $node->setChildNodeOf($this);
     }
 
-    public function offsetExists($offset)
+    /**
+     * @param mixed $offset
+     */
+    public function offsetExists($offset): bool
     {
         return isset($this->getChildNodes()[$offset]);
     }
 
+    /**
+     * @param mixed $offset
+     */
     public function offsetUnset($offset): void
     {
         unset($this->getChildNodes()[$offset]);
     }
 
+    /**
+     * @param mixed $offset
+     * @return mixed
+     */
     public function offsetGet($offset)
     {
         return $this->getChildNodes()[$offset];

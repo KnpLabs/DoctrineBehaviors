@@ -7,6 +7,5 @@ namespace Knp\DoctrineBehaviors\Model\Translatable;
 trait TranslationTrait
 {
     use TranslationPropertiesTrait;
-
     use TranslationMethodsTrait;
 }

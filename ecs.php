@@ -38,6 +38,9 @@ return static function (ContainerConfigurator $containerConfigurator): void {
         ],
         __DIR__ . '/src/Bundle/DoctrineBehaviorsBundle.php',
         __DIR__ . '/src/DoctrineBehaviorsBundle.php',
+
+        // broken on PHP 8.1
+        \PhpCsFixer\Fixer\FunctionNotation\FunctionTypehintSpaceFixer::class,
     ]);
 
     $services = $containerConfigurator->services();

@@ -158,7 +158,7 @@ trait TranslatableMethodsTrait
         $translation->setLocale($locale);
 
         $this->getNewTranslations()
-            ->set((string) $translation->getLocale(), $translation);
+            ->set($translation->getLocale(), $translation);
         $translation->setTranslatable($this);
 
         return $translation;
@@ -201,7 +201,7 @@ trait TranslatableMethodsTrait
         return null;
     }
 
-    protected function computeFallbackLocale($locale): ?string
+    protected function computeFallbackLocale(string $locale): ?string
     {
         if (strrchr($locale, '_') !== false) {
             return substr($locale, 0, -strlen(strrchr($locale, '_')));
@@ -210,6 +210,9 @@ trait TranslatableMethodsTrait
         return null;
     }
 
+    /**
+     * @param Collection|mixed $translations
+     */
     private function ensureIsIterableOrCollection($translations): void
     {
         if ($translations instanceof Collection) {
@@ -225,7 +228,7 @@ trait TranslatableMethodsTrait
         );
     }
 
-    private function resolveFallbackTranslation(?string $locale): ?TranslationInterface
+    private function resolveFallbackTranslation(string $locale): ?TranslationInterface
     {
         $fallbackLocale = $this->computeFallbackLocale($locale);
 

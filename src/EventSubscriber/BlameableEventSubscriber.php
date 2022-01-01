@@ -124,11 +124,11 @@ final class BlameableEventSubscriber implements EventSubscriberInterface
             return;
         }
 
-        $oldValue = $entity->getDeletedBy();
+        $oldDeletedBy = $entity->getDeletedBy();
         $entity->setDeletedBy($user);
 
         $this->getUnitOfWork()
-            ->propertyChanged($entity, self::DELETED_BY, $oldValue, $user);
+            ->propertyChanged($entity, self::DELETED_BY, $oldDeletedBy, $user);
     }
 
     public function getSubscribedEvents()

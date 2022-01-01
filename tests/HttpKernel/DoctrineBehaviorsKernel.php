@@ -10,14 +10,17 @@ use Symfony\Bundle\FrameworkBundle\FrameworkBundle;
 use Symfony\Component\Config\Loader\LoaderInterface;
 use Symfony\Component\HttpKernel\Bundle\BundleInterface;
 use Symfony\Component\HttpKernel\Kernel;
-use Symplify\PackageBuilder\Contract\HttpKernel\ExtraConfigAwareKernelInterface;
 
-final class DoctrineBehaviorsKernel extends Kernel implements ExtraConfigAwareKernelInterface
+final class DoctrineBehaviorsKernel extends Kernel
 {
     /**
-     * @var string[]
+     * @param string[] $configs
      */
-    private array $configs = [];
+    public function __construct(
+        private array $configs = []
+    ) {
+        parent::__construct('test', false);
+    }
 
     /**
      * @return BundleInterface[]
@@ -44,13 +47,5 @@ final class DoctrineBehaviorsKernel extends Kernel implements ExtraConfigAwareKe
         foreach ($this->configs as $config) {
             $loader->load($config);
         }
-    }
-
-    /**
-     * @param string[] $configs
-     */
-    public function setConfigs(array $configs): void
-    {
-        $this->configs = $configs;
     }
 }
