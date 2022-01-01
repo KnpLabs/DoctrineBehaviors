@@ -7,20 +7,17 @@ namespace Knp\DoctrineBehaviors\PHPStan\Type;
 use Knp\DoctrineBehaviors\Contract\Entity\TranslationInterface;
 use PhpParser\Node\Expr\MethodCall;
 use PHPStan\Analyser\Scope;
-use PHPStan\Broker\Broker;
-use PHPStan\Reflection\BrokerAwareExtension;
 use PHPStan\Reflection\MethodReflection;
+use PHPStan\Reflection\ReflectionProvider;
 use PHPStan\Type\DynamicMethodReturnTypeExtension;
 use PHPStan\Type\ObjectType;
 use PHPStan\Type\Type;
 
-final class TranslationGetTranslatableDynamicMethodReturnTypeExtension implements DynamicMethodReturnTypeExtension, BrokerAwareExtension
+final class TranslationGetTranslatableDynamicMethodReturnTypeExtension implements DynamicMethodReturnTypeExtension
 {
-    private ?Broker $broker = null;
-
-    public function setBroker(Broker $broker): void
-    {
-        $this->broker = $broker;
+    public function __construct(
+        private ReflectionProvider $reflectionProvider,
+    ) {
     }
 
     public function getClass(): string
@@ -38,7 +35,11 @@ final class TranslationGetTranslatableDynamicMethodReturnTypeExtension implement
         MethodCall $methodCall,
         Scope $scope
     ): Type {
-        $translatableClass = TranslationTypeHelper::getTranslatableClass($this->broker, $methodCall, $scope);
+        $translatableClass = StaticTranslationTypeHelper::getTranslatableClass(
+            $this->reflectionProvider,
+            $methodCall,
+            $scope
+        );
 
         return new ObjectType($translatableClass);
     }

@@ -40,7 +40,11 @@ final class TranslatableGetTranslationsDynamicMethodReturnTypeExtension implemen
         MethodCall $methodCall,
         Scope $scope
     ): Type {
-        $translationClass = TranslationTypeHelper::getTranslationClass($this->reflectionProvider, $methodCall, $scope);
+        $translationClass = StaticTranslationTypeHelper::getTranslationClass(
+            $this->reflectionProvider,
+            $methodCall,
+            $scope
+        );
 
         return TypeCombinator::intersect(
             new ObjectType(Collection::class),

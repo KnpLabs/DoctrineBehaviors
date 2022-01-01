@@ -4,14 +4,14 @@ declare(strict_types=1);
 
 namespace Knp\DoctrineBehaviors\PHPStan\Type;
 
-use Exception;
 use Knp\DoctrineBehaviors\Contract\Entity\TranslatableInterface;
 use Knp\DoctrineBehaviors\Contract\Entity\TranslationInterface;
+use Knp\DoctrineBehaviors\PHPStan\Exception\PHPStanTypeException;
 use PhpParser\Node\Expr\MethodCall;
 use PHPStan\Analyser\Scope;
 use PHPStan\Reflection\ReflectionProvider;
 
-final class TranslationTypeHelper
+final class StaticTranslationTypeHelper
 {
     public static function getTranslationClass(
         ReflectionProvider $reflectionProvider,
@@ -28,10 +28,11 @@ final class TranslationTypeHelper
                 return TranslationInterface::class;
             }
 
-            throw new Exception(sprintf(
+            $errorMessage = sprintf(
                 'Unable to find the Translation class associated to the Translatable class "%s".',
                 $reflectionClass->getName()
-            ));
+            );
+            throw new PHPStanTypeException($errorMessage);
         }
 
         return $reflectionClass
@@ -54,10 +55,11 @@ final class TranslationTypeHelper
                 return TranslatableInterface::class;
             }
 
-            throw new Exception(sprintf(
+            $errorMessage = sprintf(
                 'Unable to find the Translatable class associated to the Translation class "%s".',
                 $reflectionClass->getName()
-            ));
+            );
+            throw new PHPStanTypeException($errorMessage);
         }
 
         return $reflectionClass
