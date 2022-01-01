@@ -16,6 +16,7 @@ parameters:
     paths:
         - src
         - tests
+        - utils/phpstan-behaviors/src
 
     level: 8
     checkGenericClassInNonGenericObjectType: false

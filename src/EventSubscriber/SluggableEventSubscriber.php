@@ -115,14 +115,13 @@ final class SluggableEventSubscriber implements EventSubscriberInterface
      */
     private function getOtherScheduledEntities(SluggableInterface $sluggable): array
     {
-        $uowScheduledEntities = array_merge(
-            $this->entityManager->getUnitOfWork()
-                ->getScheduledEntityInsertions(),
-            $this->entityManager->getUnitOfWork()
-                ->getScheduledEntityUpdates(),
-            $this->entityManager->getUnitOfWork()
-                ->getScheduledEntityDeletions()
-        );
+        $unitOfWork = $this->entityManager->getUnitOfWork();
+
+        $uowScheduledEntities = [
+            ...$unitOfWork->getScheduledEntityInsertions(),
+            ...$unitOfWork->getScheduledEntityUpdates(),
+            ...$unitOfWork->getScheduledEntityDeletions(),
+        ];
 
         $scheduledEntities = [];
         foreach ($uowScheduledEntities as $uowScheduledEntity) {

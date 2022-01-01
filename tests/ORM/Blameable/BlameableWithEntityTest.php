@@ -19,10 +19,7 @@ final class BlameableWithEntityTest extends AbstractBehaviorTestCase
      */
     private ObjectRepository $blameableRepository;
 
-    /**
-     * @var UserEntity
-     */
-    private $userEntity;
+    private UserEntity $userEntity;
 
     protected function setUp(): void
     {

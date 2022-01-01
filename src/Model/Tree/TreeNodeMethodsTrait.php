@@ -105,7 +105,7 @@ trait TreeNodeMethodsTrait
     public function isIndirectChildNodeOf(TreeNodeInterface $treeNode): bool
     {
         return $this->getRealMaterializedPath() !== $treeNode->getRealMaterializedPath()
-            && strpos($this->getRealMaterializedPath(), $treeNode->getRealMaterializedPath()) === 0;
+            && str_starts_with($this->getRealMaterializedPath(), $treeNode->getRealMaterializedPath());
     }
 
     public function isChildNodeOf(TreeNodeInterface $treeNode): bool
@@ -197,9 +197,7 @@ trait TreeNodeMethodsTrait
     public function toArray(?Closure $prepare = null, ?array &$tree = null): array
     {
         if ($prepare === null) {
-            $prepare = function (TreeNodeInterface $node) {
-                return (string) $node;
-            };
+            $prepare = fn (TreeNodeInterface $node): string => (string) $node;
         }
 
         if ($tree === null) {
@@ -299,8 +297,6 @@ trait TreeNodeMethodsTrait
 
         $path = explode($separator, $this->getRealMaterializedPath());
 
-        return array_filter($path, function ($item) {
-            return $item !== '';
-        });
+        return array_filter($path, fn ($item): bool => $item !== '');
     }
 }

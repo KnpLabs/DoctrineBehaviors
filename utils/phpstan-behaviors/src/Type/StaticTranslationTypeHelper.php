@@ -4,31 +4,43 @@ declare(strict_types=1);
 
 namespace Knp\DoctrineBehaviors\PHPStan\Type;
 
-use Exception;
 use Knp\DoctrineBehaviors\Contract\Entity\TranslatableInterface;
 use Knp\DoctrineBehaviors\Contract\Entity\TranslationInterface;
+use Knp\DoctrineBehaviors\PHPStan\Exception\PHPStanTypeException;
 use PhpParser\Node\Expr\MethodCall;
 use PHPStan\Analyser\Scope;
-use PHPStan\Broker\Broker;
+use PHPStan\Reflection\ReflectionProvider;
+use ReflectionClass;
 
-final class TranslationTypeHelper
+final class StaticTranslationTypeHelper
 {
-    public static function getTranslationClass(Broker $broker, MethodCall $methodCall, Scope $scope): string
-    {
+    public static function getTranslationClass(
+        ReflectionProvider $reflectionProvider,
+        MethodCall $methodCall,
+        Scope $scope
+    ): string {
         $type = $scope->getType($methodCall->var);
+        /** @var class-string $translatableClass */
         $translatableClass = $type->getReferencedClasses()[0];
-        $reflectionClass = $broker->getClass($translatableClass)
-            ->getNativeReflection();
+
+        if (! $reflectionProvider->hasClass($translatableClass)) {
+            // for some reason, we the reflectin provided cannot locate the class
+            $reflectionClass = new ReflectionClass($translatableClass);
+        } else {
+            $reflectionClass = $reflectionProvider->getClass($translatableClass)
+                ->getNativeReflection();
+        }
 
         if ($reflectionClass->isInterface()) {
             if ($reflectionClass->getName() === TranslatableInterface::class) {
                 return TranslationInterface::class;
             }
 
-            throw new Exception(sprintf(
+            $errorMessage = sprintf(
                 'Unable to find the Translation class associated to the Translatable class "%s".',
                 $reflectionClass->getName()
-            ));
+            );
+            throw new PHPStanTypeException($errorMessage);
         }
 
         return $reflectionClass
@@ -36,11 +48,14 @@ final class TranslationTypeHelper
             ->invoke(null);
     }
 
-    public static function getTranslatableClass(Broker $broker, MethodCall $methodCall, Scope $scope): string
-    {
+    public static function getTranslatableClass(
+        ReflectionProvider $reflectionProvider,
+        MethodCall $methodCall,
+        Scope $scope
+    ): string {
         $type = $scope->getType($methodCall->var);
         $translationClass = $type->getReferencedClasses()[0];
-        $reflectionClass = $broker->getClass($translationClass)
+        $reflectionClass = $reflectionProvider->getClass($translationClass)
             ->getNativeReflection();
 
         if ($reflectionClass->isInterface()) {
@@ -48,10 +63,11 @@ final class TranslationTypeHelper
                 return TranslatableInterface::class;
             }
 
-            throw new Exception(sprintf(
+            $errorMessage = sprintf(
                 'Unable to find the Translatable class associated to the Translation class "%s".',
                 $reflectionClass->getName()
-            ));
+            );
+            throw new PHPStanTypeException($errorMessage);
         }
 
         return $reflectionClass

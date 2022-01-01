@@ -64,11 +64,13 @@ final class TranslatableTest extends AbstractBehaviorTestCase
         $this->entityManager->persist($translatableEntity);
         $this->entityManager->flush();
 
-        $id = $translatableEntity->getIdColumn();
+        $idColumn = $translatableEntity->getIdColumn();
         $this->entityManager->clear();
 
         /** @var TranslatableEntity $translatableEntity */
-        $translatableEntity = $this->entityManager->getRepository(TranslatableCustomIdentifierEntity::class)->find($id);
+        $translatableEntity = $this->entityManager->getRepository(TranslatableCustomIdentifierEntity::class)->find(
+            $idColumn
+        );
 
         $this->assertSame('awesome', $translatableEntity->translate('en')->getTitle());
     }
