@@ -10,6 +10,7 @@ use Knp\DoctrineBehaviors\PHPStan\Exception\PHPStanTypeException;
 use PhpParser\Node\Expr\MethodCall;
 use PHPStan\Analyser\Scope;
 use PHPStan\Reflection\ReflectionProvider;
+use ReflectionClass;
 
 final class StaticTranslationTypeHelper
 {
@@ -19,9 +20,16 @@ final class StaticTranslationTypeHelper
         Scope $scope
     ): string {
         $type = $scope->getType($methodCall->var);
+        /** @var class-string $translatableClass */
         $translatableClass = $type->getReferencedClasses()[0];
-        $reflectionClass = $reflectionProvider->getClass($translatableClass)
-            ->getNativeReflection();
+
+        if (! $reflectionProvider->hasClass($translatableClass)) {
+            // for some reason, we the reflectin provided cannot locate the class
+            $reflectionClass = new ReflectionClass($translatableClass);
+        } else {
+            $reflectionClass = $reflectionProvider->getClass($translatableClass)
+                ->getNativeReflection();
+        }
 
         if ($reflectionClass->isInterface()) {
             if ($reflectionClass->getName() === TranslatableInterface::class) {
