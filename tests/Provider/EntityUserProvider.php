@@ -25,15 +25,7 @@ final class EntityUserProvider implements UserProviderInterface
     ) {
     }
 
-<<<<<<< HEAD
-<<<<<<< HEAD
     public function changeUser(string $userName): void
-=======
-    public function changeUser(string $userEntity): void
->>>>>>> fix phpstan reports
-=======
-    public function changeUser(string $userName): void
->>>>>>> fixing blameable test
     {
         if ($this->userEntities !== [] && array_key_exists($userName, $this->userEntities)) {
             $this->userEntity = $this->userEntities[$userName];

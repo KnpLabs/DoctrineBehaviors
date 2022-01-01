@@ -40,15 +40,7 @@ final class TranslatableEventSubscriber implements EventSubscriberInterface
     public function loadClassMetadata(LoadClassMetadataEventArgs $loadClassMetadataEventArgs): void
     {
         $classMetadata = $loadClassMetadataEventArgs->getClassMetadata();
-<<<<<<< HEAD
-<<<<<<< HEAD
         if (! $classMetadata->reflClass instanceof ReflectionClass) {
-=======
-        if (! $classMetadata->reflClass instanceof \ReflectionClass) {
->>>>>>> skip false positive phpstan
-=======
-        if (! $classMetadata->reflClass instanceof ReflectionClass) {
->>>>>>> fixing blameable test
             // Class has not yet been fully built, ignore this event
             return;
         }

@@ -64,15 +64,7 @@ class LoggableEntity implements LoggableInterface
         return $this->dateTime;
     }
 
-<<<<<<< HEAD
-<<<<<<< HEAD
     public function setDate(DateTimeInterface $dateTime): void
-=======
-    public function setDate(DateTimeInterface $date): void
->>>>>>> fix phpstan reports
-=======
-    public function setDate(DateTimeInterface $dateTime): void
->>>>>>> fixing blameable test
     {
         $this->dateTime = $dateTime;
     }
