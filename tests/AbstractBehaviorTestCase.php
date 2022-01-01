@@ -8,28 +8,34 @@ use Doctrine\DBAL\Connection;
 use Doctrine\DBAL\Logging\DebugStack;
 use Doctrine\DBAL\Platforms\PostgreSQL94Platform;
 use Doctrine\ORM\EntityManagerInterface;
+use Knp\DoctrineBehaviors\Exception\ShouldNotHappenException;
 use Knp\DoctrineBehaviors\Tests\HttpKernel\DoctrineBehaviorsKernel;
-<<<<<<< HEAD
-use Symplify\PackageBuilder\Testing\AbstractKernelTestCase;
-=======
 use PHPUnit\Framework\TestCase;
 use Symfony\Component\DependencyInjection\ContainerInterface;
->>>>>>> 7050548... fixup! misc
 
-abstract class AbstractBehaviorTestCase extends AbstractKernelTestCase
+abstract class AbstractBehaviorTestCase extends TestCase
 {
     /**
      * @var EntityManagerInterface
      */
     protected $entityManager;
 
+    private static ContainerInterface|null $container = null;
+
     protected function setUp(): void
     {
-        $customConfig = $this->provideCustomConfig();
-        if ($customConfig !== null) {
-            self::bootKernelWithConfigs(DoctrineBehaviorsKernel::class, [$customConfig]);
-        } else {
-            self::bootKernel(DoctrineBehaviorsKernel::class);
+        if (static::$container === null) {
+            $customConfig = $this->provideCustomConfig();
+            if ($customConfig === null) {
+                $customConfigs = [];
+            } else {
+                $customConfigs = [$customConfig];
+            }
+
+            $doctrineBehaviorsKernel = new DoctrineBehaviorsKernel($customConfigs);
+            $doctrineBehaviorsKernel->boot();
+
+            static::$container = $doctrineBehaviorsKernel->getContainer();
         }
 
         $this->entityManager = $this->getService('doctrine.orm.entity_manager');
@@ -65,5 +71,19 @@ abstract class AbstractBehaviorTestCase extends AbstractKernelTestCase
             ->setSQLLogger($debugStack);
 
         return $debugStack;
+    }
+
+    /**
+     * @template T as object
+     * @param class-string<T> $type
+     * @return T
+     */
+    protected function getService(string $type): object
+    {
+        if (static::$container === null) {
+            throw new ShouldNotHappenException();
+        }
+
+        return static::$container->get($type);
     }
 }

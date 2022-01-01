@@ -121,3 +121,6 @@ parameters:
 
         # not generics
         - '#Property Knp\\DoctrineBehaviors\\Tests\\AbstractBehaviorTestCase\:\:\$entityManager \(Doctrine\\ORM\\EntityManagerInterface\) does not accept doctrine\.orm\.entity_manager#'
+
+        - '#Parameter \#1 \$type of method Knp\\DoctrineBehaviors\\Tests\\AbstractBehaviorTestCase\:\:getService\(\) expects class\-string(.*?), string given#'
+        - '#Unsafe access to private property Knp\\DoctrineBehaviors\\Tests\\AbstractBehaviorTestCase\:\:\$container through static\:\:#'

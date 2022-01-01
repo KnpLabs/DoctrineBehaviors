@@ -5,16 +5,23 @@ declare(strict_types=1);
 namespace Knp\DoctrineBehaviors\Tests\HttpKernel;
 
 use Doctrine\Bundle\DoctrineBundle\DoctrineBundle;
-use Doctrine\Bundle\DoctrineBundle\Twig\DoctrineExtension;
 use Knp\DoctrineBehaviors\DoctrineBehaviorsBundle;
-use Psr\Container\ContainerInterface;
 use Symfony\Bundle\FrameworkBundle\FrameworkBundle;
 use Symfony\Component\Config\Loader\LoaderInterface;
 use Symfony\Component\HttpKernel\Bundle\BundleInterface;
-use Symplify\SymplifyKernel\HttpKernel\AbstractSymplifyKernel;
+use Symfony\Component\HttpKernel\Kernel;
 
-final class DoctrineBehaviorsKernel extends AbstractSymplifyKernel
+final class DoctrineBehaviorsKernel extends Kernel
 {
+    /**
+     * @param string[] $configs
+     */
+    public function __construct(
+        private array $configs = []
+    ) {
+        parent::__construct('test', false);
+    }
+
     /**
      * @return BundleInterface[]
      */
@@ -23,18 +30,22 @@ final class DoctrineBehaviorsKernel extends AbstractSymplifyKernel
         return [new DoctrineBehaviorsBundle(), new DoctrineBundle(), new FrameworkBundle()];
     }
 
-    /**
-     * @param string[] $configFiles
-     */
-    public function createFromConfigs(array $configFiles): ContainerInterface
+    public function getCacheDir(): string
     {
-        $configFiles[] = __DIR__ . '/../../config/services.php';
-        $configFiles[] = __DIR__ . '/../config/config_test.php';
+        return sys_get_temp_dir() . '/doctrine_behaviors_test';
+    }
 
-        $extensions[] = new \Doctrine\Bundle\DoctrineBundle\DependencyInjection\DoctrineExtension();
+    public function getLogDir(): string
+    {
+        return sys_get_temp_dir() . '/doctrine_behaviors_test_log';
+    }
 
-        $compilerPasses = [];
+    public function registerContainerConfiguration(LoaderInterface $loader): void
+    {
+        $loader->load(__DIR__ . '/../config/config_test.php');
 
-        return $this->create($extensions, $compilerPasses, $configFiles);
+        foreach ($this->configs as $config) {
+            $loader->load($config);
+        }
     }
 }

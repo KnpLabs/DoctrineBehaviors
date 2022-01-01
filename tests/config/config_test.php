@@ -30,10 +30,6 @@ return static function (ContainerConfigurator $containerConfigurator): void {
     $parameters->set('kernel.secret', 'for_framework_bundle');
     $parameters->set('locale', 'en');
 
-    // framework bundle
-    $parameters->set('kernel.debug', true);
-    $parameters->set('kernel.bundles', []);
-
     $services = $containerConfigurator->services();
 
     $services->defaults()
