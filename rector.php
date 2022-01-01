@@ -6,6 +6,8 @@ use Rector\Core\Configuration\Option;
 use Rector\Doctrine\Set\DoctrineSetList;
 use Rector\Naming\Rector\Class_\RenamePropertyToMatchTypeRector;
 use Rector\Nette\Set\NetteSetList;
+use Rector\Php80\Rector\FunctionLike\UnionTypesRector;
+use Rector\Set\ValueObject\LevelSetList;
 use Rector\Set\ValueObject\SetList;
 use Symfony\Component\DependencyInjection\Loader\Configurator\ContainerConfigurator;
 
@@ -14,9 +16,16 @@ return static function (ContainerConfigurator $containerConfigurator): void {
 
     $parameters->set(Option::PATHS, [__DIR__ . '/src', __DIR__ . '/tests', __DIR__ . '/utils']);
     $parameters->set(Option::AUTO_IMPORT_NAMES, true);
+    $parameters->set(Option::PARALLEL, true);
 
     $parameters->set(Option::SKIP, [
         RenamePropertyToMatchTypeRector::class => [__DIR__ . '/tests/ORM/'],
+
+        UnionTypesRector::class => [
+            // to keep BC return types
+            __DIR__ . '/src/Contract/Entity',
+            'src/Model/*/*Trait.php',
+        ],
     ]);
 
     // doctrine annotations to attributes
@@ -27,12 +36,5 @@ return static function (ContainerConfigurator $containerConfigurator): void {
     $containerConfigurator->import(SetList::CODING_STYLE);
     $containerConfigurator->import(NetteSetList::NETTE_CODE_QUALITY);
     $containerConfigurator->import(SetList::NAMING);
-    $containerConfigurator->import(SetList::PHP_70);
-    $containerConfigurator->import(SetList::PHP_71);
-    $containerConfigurator->import(SetList::PHP_72);
-    $containerConfigurator->import(SetList::PHP_73);
-
-    // for tests only
-    // $containerConfigurator->import(SetList::PHP_74);
-    // $containerConfigurator->import(SetList::PHP_80);
+    $containerConfigurator->import(LevelSetList::UP_TO_PHP_80);
 };
