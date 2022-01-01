@@ -6,6 +6,7 @@ namespace Knp\DoctrineBehaviors\Tests\Provider;
 
 use Doctrine\ORM\EntityManagerInterface;
 use Knp\DoctrineBehaviors\Contract\Provider\UserProviderInterface;
+use Knp\DoctrineBehaviors\Exception\ShouldNotHappenException;
 use Knp\DoctrineBehaviors\Tests\Fixtures\Entity\UserEntity;
 
 final class EntityUserProvider implements UserProviderInterface
@@ -24,11 +25,19 @@ final class EntityUserProvider implements UserProviderInterface
     ) {
     }
 
-    public function changeUser(string $userEntity): void
+    public function changeUser(string $userName): void
     {
-        if ($this->userEntities !== [] && array_key_exists($userEntity, $this->userEntities)) {
-            $this->userEntity = $this->userEntities[$userEntity];
+        if ($this->userEntities !== [] && array_key_exists($userName, $this->userEntities)) {
+            $this->userEntity = $this->userEntities[$userName];
+        } else {
+            $errorMessage = sprintf('User with %s name was not found. Add it first.', $userName);
+            throw new ShouldNotHappenException($errorMessage);
         }
+    }
+
+    public function addUser(string $name, UserEntity $userEntity): void
+    {
+        $this->userEntities[$name] = $userEntity;
     }
 
     public function provideUser()
@@ -43,15 +52,14 @@ final class EntityUserProvider implements UserProviderInterface
         return UserEntity::class;
     }
 
-    private function prepareUserEntities(): void
+    public function prepareUserEntities(): void
     {
         if ($this->isUserEntityPrepared) {
             return;
         }
 
-        $userEntity = new UserEntity('user');
-
-        $user2Entity = new UserEntity('user2');
+        $userEntity = new UserEntity(1, 'user');
+        $user2Entity = new UserEntity(2, 'user2');
 
         // persist user
         $this->entityManager->persist($userEntity);

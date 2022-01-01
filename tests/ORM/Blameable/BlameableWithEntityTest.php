@@ -91,8 +91,11 @@ final class BlameableWithEntityTest extends AbstractBehaviorTestCase
         );
     }
 
-    protected function provideCustomConfig(): ?string
+    /**
+     * @return string[]
+     */
+    protected function provideCustomConfigs(): array
     {
-        return __DIR__ . '/../../config/config_test_with_blameable_entity.php';
+        return [__DIR__ . '/../../config/config_test_with_blameable_entity.php'];
     }
 }

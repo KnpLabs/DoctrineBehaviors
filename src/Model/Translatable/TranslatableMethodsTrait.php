@@ -158,7 +158,7 @@ trait TranslatableMethodsTrait
         $translation->setLocale($locale);
 
         $this->getNewTranslations()
-            ->set((string) $translation->getLocale(), $translation);
+            ->set($translation->getLocale(), $translation);
         $translation->setTranslatable($this);
 
         return $translation;

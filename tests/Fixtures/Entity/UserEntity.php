@@ -12,13 +12,13 @@ use Doctrine\ORM\Mapping\Id;
 #[Entity]
 class UserEntity
 {
-    #[Id]
-    #[Column(type: 'integer')]
-    #[GeneratedValue(strategy: 'AUTO')]
-    private int $id;
-
     public function __construct(
-        #[Column(type: 'string')] private string $username
+        #[Id]
+        #[Column(type: 'integer')]
+        #[GeneratedValue(strategy: 'AUTO')]
+        private int $id,
+        #[Column(type: 'string')]
+        private string $username,
     ) {
     }
 

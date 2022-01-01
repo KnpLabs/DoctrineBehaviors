@@ -20,6 +20,5 @@ return static function (ContainerConfigurator $containerConfigurator): void {
         ->autoconfigure();
 
     $services->set(EntityUserProvider::class);
-
     $services->alias(UserProviderInterface::class, EntityUserProvider::class);
 };

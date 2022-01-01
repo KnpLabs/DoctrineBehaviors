@@ -8,7 +8,6 @@ use Doctrine\DBAL\Connection;
 use Doctrine\DBAL\Logging\DebugStack;
 use Doctrine\DBAL\Platforms\PostgreSQL94Platform;
 use Doctrine\ORM\EntityManagerInterface;
-use Knp\DoctrineBehaviors\Exception\ShouldNotHappenException;
 use Knp\DoctrineBehaviors\Tests\HttpKernel\DoctrineBehaviorsKernel;
 use PHPUnit\Framework\TestCase;
 use Symfony\Component\DependencyInjection\ContainerInterface;
@@ -20,23 +19,14 @@ abstract class AbstractBehaviorTestCase extends TestCase
      */
     protected $entityManager;
 
-    private static ContainerInterface|null $container = null;
+    private ContainerInterface $container;
 
     protected function setUp(): void
     {
-        if (static::$container === null) {
-            $customConfig = $this->provideCustomConfig();
-            if ($customConfig === null) {
-                $customConfigs = [];
-            } else {
-                $customConfigs = [$customConfig];
-            }
+        $doctrineBehaviorsKernel = new DoctrineBehaviorsKernel($this->provideCustomConfigs());
+        $doctrineBehaviorsKernel->boot();
 
-            $doctrineBehaviorsKernel = new DoctrineBehaviorsKernel($customConfigs);
-            $doctrineBehaviorsKernel->boot();
-
-            static::$container = $doctrineBehaviorsKernel->getContainer();
-        }
+        $this->container = $doctrineBehaviorsKernel->getContainer();
 
         $this->entityManager = $this->getService('doctrine.orm.entity_manager');
         $this->loadDatabaseFixtures();
@@ -57,9 +47,12 @@ abstract class AbstractBehaviorTestCase extends TestCase
         return $connection->getDatabasePlatform() instanceof PostgreSQL94Platform;
     }
 
-    protected function provideCustomConfig(): ?string
+    /**
+     * @return string[]
+     */
+    protected function provideCustomConfigs(): array
     {
-        return null;
+        return [];
     }
 
     protected function createAndRegisterDebugStack(): DebugStack
@@ -80,10 +73,6 @@ abstract class AbstractBehaviorTestCase extends TestCase
      */
     protected function getService(string $type): object
     {
-        if (static::$container === null) {
-            throw new ShouldNotHappenException();
-        }
-
-        return static::$container->get($type);
+        return $this->container->get($type);
     }
 }
