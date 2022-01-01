@@ -12,6 +12,7 @@ use Doctrine\ORM\Mapping\ClassMetadataInfo;
 use Knp\DoctrineBehaviors\Contract\Entity\TranslatableInterface;
 use Knp\DoctrineBehaviors\Contract\Entity\TranslationInterface;
 use Knp\DoctrineBehaviors\Contract\Provider\LocaleProviderInterface;
+use ReflectionClass;
 
 final class TranslatableEventSubscriber implements EventSubscriberInterface
 {
@@ -39,7 +40,7 @@ final class TranslatableEventSubscriber implements EventSubscriberInterface
     public function loadClassMetadata(LoadClassMetadataEventArgs $loadClassMetadataEventArgs): void
     {
         $classMetadata = $loadClassMetadataEventArgs->getClassMetadata();
-        if ($classMetadata->reflClass === null) {
+        if (! $classMetadata->reflClass instanceof ReflectionClass) {
             // Class has not yet been fully built, ignore this event
             return;
         }
@@ -78,7 +79,7 @@ final class TranslatableEventSubscriber implements EventSubscriberInterface
     /**
      * Convert string FETCH mode to required string
      */
-    private function convertFetchString($fetchMode): int
+    private function convertFetchString(string|int $fetchMode): int
     {
         if (is_int($fetchMode)) {
             return $fetchMode;
@@ -169,10 +170,6 @@ final class TranslatableEventSubscriber implements EventSubscriberInterface
 
     private function hasUniqueTranslationConstraint(ClassMetadataInfo $classMetadataInfo, string $name): bool
     {
-        if (! isset($classMetadataInfo->table['uniqueConstraints'])) {
-            return false;
-        }
-
         return isset($classMetadataInfo->table['uniqueConstraints'][$name]);
     }
 }

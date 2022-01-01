@@ -51,10 +51,7 @@ trait SluggableMethodsTrait
         return true;
     }
 
-    /**
-     * @return mixed|string
-     */
-    private function generateSlugValue($values)
+    private function generateSlugValue(array $values): string
     {
         $usableValues = [];
         foreach ($values as $value) {
@@ -85,6 +82,9 @@ trait SluggableMethodsTrait
         ));
     }
 
+    /**
+     * @return mixed|null
+     */
     private function resolveFieldValue(string $field)
     {
         if (property_exists($this, $field)) {

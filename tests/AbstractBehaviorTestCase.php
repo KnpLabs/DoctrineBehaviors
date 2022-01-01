@@ -9,23 +9,24 @@ use Doctrine\DBAL\Logging\DebugStack;
 use Doctrine\DBAL\Platforms\PostgreSQL94Platform;
 use Doctrine\ORM\EntityManagerInterface;
 use Knp\DoctrineBehaviors\Tests\HttpKernel\DoctrineBehaviorsKernel;
-use Symplify\PackageBuilder\Testing\AbstractKernelTestCase;
+use PHPUnit\Framework\TestCase;
+use Symfony\Component\DependencyInjection\ContainerInterface;
 
-abstract class AbstractBehaviorTestCase extends AbstractKernelTestCase
+abstract class AbstractBehaviorTestCase extends TestCase
 {
     /**
      * @var EntityManagerInterface
      */
     protected $entityManager;
 
+    private ContainerInterface $container;
+
     protected function setUp(): void
     {
-        $customConfig = $this->provideCustomConfig();
-        if ($customConfig !== null) {
-            self::bootKernelWithConfigs(DoctrineBehaviorsKernel::class, [$customConfig]);
-        } else {
-            self::bootKernel(DoctrineBehaviorsKernel::class);
-        }
+        $doctrineBehaviorsKernel = new DoctrineBehaviorsKernel($this->provideCustomConfigs());
+        $doctrineBehaviorsKernel->boot();
+
+        $this->container = $doctrineBehaviorsKernel->getContainer();
 
         $this->entityManager = $this->getService('doctrine.orm.entity_manager');
         $this->loadDatabaseFixtures();
@@ -46,9 +47,12 @@ abstract class AbstractBehaviorTestCase extends AbstractKernelTestCase
         return $connection->getDatabasePlatform() instanceof PostgreSQL94Platform;
     }
 
-    protected function provideCustomConfig(): ?string
+    /**
+     * @return string[]
+     */
+    protected function provideCustomConfigs(): array
     {
-        return null;
+        return [];
     }
 
     protected function createAndRegisterDebugStack(): DebugStack
@@ -60,5 +64,15 @@ abstract class AbstractBehaviorTestCase extends AbstractKernelTestCase
             ->setSQLLogger($debugStack);
 
         return $debugStack;
+    }
+
+    /**
+     * @template T as object
+     * @param class-string<T> $type
+     * @return T
+     */
+    protected function getService(string $type): object
+    {
+        return $this->container->get($type);
     }
 }

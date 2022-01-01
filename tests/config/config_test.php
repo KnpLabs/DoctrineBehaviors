@@ -26,7 +26,7 @@ return static function (ContainerConfigurator $containerConfigurator): void {
     $parameters->set('env(DB_NAME)', 'orm_behaviors_test');
     $parameters->set('env(DB_USER)', 'root');
     $parameters->set('env(DB_PASSWD)', '');
-    $parameters->set('env(DB_MEMORY)', true);
+    $parameters->set('env(DB_MEMORY)', 'true');
     $parameters->set('kernel.secret', 'for_framework_bundle');
     $parameters->set('locale', 'en');
 
@@ -37,7 +37,9 @@ return static function (ContainerConfigurator $containerConfigurator): void {
         ->autowire()
         ->autoconfigure();
 
-    $services->set(Security::class);
+    $services->set(Security::class)
+        ->arg('$container', service('service_container'));
+
     $services->set(TestLogger::class);
 
     $services->set(TestLocaleProvider::class);
