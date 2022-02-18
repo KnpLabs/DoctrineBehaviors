@@ -5,7 +5,7 @@ How to use Translatable with API platform.
 
 Let's say you have a Document Entity like so: 
 
-Please note: you don't have a `title` property in this entity, we are accessing the `DocumentTranslation` via the `TranslatableInterface` 
+Please note: you don't have a `title` property in this entity, we are accessing the `DocumentTranslation` via the `TranslatableMethodsTrait` 
 
 ```
 use Knp\DoctrineBehaviors\Contract\Entity\TranslatableInterface;
