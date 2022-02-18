@@ -66,7 +66,7 @@ Now we can implement an Event Subscriber to listen to the accept-language header
 
 declare(strict_types=1);
 
-namespace App\Events\Subscribers;
+namespace App\Event\Subscriber;
 
 use Symfony\Component\EventDispatcher\EventSubscriberInterface;
 use Symfony\Component\HttpFoundation\HeaderUtils;
