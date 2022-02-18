@@ -1,13 +1,13 @@
-# Translatable - API Platform 
+# Translatable - API Platform
 
-How to use Translatable with API platform. 
+How to use Translatable with API platform.
 
+Let's say you have a Document Entity like so:
 
-Let's say you have a Document Entity like so: 
+Please note: you don't have a `title` property in this entity, however it has a getter for it, we are accessing the `DocumentTranslation` via
+the `TranslatableMethodsTrait` you can do this for all the translatable properties.
 
-Please note: you don't have a `title` property in this entity, we are accessing the `DocumentTranslation` via the `TranslatableMethodsTrait` 
-
-```
+```php
 use Knp\DoctrineBehaviors\Contract\Entity\TranslatableInterface;
 use Knp\DoctrineBehaviors\Model\Translatable\TranslatableTrait;
 
@@ -28,9 +28,9 @@ use TranslatableTrait;
 }
 ```
 
-Then in the DocumentTranslation entity: 
+Then in the DocumentTranslation entity:
 
-```
+```php
 use Knp\DoctrineBehaviors\Contract\Entity\TranslationInterface;
 use Knp\DoctrineBehaviors\Model\Translatable\TranslationTrait;
 
@@ -61,7 +61,7 @@ class DocumentTranslation implements TranslationInterface
 
 Now we can implement an Event Subscriber to listen to the accept-language header on each request:
 
-```
+```php
 <?php
 
 declare(strict_types=1);
@@ -106,8 +106,27 @@ class LocaleSubscriber implements EventSubscriberInterface
 }
 ```
 
+Now we can make a request to `/api/documents` do not for get to add the `Accept-Language` header value, in this case it's set to 'cz'. 
+When you change the `Accept-Language` header value, notice the title change language.
 
-Now we can make a request to `/api/documents.json` do not for get to add the `Accept-Language` header value.
-When you change the `Accept-Language` header value, notice the title change language. 
+```json
+{
+  "@context": "/api/contexts/Document",
+  "@id": "/api/documents",
+  "@type": "hydra:Collection",
+  "hydra:member": [
+    {
+      "@id": "/api/documents/1",
+      "@type": "Document",
+      "id": 1,
+      "newTranslations": [],
+      "currentLocale": "cz",
+      "defaultLocale": "en",
+      "title": "příkladová data",
+      "translationEntityClass": "App\\Entity\\DocumentTranslation"
+    }
+  ]
+}
+```
 
 That's it!
