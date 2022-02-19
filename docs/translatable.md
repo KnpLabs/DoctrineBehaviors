@@ -239,3 +239,11 @@ parameters:
     doctrine_behaviors_translatable_fetch_mode: "LAZY"
     doctrine_behaviors_translation_fetch_mode: "LAZY"
 ```
+
+No joins are created. Only the query strategy is changed.
+
+| Strategy   | Description                                                                                                                        |
+|------------|------------------------------------------------------------------------------------------------------------------------------------|
+| EAGER      | Doctrine always loads the translation.                                                                                             |
+| LAZY       | Doctrine only loads the translation if it's actually used.                                                                         |
+| EXTRA_LAZY | Doctrine only loads the translation if the data is specifically queried. Count and/or contains queries do not trigger new queries. |
