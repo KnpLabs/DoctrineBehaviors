@@ -14,11 +14,16 @@ use Knp\DoctrineBehaviors\Contract\Entity\TranslatableInterface;
 use Knp\DoctrineBehaviors\Model\Translatable\TranslatableTrait;
 
 #[Entity]
-#[InheritanceType("JOINED")]
-#[DiscriminatorColumn(name:"handle", type:"string")]
+#[InheritanceType('JOINED')]
+#[DiscriminatorColumn(name:'handle', type:'string')]
 class TranslatableEntityWithJoinTableInheritance implements TranslatableInterface
 {
     use TranslatableTrait;
+
+    #[Id]
+    #[Column(type: 'integer')]
+    #[GeneratedValue(strategy: 'AUTO')]
+    private int $id;
 
     /**
      * @return mixed
@@ -28,14 +33,8 @@ class TranslatableEntityWithJoinTableInheritance implements TranslatableInterfac
         return $this->proxyCurrentLocaleTranslation($method, $arguments);
     }
 
-    #[Id]
-    #[Column(type: 'integer')]
-    #[GeneratedValue(strategy: 'AUTO')]
-    private int $id;
-
     public function getId(): int
     {
         return $this->id;
     }
-
 }

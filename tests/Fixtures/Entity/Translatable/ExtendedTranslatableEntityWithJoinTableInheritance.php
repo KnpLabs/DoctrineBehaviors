@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Knp\DoctrineBehaviors\Tests\Fixtures\Entity\Translatable;
 
 use Doctrine\ORM\Mapping\Column;
@@ -13,7 +15,6 @@ class ExtendedTranslatableEntityWithJoinTableInheritance extends TranslatableEnt
     private ?string $untranslatedField = null;
 
     /**
-     * @return mixed
      * @throws ShouldNotHappenException
      */
     public function getUntranslatedField(): string
@@ -24,9 +25,6 @@ class ExtendedTranslatableEntityWithJoinTableInheritance extends TranslatableEnt
         return $this->untranslatedField;
     }
 
-    /**
-     * @param mixed $untranslatedField
-     */
     public function setUntranslatedField(String $untranslatedField): void
     {
         $this->untranslatedField = $untranslatedField;

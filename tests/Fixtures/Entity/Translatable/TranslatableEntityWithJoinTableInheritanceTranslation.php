@@ -15,8 +15,8 @@ use Knp\DoctrineBehaviors\Exception\ShouldNotHappenException;
 use Knp\DoctrineBehaviors\Model\Translatable\TranslationTrait;
 
 #[Entity]
-#[InheritanceType("JOINED")]
-#[DiscriminatorColumn(name:"handle", type:"string")]
+#[InheritanceType('JOINED')]
+#[DiscriminatorColumn(name:'handle', type:'string')]
 class TranslatableEntityWithJoinTableInheritanceTranslation implements TranslationInterface
 {
     use TranslationTrait;
