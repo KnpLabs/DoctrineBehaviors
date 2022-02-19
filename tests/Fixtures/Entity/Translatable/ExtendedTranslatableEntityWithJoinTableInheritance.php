@@ -22,6 +22,7 @@ class ExtendedTranslatableEntityWithJoinTableInheritance extends TranslatableEnt
         if ($this->untranslatedField === null) {
             throw new ShouldNotHappenException();
         }
+
         return $this->untranslatedField;
     }
 
