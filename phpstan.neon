@@ -105,6 +105,10 @@ parameters:
                 - tests/Fixtures/Entity/TranslatableCustomizedEntity.php
                 - tests/Fixtures/Entity/Translation/TranslatableCustomizedEntityTranslation.php
 
+        -
+            message: '#There should be no empty class#'
+            path: tests/Fixtures/Entity/Translatable/ExtendedTranslatableEntityWithJoinTableInheritanceTranslation.php
+
         # false positive, already checked for type
         -
             message: '#Cannot call method getName\(\) on ReflectionClass\|null#'
