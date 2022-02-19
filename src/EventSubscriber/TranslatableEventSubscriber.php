@@ -28,9 +28,10 @@ final class TranslatableEventSubscriber implements EventSubscriberInterface
 
     public function __construct(
         private LocaleProviderInterface $localeProvider,
-        string $translatableFetchMode,
-        string $translationFetchMode
-    ) {
+        string                          $translatableFetchMode,
+        string                          $translationFetchMode
+    )
+    {
         $this->translatableFetchMode = $this->convertFetchString($translatableFetchMode);
         $this->translationFetchMode = $this->convertFetchString($translationFetchMode);
     }
@@ -41,7 +42,7 @@ final class TranslatableEventSubscriber implements EventSubscriberInterface
     public function loadClassMetadata(LoadClassMetadataEventArgs $loadClassMetadataEventArgs): void
     {
         $classMetadata = $loadClassMetadataEventArgs->getClassMetadata();
-        if (! $classMetadata->reflClass instanceof ReflectionClass) {
+        if (!$classMetadata->reflClass instanceof ReflectionClass) {
             // Class has not yet been fully built, ignore this event
             return;
         }
@@ -118,7 +119,7 @@ final class TranslatableEventSubscriber implements EventSubscriberInterface
 
     private function mapTranslation(ClassMetadataInfo $classMetadataInfo, ObjectManager $objectManager): void
     {
-        if (! $classMetadataInfo->hasAssociation('translatable')) {
+        if (!$classMetadataInfo->hasAssociation('translatable')) {
             $targetEntity = $classMetadataInfo->getReflectionClass()
                 ->getMethod('getTranslatableEntityClass')
                 ->invoke(null);
@@ -143,13 +144,14 @@ final class TranslatableEventSubscriber implements EventSubscriberInterface
         }
 
         $name = $classMetadataInfo->getTableName() . '_unique_translation';
-        if (! $this->hasUniqueTranslationConstraint($classMetadataInfo, $name)) {
+        if (!$this->hasUniqueTranslationConstraint($classMetadataInfo, $name) &&
+            $classMetadataInfo->getName() === $classMetadataInfo->rootEntityName) {
             $classMetadataInfo->table['uniqueConstraints'][$name] = [
                 'columns' => ['translatable_id', self::LOCALE],
             ];
         }
 
-        if (! $classMetadataInfo->hasField(self::LOCALE) && ! $classMetadataInfo->hasAssociation(self::LOCALE)) {
+        if (!$classMetadataInfo->hasField(self::LOCALE) && !$classMetadataInfo->hasAssociation(self::LOCALE)) {
             $classMetadataInfo->mapField([
                 'fieldName' => self::LOCALE,
                 'type' => 'string',
@@ -161,7 +163,7 @@ final class TranslatableEventSubscriber implements EventSubscriberInterface
     private function setLocales(LifecycleEventArgs $lifecycleEventArgs): void
     {
         $entity = $lifecycleEventArgs->getEntity();
-        if (! $entity instanceof TranslatableInterface) {
+        if (!$entity instanceof TranslatableInterface) {
             return;
         }
 
