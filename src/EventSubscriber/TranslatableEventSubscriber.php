@@ -28,8 +28,8 @@ final class TranslatableEventSubscriber implements EventSubscriberInterface
 
     public function __construct(
         private LocaleProviderInterface $localeProvider,
-        string $translatableFetchMode,
-        string $translationFetchMode
+        string                          $translatableFetchMode,
+        string                          $translationFetchMode
     ) {
         $this->translatableFetchMode = $this->convertFetchString($translatableFetchMode);
         $this->translationFetchMode = $this->convertFetchString($translationFetchMode);
@@ -143,7 +143,8 @@ final class TranslatableEventSubscriber implements EventSubscriberInterface
         }
 
         $name = $classMetadataInfo->getTableName() . '_unique_translation';
-        if (! $this->hasUniqueTranslationConstraint($classMetadataInfo, $name)) {
+        if (! $this->hasUniqueTranslationConstraint($classMetadataInfo, $name) &&
+            $classMetadataInfo->getName() === $classMetadataInfo->rootEntityName) {
             $classMetadataInfo->table['uniqueConstraints'][$name] = [
                 'columns' => ['translatable_id', self::LOCALE],
             ];
