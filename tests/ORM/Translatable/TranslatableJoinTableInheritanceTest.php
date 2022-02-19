@@ -12,7 +12,7 @@ use Knp\DoctrineBehaviors\Tests\Fixtures\Entity\Translatable\ExtendedTranslatabl
 final class TranslatableJoinTableInheritanceTest extends AbstractBehaviorTestCase
 {
     /**
-     * @var ObjectRepository<ExtendedTranslatableEntity>
+     * @var ObjectRepository<ExtendedTranslatableEntityWithJoinTableInheritance>
      */
     private ObjectRepository $objectRepository;
 
