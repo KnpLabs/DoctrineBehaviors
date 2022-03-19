@@ -126,7 +126,7 @@ final class TranslatableEventSubscriber implements EventSubscriberInterface
             /** @var ClassMetadataInfo $targetEntityClassMetadataInfo */
             $targetEntityClassMetadataInfo = $objectManager->getClassMetadata($targetEntity);
 
-            $singleIdentifierFieldName = $targetEntityClassMetadataInfo->getSingleIdentifierFieldName();
+            $singleIdentifierColumnName = $targetEntityClassMetadataInfo->getSingleIdentifierColumnName();
 
             $classMetadataInfo->mapManyToOne([
                 'fieldName' => 'translatable',
@@ -135,7 +135,7 @@ final class TranslatableEventSubscriber implements EventSubscriberInterface
                 'fetch' => $this->translationFetchMode,
                 'joinColumns' => [[
                     'name' => 'translatable_id',
-                    'referencedColumnName' => $singleIdentifierFieldName,
+                    'referencedColumnName' => $singleIdentifierColumnName,
                     'onDelete' => 'CASCADE',
                 ]],
                 'targetEntity' => $targetEntity,
