@@ -32,7 +32,9 @@ final class StaticTranslationTypeHelper
         }
 
         if ($reflectionClass->isInterface()) {
-            if ($reflectionClass->getName() === TranslatableInterface::class) {
+            if ($reflectionClass->getName() === TranslatableInterface::class || $reflectionClass->implementsInterface(
+                TranslatableInterface::class
+            )) {
                 return TranslationInterface::class;
             }
 
@@ -59,7 +61,9 @@ final class StaticTranslationTypeHelper
             ->getNativeReflection();
 
         if ($nativeReflection->isInterface()) {
-            if ($nativeReflection->getName() === TranslationInterface::class) {
+            if ($nativeReflection->getName() === TranslationInterface::class || $nativeReflection->implementsInterface(
+                TranslationInterface::class
+            )) {
                 return TranslatableInterface::class;
             }
 
