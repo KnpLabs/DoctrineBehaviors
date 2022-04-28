@@ -8,9 +8,12 @@ same folder, e.g.:
 
 The default naming convention (or its customization via trait methods) avoids you to manually handle entity associations. It is handled automatically by the `TranslatableEventSubscriber`.
 
+[How to use translatable with api platform?](/docs/translatable-api-platform.md)
+
 ## Entity
 
-You need to add their own id and translatable fields.
+This entity must implement Translation interface, use the Translation trait and have an id. 
+This entity contains the fields you want to be translatable.
 
 ```php
 <?php
@@ -23,43 +26,25 @@ use Doctrine\ORM\Mapping as ORM;
 use Knp\DoctrineBehaviors\Contract\Entity\TranslationInterface;
 use Knp\DoctrineBehaviors\Model\Translatable\TranslationTrait;
 
-/**
- * @ORM\Entity
- */
+#[ORM\Entity]
 class CategoryTranslation implements TranslationInterface
 {
     use TranslationTrait;
 
-    /**
-     * @ORM\Id
-     * @ORM\Column(type="integer")
-     * @ORM\GeneratedValue(strategy="AUTO")
-     */
+    #[ORM\Id]
+    #[ORM\GeneratedValue]
+    #[ORM\Column(type: 'integer')]
     private $id;
 
-    /**
-     * @ORM\Column(type="string", length=255)
-     */
-    protected $name;
-
-    /**
-     * @ORM\Column(type="string", length=255)
-     */
+    #[ORM\Column(type: 'string', length: 255)]
     protected $description;
+    
+    #[ORM\Column(type: 'string', length: 255)]
+    protected $fieldsYouNeedToTranslate;
 
     public function getId(): ?int
     {
         return $this->id;
-    }
-
-    public function getName(): string
-    {
-        return $this->name;
-    }
-
-    public function setName(string $name): void
-    {
-        $this->name = $name;
     }
 
     public function getDescription(): string
@@ -71,14 +56,17 @@ class CategoryTranslation implements TranslationInterface
     {
         $this->description = $description;
     }
+    
+    ...
 }
 ```
 
-The corresponding Category entity needs to `use Translatable;`
-and should only contain fields that you do not need to translate.
+This entity must implement Translatable interface and use Translatable trait. 
+this entity should only contain fields that you don't need to translate.
 
 ```php
 <?php
+
 
 declare(strict_types=1);    
 
@@ -88,23 +76,17 @@ use Doctrine\ORM\Mapping as ORM;
 use Knp\DoctrineBehaviors\Contract\Entity\TranslatableInterface;
 use Knp\DoctrineBehaviors\Model\Translatable\TranslatableTrait;
 
-/**
- * @ORM\Entity
- */
+#[ORM\Entity]
 class Category implements TranslatableInterface
 {
     use TranslatableTrait;
     
-    /**
-     * @ORM\Id
-     * @ORM\Column(type="integer")
-     * @ORM\GeneratedValue(strategy="AUTO")
-     */
+    #[ORM\Id]
+    #[ORM\GeneratedValue]
+    #[ORM\Column(type: 'integer')]
     private $id;
 
-    /**
-     * @ORM\Column(type="string", length=255)
-     */
+    #[ORM\Column(type: 'string', length: 255)]
     protected $someFieldYouDoNotNeedToTranslate;
     
     public function getId(): ?int
