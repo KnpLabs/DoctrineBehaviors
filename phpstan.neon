@@ -6,10 +6,8 @@ includes:
     - vendor/symplify/phpstan-rules/config/doctrine-rules.neon
     - vendor/symplify/phpstan-rules/config/regex-rules.neon
     - vendor/symplify/phpstan-rules/config/services-rules.neon
-    - vendor/symplify/phpstan-rules/config/size-rules.neon
     - vendor/symplify/phpstan-rules/config/forbidden-static-rules.neon
     - vendor/symplify/phpstan-rules/config/string-to-constant-rules.neon
-    - vendor/symplify/phpstan-rules/config/symfony-rules.neon
     - vendor/symplify/phpstan-rules/config/test-rules.neon
 
 parameters:
@@ -82,7 +80,7 @@ parameters:
             path: src/Model/*/*MethodsTrait.php
 
         # known retype
-        - '#Cannot cast array\|bool\|float\|int\|string\|null to string#'
+        - '#Cannot cast array\|bool\|float\|int\|string\|UnitEnum\|null to string#'
 
         -
             message: '#Use required typed property over of nullable property#'
