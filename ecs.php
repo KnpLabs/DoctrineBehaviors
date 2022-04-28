@@ -7,21 +7,13 @@ use PhpCsFixer\Fixer\Import\OrderedImportsFixer;
 use PhpCsFixer\Fixer\Operator\UnaryOperatorSpacesFixer;
 use PhpCsFixer\Fixer\Phpdoc\GeneralPhpdocAnnotationRemoveFixer;
 use PhpCsFixer\Fixer\PhpUnit\PhpUnitStrictFixer;
-use Symfony\Component\DependencyInjection\Loader\Configurator\ContainerConfigurator;
-use Symplify\EasyCodingStandard\ValueObject\Option;
+use Symplify\EasyCodingStandard\Config\ECSConfig;
 use Symplify\EasyCodingStandard\ValueObject\Set\SetList;
 
-return static function (ContainerConfigurator $containerConfigurator): void {
-    $containerConfigurator->import(SetList::PSR_12);
-    $containerConfigurator->import(SetList::SYMPLIFY);
-    $containerConfigurator->import(SetList::COMMON);
-    $containerConfigurator->import(SetList::CLEAN_CODE);
+return static function (ECSConfig $ecsConfig): void {
+    $ecsConfig->sets([SetList::SYMPLIFY, SetList::COMMON, SetList::CLEAN_CODE, SetList::PSR_12]);
 
-    $parameters = $containerConfigurator->parameters();
-
-    $parameters->set(Option::PARALLEL, true);
-
-    $parameters->set(Option::PATHS, [
+    $ecsConfig->paths([
         __DIR__ . '/config',
         __DIR__ . '/src',
         __DIR__ . '/tests',
@@ -30,7 +22,7 @@ return static function (ContainerConfigurator $containerConfigurator): void {
         __DIR__ . '/rector.php',
     ]);
 
-    $parameters->set(Option::SKIP, [
+    $ecsConfig->skip([
         UnaryOperatorSpacesFixer::class,
         PhpUnitStrictFixer::class => [__DIR__ . '/tests/ORM/Timestampable/TimestampableTest.php'],
         OrderedImportsFixer::class => [
@@ -43,15 +35,11 @@ return static function (ContainerConfigurator $containerConfigurator): void {
         \PhpCsFixer\Fixer\FunctionNotation\FunctionTypehintSpaceFixer::class,
     ]);
 
-    $services = $containerConfigurator->services();
+    $ecsConfig->ruleWithConfiguration(HeaderCommentFixer::class, [
+        'header' => '',
+    ]);
 
-    $services->set(HeaderCommentFixer::class)
-        ->call('configure', [[
-            'header' => '',
-        ]]);
-
-    $services->set(GeneralPhpdocAnnotationRemoveFixer::class)
-        ->call('configure', [[
-            'annotations' => ['author', 'package', 'license', 'link', 'abstract'],
-        ]]);
+    $ecsConfig->ruleWithConfiguration(GeneralPhpdocAnnotationRemoveFixer::class, [
+        'annotations' => ['author', 'package', 'license', 'link', 'abstract'],
+    ]);
 };

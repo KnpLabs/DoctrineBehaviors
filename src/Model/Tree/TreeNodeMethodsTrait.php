@@ -229,10 +229,10 @@ trait TreeNodeMethodsTrait
     public function toFlatArray(?Closure $prepare = null, ?array &$tree = null): array
     {
         if ($prepare === null) {
-            $prepare = function (TreeNodeInterface $node) {
-                $pre = $node->getNodeLevel() > 1 ? implode('', array_fill(0, $node->getNodeLevel(), '--')) : '';
+            $prepare = function (TreeNodeInterface $treeNode) {
+                $pre = $treeNode->getNodeLevel() > 1 ? implode('', array_fill(0, $treeNode->getNodeLevel(), '--')) : '';
 
-                return $pre . $node;
+                return $pre . $treeNode;
             };
         }
 

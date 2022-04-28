@@ -10,13 +10,13 @@ use Knp\DoctrineBehaviors\Tests\Provider\TestLocaleProvider;
 use Knp\DoctrineBehaviors\Tests\Provider\TestUserProvider;
 use Psr\Log\Test\TestLogger;
 use Symfony\Component\DependencyInjection\Loader\Configurator\ContainerConfigurator;
-use function Symfony\Component\DependencyInjection\Loader\Configurator\service;
 use Symfony\Component\Security\Core\Security;
-use function Symplify\Amnesia\Functions\env;
 use Symplify\Amnesia\ValueObject\Symfony\Extension\Doctrine\DBAL;
 use Symplify\Amnesia\ValueObject\Symfony\Extension\Doctrine\Mapping;
 use Symplify\Amnesia\ValueObject\Symfony\Extension\Doctrine\ORM;
 use Symplify\Amnesia\ValueObject\Symfony\Extension\DoctrineExtension;
+use function Symfony\Component\DependencyInjection\Loader\Configurator\service;
+use function Symplify\Amnesia\Functions\env;
 
 return static function (ContainerConfigurator $containerConfigurator): void {
     $parameters = $containerConfigurator->parameters();
