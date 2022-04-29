@@ -30,7 +30,7 @@ trait TreeTrait
     /**
      * Returns a node hydrated with its children and parents
      *
-     * @return TreeNodeInterface[]|ArrayAccess|null
+     * @return TreeNodeInterface|ArrayAccess|null
      */
     public function getTree(string $path = '', string $rootAlias = 't', array $extraParams = [])
     {
@@ -53,7 +53,7 @@ trait TreeTrait
     /**
      * Extracts the root node and constructs a tree using flat resultset
      *
-     * @return ArrayAccess|TreeNodeInterface[]|null
+     * @return ArrayAccess|TreeNodeInterface|null
      */
     public function buildTree(array $results)
     {
