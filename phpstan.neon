@@ -5,9 +5,7 @@ includes:
     - vendor/symplify/phpstan-rules/config/array-rules.neon
     - vendor/symplify/phpstan-rules/config/doctrine-rules.neon
     - vendor/symplify/phpstan-rules/config/regex-rules.neon
-    - vendor/symplify/phpstan-rules/config/services-rules.neon
     - vendor/symplify/phpstan-rules/config/forbidden-static-rules.neon
-    - vendor/symplify/phpstan-rules/config/string-to-constant-rules.neon
     - vendor/symplify/phpstan-rules/config/test-rules.neon
 
 parameters:
