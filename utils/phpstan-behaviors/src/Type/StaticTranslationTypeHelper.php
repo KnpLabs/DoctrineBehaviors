@@ -55,22 +55,22 @@ final class StaticTranslationTypeHelper
     ): string {
         $type = $scope->getType($methodCall->var);
         $translationClass = $type->getReferencedClasses()[0];
-        $reflectionClass = $reflectionProvider->getClass($translationClass)
+        $nativeReflection = $reflectionProvider->getClass($translationClass)
             ->getNativeReflection();
 
-        if ($reflectionClass->isInterface()) {
-            if ($reflectionClass->getName() === TranslationInterface::class) {
+        if ($nativeReflection->isInterface()) {
+            if ($nativeReflection->getName() === TranslationInterface::class) {
                 return TranslatableInterface::class;
             }
 
             $errorMessage = sprintf(
                 'Unable to find the Translatable class associated to the Translation class "%s".',
-                $reflectionClass->getName()
+                $nativeReflection->getName()
             );
             throw new PHPStanTypeException($errorMessage);
         }
 
-        return $reflectionClass
+        return $nativeReflection
             ->getMethod('getTranslatableEntityClass')
             ->invoke(null);
     }

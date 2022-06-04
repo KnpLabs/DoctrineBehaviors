@@ -7,6 +7,7 @@ namespace Knp\DoctrineBehaviors\Tests\ORM\Translatable;
 use Doctrine\Persistence\ObjectRepository;
 use Knp\DoctrineBehaviors\Tests\AbstractBehaviorTestCase;
 use Knp\DoctrineBehaviors\Tests\Fixtures\Entity\Translatable\ExtendedTranslatableEntity;
+use Knp\DoctrineBehaviors\Tests\Fixtures\Entity\Translatable\ExtendedTranslatableEntityTranslation;
 
 final class TranslatableInheritanceTest extends AbstractBehaviorTestCase
 {
@@ -25,20 +26,22 @@ final class TranslatableInheritanceTest extends AbstractBehaviorTestCase
     public function testShouldPersistTranslationsWithInheritance(): void
     {
         $entity = new ExtendedTranslatableEntity();
-        $entity->translate('fr')
-            ->setTitle('fabuleux');
-        $entity->translate('fr')
-            ->setExtendedTitle('fabuleux');
 
-        $entity->translate('en')
-            ->setTitle('awesome');
-        $entity->translate('en')
-            ->setExtendedTitle('awesome');
+        /** @var ExtendedTranslatableEntityTranslation $frenchEntity */
+        $frenchEntity = $entity->translate('fr');
+        $frenchEntity->setTitle('fabuleux');
+        $frenchEntity->setExtendedTitle('fabuleux');
 
-        $entity->translate('ru')
-            ->setTitle('удивительный');
-        $entity->translate('ru')
-            ->setExtendedTitle('удивительный');
+        /** @var ExtendedTranslatableEntityTranslation $englishEntity */
+        $englishEntity = $entity->translate('en');
+        $englishEntity->setTitle('awesome');
+        $englishEntity->setExtendedTitle('awesome');
+
+        /** @var ExtendedTranslatableEntityTranslation $russianEntity */
+        $russianEntity = $entity->translate('ru');
+        $russianEntity->setTitle('удивительный');
+        $russianEntity->setExtendedTitle('удивительный');
+
         $entity->mergeNewTranslations();
 
         $this->entityManager->persist($entity);
@@ -51,13 +54,19 @@ final class TranslatableInheritanceTest extends AbstractBehaviorTestCase
         /** @var ExtendedTranslatableEntity $entity */
         $entity = $this->objectRepository->find($id);
 
-        $this->assertSame('fabuleux', $entity->translate('fr')->getTitle());
-        $this->assertSame('fabuleux', $entity->translate('fr')->getExtendedTitle());
+        /** @var ExtendedTranslatableEntityTranslation $frenchEntity */
+        $frenchEntity = $entity->translate('fr');
+        $this->assertSame('fabuleux', $frenchEntity->getTitle());
+        $this->assertSame('fabuleux', $frenchEntity->getExtendedTitle());
 
-        $this->assertSame('awesome', $entity->translate('en')->getTitle());
-        $this->assertSame('awesome', $entity->translate('en')->getExtendedTitle());
+        /** @var ExtendedTranslatableEntityTranslation $englishEntity */
+        $englishEntity = $entity->translate('en');
+        $this->assertSame('awesome', $englishEntity->getTitle());
+        $this->assertSame('awesome', $englishEntity->getExtendedTitle());
 
-        $this->assertSame('удивительный', $entity->translate('ru')->getTitle());
-        $this->assertSame('удивительный', $entity->translate('ru')->getExtendedTitle());
+        /** @var ExtendedTranslatableEntityTranslation $russianEntity */
+        $russianEntity = $entity->translate('ru');
+        $this->assertSame('удивительный', $russianEntity->getTitle());
+        $this->assertSame('удивительный', $russianEntity->getExtendedTitle());
     }
 }

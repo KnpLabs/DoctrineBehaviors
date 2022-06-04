@@ -34,7 +34,7 @@ final class DatabaseLoader
     }
 
     /**
-     * @param string[] $entityClasses
+     * @param class-string[] $entityClasses
      */
     public function reloadEntityClasses(array $entityClasses): void
     {

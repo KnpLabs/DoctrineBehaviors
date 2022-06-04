@@ -384,6 +384,8 @@ final class TranslatableTest extends AbstractBehaviorTestCase
     }
 
     /**
+     * @param class-string $translatableClass
+     * @param class-string $translationClass
      * Asserts that the one to many relationship between translatable and translations is mapped correctly.
      */
     private function assertTranslationsOneToManyMapped(string $translatableClass, string $translationClass): void

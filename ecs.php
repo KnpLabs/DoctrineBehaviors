@@ -2,11 +2,9 @@
 
 declare(strict_types=1);
 
-use PhpCsFixer\Fixer\Comment\HeaderCommentFixer;
 use PhpCsFixer\Fixer\Import\OrderedImportsFixer;
 use PhpCsFixer\Fixer\Operator\UnaryOperatorSpacesFixer;
 use PhpCsFixer\Fixer\Phpdoc\GeneralPhpdocAnnotationRemoveFixer;
-use PhpCsFixer\Fixer\PhpUnit\PhpUnitStrictFixer;
 use Symplify\EasyCodingStandard\Config\ECSConfig;
 use Symplify\EasyCodingStandard\ValueObject\Set\SetList;
 
@@ -24,19 +22,11 @@ return static function (ECSConfig $ecsConfig): void {
 
     $ecsConfig->skip([
         UnaryOperatorSpacesFixer::class,
-        PhpUnitStrictFixer::class => [__DIR__ . '/tests/ORM/Timestampable/TimestampableTest.php'],
         OrderedImportsFixer::class => [
             __DIR__ . '/tests/Fixtures/Entity/AbstractTimestampableMappedSuperclassEntity.php',
         ],
         __DIR__ . '/src/Bundle/DoctrineBehaviorsBundle.php',
         __DIR__ . '/src/DoctrineBehaviorsBundle.php',
-
-        // broken on PHP 8.1
-        \PhpCsFixer\Fixer\FunctionNotation\FunctionTypehintSpaceFixer::class,
-    ]);
-
-    $ecsConfig->ruleWithConfiguration(HeaderCommentFixer::class, [
-        'header' => '',
     ]);
 
     $ecsConfig->ruleWithConfiguration(GeneralPhpdocAnnotationRemoveFixer::class, [

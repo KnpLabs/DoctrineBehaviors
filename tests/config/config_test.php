@@ -11,12 +11,7 @@ use Knp\DoctrineBehaviors\Tests\Provider\TestUserProvider;
 use Psr\Log\Test\TestLogger;
 use Symfony\Component\DependencyInjection\Loader\Configurator\ContainerConfigurator;
 use Symfony\Component\Security\Core\Security;
-use Symplify\Amnesia\ValueObject\Symfony\Extension\Doctrine\DBAL;
-use Symplify\Amnesia\ValueObject\Symfony\Extension\Doctrine\Mapping;
-use Symplify\Amnesia\ValueObject\Symfony\Extension\Doctrine\ORM;
-use Symplify\Amnesia\ValueObject\Symfony\Extension\DoctrineExtension;
 use function Symfony\Component\DependencyInjection\Loader\Configurator\service;
-use function Symplify\Amnesia\Functions\env;
 
 return static function (ContainerConfigurator $containerConfigurator): void {
     $parameters = $containerConfigurator->parameters();
@@ -53,25 +48,24 @@ return static function (ContainerConfigurator $containerConfigurator): void {
     $services->set(LoggableEventSubscriber::class)
         ->arg('$logger', service(TestLogger::class));
 
-    $containerConfigurator->extension(DoctrineExtension::NAME, [
-        DoctrineExtension::DBAL => [
-            DBAL::DBNAME => env('DB_NAME'),
-            DBAL::HOST => env('DB_HOST'),
-            DBAL::USER => env('DB_USER'),
-            DBAL::PASSWORD => env('DB_PASSWD'),
-            DBAL::DRIVER => env('DB_ENGINE'),
-            DBAL::MEMORY => (bool) env('DB_MEMORY'),
+    $containerConfigurator->extension('doctrine', [
+        'dbal' => [
+            'dbname' => '%env(DB_NAME)%',
+            'host' => '%env(DB_HOST)%',
+            'user' => '%env(DB_USER)%',
+            'password' => '%env(DB_PASSWD)%',
+            'driver' => '%env(DB_ENGINE)%',
+            'memory' => '%env(bool:DB_MEMORY)%',
         ],
-
-        DoctrineExtension::ORM => [
-            ORM::AUTO_MAPPING => true,
-            ORM::MAPPINGS => [
+        'orm' => [
+            'auto_mapping' => true,
+            'mappings' => [
                 [
-                    Mapping::NAME => 'DoctrineBehaviors',
-                    Mapping::TYPE => 'attribute',
-                    Mapping::PREFIX => 'Knp\DoctrineBehaviors\Tests\Fixtures\Entity\\',
-                    Mapping::DIR => __DIR__ . '/../../tests/Fixtures/Entity',
-                    Mapping::IS_BUNDLE => false,
+                    'name' => 'DoctrineBehaviors',
+                    'type' => 'attribute',
+                    'prefix' => 'Knp\DoctrineBehaviors\Tests\Fixtures\Entity\\',
+                    'dir' => __DIR__ . '/../../tests/Fixtures/Entity',
+                    'is_bundle' => false,
                 ],
             ],
         ],
