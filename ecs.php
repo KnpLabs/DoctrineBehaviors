@@ -2,7 +2,6 @@
 
 declare(strict_types=1);
 
-use PhpCsFixer\Fixer\Comment\HeaderCommentFixer;
 use PhpCsFixer\Fixer\Import\OrderedImportsFixer;
 use PhpCsFixer\Fixer\Operator\UnaryOperatorSpacesFixer;
 use PhpCsFixer\Fixer\Phpdoc\GeneralPhpdocAnnotationRemoveFixer;
@@ -32,11 +31,7 @@ return static function (ECSConfig $ecsConfig): void {
         __DIR__ . '/src/DoctrineBehaviorsBundle.php',
 
         // broken on PHP 8.1
-        \PhpCsFixer\Fixer\FunctionNotation\FunctionTypehintSpaceFixer::class,
-    ]);
-
-    $ecsConfig->ruleWithConfiguration(HeaderCommentFixer::class, [
-        'header' => '',
+        //\PhpCsFixer\Fixer\FunctionNotation\FunctionTypehintSpaceFixer::class,
     ]);
 
     $ecsConfig->ruleWithConfiguration(GeneralPhpdocAnnotationRemoveFixer::class, [
