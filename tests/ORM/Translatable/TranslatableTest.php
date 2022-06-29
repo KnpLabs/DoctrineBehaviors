@@ -9,6 +9,7 @@ use Doctrine\Persistence\ObjectRepository;
 use Knp\DoctrineBehaviors\Contract\Entity\TranslatableInterface;
 use Knp\DoctrineBehaviors\Contract\Entity\TranslationInterface;
 use Knp\DoctrineBehaviors\Tests\AbstractBehaviorTestCase;
+use Knp\DoctrineBehaviors\Tests\Fixtures\Contract\Translatable\TranslatableEntityWithCustomInterface;
 use Knp\DoctrineBehaviors\Tests\Fixtures\Entity\TranslatableCustomIdentifierEntity;
 use Knp\DoctrineBehaviors\Tests\Fixtures\Entity\TranslatableCustomizedEntity;
 use Knp\DoctrineBehaviors\Tests\Fixtures\Entity\TranslatableEntity;
@@ -381,6 +382,16 @@ final class TranslatableTest extends AbstractBehaviorTestCase
         $this->assertFalse($translatableEntity->translate('en')->isEmpty());
         $this->assertSame('0', $translatableEntity->translate('fr')->getTitle());
         $this->assertSame('0', $translatableEntity->translate('en')->getTitle());
+    }
+
+    public function testCustomInterface(): void
+    {
+        $translatableEntityWithCustom = new TranslatableEntityWithCustomInterface();
+        $translatableEntityWithCustom->translate('en')
+            ->setTitle('awesome');
+        $translatableEntityWithCustom->mergeNewTranslations();
+
+        $this->assertSame('awesome', $translatableEntityWithCustom->translate('en')->getTitle());
     }
 
     /**
