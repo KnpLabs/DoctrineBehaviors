@@ -123,10 +123,10 @@ final class TranslatableEventSubscriber implements EventSubscriberInterface
                 ->getMethod('getTranslatableEntityClass')
                 ->invoke(null);
 
-            /** @var ClassMetadataInfo $targetEntityClassMetadataInfo */
-            $targetEntityClassMetadataInfo = $objectManager->getClassMetadata($targetEntity);
+            /** @var ClassMetadataInfo $classMetadata */
+            $classMetadata = $objectManager->getClassMetadata($targetEntity);
 
-            $singleIdentifierFieldName = $targetEntityClassMetadataInfo->getSingleIdentifierFieldName();
+            $singleIdentifierFieldName = $classMetadata->getSingleIdentifierFieldName();
 
             $classMetadataInfo->mapManyToOne([
                 'fieldName' => 'translatable',
