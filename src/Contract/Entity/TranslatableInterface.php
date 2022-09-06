@@ -6,20 +6,29 @@ namespace Knp\DoctrineBehaviors\Contract\Entity;
 
 use Doctrine\Common\Collections\Collection;
 
+/**
+ * @template T of TranslationInterface
+ */
 interface TranslatableInterface
 {
     /**
-     * @return Collection<string, TranslationInterface>
+     * @return Collection<string, T>
      */
     public function getTranslations();
 
     /**
-     * @return Collection<string, TranslationInterface>
+     * @return Collection<string, T>
      */
     public function getNewTranslations(): Collection;
 
+    /**
+     * @param T $translation
+     */
     public function addTranslation(TranslationInterface $translation): void;
 
+    /**
+     * @param T $translation
+     */
     public function removeTranslation(TranslationInterface $translation): void;
 
     /**
@@ -28,6 +37,8 @@ interface TranslatableInterface
      * newTranslations collection. In order to persist new translations, call mergeNewTranslations method, before flush
      *
      * @param string $locale The locale (en, ru, fr) | null If null, will try with current locale
+     *
+     * @return T
      */
     public function translate(?string $locale = null, bool $fallbackToDefault = true): TranslationInterface;
 
@@ -44,5 +55,8 @@ interface TranslatableInterface
 
     public function getDefaultLocale(): string;
 
+    /**
+     * @return class-string<T>
+     */
     public static function getTranslationEntityClass(): string;
 }
