@@ -93,6 +93,13 @@ use Symfony\Component\HttpKernel\KernelEvents;
 class LocaleSubscriber implements EventSubscriberInterface
 {
     /**
+     * @param array<string> $availableLocales
+     */
+    public function __construct(private readonly array $availableLocales)
+    {
+    }
+    
+    /**
      * @return array<string, array<int[]|string[]>>
      */
     public static function getSubscribedEvents(): array
