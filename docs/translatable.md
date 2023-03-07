@@ -6,7 +6,7 @@ same folder, e.g.:
 - `app/Entity/Category.php`
 - `app/Entity/CategoryTranslation.php`
 
-The default naming convention (or its customization via trait methods) avoids you to manually handle entity associations. It is handled automatically by the `TranslatableEventSubscriber`.
+The default naming convention (or its customization via trait methods) avoids you having to manually handle entity associations. It is handled automatically by the `TranslatableEventSubscriber`.
 
 [How to use translatable with api platform?](/docs/translatable-api-platform.md)
 
