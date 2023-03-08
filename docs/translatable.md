@@ -122,11 +122,11 @@ $category->translate('en')->getName();
 
 In case you prefer to use a different class name for the translation entity, or want to use a separate namespace, you have 2 ways:
 
-If you want to define a custom translation entity class name globally: Override the trait `Translatable` and his  method `getTranslationEntityClass` and the trait `Translation` and his method `getTranslatableEntityClass` in the translation entity.
+If you want to define a custom translation entity class name globally: Override the trait `Translatable` and its  method `getTranslationEntityClass` and the trait `Translation` and its method `getTranslatableEntityClass` in the translation entity.
 
 If you override one, you also need to override the other to return the inverse class.
 
-Example: Let's say you want to create a sub namespace AppBundle\Entity\Translation to stock translations classes
+Example: Let's say you want to create a sub namespace App\Entity\Translation to stock translations classes
 then put overrided traits in that folder.
 
 ```php
@@ -134,7 +134,7 @@ then put overrided traits in that folder.
 
 declare(strict_types=1);
 
-namespace AppBundle\Behavior;
+namespace App\Behavior;
 
 use Knp\DoctrineBehaviors\Model\Translatable\TranslatableTrait;
 
@@ -157,7 +157,7 @@ trait TranslatableTrait
 
 declare(strict_types=1);
 
-namespace AppBundle\Behavior;
+namespace App\Behavior;
 
 use Knp\DoctrineBehaviors\Model\Translatable\TranslationTrait;
 
