@@ -106,7 +106,7 @@ class LocaleSubscriber implements EventSubscriberInterface
 }
 ```
 
-Now we can make a request to `/api/documents` do not for get to add the `Accept-Language` header value, in this case it's set to 'cz'. 
+Now we can make a request to `/api/documents` do not forget to add the `Accept-Language` header value, in this case it's set to 'cz'. 
 When you change the `Accept-Language` header value, notice the title change language.
 
 ```json
