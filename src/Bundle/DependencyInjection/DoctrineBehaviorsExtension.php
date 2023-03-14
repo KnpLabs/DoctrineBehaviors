@@ -11,8 +11,9 @@ use Symfony\Component\DependencyInjection\Loader\PhpFileLoader;
 
 final class DoctrineBehaviorsExtension extends Extension
 {
+
     /**
-     * @param string[] $configs
+     * @inheritDoc
      */
     public function load(array $configs, ContainerBuilder $containerBuilder): void
     {
