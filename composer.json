@@ -20,9 +20,9 @@
         "symfony/cache": "^5.4|^6.0",
         "symfony/dependency-injection": "^5.4|^6.0",
         "symfony/http-kernel": "^5.4|^6.0",
-        "symfony/security-core": "^5.4|^6.0",
         "symfony/framework-bundle": "^5.4|^6.0",
         "symfony/string": "^5.4|^6.0",
+        "symfony/security-bundle": "^5.4|^6.0",
         "symfony/translation-contracts": "^2.4|^3.0",
         "nette/utils": "^3.2",
         "ramsey/uuid": "^4.2"
