@@ -16,7 +16,7 @@
         "doctrine/persistence": "^2.5|^3.0",
         "doctrine/dbal": "^3.3",
         "doctrine/orm": "^2.12",
-        "doctrine/doctrine-bundle": "^2.6",
+        "doctrine/doctrine-bundle": "^2.7.2",
         "symfony/cache": "^5.4|^6.0",
         "symfony/dependency-injection": "^5.4|^6.0",
         "symfony/http-kernel": "^5.4|^6.0",
