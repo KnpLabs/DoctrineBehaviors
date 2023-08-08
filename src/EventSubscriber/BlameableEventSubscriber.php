@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace Knp\DoctrineBehaviors\EventSubscriber;
 
-use Doctrine\Bundle\DoctrineBundle\EventSubscriber\EventSubscriberInterface;
+use Doctrine\Bundle\DoctrineBundle\Attribute\AsDoctrineListener;
 use Doctrine\ORM\EntityManagerInterface;
 use Doctrine\ORM\Event\LifecycleEventArgs;
 use Doctrine\ORM\Event\LoadClassMetadataEventArgs;
@@ -14,7 +14,11 @@ use Doctrine\ORM\UnitOfWork;
 use Knp\DoctrineBehaviors\Contract\Entity\BlameableInterface;
 use Knp\DoctrineBehaviors\Contract\Provider\UserProviderInterface;
 
-final class BlameableEventSubscriber implements EventSubscriberInterface
+#[AsDoctrineListener(event: Events::loadClassMetadata)]
+#[AsDoctrineListener(event: Events::prePersist)]
+#[AsDoctrineListener(event: Events::preUpdate)]
+#[AsDoctrineListener(event: Events::preRemove)]
+final class BlameableEventSubscriber
 {
     /**
      * @var string
@@ -129,14 +133,6 @@ final class BlameableEventSubscriber implements EventSubscriberInterface
 
         $this->getUnitOfWork()
             ->propertyChanged($entity, self::DELETED_BY, $oldDeletedBy, $user);
-    }
-
-    /**
-     * @return string[]
-     */
-    public function getSubscribedEvents(): array
-    {
-        return [Events::prePersist, Events::preUpdate, Events::preRemove, Events::loadClassMetadata];
     }
 
     private function mapEntity(ClassMetadataInfo $classMetadataInfo): void
