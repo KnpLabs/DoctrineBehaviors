@@ -8,8 +8,10 @@ use Symfony\Bundle\SecurityBundle\Security as SecurityBundle;
 use Symfony\Component\Security\Core\Authentication\Token\TokenInterface;
 use Symfony\Component\Security\Core\Security as SecurityCore;
 
-if (class_exists(SecurityBundle::class)) {
-    final class Security {
+if (class_exists(SecurityBundle::class))
+{
+    final class Security
+    {
         public function __construct(
             private SecurityBundle $security,
         ) {
@@ -20,7 +22,8 @@ if (class_exists(SecurityBundle::class)) {
             return $this->security->getToken();
         }
     }
-} elseif (class_exists(SecurityCore::class)) {
+} elseif (class_exists(SecurityCore::class))
+{
     final class Security {
         public function __construct(
             private SecurityCore $security,
@@ -33,5 +36,8 @@ if (class_exists(SecurityBundle::class)) {
         }
     }
 } else {
-    throw new \LogicException(sprintf('You cannot use "%s" because either the Symfony Security Bundle or Symfony Security Core is not installed. If you use Symfony 6.2+, try running "composer require symfony/security-bundle", otherwise run "composer require symfony/security-core".', __CLASS__));
+    throw new \LogicException(sprintf(
+        'You cannot use "%s" because either the Symfony Security Bundle or Symfony Security Core is not installed. If you use Symfony 6.2+, try running "composer require symfony/security-bundle", otherwise run "composer require symfony/security-core".',
+        __CLASS__
+    ));
 }
