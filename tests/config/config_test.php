@@ -2,13 +2,13 @@
 
 declare(strict_types=1);
 
+use Doctrine\ORM\EntityManagerInterface;
 use Knp\DoctrineBehaviors\Contract\Provider\LocaleProviderInterface;
 use Knp\DoctrineBehaviors\Contract\Provider\UserProviderInterface;
 use Knp\DoctrineBehaviors\EventSubscriber\LoggableEventSubscriber;
 use Knp\DoctrineBehaviors\Tests\DatabaseLoader;
 use Knp\DoctrineBehaviors\Tests\Provider\TestLocaleProvider;
 use Knp\DoctrineBehaviors\Tests\Provider\TestUserProvider;
-use Knp\DoctrineBehaviors\Security\Security;
 use Psr\Log\Test\TestLogger;
 use Symfony\Component\DependencyInjection\Loader\Configurator\ContainerConfigurator;
 use function Symfony\Component\DependencyInjection\Loader\Configurator\service;
@@ -32,8 +32,14 @@ return static function (ContainerConfigurator $containerConfigurator): void {
         ->autowire()
         ->autoconfigure();
 
-    $services->set(Security::class)
-        ->arg('$container', service('service_container'));
+    if (class_exists(Symfony\Bundle\SecurityBundle\Security::class)) {
+        $services->set(Symfony\Bundle\SecurityBundle\Security::class)
+            ->arg('$container', service('service_container'));
+    }
+    if (class_exists(Symfony\Component\Security\Core\Security::class)) {
+        $services->set(Symfony\Component\Security\Core\Security::class)
+            ->arg('$container', service('service_container'));
+    }
 
     $services->set(TestLogger::class);
 
@@ -46,6 +52,7 @@ return static function (ContainerConfigurator $containerConfigurator): void {
     $services->set(DatabaseLoader::class);
 
     $services->set(LoggableEventSubscriber::class)
+        ->arg('$entityManager', service(EntityManagerInterface::class))
         ->arg('$logger', service(TestLogger::class));
 
     $containerConfigurator->extension('doctrine', [
