@@ -6,10 +6,10 @@ namespace Knp\DoctrineBehaviors\EventSubscriber;
 
 use Doctrine\Bundle\DoctrineBundle\Attribute\AsDoctrineListener;
 use Doctrine\ORM\EntityManagerInterface;
-use Doctrine\ORM\Event\LifecycleEventArgs;
 use Doctrine\ORM\Event\LoadClassMetadataEventArgs;
 use Doctrine\ORM\Events;
 use Doctrine\ORM\Mapping\ClassMetadataInfo;
+use Doctrine\Persistence\Event\LifecycleEventArgs as BaseLifecycleEventArgs;
 use Knp\DoctrineBehaviors\Contract\Entity\SluggableInterface;
 use Knp\DoctrineBehaviors\Repository\DefaultSluggableRepository;
 
@@ -43,12 +43,12 @@ final class SluggableEventSubscriber
         ]);
     }
 
-    public function prePersist(LifecycleEventArgs $lifecycleEventArgs): void
+    public function prePersist(BaseLifecycleEventArgs $lifecycleEventArgs): void
     {
         $this->processLifecycleEventArgs($lifecycleEventArgs);
     }
 
-    public function preUpdate(LifecycleEventArgs $lifecycleEventArgs): void
+    public function preUpdate(BaseLifecycleEventArgs $lifecycleEventArgs): void
     {
         $this->processLifecycleEventArgs($lifecycleEventArgs);
     }
@@ -62,9 +62,9 @@ final class SluggableEventSubscriber
         return $classMetadataInfo->hasField(self::SLUG);
     }
 
-    private function processLifecycleEventArgs(LifecycleEventArgs $lifecycleEventArgs): void
+    private function processLifecycleEventArgs(BaseLifecycleEventArgs $lifecycleEventArgs): void
     {
-        $entity = $lifecycleEventArgs->getEntity();
+        $entity = $lifecycleEventArgs->getObject();
         if (! $entity instanceof SluggableInterface) {
             return;
         }

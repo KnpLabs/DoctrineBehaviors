@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace Knp\DoctrineBehaviors\EventSubscriber;
 
 use Doctrine\Bundle\DoctrineBundle\Attribute\AsDoctrineListener;
+use Doctrine\ORM\EntityManagerInterface;
 use Doctrine\ORM\Event\LoadClassMetadataEventArgs;
 use Doctrine\ORM\Event\OnFlushEventArgs;
 use Doctrine\ORM\Events;
@@ -14,6 +15,11 @@ use Knp\DoctrineBehaviors\Contract\Entity\SoftDeletableInterface;
 #[AsDoctrineListener(event: Events::onFlush)]
 final class SoftDeletableEventSubscriber
 {
+    public function __construct(
+        private EntityManagerInterface $entityManager,
+    ) {
+    }
+
     /**
      * @var string
      */
@@ -21,8 +27,7 @@ final class SoftDeletableEventSubscriber
 
     public function onFlush(OnFlushEventArgs $onFlushEventArgs): void
     {
-        $entityManager = $onFlushEventArgs->getEntityManager();
-        $unitOfWork = $entityManager->getUnitOfWork();
+        $unitOfWork = $this->entityManager->getUnitOfWork();
 
         foreach ($unitOfWork->getScheduledEntityDeletions() as $entity) {
             if (! $entity instanceof SoftDeletableInterface) {
@@ -32,7 +37,7 @@ final class SoftDeletableEventSubscriber
             $oldValue = $entity->getDeletedAt();
 
             $entity->delete();
-            $entityManager->persist($entity);
+            $this->entityManager->persist($entity);
 
             $unitOfWork->propertyChanged($entity, self::DELETED_AT, $oldValue, $entity->getDeletedAt());
             $unitOfWork->scheduleExtraUpdate($entity, [
@@ -63,5 +68,4 @@ final class SoftDeletableEventSubscriber
             'nullable' => true,
         ]);
     }
-
 }

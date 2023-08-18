@@ -5,8 +5,9 @@ declare(strict_types=1);
 namespace Knp\DoctrineBehaviors\EventSubscriber;
 
 use Doctrine\Bundle\DoctrineBundle\Attribute\AsDoctrineListener;
-use Doctrine\ORM\Event\LifecycleEventArgs;
+use Doctrine\ORM\EntityManagerInterface;
 use Doctrine\ORM\Events;
+use Doctrine\Persistence\Event\LifecycleEventArgs as BaseLifecycleEventArgs;
 use Knp\DoctrineBehaviors\Contract\Entity\LoggableInterface;
 use Psr\Log\LoggerInterface;
 use Psr\Log\LogLevel;
@@ -17,13 +18,14 @@ use Psr\Log\LogLevel;
 final class LoggableEventSubscriber
 {
     public function __construct(
+        private EntityManagerInterface $entityManager,
         private LoggerInterface $logger
     ) {
     }
 
-    public function postPersist(LifecycleEventArgs $lifecycleEventArgs): void
+    public function postPersist(BaseLifecycleEventArgs $lifecycleEventArgs): void
     {
-        $entity = $lifecycleEventArgs->getEntity();
+        $entity = $lifecycleEventArgs->getObject();
         if (! $entity instanceof LoggableInterface) {
             return;
         }
@@ -34,9 +36,9 @@ final class LoggableEventSubscriber
         $this->logChangeSet($lifecycleEventArgs);
     }
 
-    public function postUpdate(LifecycleEventArgs $lifecycleEventArgs): void
+    public function postUpdate(BaseLifecycleEventArgs $lifecycleEventArgs): void
     {
-        $entity = $lifecycleEventArgs->getEntity();
+        $entity = $lifecycleEventArgs->getObject();
         if (! $entity instanceof LoggableInterface) {
             return;
         }
@@ -44,9 +46,9 @@ final class LoggableEventSubscriber
         $this->logChangeSet($lifecycleEventArgs);
     }
 
-    public function preRemove(LifecycleEventArgs $lifecycleEventArgs): void
+    public function preRemove(BaseLifecycleEventArgs $lifecycleEventArgs): void
     {
-        $entity = $lifecycleEventArgs->getEntity();
+        $entity = $lifecycleEventArgs->getObject();
 
         if ($entity instanceof LoggableInterface) {
             $this->logger->log(LogLevel::INFO, $entity->getRemoveLogMessage());
@@ -56,14 +58,13 @@ final class LoggableEventSubscriber
     /**
      * Logs entity changeset
      */
-    private function logChangeSet(LifecycleEventArgs $lifecycleEventArgs): void
+    private function logChangeSet(BaseLifecycleEventArgs $lifecycleEventArgs): void
     {
-        $entityManager = $lifecycleEventArgs->getEntityManager();
-        $unitOfWork = $entityManager->getUnitOfWork();
-        $entity = $lifecycleEventArgs->getEntity();
+        $unitOfWork = $this->entityManager->getUnitOfWork();
+        $entity = $lifecycleEventArgs->getObject();
 
         $entityClass = $entity::class;
-        $classMetadata = $entityManager->getClassMetadata($entityClass);
+        $classMetadata = $this->entityManager->getClassMetadata($entityClass);
 
         /** @var LoggableInterface $entity */
         $unitOfWork->computeChangeSet($classMetadata, $entity);
