@@ -196,7 +196,7 @@ trait TreeNodeMethodsTrait
      */
     public function toArray(?Closure $prepare = null, ?array &$tree = null): array
     {
-        if (!$prepare instanceof Closure) {
+        if (! $prepare instanceof Closure) {
             $prepare = static fn (TreeNodeInterface $treeNode): string => (string) $treeNode;
         }
 
@@ -228,7 +228,7 @@ trait TreeNodeMethodsTrait
      */
     public function toFlatArray(?Closure $prepare = null, ?array &$tree = null): array
     {
-        if (!$prepare instanceof Closure) {
+        if (! $prepare instanceof Closure) {
             $prepare = static function (TreeNodeInterface $treeNode) {
                 $pre = $treeNode->getNodeLevel() > 1 ? implode('', array_fill(0, $treeNode->getNodeLevel(), '--')) : '';
                 return $pre . $treeNode;
@@ -268,10 +268,7 @@ trait TreeNodeMethodsTrait
         unset($this->getChildNodes()[$offset]);
     }
 
-    /**
-     * @return mixed
-     */
-    public function offsetGet(mixed $offset)
+    public function offsetGet(mixed $offset): mixed
     {
         return $this->getChildNodes()[$offset];
     }

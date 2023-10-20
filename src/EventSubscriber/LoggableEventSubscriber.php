@@ -67,7 +67,7 @@ final class LoggableEventSubscriber
         $entityClass = $object::class;
         $classMetadata = $entityManager->getClassMetadata($entityClass);
 
-        /** @var LoggableInterface $entity */
+        /** @var LoggableInterface $object */
         $unitOfWork->computeChangeSet($classMetadata, $object);
         $changeSet = $unitOfWork->getEntityChangeSet($object);
 

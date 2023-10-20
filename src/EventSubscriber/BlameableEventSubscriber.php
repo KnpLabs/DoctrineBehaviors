@@ -5,7 +5,6 @@ declare(strict_types=1);
 namespace Knp\DoctrineBehaviors\EventSubscriber;
 
 use Doctrine\Bundle\DoctrineBundle\Attribute\AsDoctrineListener;
-use Doctrine\Bundle\DoctrineBundle\EventSubscriber\EventSubscriberInterface;
 use Doctrine\ORM\EntityManagerInterface;
 use Doctrine\ORM\Event\LoadClassMetadataEventArgs;
 use Doctrine\ORM\Event\PrePersistEventArgs;
@@ -21,7 +20,7 @@ use Knp\DoctrineBehaviors\Contract\Provider\UserProviderInterface;
 #[AsDoctrineListener(event: Events::prePersist)]
 #[AsDoctrineListener(event: Events::preUpdate)]
 #[AsDoctrineListener(event: Events::preRemove)]
-final class BlameableEventSubscriber implements EventSubscriberInterface
+final class BlameableEventSubscriber
 {
     /**
      * @var string
@@ -109,11 +108,11 @@ final class BlameableEventSubscriber implements EventSubscriberInterface
             return;
         }
 
-        $oldValue = $object->getUpdatedBy();
+        $updatedBy = $object->getUpdatedBy();
         $object->setUpdatedBy($user);
 
         $this->getUnitOfWork()
-            ->propertyChanged($object, self::UPDATED_BY, $oldValue, $user);
+            ->propertyChanged($object, self::UPDATED_BY, $updatedBy, $user);
     }
 
     /**
@@ -194,10 +193,5 @@ final class BlameableEventSubscriber implements EventSubscriberInterface
             'type' => 'string',
             'nullable' => true,
         ]);
-    }
-
-    public static function getSubscribedEvents()
-    {
-        // TODO: Implement getSubscribedEvents() method.
     }
 }

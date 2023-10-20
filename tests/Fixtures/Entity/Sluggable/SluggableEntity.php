@@ -28,7 +28,7 @@ class SluggableEntity implements SluggableInterface
     private int $id;
 
     #[Column(type: 'datetime')]
-    private \DateTimeInterface|\DateTime $dateTime;
+    private DateTimeInterface|DateTime $dateTime;
 
     public function __construct()
     {
