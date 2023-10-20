@@ -120,7 +120,7 @@ trait TreeNodeMethodsTrait
             throw new TreeException('You must provide an id for this node if you want it to be part of a tree.');
         }
 
-        $path = $treeNode !== null
+        $path = $treeNode instanceof TreeNodeInterface
             ? rtrim($treeNode->getRealMaterializedPath(), static::getMaterializedPathSeparator())
             : static::getMaterializedPathSeparator();
         $this->setMaterializedPath($path);
@@ -132,7 +132,7 @@ trait TreeNodeMethodsTrait
 
         $this->parentNode = $treeNode;
 
-        if ($treeNode !== null) {
+        if ($treeNode instanceof TreeNodeInterface) {
             $this->parentNode->addChildNode($this);
         }
 
@@ -196,8 +196,8 @@ trait TreeNodeMethodsTrait
      */
     public function toArray(?Closure $prepare = null, ?array &$tree = null): array
     {
-        if ($prepare === null) {
-            $prepare = static fn (TreeNodeInterface $node): string => (string) $node;
+        if (!$prepare instanceof Closure) {
+            $prepare = static fn (TreeNodeInterface $treeNode): string => (string) $treeNode;
         }
 
         if ($tree === null) {
@@ -228,7 +228,7 @@ trait TreeNodeMethodsTrait
      */
     public function toFlatArray(?Closure $prepare = null, ?array &$tree = null): array
     {
-        if ($prepare === null) {
+        if (!$prepare instanceof Closure) {
             $prepare = static function (TreeNodeInterface $treeNode) {
                 $pre = $treeNode->getNodeLevel() > 1 ? implode('', array_fill(0, $treeNode->getNodeLevel(), '--')) : '';
                 return $pre . $treeNode;
@@ -281,12 +281,12 @@ trait TreeNodeMethodsTrait
      */
     protected function getExplodedPath(): array
     {
-        $separator = static::getMaterializedPathSeparator();
-        if ($separator === '') {
+        $materializedPathSeparator = static::getMaterializedPathSeparator();
+        if ($materializedPathSeparator === '') {
             throw new ShouldNotHappenException();
         }
 
-        $path = explode($separator, $this->getRealMaterializedPath());
+        $path = explode($materializedPathSeparator, $this->getRealMaterializedPath());
 
         return array_filter($path, static fn ($item): bool => $item !== '');
     }

@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace Knp\DoctrineBehaviors\Provider;
 
+use Symfony\Component\Security\Core\Authentication\Token\TokenInterface;
 use Knp\DoctrineBehaviors\Contract\Provider\UserProviderInterface;
 use Symfony\Component\Security\Core\Security;
 
@@ -18,7 +19,7 @@ final class UserProvider implements UserProviderInterface
     public function provideUser()
     {
         $token = $this->security->getToken();
-        if ($token !== null) {
+        if ($token instanceof TokenInterface) {
             $user = $token->getUser();
             if ($this->blameableUserEntity) {
                 if ($user instanceof $this->blameableUserEntity) {
