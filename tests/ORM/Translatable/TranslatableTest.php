@@ -12,6 +12,7 @@ use Knp\DoctrineBehaviors\Tests\AbstractBehaviorTestCase;
 use Knp\DoctrineBehaviors\Tests\Fixtures\Contract\Translatable\TranslatableEntityWithCustomInterface;
 use Knp\DoctrineBehaviors\Tests\Fixtures\Entity\TranslatableCustomIdentifierEntity;
 use Knp\DoctrineBehaviors\Tests\Fixtures\Entity\TranslatableCustomizedEntity;
+use Knp\DoctrineBehaviors\Tests\Fixtures\Entity\TranslatableEmbeddedIdentifierEntity;
 use Knp\DoctrineBehaviors\Tests\Fixtures\Entity\TranslatableEntity;
 use Knp\DoctrineBehaviors\Tests\Fixtures\Entity\TranslatableEntityTranslation;
 use Knp\DoctrineBehaviors\Tests\Fixtures\Entity\Translation\TranslatableCustomizedEntityTranslation;
@@ -71,6 +72,27 @@ final class TranslatableTest extends AbstractBehaviorTestCase
         /** @var TranslatableEntity $translatableEntity */
         $translatableEntity = $this->entityManager->getRepository(TranslatableCustomIdentifierEntity::class)->find(
             $idColumn
+        );
+
+        $this->assertSame('awesome', $translatableEntity->translate('en')->getTitle());
+    }
+
+    public function testShouldPersistWithEmbeddedIdentifier(): void
+    {
+        $translatableEntity = new TranslatableEmbeddedIdentifierEntity();
+        $translatableEntity->translate('en')
+            ->setTitle('awesome');
+        $translatableEntity->mergeNewTranslations();
+
+        $this->entityManager->persist($translatableEntity);
+        $this->entityManager->flush();
+
+        $uuid = $translatableEntity->getUuid();
+        $this->entityManager->clear();
+
+        /** @var TranslatableEntity $translatableEntity */
+        $translatableEntity = $this->entityManager->getRepository(TranslatableEmbeddedIdentifierEntity::class)->find(
+            $uuid
         );
 
         $this->assertSame('awesome', $translatableEntity->translate('en')->getTitle());
