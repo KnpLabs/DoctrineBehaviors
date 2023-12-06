@@ -24,7 +24,7 @@
         "symfony/framework-bundle": "^5.4|^6.0",
         "symfony/string": "^5.4|^6.0",
         "symfony/translation-contracts": "^2.4|^3.0",
-        "nette/utils": "^3.2",
+        "nette/utils": "^3.2 || ^4.0",
         "ramsey/uuid": "^4.2"
     },
     "require-dev": {
