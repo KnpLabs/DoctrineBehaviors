@@ -8,7 +8,7 @@ jobs:
         strategy:
             matrix:
                 php:
-                    - 8.0
+                    - 8.2
 
         name: Test ${{ matrix.php }}
         runs-on: ubuntu-latest
@@ -16,7 +16,7 @@ jobs:
         steps:
             -   uses: actions/checkout@v2
 
-            -   uses: shivammathur/setup-php@v1
+            -   uses: shivammathur/setup-php@v2
                 with:
                     php-version: ${{ matrix.php }}
                     extensions: pdo_sqlite, pdo_mysql, pdo_pgsql
