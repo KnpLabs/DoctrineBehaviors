@@ -4,18 +4,21 @@ declare(strict_types=1);
 
 namespace Knp\DoctrineBehaviors\EventSubscriber;
 
-use Doctrine\Bundle\DoctrineBundle\EventSubscriber\EventSubscriberInterface;
-use Doctrine\ORM\Event\LifecycleEventArgs;
+use Doctrine\Bundle\DoctrineBundle\Attribute\AsDoctrineListener;
 use Doctrine\ORM\Event\LoadClassMetadataEventArgs;
 use Doctrine\ORM\Events;
 use Doctrine\ORM\Mapping\ClassMetadataInfo;
+use Doctrine\Persistence\Event\LifecycleEventArgs as BaseLifecycleEventArgs;
 use Doctrine\Persistence\ObjectManager;
 use Knp\DoctrineBehaviors\Contract\Entity\TranslatableInterface;
 use Knp\DoctrineBehaviors\Contract\Entity\TranslationInterface;
 use Knp\DoctrineBehaviors\Contract\Provider\LocaleProviderInterface;
 use ReflectionClass;
 
-final class TranslatableEventSubscriber implements EventSubscriberInterface
+#[AsDoctrineListener(event: Events::loadClassMetadata)]
+#[AsDoctrineListener(event: Events::postLoad)]
+#[AsDoctrineListener(event: Events::prePersist)]
+final class TranslatableEventSubscriber
 {
     /**
      * @var string
@@ -59,23 +62,17 @@ final class TranslatableEventSubscriber implements EventSubscriberInterface
         }
     }
 
-    public function postLoad(LifecycleEventArgs $lifecycleEventArgs): void
+    public function postLoad(BaseLifecycleEventArgs $lifecycleEventArgs): void
     {
         $this->setLocales($lifecycleEventArgs);
     }
 
-    public function prePersist(LifecycleEventArgs $lifecycleEventArgs): void
+    public function prePersist(BaseLifecycleEventArgs $lifecycleEventArgs): void
     {
         $this->setLocales($lifecycleEventArgs);
     }
 
-    /**
-     * @return string[]
-     */
-    public function getSubscribedEvents(): array
-    {
-        return [Events::loadClassMetadata, Events::postLoad, Events::prePersist];
-    }
+
 
     /**
      * Convert string FETCH mode to required string
@@ -126,7 +123,7 @@ final class TranslatableEventSubscriber implements EventSubscriberInterface
             /** @var ClassMetadataInfo $classMetadata */
             $classMetadata = $objectManager->getClassMetadata($targetEntity);
 
-            $singleIdentifierFieldName = $classMetadata->getSingleIdentifierFieldName();
+            $singleIdentifierColumnName = $classMetadata->getSingleIdentifierColumnName();
 
             $classMetadataInfo->mapManyToOne([
                 'fieldName' => 'translatable',
@@ -135,7 +132,7 @@ final class TranslatableEventSubscriber implements EventSubscriberInterface
                 'fetch' => $this->translationFetchMode,
                 'joinColumns' => [[
                     'name' => 'translatable_id',
-                    'referencedColumnName' => $singleIdentifierFieldName,
+                    'referencedColumnName' => $singleIdentifierColumnName,
                     'onDelete' => 'CASCADE',
                 ]],
                 'targetEntity' => $targetEntity,
@@ -159,9 +156,9 @@ final class TranslatableEventSubscriber implements EventSubscriberInterface
         }
     }
 
-    private function setLocales(LifecycleEventArgs $lifecycleEventArgs): void
+    private function setLocales(BaseLifecycleEventArgs $lifecycleEventArgs): void
     {
-        $entity = $lifecycleEventArgs->getEntity();
+        $entity = $lifecycleEventArgs->getObject();
         if (! $entity instanceof TranslatableInterface) {
             return;
         }
