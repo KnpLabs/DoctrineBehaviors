@@ -59,7 +59,7 @@ class LoggableEntity implements LoggableInterface
         $this->roles = $roles;
     }
 
-    public function getDate(): \DateTimeInterface|null
+    public function getDate(): DateTimeInterface|null
     {
         return $this->dateTime;
     }

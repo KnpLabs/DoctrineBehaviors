@@ -4,9 +4,10 @@ declare(strict_types=1);
 
 namespace Knp\DoctrineBehaviors\EventSubscriber;
 
-use Doctrine\Bundle\DoctrineBundle\EventSubscriber\EventSubscriberInterface;
-use Doctrine\ORM\Event\LifecycleEventArgs;
+use Doctrine\Bundle\DoctrineBundle\Attribute\AsDoctrineListener;
 use Doctrine\ORM\Event\LoadClassMetadataEventArgs;
+use Doctrine\ORM\Event\PostLoadEventArgs;
+use Doctrine\ORM\Event\PrePersistEventArgs;
 use Doctrine\ORM\Events;
 use Doctrine\ORM\Mapping\ClassMetadataInfo;
 use Doctrine\Persistence\ObjectManager;
@@ -15,7 +16,10 @@ use Knp\DoctrineBehaviors\Contract\Entity\TranslationInterface;
 use Knp\DoctrineBehaviors\Contract\Provider\LocaleProviderInterface;
 use ReflectionClass;
 
-final class TranslatableEventSubscriber implements EventSubscriberInterface
+#[AsDoctrineListener(event: Events::loadClassMetadata)]
+#[AsDoctrineListener(event: Events::postLoad)]
+#[AsDoctrineListener(event: Events::prePersist)]
+final class TranslatableEventSubscriber
 {
     /**
      * @var string
@@ -59,22 +63,14 @@ final class TranslatableEventSubscriber implements EventSubscriberInterface
         }
     }
 
-    public function postLoad(LifecycleEventArgs $lifecycleEventArgs): void
+    public function postLoad(PostLoadEventArgs $postLoadEventArgs): void
     {
-        $this->setLocales($lifecycleEventArgs);
+        $this->setLocales($postLoadEventArgs);
     }
 
-    public function prePersist(LifecycleEventArgs $lifecycleEventArgs): void
+    public function prePersist(PrePersistEventArgs $prePersistEventArgs): void
     {
-        $this->setLocales($lifecycleEventArgs);
-    }
-
-    /**
-     * @return string[]
-     */
-    public function getSubscribedEvents(): array
-    {
-        return [Events::loadClassMetadata, Events::postLoad, Events::prePersist];
+        $this->setLocales($prePersistEventArgs);
     }
 
     /**
@@ -159,21 +155,21 @@ final class TranslatableEventSubscriber implements EventSubscriberInterface
         }
     }
 
-    private function setLocales(LifecycleEventArgs $lifecycleEventArgs): void
+    private function setLocales(PostLoadEventArgs|PrePersistEventArgs $lifecycleEventArgs): void
     {
-        $entity = $lifecycleEventArgs->getEntity();
-        if (! $entity instanceof TranslatableInterface) {
+        $object = $lifecycleEventArgs->getObject();
+        if (! $object instanceof TranslatableInterface) {
             return;
         }
 
         $currentLocale = $this->localeProvider->provideCurrentLocale();
         if ($currentLocale) {
-            $entity->setCurrentLocale($currentLocale);
+            $object->setCurrentLocale($currentLocale);
         }
 
         $fallbackLocale = $this->localeProvider->provideFallbackLocale();
         if ($fallbackLocale) {
-            $entity->setDefaultLocale($fallbackLocale);
+            $object->setDefaultLocale($fallbackLocale);
         }
     }
 

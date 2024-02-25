@@ -353,8 +353,8 @@ final class TreeNodeTest extends AbstractBehaviorTestCase
 
     public function testGetTree(): void
     {
-        /** @var TreeNodeRepository $treeNodeRepository */
-        $treeNodeRepository = $this->entityManager->getRepository(TreeNodeEntity::class);
+        /** @var TreeNodeRepository $entityRepository */
+        $entityRepository = $this->entityManager->getRepository(TreeNodeEntity::class);
 
         $entity = new TreeNodeEntity();
         $entity->setId(1);
@@ -372,7 +372,7 @@ final class TreeNodeTest extends AbstractBehaviorTestCase
         $this->entityManager->persist($entity[0][0]);
         $this->entityManager->flush();
 
-        $tree = $treeNodeRepository->getTree();
+        $tree = $entityRepository->getTree();
         $this->assertSame($tree[0][0], $entity[0][0]);
     }
 

@@ -12,7 +12,7 @@ use Symfony\Component\DependencyInjection\Loader\PhpFileLoader;
 final class DoctrineBehaviorsExtension extends Extension
 {
     /**
-     * @param string[] $configs
+     * @param array<array<mixed>> $configs
      */
     public function load(array $configs, ContainerBuilder $containerBuilder): void
     {

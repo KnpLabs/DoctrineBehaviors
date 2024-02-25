@@ -31,10 +31,10 @@ jobs:
         runs-on: ubuntu-latest
 
         steps:
-            -   uses: actions/checkout@v2
-            -   uses: shivammathur/setup-php@v1
+            -   uses: actions/checkout@v4
+            -   uses: shivammathur/setup-php@v2
                 with:
-                    php-version: 8.0
+                    php-version: 8.1
                     extensions: pdo_sqlite, pdo_mysql, pdo_pgsql
                     coverage: none
 
