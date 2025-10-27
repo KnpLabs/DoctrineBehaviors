@@ -6,6 +6,7 @@ namespace Knp\DoctrineBehaviors\Model\Translatable;
 
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
+use Doctrine\Persistence\Proxy;
 use Knp\DoctrineBehaviors\Contract\Entity\TranslationInterface;
 use Knp\DoctrineBehaviors\Exception\TranslatableException;
 
@@ -104,6 +105,10 @@ trait TranslatableMethodsTrait
 
     public function getCurrentLocale(): string
     {
+        if ($this instanceof Proxy && !$this->__isInitialized()) {
+            $this->__load();
+        }
+        
         return $this->currentLocale ?: $this->getDefaultLocale();
     }
 
@@ -114,6 +119,10 @@ trait TranslatableMethodsTrait
 
     public function getDefaultLocale(): string
     {
+        if ($this instanceof Proxy && !$this->__isInitialized()) {
+            $this->__load();
+        }
+        
         return $this->defaultLocale;
     }
 
