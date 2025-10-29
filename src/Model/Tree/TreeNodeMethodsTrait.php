@@ -57,7 +57,6 @@ trait TreeNodeMethodsTrait
 
     public function setParentMaterializedPath(string $path): void
     {
-        $this->parentNodePath = $path;
     }
 
     public function getRootMaterializedPath(): string

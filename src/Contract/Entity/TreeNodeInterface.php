@@ -40,7 +40,7 @@ interface TreeNodeInterface
     public function setParentNode(self $treeNode): void;
 
     /**
-     * @param string $path the materialized path, eg: the the materialized path to its parent
+     * @param string $path the materialized path, eg: the materialized path to its parent
      */
     public function setMaterializedPath(string $path): void;
 
