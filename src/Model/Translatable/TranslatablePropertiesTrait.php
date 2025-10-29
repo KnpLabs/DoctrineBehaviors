@@ -5,18 +5,20 @@ declare(strict_types=1);
 namespace Knp\DoctrineBehaviors\Model\Translatable;
 
 use Doctrine\Common\Collections\Collection;
-use Knp\DoctrineBehaviors\Contract\Entity\TranslationInterface;
 
+/**
+ * @template T of \Knp\DoctrineBehaviors\Contract\Entity\TranslationInterface
+ */
 trait TranslatablePropertiesTrait
 {
     /**
-     * @var Collection<string, TranslationInterface>
+     * @var Collection<string, T>
      */
     protected $translations;
 
     /**
      * @see mergeNewTranslations
-     * @var Collection<string, TranslationInterface>
+     * @var Collection<string, T>
      */
     protected $newTranslations;
 

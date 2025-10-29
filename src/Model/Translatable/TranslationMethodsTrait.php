@@ -7,8 +7,14 @@ namespace Knp\DoctrineBehaviors\Model\Translatable;
 use Knp\DoctrineBehaviors\Contract\Entity\TranslatableInterface;
 use Nette\Utils\Strings;
 
+/**
+ * @template T of TranslatableInterface
+ */
 trait TranslationMethodsTrait
 {
+    /**
+     * @return class-string<T>
+     */
     public static function getTranslatableEntityClass(): string
     {
         // By default, the translatable class has the same name but without the "Translation" suffix
@@ -17,6 +23,8 @@ trait TranslationMethodsTrait
 
     /**
      * Sets entity, that this translation should be mapped to.
+     *
+     * @param T $translatable
      */
     public function setTranslatable(TranslatableInterface $translatable): void
     {
@@ -25,6 +33,8 @@ trait TranslationMethodsTrait
 
     /**
      * Returns entity, that this translation is mapped to.
+     *
+     * @return T
      */
     public function getTranslatable(): TranslatableInterface
     {

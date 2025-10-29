@@ -9,10 +9,13 @@ use Doctrine\Common\Collections\Collection;
 use Knp\DoctrineBehaviors\Contract\Entity\TranslationInterface;
 use Knp\DoctrineBehaviors\Exception\TranslatableException;
 
+/**
+ * @template T of TranslationInterface
+ */
 trait TranslatableMethodsTrait
 {
     /**
-     * @return Collection<string, TranslationInterface>
+     * @return Collection<string, T>
      */
     public function getTranslations()
     {
@@ -25,8 +28,8 @@ trait TranslatableMethodsTrait
     }
 
     /**
-     * @param Collection<string, TranslationInterface> $translations
-     * @phpstan-param iterable<TranslationInterface> $translations
+     * @param Collection<string, T> $translations
+     * @phpstan-param iterable<T> $translations
      */
     public function setTranslations(iterable $translations): void
     {
@@ -38,7 +41,7 @@ trait TranslatableMethodsTrait
     }
 
     /**
-     * @return Collection<string, TranslationInterface>
+     * @return Collection<string, T>
      */
     public function getNewTranslations(): Collection
     {
@@ -50,6 +53,9 @@ trait TranslatableMethodsTrait
         return $this->newTranslations;
     }
 
+    /**
+     * @param T $translation
+     */
     public function addTranslation(TranslationInterface $translation): void
     {
         $this->getTranslations()
@@ -57,6 +63,9 @@ trait TranslatableMethodsTrait
         $translation->setTranslatable($this);
     }
 
+    /**
+     * @param T $translation
+     */
     public function removeTranslation(TranslationInterface $translation): void
     {
         $this->getTranslations()
@@ -69,6 +78,8 @@ trait TranslatableMethodsTrait
      * newTranslations collection. In order to persist new translations, call mergeNewTranslations method, before flush
      *
      * @param string $locale The locale (en, ru, fr) | null If null, will try with current locale
+     *
+     * @return T
      */
     public function translate(?string $locale = null, bool $fallbackToDefault = true): TranslationInterface
     {
@@ -117,6 +128,9 @@ trait TranslatableMethodsTrait
         return $this->defaultLocale;
     }
 
+    /**
+     * @return class-string<T>
+     */
     public static function getTranslationEntityClass(): string
     {
         return static::class . 'Translation';
@@ -128,6 +142,8 @@ trait TranslatableMethodsTrait
      * newTranslations collection. In order to persist new translations, call mergeNewTranslations method, before flush
      *
      * @param string $locale The locale (en, ru, fr) | null If null, will try with current locale
+     *
+     * @return T
      */
     protected function doTranslate(?string $locale = null, bool $fallbackToDefault = true): TranslationInterface
     {
@@ -183,6 +199,8 @@ trait TranslatableMethodsTrait
 
     /**
      * Finds specific translation in collection by its locale.
+     *
+     * @return T|null
      */
     protected function findTranslationByLocale(string $locale, bool $withNewTranslations = true): ?TranslationInterface
     {
@@ -228,6 +246,9 @@ trait TranslatableMethodsTrait
         );
     }
 
+    /**
+     * @return T|null
+     */
     private function resolveFallbackTranslation(string $locale): ?TranslationInterface
     {
         $fallbackLocale = $this->computeFallbackLocale($locale);
