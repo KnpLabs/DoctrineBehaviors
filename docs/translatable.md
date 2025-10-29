@@ -8,7 +8,10 @@ same folder, e.g.:
 
 The default naming convention (or its customization via trait methods) avoids you to manually handle entity associations. It is handled automatically by the `TranslatableEventSubscriber`.
 
-[How to use translatable with api platform?](/docs/translatable-api-platform.md)
+Related documentations:
+
+- [How to use translatable with api platform?](/docs/translatable-api-platform.md)
+- [How to tweak your Doctrine Migration to keep existing content?](/docs/translatable-migration.md)
 
 ## Entity
 
