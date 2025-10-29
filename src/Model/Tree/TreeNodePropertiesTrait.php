@@ -23,4 +23,9 @@ trait TreeNodePropertiesTrait
      * @var TreeNodeInterface|null
      */
     private $parentNode;
+
+    /**
+     * @var string
+     */
+    private $parentNodePath;
 }
