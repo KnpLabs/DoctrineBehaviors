@@ -1,6 +1,8 @@
 # Translatable - API Platform
 
-How to use Translatable with API platform.
+## Expose translated properties
+
+How to use Translatable with API Platform.
 
 Let's say you have a Document Entity like so:
 
@@ -13,7 +15,7 @@ use Knp\DoctrineBehaviors\Model\Translatable\TranslatableTrait;
 
 class Document implements TranslatableInterface
 {
-use TranslatableTrait;
+    use TranslatableTrait;
 
     #[ORM\Id]
     #[ORM\GeneratedValue]
@@ -22,8 +24,7 @@ use TranslatableTrait;
 
     public function getTitle(): string
     {
-        return $this->translate()
-            ->getTitle();
+        return $this->translate()->getTitle();
     }
 }
 ```
@@ -59,7 +60,23 @@ class DocumentTranslation implements TranslationInterface
 }
 ```
 
-Now we can implement an Event Subscriber to listen to the accept-language header on each request:
+If you need serialisation groups you must add them on the root entity getter like this:
+
+```php
+class Document implements TranslatableInterface
+{
+    use TranslatableTrait;
+    
+    #[Groups(['document:read', 'search:read'])]
+    public function getTitle(): string
+    {
+        return $this->translate()->getTitle();
+    }
+```
+
+## Set the locale
+
+If you cannot enabled [Symfony `set_content_language_from_locale` option](https://symfony.com/doc/current/reference/configuration/framework.html#set-content-language-from-locale) (happens when you have other parts of your applications where the `Accept-Language` is not the locale provider) you can add your own Event Subscriber like this:
 
 ```php
 <?php
@@ -76,6 +93,13 @@ use Symfony\Component\HttpKernel\KernelEvents;
 class LocaleSubscriber implements EventSubscriberInterface
 {
     /**
+     * @param array<string> $availableLocales
+     */
+    public function __construct(private readonly array $availableLocales)
+    {
+    }
+    
+    /**
      * @return array<string, array<int[]|string[]>>
      */
     public static function getSubscribedEvents(): array
@@ -88,25 +112,23 @@ class LocaleSubscriber implements EventSubscriberInterface
     public function onKernelRequest(RequestEvent $event): void
     {
         $request = $event->getRequest();
-        $acceptLanguage = $request->headers->get('accept-language');
-        if (empty($acceptLanguage)) {
+
+        // Only set your locale from the Accept Language header
+        if (!str_starts_with($request->getPathInfo(), '/api')) {
             return;
         }
 
-        $arr = HeaderUtils::split($acceptLanguage, ',;');
-        if (empty($arr[0][0])) {
-            return;
-        }
-
-        // Symfony expects underscore instead of dash in locale
-        $locale = str_replace('-', '_', $arr[0][0]);
-
-        $request->setLocale($locale);
+        $request->setLocale(
+            $request->getPreferredLanguage($this->availableLocales)
+        );
+        $request->attributes->set('_vary_by_language', true);
     }
 }
 ```
 
-Now we can make a request to `/api/documents` do not for get to add the `Accept-Language` header value, in this case it's set to 'cz'. 
+## Demo
+
+Now we can make a request to `/api/documents`, do not forget to add the `Accept-Language` header value, in this case it's set to 'cz'. 
 When you change the `Accept-Language` header value, notice the title change language.
 
 ```json
@@ -128,5 +150,3 @@ When you change the `Accept-Language` header value, notice the title change lang
   ]
 }
 ```
-
-That's it!
