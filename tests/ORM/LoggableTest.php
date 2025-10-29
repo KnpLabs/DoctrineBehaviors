@@ -4,6 +4,9 @@ declare(strict_types=1);
 
 namespace Knp\DoctrineBehaviors\Tests\ORM;
 
+use DateTime;
+use DateTimeImmutable;
+use DateTimeZone;
 use Knp\DoctrineBehaviors\Tests\AbstractBehaviorTestCase;
 use Knp\DoctrineBehaviors\Tests\Fixtures\Entity\LoggableEntity;
 use Psr\Log\Test\TestLogger;
@@ -117,6 +120,56 @@ final class LoggableTest extends AbstractBehaviorTestCase
 
         $expectedMessage = sprintf('%s #1 removed', LoggableEntity::class);
         $this->assertSame($expectedMessage, $lastRecord['message']);
+    }
+
+    public function testDateTimeMustBeFormated(): void
+    {
+        $loggableEntity = new LoggableEntity();
+
+        $this->entityManager->persist($loggableEntity);
+        $this->entityManager->flush();
+
+        $loggableEntity->setDate(new DateTime('2023-02-11 10:00:00', new DateTimeZone('UTC')));
+
+        $this->entityManager->flush();
+
+        $expectedRecordCount = $this->isPostgreSql() ? 3 : 2;
+        $this->assertCount($expectedRecordCount, $this->testLogger->records);
+
+        $lastRecord = array_pop($this->testLogger->records);
+
+        $expectedMessage = sprintf(
+            '%s #1 : property "%s" changed from "" to "%s"',
+            LoggableEntity::class,
+            'dateTime',
+            '2023-02-11 10:00:00.000000'
+        );
+        $this->assertStringContainsString($expectedMessage, $lastRecord['message']);
+    }
+
+    public function testDateTimeImmutableMustBeFormated(): void
+    {
+        $loggableEntity = new LoggableEntity();
+
+        $this->entityManager->persist($loggableEntity);
+        $this->entityManager->flush();
+
+        $loggableEntity->setDate(new DateTimeImmutable('2023-02-11 10:00:00', new DateTimeZone('UTC')));
+
+        $this->entityManager->flush();
+
+        $expectedRecordCount = $this->isPostgreSql() ? 3 : 2;
+        $this->assertCount($expectedRecordCount, $this->testLogger->records);
+
+        $lastRecord = array_pop($this->testLogger->records);
+
+        $expectedMessage = sprintf(
+            '%s #1 : property "%s" changed from "" to "%s"',
+            LoggableEntity::class,
+            'dateTime',
+            '2023-02-11 10:00:00.000000'
+        );
+        $this->assertStringContainsString($expectedMessage, $lastRecord['message']);
     }
 
     private function doTestChangesetMessage(LoggableEntity $loggableEntity, string $field, string $expected): void
