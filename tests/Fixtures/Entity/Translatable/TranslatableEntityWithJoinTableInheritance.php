@@ -15,7 +15,7 @@ use Knp\DoctrineBehaviors\Model\Translatable\TranslatableTrait;
 
 #[Entity]
 #[InheritanceType(value: 'JOINED')]
-#[DiscriminatorColumn(name:'handle', type:'string')]
+#[DiscriminatorColumn(name: 'handle', type: 'string')]
 class TranslatableEntityWithJoinTableInheritance implements TranslatableInterface
 {
     use TranslatableTrait;

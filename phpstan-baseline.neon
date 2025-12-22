@@ -1,0 +1,151 @@
+parameters:
+	ignoreErrors:
+		-
+			message: '#^Method Knp\\DoctrineBehaviors\\Provider\\UserProvider\:\:provideUser\(\) never returns string so it can be removed from the return type\.$#'
+			identifier: return.unusedType
+			count: 1
+			path: src/Provider/UserProvider.php
+
+		-
+			message: '#^PHPDoc tag @var with type Knp\\DoctrineBehaviors\\Contract\\Entity\\TreeNodeInterface is not subtype of native type \$this\(Knp\\DoctrineBehaviors\\Tests\\Fixtures\\Entity\\TreeNodeEntity\)\.$#'
+			identifier: varTag.nativeType
+			count: 1
+			path: tests/Fixtures/Entity/TreeNodeEntity.php
+
+		-
+			message: '#^Call to method PHPUnit\\Framework\\Assert\:\:assertNotNull\(\) with Knp\\DoctrineBehaviors\\Tests\\Fixtures\\Entity\\Sluggable\\SluggableMultiEntity will always evaluate to true\.$#'
+			identifier: method.alreadyNarrowedType
+			count: 1
+			path: tests/ORM/Sluggable/SluggableMultiTest.php
+
+		-
+			message: '#^Call to method PHPUnit\\Framework\\Assert\:\:assertNotNull\(\) with int will always evaluate to true\.$#'
+			identifier: method.alreadyNarrowedType
+			count: 1
+			path: tests/ORM/Sluggable/SluggableMultiTest.php
+
+		-
+			message: '#^Call to method PHPUnit\\Framework\\Assert\:\:assertNotNull\(\) with Knp\\DoctrineBehaviors\\Tests\\Fixtures\\Entity\\Sluggable\\SluggableEntity will always evaluate to true\.$#'
+			identifier: method.alreadyNarrowedType
+			count: 1
+			path: tests/ORM/Sluggable/SluggableTest.php
+
+		-
+			message: '#^Call to method PHPUnit\\Framework\\Assert\:\:assertNotNull\(\) with int will always evaluate to true\.$#'
+			identifier: method.alreadyNarrowedType
+			count: 1
+			path: tests/ORM/Sluggable/SluggableTest.php
+
+		-
+			message: '#^Call to method PHPUnit\\Framework\\Assert\:\:assertNotNull\(\) with Knp\\DoctrineBehaviors\\Tests\\Fixtures\\Entity\\Sluggable\\SluggableTranslatableEntity will always evaluate to true\.$#'
+			identifier: method.alreadyNarrowedType
+			count: 1
+			path: tests/ORM/Sluggable/SluggableWithTranslatableEntityAndUniquenessTest.php
+
+		-
+			message: '#^Call to method PHPUnit\\Framework\\Assert\:\:assertNotNull\(\) with int will always evaluate to true\.$#'
+			identifier: method.alreadyNarrowedType
+			count: 1
+			path: tests/ORM/Sluggable/SluggableWithTranslatableEntityAndUniquenessTest.php
+
+		-
+			message: '#^Call to method PHPUnit\\Framework\\Assert\:\:assertNotNull\(\) with Knp\\DoctrineBehaviors\\Tests\\Fixtures\\Entity\\Sluggable\\SluggableEntity will always evaluate to true\.$#'
+			identifier: method.alreadyNarrowedType
+			count: 1
+			path: tests/ORM/Sluggable/SluggableWithoutRegenerateTest.php
+
+		-
+			message: '#^Call to method PHPUnit\\Framework\\Assert\:\:assertNotNull\(\) with int will always evaluate to true\.$#'
+			identifier: method.alreadyNarrowedType
+			count: 1
+			path: tests/ORM/Sluggable/SluggableWithoutRegenerateTest.php
+
+		-
+			message: '#^Call to method PHPUnit\\Framework\\Assert\:\:assertNotNull\(\) with Knp\\DoctrineBehaviors\\Tests\\Fixtures\\Entity\\SoftDeletable\\SoftDeletableEntity will always evaluate to true\.$#'
+			identifier: method.alreadyNarrowedType
+			count: 3
+			path: tests/ORM/SoftDeletableTest.php
+
+		-
+			message: '#^Call to method PHPUnit\\Framework\\Assert\:\:assertNotNull\(\) with int will always evaluate to true\.$#'
+			identifier: method.alreadyNarrowedType
+			count: 3
+			path: tests/ORM/SoftDeletableTest.php
+
+		-
+			message: '#^Call to method PHPUnit\\Framework\\Assert\:\:assertInstanceOf\(\) with ''Knp\\\\DoctrineBehaviors\\\\Tests\\\\Fixtures\\\\Entity\\\\TranslatableEntity'' and Knp\\DoctrineBehaviors\\Tests\\Fixtures\\Entity\\TranslatableEntity will always evaluate to true\.$#'
+			identifier: method.alreadyNarrowedType
+			count: 2
+			path: tests/ORM/Translatable/TranslatableTest.php
+
+		-
+			message: '#^Call to method PHPUnit\\Framework\\Assert\:\:assertInstanceOf\(\) with ''Knp\\\\DoctrineBehaviors\\\\Tests\\\\Fixtures\\\\Entity\\\\TranslatableEntityTranslation'' and Knp\\DoctrineBehaviors\\Tests\\Fixtures\\Entity\\TranslatableEntityTranslation will always evaluate to true\.$#'
+			identifier: method.alreadyNarrowedType
+			count: 1
+			path: tests/ORM/Translatable/TranslatableTest.php
+
+		-
+			message: '#^Instanceof between Doctrine\\ORM\\Mapping\\AssociationMapping and Doctrine\\ORM\\Mapping\\AssociationMapping will always evaluate to true\.$#'
+			identifier: instanceof.alwaysTrue
+			count: 1
+			path: tests/ORM/Translatable/TranslatableTest.php
+
+		-
+			message: '#^PHPDoc tag @var with type Knp\\DoctrineBehaviors\\Contract\\Entity\\TranslatableInterface is not subtype of native type Knp\\DoctrineBehaviors\\Tests\\Fixtures\\Entity\\TranslatableEntity\.$#'
+			identifier: varTag.nativeType
+			count: 1
+			path: tests/ORM/Translatable/TranslatableTest.php
+
+		-
+			message: '#^PHPDoc tag @var with type Knp\\DoctrineBehaviors\\Contract\\Entity\\TranslationInterface is not subtype of native type Knp\\DoctrineBehaviors\\Tests\\Fixtures\\Entity\\TranslatableEntityTranslation\.$#'
+			identifier: varTag.nativeType
+			count: 1
+			path: tests/ORM/Translatable/TranslatableTest.php
+
+		-
+			message: '#^Offset 0 might not exist on array\<Knp\\DoctrineBehaviors\\Contract\\Entity\\TreeNodeInterface\>\|ArrayAccess\|null\.$#'
+			identifier: offsetAccess.notFound
+			count: 1
+			path: tests/ORM/TreeNodeTest.php
+
+		-
+			message: '#^Call to method PHPUnit\\Framework\\Assert\:\:assertNotNull\(\) with Knp\\DoctrineBehaviors\\Contract\\Entity\\UuidableInterface will always evaluate to true\.$#'
+			identifier: method.alreadyNarrowedType
+			count: 1
+			path: tests/ORM/UuidableTest.php
+
+		-
+			message: '#^Call to method PHPUnit\\Framework\\Assert\:\:assertNotNull\(\) with int will always evaluate to true\.$#'
+			identifier: method.alreadyNarrowedType
+			count: 1
+			path: tests/ORM/UuidableTest.php
+
+		-
+			message: '#^Method Knp\\DoctrineBehaviors\\Tests\\Provider\\EntityUserProvider\:\:provideUser\(\) never returns null so it can be removed from the return type\.$#'
+			identifier: return.unusedType
+			count: 1
+			path: tests/Provider/EntityUserProvider.php
+
+		-
+			message: '#^Method Knp\\DoctrineBehaviors\\Tests\\Provider\\EntityUserProvider\:\:provideUser\(\) never returns string so it can be removed from the return type\.$#'
+			identifier: return.unusedType
+			count: 1
+			path: tests/Provider/EntityUserProvider.php
+
+		-
+			message: '#^Method Knp\\DoctrineBehaviors\\Tests\\Provider\\EntityUserProvider\:\:provideUserEntity\(\) never returns null so it can be removed from the return type\.$#'
+			identifier: return.unusedType
+			count: 1
+			path: tests/Provider/EntityUserProvider.php
+
+		-
+			message: '#^Method Knp\\DoctrineBehaviors\\Tests\\Provider\\TestLocaleProvider\:\:provideCurrentLocale\(\) never returns null so it can be removed from the return type\.$#'
+			identifier: return.unusedType
+			count: 1
+			path: tests/Provider/TestLocaleProvider.php
+
+		-
+			message: '#^Method Knp\\DoctrineBehaviors\\Tests\\Provider\\TestLocaleProvider\:\:provideFallbackLocale\(\) never returns null so it can be removed from the return type\.$#'
+			identifier: return.unusedType
+			count: 1
+			path: tests/Provider/TestLocaleProvider.php

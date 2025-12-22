@@ -16,7 +16,7 @@ use Knp\DoctrineBehaviors\Model\SoftDeletable\SoftDeletableTrait;
 #[Entity]
 #[InheritanceType(value: 'SINGLE_TABLE')]
 #[DiscriminatorMap(value: [
-    'mainclass' => \Knp\DoctrineBehaviors\Tests\Fixtures\Entity\SoftDeletable\SoftDeletableEntity::class,
+    'mainclass' => SoftDeletableEntity::class,
     'subclass' => SoftDeletableEntityInherit::class,
 ])]
 class SoftDeletableEntity implements SoftDeletableInterface

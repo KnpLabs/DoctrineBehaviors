@@ -45,7 +45,7 @@ final class SluggableTest extends AbstractBehaviorTestCase
     }
 
     /**
-     * @dataProvider provideDataForTest()
+     * @dataProvider provideDataForTest
      */
     public function testNotUpdatedSlug(string $value, string $expectedSlug): void
     {
@@ -63,7 +63,7 @@ final class SluggableTest extends AbstractBehaviorTestCase
         $this->assertSame($expectedSlug, $sluggableEntity->getSlug());
     }
 
-    public function provideDataForTest(): Iterator
+    public static function provideDataForTest(): Iterator
     {
         yield ['The name', 'the-name'];
         yield ['Löic & René', 'loic-rene'];

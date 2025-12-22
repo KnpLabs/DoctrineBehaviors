@@ -39,7 +39,7 @@ trait SoftDeletableMethodsTrait
             return false;
         }
 
-        if ($deletedAt === null) {
+        if (! $deletedAt instanceof \DateTimeInterface) {
             return true;
         }
 

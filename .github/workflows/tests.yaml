@@ -2,26 +2,50 @@ name: Code Tests
 
 on:
     pull_request: null
+    push:
+        branches:
+            - master
 
 jobs:
     tests:
         strategy:
             matrix:
-                php:
-                    - 8.0
+                php: ['8.1', '8.2', '8.3', '8.4']
+                deps: ['stable']
+                symfony: [ '' ] # Don't lock to a specific symfony version by default
+                include:
+                    # Test lowest dependencies
+                    -   deps: 'lowest'
+                        php: '8.1'
+                    # Test latest php with LTS version.
+                    -   deps: 'lts'
+                        php: '8.4'
+                        symfony: '^6.4'
 
-        name: Test ${{ matrix.php }}
+        name: "${{ matrix.deps }} | PHP ${{ matrix.php }} ${{ matrix.symfony != '' && format('| Symfony {0}', matrix.symfony) || '' }}"
         runs-on: ubuntu-latest
 
         steps:
             -   uses: actions/checkout@v2
 
-            -   uses: shivammathur/setup-php@v1
+            -   name: Set-up env variables
+                run: |
+                    case "${{ matrix.deps }}" in
+                     "lowest")
+                       echo "COMPOSER_FLAGS=--prefer-lowest" >> $GITHUB_ENV
+                       echo "SYMFONY_REQUIRE=$(echo '${{ matrix.symfony }}')" >> $GITHUB_ENV
+                       ;;
+                     *)
+                       echo "SYMFONY_REQUIRE=$(echo '${{ matrix.symfony }}')" >> $GITHUB_ENV
+                    esac
+
+            -   uses: shivammathur/setup-php@v2
                 with:
                     php-version: ${{ matrix.php }}
                     extensions: pdo_sqlite, pdo_mysql, pdo_pgsql
+                    tools: flex
                     coverage: none
 
-            -   run: composer install --no-progress
+            -   run: composer update --prefer-dist --no-progress $COMPOSER_FLAGS
 
             -   run: vendor/bin/phpunit

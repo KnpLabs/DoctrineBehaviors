@@ -120,7 +120,7 @@ final class SoftDeletableTest extends AbstractBehaviorTestCase
         $this->assertNotNull($id);
         $this->assertFalse($softDeletableEntity->isDeleted());
 
-        $debugStack = $this->createAndRegisterDebugStack();
+        $debugStack = $this->getAndResetDebugStack();
 
         $this->entityManager->remove($softDeletableEntity);
         $this->entityManager->flush();

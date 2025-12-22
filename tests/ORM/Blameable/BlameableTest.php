@@ -57,14 +57,14 @@ final class BlameableTest extends AbstractBehaviorTestCase
 
         $id = $entity->getId();
         $createdBy = $entity->getCreatedBy();
-//        $this->entityManager->clear();
+        // $this->entityManager->clear();
 
         $this->userProvider->changeUser('user2');
 
         /** @var BlameableEntity $entity */
         $entity = $this->blameableRepository->find($id);
 
-        $debugStack = $this->createAndRegisterDebugStack();
+        $debugStack = $this->getAndResetDebugStack();
 
         // need to modify at least one column to trigger onUpdate
         $entity->setTitle('test');
@@ -127,7 +127,7 @@ final class BlameableTest extends AbstractBehaviorTestCase
     {
         $blameableEntity = new BlameableEntity();
 
-        $stackLogger = $this->createAndRegisterDebugStack();
+        $debugStack = $this->getAndResetDebugStack();
 
         $this->entityManager->persist($blameableEntity);
         $this->entityManager->flush();
@@ -135,11 +135,11 @@ final class BlameableTest extends AbstractBehaviorTestCase
         $expectedCount = $this->isPostgreSql() ? 4 : 7;
         $startKey = $this->isPostgreSql() ? 2 : 1;
 
-        $this->assertCount($expectedCount, $stackLogger->queries);
+        $this->assertCount($expectedCount, $debugStack->queries);
 
-        $this->assertSame('"START TRANSACTION"', $stackLogger->queries[$startKey]['sql']);
+        $this->assertSame('"START TRANSACTION"', $debugStack->queries[$startKey]['sql']);
 
-        $sql2 = $stackLogger->queries[$startKey + 5]['sql'];
+        $sql2 = $debugStack->queries[$startKey + 5]['sql'];
         if ($this->isPostgreSql()) {
             $this->assertSame(
                 'INSERT INTO BlameableEntity (id, title, createdBy_id, updatedBy_id, deletedBy_id) VALUES (?, ?, ?, ?, ?)',
@@ -152,7 +152,7 @@ final class BlameableTest extends AbstractBehaviorTestCase
             );
         }
 
-        $this->assertSame('"COMMIT"', $stackLogger->queries[$startKey + 6]['sql']);
+        $this->assertSame('"COMMIT"', $debugStack->queries[$startKey + 6]['sql']);
     }
 
     /**

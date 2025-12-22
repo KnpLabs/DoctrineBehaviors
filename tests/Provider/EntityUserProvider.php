@@ -47,7 +47,7 @@ final class EntityUserProvider implements UserProviderInterface
         return $this->userEntity;
     }
 
-    public function provideUserEntity(): ?string
+    public function provideUserEntity(): string
     {
         return UserEntity::class;
     }

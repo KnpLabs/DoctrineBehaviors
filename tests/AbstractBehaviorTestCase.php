@@ -5,10 +5,10 @@ declare(strict_types=1);
 namespace Knp\DoctrineBehaviors\Tests;
 
 use Doctrine\DBAL\Connection;
-use Doctrine\DBAL\Logging\DebugStack;
-use Doctrine\DBAL\Platforms\PostgreSQL94Platform;
+use Doctrine\DBAL\Platforms\PostgreSQLPlatform;
 use Doctrine\ORM\EntityManagerInterface;
 use Knp\DoctrineBehaviors\Tests\HttpKernel\DoctrineBehaviorsKernel;
+use Knp\DoctrineBehaviors\Tests\Utils\Doctrine\DebugStack;
 use PHPUnit\Framework\TestCase;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 
@@ -21,6 +21,8 @@ abstract class AbstractBehaviorTestCase extends TestCase
 
     private ContainerInterface $container;
 
+    private DebugStack $debugStack;
+
     protected function setUp(): void
     {
         $doctrineBehaviorsKernel = new DoctrineBehaviorsKernel($this->provideCustomConfigs());
@@ -29,6 +31,9 @@ abstract class AbstractBehaviorTestCase extends TestCase
         $this->container = $doctrineBehaviorsKernel->getContainer();
 
         $this->entityManager = $this->getService('doctrine.orm.entity_manager');
+
+        $this->debugStack = $this->getService(DebugStack::class);
+
         $this->loadDatabaseFixtures();
     }
 
@@ -44,7 +49,7 @@ abstract class AbstractBehaviorTestCase extends TestCase
         /** @var Connection $connection */
         $connection = $this->entityManager->getConnection();
 
-        return $connection->getDatabasePlatform() instanceof PostgreSQL94Platform;
+        return $connection->getDatabasePlatform() instanceof PostgreSQLPlatform;
     }
 
     /**
@@ -55,15 +60,11 @@ abstract class AbstractBehaviorTestCase extends TestCase
         return [];
     }
 
-    protected function createAndRegisterDebugStack(): DebugStack
+    protected function getAndResetDebugStack(): DebugStack
     {
-        $debugStack = new DebugStack();
+        $this->debugStack->reset();
 
-        $this->entityManager->getConnection()
-            ->getConfiguration()
-            ->setSQLLogger($debugStack);
-
-        return $debugStack;
+        return $this->debugStack;
     }
 
     /**

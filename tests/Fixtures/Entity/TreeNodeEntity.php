@@ -27,6 +27,8 @@ class TreeNodeEntity implements TreeNodeInterface, ArrayAccess, Stringable
     #[Column(type: 'string', length: 255, nullable: true)]
     private ?string $name = null;
 
+    private string $parentNodePath;
+
     public function __toString(): string
     {
         return (string) $this->getName();

@@ -4,13 +4,15 @@ declare(strict_types=1);
 
 namespace Knp\DoctrineBehaviors\EventSubscriber;
 
-use Doctrine\Bundle\DoctrineBundle\EventSubscriber\EventSubscriberInterface;
-use Doctrine\ORM\Event\LifecycleEventArgs;
+use Doctrine\Bundle\DoctrineBundle\Attribute\AsDoctrineListener;
 use Doctrine\ORM\Event\LoadClassMetadataEventArgs;
 use Doctrine\ORM\Events;
+use Doctrine\Persistence\Event\LifecycleEventArgs;
 use Knp\DoctrineBehaviors\Contract\Entity\UuidableInterface;
 
-final class UuidableEventSubscriber implements EventSubscriberInterface
+#[AsDoctrineListener(event: Events::loadClassMetadata)]
+#[AsDoctrineListener(event: Events::prePersist)]
+final class UuidableEventSubscriber
 {
     public function loadClassMetadata(LoadClassMetadataEventArgs $loadClassMetadataEventArgs): void
     {
@@ -37,19 +39,11 @@ final class UuidableEventSubscriber implements EventSubscriberInterface
 
     public function prePersist(LifecycleEventArgs $lifecycleEventArgs): void
     {
-        $entity = $lifecycleEventArgs->getEntity();
+        $entity = $lifecycleEventArgs->getObject();
         if (! $entity instanceof UuidableInterface) {
             return;
         }
 
         $entity->generateUuid();
-    }
-
-    /**
-     * @return string[]
-     */
-    public function getSubscribedEvents(): array
-    {
-        return [Events::loadClassMetadata, Events::prePersist];
     }
 }

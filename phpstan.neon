@@ -1,26 +1,24 @@
 includes:
     - phpstan-extension.neon
+    - phpstan-baseline.neon
 
-    - vendor/symplify/phpstan-rules/config/static-rules.neon
-    - vendor/symplify/phpstan-rules/config/array-rules.neon
     - vendor/symplify/phpstan-rules/config/doctrine-rules.neon
-    - vendor/symplify/phpstan-rules/config/regex-rules.neon
-    - vendor/symplify/phpstan-rules/config/forbidden-static-rules.neon
-    - vendor/symplify/phpstan-rules/config/test-rules.neon
 
 parameters:
     paths:
         - src
         - tests
         - utils/phpstan-behaviors/src
+    excludePaths:
+        - tests/Utils/Doctrine
 
     level: 8
-    checkGenericClassInNonGenericObjectType: false
 
     # to allow installing with various phsptan versions without reporting old errors here
     reportUnmatchedIgnoredErrors: false
 
     ignoreErrors:
+        - identifier: missingType.generics
         # traits
         - '#Call to an undefined method Knp\\DoctrineBehaviors\\Contract\\Provider\\UserProviderInterface::changeUser\(\)#'
         - '#Call to an undefined method Knp\\DoctrineBehaviors\\Contract\\Entity\\TreeNodeInterface::getId\(\)#'
@@ -39,6 +37,15 @@ parameters:
 
         # tests
         - '#Offset 0 does not exist on array<Knp\\DoctrineBehaviors\\Contract\\Entity\\TreeNodeInterface\>\|ArrayAccess\|null#'
+        -
+            identifier: doctrine.noGetRepositoryOutsideService
+            path: tests/
+        -
+            identifier: doctrine.columnType
+            path: tests/
+        -
+            identifier: doctrine.noParentRepository
+            path: tests/
 
         - '#Cannot call method addChildNode\(\) on Knp\\DoctrineBehaviors\\Contract\\Entity\\TreeNodeInterface\|null#'
 
@@ -123,7 +130,23 @@ parameters:
         # specific implementation
         - '#Property Knp\\DoctrineBehaviors\\Tests\\ORM\\Blameable\\BlameableTest\:\:\$userProvider \(Knp\\DoctrineBehaviors\\Tests\\Provider\\EntityUserProvider\) does not accept Knp\\DoctrineBehaviors\\Contract\\Provider\\UserProviderInterface#'
 
+        -
+            identifier: doctrine.requireQueryBuilderOnRepository
+            path: src/Repository/DefaultSluggableRepository.php
+
         # different entity can return differnt types - reusable trait
         -
             message: '#sprintf\(\) call mask types does not match provided arguments types#'
             path: src/Model/Loggable/LoggableTrait.php
+
+        -
+            message: "#^Cannot call method getName\\(\\) on ReflectionClass\\<object\\>\\|null\\.$#"
+            path: src/EventSubscriber/TranslatableEventSubscriber.php
+
+        -
+            message: "#^Property Knp\\\\DoctrineBehaviors\\\\Tests\\\\Fixtures\\\\Entity\\\\TreeNodeEntity\\:\\:\\$parentNodePath is never read, only written\\.$#"
+            path: tests/Fixtures/Entity/TreeNodeEntity.php
+
+        -
+            message: "#^Else branch is unreachable because ternary operator condition is always true\\.$#"
+            path: tests/ORM/Translatable/TranslatableTest.php

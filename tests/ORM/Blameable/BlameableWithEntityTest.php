@@ -59,7 +59,7 @@ final class BlameableWithEntityTest extends AbstractBehaviorTestCase
         /** @var BlameableEntityWithUserEntity $entity */
         $entity = $this->blameableRepository->find($id);
 
-        $debugStack = $this->createAndRegisterDebugStack();
+        $debugStack = $this->getAndResetDebugStack();
 
         $entity->setTitle('test');
         $this->entityManager->flush();
