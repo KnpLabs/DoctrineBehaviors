@@ -4,7 +4,7 @@ on:
     pull_request: null
     push:
         branches:
-            - master
+            - '3.*'
 
 jobs:
     tests:
@@ -21,6 +21,10 @@ jobs:
                     -   deps: 'lts'
                         php: '8.4'
                         symfony: '^6.4'
+                    # Test latest php with LTS version.
+                    -   deps: 'lts'
+                        php: '8.4'
+                        symfony: '^7.4'
 
         name: "${{ matrix.deps }} | PHP ${{ matrix.php }} ${{ matrix.symfony != '' && format('| Symfony {0}', matrix.symfony) || '' }}"
         runs-on: ubuntu-latest

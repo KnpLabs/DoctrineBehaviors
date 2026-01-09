@@ -2,6 +2,7 @@
 
 declare(strict_types=1);
 
+use Doctrine\Bundle\DoctrineBundle\Mapping\DisconnectedMetadataFactory;
 use Knp\DoctrineBehaviors\Contract\Provider\LocaleProviderInterface;
 use Knp\DoctrineBehaviors\Contract\Provider\UserProviderInterface;
 use Knp\DoctrineBehaviors\EventSubscriber\LoggableEventSubscriber;
@@ -33,16 +34,18 @@ return static function (ContainerConfigurator $containerConfigurator): void {
         ]);
     }
 
-    $containerConfigurator->extension('doctrine', [
-        'orm' => [
-            'enable_lazy_ghost_objects' => true,
-            'controller_resolver' => [
-                'auto_mapping' => false,
+    if (class_exists(DisconnectedMetadataFactory::class)) {
+        $containerConfigurator->extension('doctrine', [
+            'orm' => [
+                'enable_lazy_ghost_objects' => true,
+                'controller_resolver' => [
+                    'auto_mapping' => false,
+                ],
             ],
-        ],
-    ]);
+        ]);
+    }
 
-    if (PHP_VERSION_ID >= 80400) {
+    if (PHP_VERSION_ID >= 80400 && class_exists(DisconnectedMetadataFactory::class)) {
         $containerConfigurator->extension('doctrine', [
             'orm' => [
                 'enable_lazy_ghost_objects' => true,
