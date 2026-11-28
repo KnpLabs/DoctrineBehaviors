@@ -6,76 +6,119 @@ namespace Knp\DoctrineBehaviors\PHPStan\Type;
 
 use Knp\DoctrineBehaviors\Contract\Entity\TranslatableInterface;
 use Knp\DoctrineBehaviors\Contract\Entity\TranslationInterface;
-use Knp\DoctrineBehaviors\PHPStan\Exception\PHPStanTypeException;
 use PhpParser\Node\Expr\MethodCall;
 use PHPStan\Analyser\Scope;
 use PHPStan\Reflection\ReflectionProvider;
-use ReflectionClass;
+use PHPStan\Type\ObjectType;
+use PHPStan\Type\Type;
+use PHPStan\Type\TypeCombinator;
+use Throwable;
 
 final class StaticTranslationTypeHelper
 {
-    public static function getTranslationClass(
+    /**
+     * Resolves the translation type for a call on a TranslatableInterface object.
+     * Returns null when nothing can be resolved, so PHPStan falls back to the declared return type.
+     */
+    public static function getTranslationType(
         ReflectionProvider $reflectionProvider,
         MethodCall $methodCall,
         Scope $scope
-    ): string {
-        $type = $scope->getType($methodCall->var);
-        /** @var class-string $translatableClass */
-        $translatableClass = $type->getReferencedClasses()[0];
-
-        if (! $reflectionProvider->hasClass($translatableClass)) {
-            // for some reason, we the reflectin provided cannot locate the class
-            $reflectionClass = new ReflectionClass($translatableClass);
-        } else {
-            $reflectionClass = $reflectionProvider->getClass($translatableClass)
-                ->getNativeReflection();
-        }
-
-        if ($reflectionClass->isInterface()) {
-            if ($reflectionClass->getName() === TranslatableInterface::class || $reflectionClass->implementsInterface(
-                TranslatableInterface::class
-            )) {
-                return TranslationInterface::class;
-            }
-
-            $errorMessage = sprintf(
-                'Unable to find the Translation class associated to the Translatable class "%s".',
-                $reflectionClass->getName()
-            );
-            throw new PHPStanTypeException($errorMessage);
-        }
-
-        return $reflectionClass
-            ->getMethod('getTranslationEntityClass')
-            ->invoke(null);
+    ): ?Type {
+        return self::resolveRelatedType(
+            $reflectionProvider,
+            $scope->getType($methodCall->var),
+            TranslatableInterface::class,
+            'getTranslationEntityClass',
+            TranslationInterface::class
+        );
     }
 
-    public static function getTranslatableClass(
+    /**
+     * Resolves the translatable type for a call on a TranslationInterface object.
+     * Returns null when nothing can be resolved, so PHPStan falls back to the declared return type.
+     */
+    public static function getTranslatableType(
         ReflectionProvider $reflectionProvider,
         MethodCall $methodCall,
         Scope $scope
-    ): string {
-        $type = $scope->getType($methodCall->var);
-        $translationClass = $type->getReferencedClasses()[0];
-        $nativeReflection = $reflectionProvider->getClass($translationClass)
-            ->getNativeReflection();
+    ): ?Type {
+        return self::resolveRelatedType(
+            $reflectionProvider,
+            $scope->getType($methodCall->var),
+            TranslationInterface::class,
+            'getTranslatableEntityClass',
+            TranslatableInterface::class
+        );
+    }
 
-        if ($nativeReflection->isInterface()) {
-            if ($nativeReflection->getName() === TranslationInterface::class || $nativeReflection->implementsInterface(
-                TranslationInterface::class
-            )) {
-                return TranslatableInterface::class;
+    /**
+     * @param class-string $contractInterface interface the called-on class must implement
+     * @param class-string $fallbackInterface type used when the related class cannot be determined
+     */
+    private static function resolveRelatedType(
+        ReflectionProvider $reflectionProvider,
+        Type $calledOnType,
+        string $contractInterface,
+        string $relatedClassMethod,
+        string $fallbackInterface
+    ): ?Type {
+        $relatedTypes = [];
+
+        // a union or intersection type can contain several classes, e.g. "TranslatableInterface&OtherInterface"
+        foreach ($calledOnType->getObjectClassNames() as $className) {
+            if (! $reflectionProvider->hasClass($className)) {
+                continue;
             }
 
-            $errorMessage = sprintf(
-                'Unable to find the Translatable class associated to the Translation class "%s".',
-                $nativeReflection->getName()
+            $classReflection = $reflectionProvider->getClass($className);
+            if ($classReflection->getName() !== $contractInterface && ! $classReflection->implementsInterface(
+                $contractInterface
+            )) {
+                // not part of the translatable contract, e.g. the other side of an intersection type
+                continue;
+            }
+
+            $relatedTypes[] = self::resolveRelatedClassType(
+                $reflectionProvider,
+                $classReflection->isInterface() ? null : $className,
+                $relatedClassMethod,
+                $fallbackInterface
             );
-            throw new PHPStanTypeException($errorMessage);
         }
 
-        return $nativeReflection
-            ->getMethod('getTranslatableEntityClass')
-            ->invoke(null);
+        if ($relatedTypes === []) {
+            return null;
+        }
+
+        return TypeCombinator::union(...$relatedTypes);
+    }
+
+    private static function resolveRelatedClassType(
+        ReflectionProvider $reflectionProvider,
+        ?string $className,
+        string $relatedClassMethod,
+        string $fallbackInterface
+    ): Type {
+        if ($className === null) {
+            return new ObjectType($fallbackInterface);
+        }
+
+        try {
+            $relatedClass = $reflectionProvider->getClass($className)
+                ->getNativeReflection()
+                ->getMethod($relatedClassMethod)
+                ->invoke(null);
+        } catch (Throwable) {
+            // e.g. the class is known to PHPStan but not autoloadable, so its static method cannot be invoked
+            return new ObjectType($fallbackInterface);
+        }
+
+        if (! is_string($relatedClass) || ! $reflectionProvider->hasClass($relatedClass)) {
+            // e.g. an abstract class whose "<ClassName>Translation" does not exist
+            return new ObjectType($fallbackInterface);
+        }
+
+        return new ObjectType($relatedClass);
     }
 }

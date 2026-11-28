@@ -10,7 +10,6 @@ use PHPStan\Analyser\Scope;
 use PHPStan\Reflection\MethodReflection;
 use PHPStan\Reflection\ReflectionProvider;
 use PHPStan\Type\DynamicMethodReturnTypeExtension;
-use PHPStan\Type\ObjectType;
 use PHPStan\Type\Type;
 
 final class TranslatableTranslateDynamicMethodReturnTypeExtension implements DynamicMethodReturnTypeExtension
@@ -34,13 +33,7 @@ final class TranslatableTranslateDynamicMethodReturnTypeExtension implements Dyn
         MethodReflection $methodReflection,
         MethodCall $methodCall,
         Scope $scope
-    ): Type {
-        $translationClass = StaticTranslationTypeHelper::getTranslationClass(
-            $this->reflectionProvider,
-            $methodCall,
-            $scope
-        );
-
-        return new ObjectType($translationClass);
+    ): ?Type {
+        return StaticTranslationTypeHelper::getTranslationType($this->reflectionProvider, $methodCall, $scope);
     }
 }
